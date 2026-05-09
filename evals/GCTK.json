@@ -1,0 +1,195 @@
+{
+  "ticker": "GCTK",
+  "source": "DilutionTracker screenshot, manually transcribed",
+  "cards": {
+    "s1_offering": [
+      {
+        "filing_date": "2024-09-16",
+        "title_contains": "September 2024",
+        "registered": "Priced",
+        "anticipated_deal_size": 10000000,
+        "underwriter": "Dawson James",
+        "warrant_coverage_pct": 200,
+        "final_deal_size": 10000000,
+        "final_pricing": 1.39,
+        "final_shares_offered": 7195000,
+        "final_warrant_coverage_pct": 200,
+        "exercise_price": 1.87
+      }
+    ],
+    "warrant": [
+      {
+        "issue_date": "2025-12-31",
+        "title_contains": "December 2025",
+        "registered": "Registered",
+        "remaining_outstanding": 2067182,
+        "total_issued": 2067182,
+        "exercise_price": 3.87,
+        "known_owners": [
+          "Armistice"
+        ],
+        "underwriter": "Curvature",
+        "price_protection": "undisclosed",
+        "exercisable_date": "2025-12-31",
+        "expiration_date": "2030-12-31"
+      },
+      {
+        "issue_date": "2024-11-14",
+        "title_contains": "November 2024 Series A",
+        "registered": "Registered",
+        "remaining_outstanding": 7837,
+        "total_issued": 7837,
+        "exercise_price": 2172.0,
+        "underwriter": "Dawson James",
+        "price_protection": "full_ratchet",
+        "exercisable_date": "2024-11-14",
+        "expiration_date": "2029-11-14"
+      },
+      {
+        "issue_date": "2024-11-14",
+        "title_contains": "November 2024 Series B",
+        "registered": "Registered",
+        "remaining_outstanding": 32,
+        "total_issued": 162094,
+        "exercise_price": 0.0,
+        "underwriter": "Dawson James",
+        "price_protection": "full_ratchet",
+        "exercisable_date": "2024-11-14",
+        "expiration_date": "2027-05-14"
+      },
+      {
+        "issue_date": "2024-07-30",
+        "title_contains": "July 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 1778,
+        "total_issued": 1778,
+        "exercise_price": 2250.0,
+        "price_protection": "Customary Anti-Dilution",
+        "exercisable_date": "2025-07-30",
+        "expiration_date": "2034-07-30"
+      },
+      {
+        "issue_date": "2024-07-30",
+        "title_contains": "July 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 1270,
+        "total_issued": 1270,
+        "exercise_price": 3150.0,
+        "price_protection": "Customary Anti-Dilution",
+        "exercisable_date": "2025-07-30",
+        "expiration_date": "2034-07-30"
+      },
+      {
+        "issue_date": "2024-07-30",
+        "title_contains": "July 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 988,
+        "total_issued": 988,
+        "exercise_price": 4050.0,
+        "price_protection": "Customary Anti-Dilution",
+        "exercisable_date": "2025-07-30",
+        "expiration_date": "2034-07-30"
+      },
+      {
+        "issue_date": "2024-07-01",
+        "title_contains": "July 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 250,
+        "total_issued": 250,
+        "exercise_price": 5940.0,
+        "exercisable_date": "2024-07-01",
+        "expiration_date": "2029-07-01"
+      }
+    ],
+    "convertible": [
+      {
+        "issue_date": "2025-09-12",
+        "title_contains": "September 2025",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 616016,
+        "principal_remaining": 3000000,
+        "conversion_price": 4.87,
+        "total_shares_issuable": 739008,
+        "principal_total": 3600000,
+        "price_protection": "Customary Anti-Dilution",
+        "convertible_date": "2025-09-12",
+        "maturity_date": "2026-09-12"
+      },
+      {
+        "issue_date": "2024-07-18",
+        "title_contains": "July 2024",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 0,
+        "principal_remaining": 0,
+        "conversion_price": 1872.0,
+        "total_shares_issuable": 187,
+        "principal_total": 350000,
+        "price_protection": "Customary Anti-Dilution",
+        "convertible_date": "2024-07-18",
+        "maturity_date": "2025-07-18"
+      },
+      {
+        "issue_date": "2024-07-30",
+        "title_contains": "July 2024",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 0,
+        "principal_remaining": 0,
+        "conversion_price": 1200.0,
+        "total_shares_issuable": 3333,
+        "principal_total": 4000000,
+        "price_protection": "Customary Anti-Dilution",
+        "convertible_date": "2024-07-30",
+        "maturity_date": "2025-07-30"
+      }
+    ],
+    "convertible_preferred": [],
+    "atm": [
+      {
+        "agreement_start_date": "2024-12-17",
+        "title_contains": "December 2024",
+        "registered": "Registered",
+        "remaining_capacity": 0,
+        "total_capacity": 8230000,
+        "limited_by_baby_shelf": "Yes",
+        "remaining_without_baby_shelf": 0,
+        "placement_agent": "Dawson James"
+      }
+    ],
+    "equity_line": [
+      {
+        "agreement_start_date": "2025-09-11",
+        "title_contains": "September 2025",
+        "registered": "Registered",
+        "remaining_capacity": 20000000,
+        "total_capacity": 20000000,
+        "agreement_end_date": "2027-09-11"
+      }
+    ],
+    "shelf": [
+      {
+        "effect_date": "2024-10-03",
+        "title_contains": "September 2024",
+        "registered": "Registered",
+        "current_raisable_amount": 0,
+        "total_shelf_capacity": 30000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 11097791,
+        "raised_last_12mo_under_ib6": 4454791,
+        "highest_60_day_close": 1.55,
+        "expiration_date": "2027-10-03"
+      },
+      {
+        "effect_date": "2021-09-27",
+        "title_contains": "September 2021",
+        "registered": "Registered",
+        "current_raisable_amount": 0,
+        "total_shelf_capacity": 100000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 10000001,
+        "raised_last_12mo_under_ib6": 4454791,
+        "last_banker": "Aegis",
+        "expiration_date": "2024-09-27"
+      }
+    ]
+  }
+}

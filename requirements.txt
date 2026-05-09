@@ -1,0 +1,9 @@
+edgartools
+xai-sdk
+openai>=1.0
+pandas
+python-dateutil
+openpyxl
+pydantic>=2
+flask
+langfuse>=4.5,<5

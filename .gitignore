@@ -1,0 +1,11 @@
+.env
+.venv/
+venv/
+dilution.db
+dilution.db-wal
+dilution.db-shm
+dilution.log*
+dashboard.log*
+dilution_reports/
+__pycache__/
+*.pyc

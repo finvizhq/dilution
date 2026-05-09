@@ -1,0 +1,184 @@
+{
+  "ticker": "SCNI",
+  "source": "DilutionTracker screenshots, manually transcribed",
+  "cards": {
+    "warrant": [
+      {
+        "issue_date": "2024-01-03",
+        "title_contains": "December 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 521310,
+        "total_issued": 521310,
+        "exercise_price": 6.5,
+        "known_owners": [
+          "Armistice",
+          "Sabby",
+          "Bigger Capital",
+          "District 2"
+        ],
+        "underwriter": "HC Wainwright",
+        "price_protection": "Customary Anti-Dilution",
+        "exercisable_date": "2024-01-03",
+        "expiration_date": "2029-01-03"
+      },
+      {
+        "issue_date": "2026-04-27",
+        "title_contains": "April 2026 Series A",
+        "registered": "Not Registered",
+        "remaining_outstanding": 5208333,
+        "total_issued": 5208333,
+        "exercise_price": 0.48,
+        "known_owners": [],
+        "underwriter": "AGP",
+        "price_protection": "undisclosed",
+        "exercisable_date": "2026-04-27",
+        "expiration_date": "2028-04-27"
+      },
+      {
+        "issue_date": "2026-04-27",
+        "title_contains": "April 2026 Series B",
+        "registered": "Not Registered",
+        "remaining_outstanding": 5208333,
+        "total_issued": 5208333,
+        "exercise_price": 0.55,
+        "known_owners": [],
+        "underwriter": "AGP",
+        "price_protection": "undisclosed",
+        "exercisable_date": "2026-04-27",
+        "expiration_date": "2031-04-27"
+      },
+      {
+        "issue_date": "2023-09-19",
+        "title_contains": "September 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 0,
+        "total_issued": 114650,
+        "exercise_price": 6.5,
+        "known_owners": [
+          "Armistice"
+        ],
+        "underwriter": "HC Wainwright",
+        "price_protection": "Customary Anti-Dilution",
+        "exercisable_date": "2023-09-19",
+        "expiration_date": "2028-09-19"
+      },
+      {
+        "issue_date": "2022-12-20",
+        "title_contains": "December 2022 Warrants 1",
+        "registered": "Registered",
+        "remaining_outstanding": 0,
+        "total_issued": 16000,
+        "exercise_price": 50.0,
+        "known_owners": [],
+        "underwriter": "Aegis",
+        "price_protection": "Customary Anti-Dilution",
+        "exercisable_date": "2022-12-20",
+        "expiration_date": "2025-12-20"
+      },
+      {
+        "issue_date": "2022-12-20",
+        "title_contains": "December 2022 Warrants 2",
+        "registered": "Registered",
+        "remaining_outstanding": 0,
+        "total_issued": 16000,
+        "exercise_price": 50.0,
+        "known_owners": [],
+        "underwriter": "Aegis",
+        "price_protection": "Alternate Cashless",
+        "pp_clause_text": "Cashless after 60 days for 0.5 shares per warrant",
+        "exercisable_date": "2022-12-20",
+        "expiration_date": "2023-12-20"
+      }
+    ],
+    "convertible": [],
+    "convertible_preferred": [
+      {
+        "issue_date": "2024-08-13",
+        "title_contains": "August 2024 EIB Preferred",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 364000,
+        "principal_remaining": 34000000,
+        "conversion_price": 93.4,
+        "total_shares_issuable": 364000,
+        "principal_total": 34000000,
+        "known_owners": [
+          "EIB"
+        ],
+        "underwriter": null,
+        "price_protection": "Customary Anti-Dilution",
+        "convertible_date": "2024-08-13",
+        "maturity_date": null
+      }
+    ],
+    "atm": [
+      {
+        "agreement_start_date": "2020-10-02",
+        "title_contains": "October 2020 BofA ATM",
+        "registered": "Registered",
+        "remaining_capacity": 2511056,
+        "total_capacity": 100000000,
+        "limited_by_baby_shelf": "Yes",
+        "remaining_without_baby_shelf": 100000000,
+        "placement_agent": "BofA, Citi, Credit Suisse"
+      }
+    ],
+    "equity_line": [
+      {
+        "agreement_start_date": "2025-09-10",
+        "title_contains": "September 2025 YA II",
+        "registered": "Registered",
+        "remaining_capacity": 15000000,
+        "total_capacity": 15000000,
+        "agreement_end_date": "2028-09-10",
+        "terminated": false
+      },
+      {
+        "agreement_start_date": "2025-03-03",
+        "title_contains": "March 2025 YA II",
+        "registered": "Terminated",
+        "remaining_capacity": 4313000,
+        "total_capacity": 10000000,
+        "agreement_end_date": "2027-03-03",
+        "terminated": true
+      },
+      {
+        "agreement_start_date": "2024-08-20",
+        "title_contains": "August 2024 RK Stone",
+        "registered": "Not Registered",
+        "remaining_capacity": 2000000,
+        "total_capacity": 2000000,
+        "agreement_end_date": "2024-12-31",
+        "terminated": false
+      }
+    ],
+    "s1_offering": [],
+    "shelf": [
+      {
+        "effect_date": "2023-08-25",
+        "title_contains": "August 2023",
+        "registered": "Registered",
+        "current_raisable_amount": 2511056,
+        "total_shelf_capacity": 150000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 1330000,
+        "raised_last_12mo_under_ib6": 0,
+        "highest_60_day_close": 0.85,
+        "last_banker": "HC Wainwright",
+        "expiration_date": "2026-08-25"
+      },
+      {
+        "effect_date": "2020-08-10",
+        "title_contains": "August 2020",
+        "registered": "Registered",
+        "current_raisable_amount": 2511056,
+        "total_shelf_capacity": 150000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 22860002,
+        "raised_last_12mo_under_ib6": 0,
+        "highest_60_day_close": 0.85,
+        "last_banker": "HC Wainwright",
+        "expiration_date": "2023-08-10"
+      }
+    ]
+  }
+}

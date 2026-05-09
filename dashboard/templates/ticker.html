@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}{{ ticker }} — dilution{% endblock %}
+{% block subtitle %}{{ ticker }} — {{ name }}{% endblock %}
+
+{% block content %}
+
+<div class="ticker-header">
+  <div class="left">
+    <div class="symbol">{{ ticker }}</div>
+    <div class="name">{{ name }}</div>
+    <div class="cik">CIK {{ cik }}{% if finviz %} · {{ finviz.exchange }}{% endif %}</div>
+    {% if finviz and (finviz.sector or finviz.industry) %}
+    <div class="muted">{{ finviz.sector or '' }}{% if finviz.industry %} · {{ finviz.industry }}{% endif %}</div>
+    {% endif %}
+  </div>
+  <div class="right">
+    {% if finviz and finviz.price is not none %}
+      <div style="font-size:1.5em;"><strong>${{ '%.2f' % finviz.price }}</strong></div>
+    {% endif %}
+    {% if finviz and finviz.market_cap is not none %}
+      <div class="muted">Mkt cap {{ finviz.market_cap | usd }}</div>
+    {% endif %}
+  </div>
+</div>
+
+{% if cards.s1_offering %}
+<section class="card-section">
+  <h2 class="card-section-title">S-1 Offering</h2>
+  <div class="card-grid">
+    {% for c in cards.s1_offering %}
+      {% with kind='s1_offering' %}{% include "_card.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if cards.warrant %}
+<section class="card-section">
+  <h2 class="card-section-title">Warrant</h2>
+  <div class="card-grid">
+    {% for c in cards.warrant %}
+      {% with kind='warrant' %}{% include "_card.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if cards.convertible %}
+<section class="card-section">
+  <h2 class="card-section-title">Convertible Note</h2>
+  <div class="card-grid">
+    {% for c in cards.convertible %}
+      {% with kind='convertible' %}{% include "_card.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if cards.convertible_preferred %}
+<section class="card-section">
+  <h2 class="card-section-title">Convertible Preferred</h2>
+  <div class="card-grid">
+    {% for c in cards.convertible_preferred %}
+      {% with kind='convertible_preferred' %}{% include "_card.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if cards.atm %}
+<section class="card-section">
+  <h2 class="card-section-title">ATM</h2>
+  <div class="card-grid">
+    {% for c in cards.atm %}
+      {% with kind='atm' %}{% include "_card.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if cards.equity_line %}
+<section class="card-section">
+  <h2 class="card-section-title">Equity Line</h2>
+  <div class="card-grid">
+    {% for c in cards.equity_line %}
+      {% with kind='equity_line' %}{% include "_card.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if cards.shelf %}
+<section class="card-section">
+  <h2 class="card-section-title">Shelf</h2>
+  <div class="card-grid">
+    {% for c in cards.shelf %}
+      {% with kind='shelf' %}{% include "_card.html" %}{% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

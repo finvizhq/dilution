@@ -1,0 +1,469 @@
+/* Finviz-flavored dashboard. Dense, tabular, functional. */
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    line-height: 1.35;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+a { color: #355e93; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar {
+    background: #355e93;
+    color: #fff;
+    padding: 8px 14px;
+    border-bottom: 1px solid #263a5a;
+}
+
+.topbar a { color: #fff; font-weight: bold; }
+.topbar .title { font-size: 16px; }
+.topbar .subtitle { font-size: 10px; opacity: 0.85; margin-left: 10px; }
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 8px 14px 40px;
+}
+
+/* Ticker-page header */
+.ticker-header {
+    border: 1px solid #aaa;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    background: #f0f3f8;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.ticker-header .left { min-width: 50%; }
+.ticker-header .symbol {
+    font-size: 28px;
+    font-weight: bold;
+    color: #355e93;
+}
+.ticker-header .name { font-size: 13px; color: #333; }
+.ticker-header .cik { color: #666; font-size: 10px; }
+.ticker-header .right {
+    text-align: right;
+    font-size: 10px;
+    color: #444;
+}
+
+/* Two-column / three-column grid */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.grid-wide { grid-template-columns: 2fr 1fr; }
+.two-col { grid-template-columns: 1fr 1fr; margin-bottom: 10px; }
+
+/* Key-value flavored table — 3 cols (label / value / muted-help) */
+table.kv td:first-child { width: 35%; }
+table.kv td:nth-child(2) { width: 25%; }
+table.kv td:nth-child(3) { width: 40%; color: #888; font-size: 10px; }
+
+/* Panel style: thin-border rectangle with tight header */
+.panel {
+    border: 1px solid #aaa;
+    background: #fff;
+    margin-bottom: 0;
+}
+.panel .hdr {
+    background: #355e93;
+    color: #fff;
+    padding: 3px 8px;
+    font-weight: bold;
+    font-size: 11px;
+}
+.panel .body { padding: 6px 8px; }
+
+/* Dense table */
+table.tight {
+    border-collapse: collapse;
+    font-size: 11px;
+    width: 100%;
+}
+table.tight th, table.tight td {
+    padding: 2px 6px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+    vertical-align: top;
+}
+table.tight th {
+    background: #f0f0f0;
+    font-weight: bold;
+    color: #333;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid #aaa;
+}
+table.tight tr:hover { background: #f8faff; }
+table.tight td.num, table.tight th.num { text-align: right; font-family: 'Courier New', monospace; }
+table.tight td.mono { font-family: 'Courier New', monospace; }
+
+/* KPI strip for header area */
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1px;
+    background: #aaa;
+    border: 1px solid #aaa;
+    margin-bottom: 10px;
+}
+.kpi {
+    background: #fff;
+    padding: 6px 10px;
+    min-width: 120px;
+}
+.kpi .label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.kpi .val {
+    font-size: 15px;
+    font-weight: bold;
+    color: #000;
+    font-family: 'Courier New', monospace;
+}
+.kpi .sub {
+    font-size: 10px;
+    color: #666;
+}
+
+/* Risk badges, finviz-style pill */
+.pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+}
+.pill-low, .pill-medium {} /* use specific colors below */
+.pill-low { background: #3d863d; }
+.pill-med, .pill-medium { background: #c67e00; }
+.pill-high { background: #b13030; }
+.pill-neutral { background: #666; }
+
+/* DT-style risk strip — five labelled pills across the top */
+.risk-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: #aaa;
+    border: 1px solid #aaa;
+    margin-bottom: 8px;
+}
+.risk-cell {
+    background: #fff;
+    padding: 4px 8px;
+    text-align: center;
+}
+.risk-label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+.risk-pill {
+    display: inline-block;
+    padding: 2px 12px;
+    font-size: 11px;
+}
+
+.risk-detail summary {
+    cursor: pointer;
+    font-size: 11px;
+    color: #355e93;
+    padding: 4px 0;
+    user-select: none;
+}
+.risk-detail summary:hover { text-decoration: underline; }
+
+/* Finviz market-data strip — auto-fit headline numbers row */
+.finviz-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 1px;
+    background: #aaa;
+    border: 1px solid #aaa;
+    margin-bottom: 8px;
+}
+.fv-cell {
+    background: #fff;
+    padding: 4px 8px;
+    text-align: center;
+}
+.fv-label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+.fv-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+.risk-detail ul.factors {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 10px;
+    color: #444;
+}
+.risk-detail ul.factors li { padding: 1px 0; }
+
+/* Event type badges */
+.et {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    background: #e8ecf2;
+    color: #355e93;
+    border: 1px solid #c0c9d9;
+    font-family: 'Courier New', monospace;
+}
+
+.et-split, .et-reverse_split {
+    background: #b13030; color: #fff; border-color: #8f2020;
+}
+.et-atm_sale, .et-equity_line_sale, .et-underwritten_offering,
+.et-registered_direct_offering, .et-private_placement,
+.et-convertible_note_issuance, .et-preferred_issuance,
+.et-warrant_issuance {
+    background: #c67e00; color: #fff; border-color: #9f6100;
+}
+.et-atm_program_established, .et-equity_line_established,
+.et-shelf_registration {
+    background: #4e689c; color: #fff; border-color: #355e93;
+}
+.et-equity_plan_increase, .et-authorized_share_increase {
+    background: #888; color: #fff; border-color: #666;
+}
+.et-warrant_exercise, .et-convertible_note_conversion, .et-preferred_conversion {
+    background: #3d863d; color: #fff; border-color: #2a6a2a;
+}
+
+/* Charts */
+.chart-wrap {
+    padding: 4px 8px 8px;
+    height: 260px;
+    position: relative;
+}
+.chart-wrap canvas { max-height: 240px; }
+
+/* Notes text */
+.notes {
+    color: #444;
+    font-size: 10px;
+    font-style: italic;
+    max-width: 600px;
+}
+
+/* Small helpers */
+.pos { color: #2a6a2a; }
+.neg { color: #b13030; }
+.muted { color: #888; }
+.tiny { font-size: 10px; }
+.strong { font-weight: bold; }
+.right { text-align: right; }
+.nowrap { white-space: nowrap; }
+
+/* Section spacing */
+h2.section {
+    font-size: 13px;
+    color: #355e93;
+    margin: 16px 0 4px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #c0c9d9;
+}
+
+/* Validator warning */
+.warn { color: #c67e00; font-size: 10px; }
+
+/* Events-table filter bar */
+#event-filter-bar { padding: 6px 8px; background: #f8f9fb; border-bottom: 1px solid #c0c9d9; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; padding: 2px 0; }
+.filter-label { font-size: 10px; color: #666; text-transform: uppercase; margin-right: 4px; }
+.filter-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    background: #e8ecf2;
+    color: #355e93;
+    border: 1px solid #c0c9d9;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.4;
+    opacity: 0.6;
+}
+.filter-pill:hover { opacity: 0.9; }
+.filter-pill.active { opacity: 1; outline: 2px solid #355e93; outline-offset: -1px; }
+.filter-pill.filter-all, .filter-pill.range-pill {
+    background: #fff; color: #355e93; border-color: #c0c9d9;
+}
+.filter-pill.filter-all.active, .filter-pill.range-pill.active {
+    background: #355e93; color: #fff; border-color: #263a5a;
+}
+.filter-search {
+    font: inherit;
+    font-size: 11px;
+    padding: 1px 6px;
+    border: 1px solid #c0c9d9;
+    background: #fff;
+    color: #000;
+    width: 200px;
+}
+.filter-search:focus { outline: 1px solid #355e93; }
+#event-count-readout { color: #666; }
+
+/* Collapsed detail sections — keep retail summary tight */
+details.details-section {
+    margin: 16px 0;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    border-radius: 2px;
+}
+details.details-section > summary {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #333;
+    background: #f0f0f0;
+    border-bottom: 1px solid transparent;
+    user-select: none;
+}
+details.details-section[open] > summary {
+    border-bottom: 1px solid #ddd;
+}
+details.details-section > summary:hover { background: #e8e8e8; }
+details.details-section > *:not(summary) { padding: 8px; }
+
+/* KPI tooltip cursor — make tile-level tooltips discoverable */
+.kpi[title] { cursor: help; }
+.kpi .val .pill {
+    margin-left: 6px;
+    vertical-align: middle;
+    font-size: 9px;
+    padding: 1px 5px;
+}
+
+/* DT-style instrument cards */
+.card-section {
+    margin: 18px 0 12px;
+}
+.card-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    margin: 0 0 8px;
+    padding: 0;
+    border: none;
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+}
+.card {
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    border-left: 3px solid #b13030; /* registered = red, like DT */
+    padding: 10px 12px 8px;
+    font-size: 11px;
+    line-height: 1.5;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.03);
+}
+.card-not-registered { border-left-color: #c67e00; }
+.card-shelf { border-left-color: #c67e00; } /* shelves get the orange/yellow accent */
+.card-s1_offering { border-left-color: #b13030; }
+.card-convertible { border-left-color: #c67e00; }
+.card-equity_line { border-left-color: #b13030; }
+.card-atm { border-left-color: #b13030; }
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1px;
+}
+.card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.25;
+    flex: 1;
+    padding-right: 6px;
+}
+.card-edgar {
+    font-size: 10px;
+    color: #355e93;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+}
+.card-subhead {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
+}
+.card-rows { display: block; }
+.card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    padding: 2px 0;
+    border-bottom: 1px dotted #f0f0f0;
+}
+.card-row:last-child { border-bottom: none; }
+.card-row-label {
+    font-size: 10px;
+    color: #666;
+    flex: 0 0 auto;
+    max-width: 65%;
+}
+.card-row-value {
+    font-size: 11px;
+    color: #111;
+    text-align: right;
+    font-weight: 600;
+    flex: 1 1 auto;
+}
+.card-row-value.mono { font-family: 'Courier New', monospace; font-weight: 500; }
+.card-row-value.muted { color: #aaa; font-weight: 400; }
+.card-row-empty .card-row-label { color: #aaa; }
+.card-row-empty .card-row-value { color: #ccc; font-weight: 400; }
+
+footer {
+    margin-top: 30px;
+    padding: 10px 0;
+    color: #888;
+    font-size: 10px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+}

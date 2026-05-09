@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Tracked Tickers{% endblock %}
+{% block subtitle %}Tracked tickers{% endblock %}
+
+{% block content %}
+<h2 class="section">Tracked tickers</h2>
+
+<div class="panel">
+  <table class="tight">
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Company</th>
+        <th>CIK</th>
+        <th class="num">Filings</th>
+        <th class="num">Active instr.</th>
+        <th>Latest filing</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for t in tickers %}
+      <tr>
+        <td><a href="/t/{{ t.ticker }}"><strong>{{ t.ticker }}</strong></a></td>
+        <td>{{ t.name }}</td>
+        <td class="mono muted">{{ t.cik }}</td>
+        <td class="num">{{ t.filings }}</td>
+        <td class="num">{{ t.events }}</td>
+        <td class="mono">{{ t.latest_filing or '—' }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="muted">No tickers tracked yet. Run <code>python run_dilution.py TICKER</code>.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

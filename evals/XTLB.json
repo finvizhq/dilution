@@ -1,0 +1,27 @@
+{
+  "ticker": "XTLB",
+  "source": "DilutionTracker screenshot, manually transcribed",
+  "cards": {
+    "warrant": [
+      {
+        "issue_date": "2024-08-14",
+        "title_contains": "August 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 375000,
+        "total_issued": 375000,
+        "exercise_price": 4.0,
+        "known_owners": [],
+        "underwriter": null,
+        "price_protection": "undisclosed",
+        "exercisable_date": "2024-08-14",
+        "expiration_date": "2029-08-14"
+      }
+    ],
+    "convertible": [],
+    "convertible_preferred": [],
+    "atm": [],
+    "equity_line": [],
+    "shelf": [],
+    "s1_offering": []
+  }
+}

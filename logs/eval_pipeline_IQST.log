@@ -1,0 +1,482 @@
+17:55:27  [IQST]  langfuse: tracing enabled (host=https://cloud.langfuse.com)
+17:55:27  [IQST]  Dilution tracker — ticker=IQST stage=all events_since=2020-05-08
+17:55:27  [IQST]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+17:55:27  [IQST]  resolved IQST → CIK 1527702 IQST (iQSTEL Inc)
+17:55:27  [IQST]  STAGE index
+17:55:27  [IQST]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+17:55:28  [IQST]    198 relevant filings since 2020-05-08
+17:55:28  [IQST]  STAGE unit
+17:55:28  [IQST]    is_fpi=0 (no 20-F / 40-F filings)
+17:55:28  [IQST]    unit ctx — is_fpi=0 ads_ratio=None reporting_unit=common
+17:55:28  [IQST]  STAGE fetch
+17:55:28  [IQST]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+17:55:28  [IQST]    fetch concurrency=3 over 193 filings
+17:55:44  [IQST]  TOC detection found 22 sections
+17:55:44  [IQST]  TOC detection successful: 22 sections found
+17:55:45  [IQST]  All detection strategies failed, no sections found
+17:55:45  [IQST]    10-K/A 0001663577-26-000112 section-select fallback: no sections parsed
+17:55:45  [IQST]    10-K 0001663577-26-000094 sections kept=['part_ii_item_5', 'part_ii_item_7', 'part_ii_item_8', 'part_ii_item_9b', 'part_iii_item_11', 'part_iii_item_12', 'part_iii_item_13'] dropped=15 kept_chars=178410 dropped_chars=145076
+17:55:53  [IQST]    desc-classify keep EX-10.1/ex10_1.htm [0001663577-26-000128]: 'EQUITY PURCHASE AGREEMENT, DATED APRIL 30, 2026, BY AND BETWEEN IQSTEL INC. AND M2B FUNDING CORP.'
+17:55:53  [IQST]    desc-classify keep EX-10.2/ex10_2.htm [0001663577-26-000128]: 'REGISTRATION RIGHTS AGREEMENT, DATED APRIL 30, 2026, BY AND BETWEEN IQSTEL INC. AND M2B FUNDING CORP.'
+17:56:08  [IQST]  TOC detection found 4 sections
+17:56:08  [IQST]  TOC detection successful: 4 sections found
+17:56:09  [IQST]    10-Q 0001663577-25-000314 section-select fallback: kept_chars 2261 below floor 5000
+17:56:11  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-25-000287] → DROP
+17:56:17  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-25-000273] → KEEP
+17:56:23  [IQST]  TOC detection found 4 sections
+17:56:23  [IQST]  TOC detection successful: 4 sections found
+17:56:23  [IQST]    10-Q 0001663577-25-000264 section-select fallback: kept_chars 2170 below floor 5000
+17:56:23  [IQST]    fetched 25/193 filings, 50 docs total (err=0)
+17:56:30  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-25-000222] → KEEP
+17:56:31  [IQST]    classify EX-10.2/ex10_2.htm [0001663577-25-000222] → KEEP
+17:56:31  [IQST]    desc-classify drop EX-10.1/ex10_1.htm [0001663577-25-000215]: 'AMENDED EMPLOYMENT AGREEMENT WITH MR. IGLESIAS, DATED JUNE 23, 2025'
+17:56:31  [IQST]    desc-classify drop EX-10.2/ex10_2.htm [0001663577-25-000215]: 'AMENDED EMPLOYMENT AGREEMENT WITH MR. CARDONA, DATED JUNE 23, 2025'
+17:56:42  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-25-000175] → KEEP
+17:56:48  [IQST]  TOC detection found 4 sections
+17:56:48  [IQST]  TOC detection successful: 4 sections found
+17:56:48  [IQST]    10-Q 0001663577-25-000148 section-select fallback: kept_chars 2484 below floor 5000
+17:56:59  [IQST]  TOC detection found 22 sections
+17:56:59  [IQST]  TOC detection successful: 22 sections found
+17:57:00  [IQST]    10-K 0001663577-25-000086 sections kept=['part_ii_item_5', 'part_ii_item_7', 'part_ii_item_8', 'part_ii_item_9b', 'part_iii_item_11', 'part_iii_item_12', 'part_iii_item_13'] dropped=15 kept_chars=139623 dropped_chars=144409
+17:57:02  [IQST]    fetched 50/193 filings, 99 docs total (err=0)
+17:57:10  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-25-000026] → KEEP
+17:57:12  [IQST]    desc-classify keep EX-10.2/ex10_2.htm [0001663577-25-000026]: 'REGISTRATION RIGHTS AGREEMENT, DATED JANUARY 14, 2025'
+17:57:19  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-24-000273] → KEEP
+17:57:19  [IQST]  TOC detection found 4 sections
+17:57:19  [IQST]  TOC detection successful: 4 sections found
+17:57:19  [IQST]    10-Q 0001663577-24-000281 section-select fallback: kept_chars 2005 below floor 5000
+17:57:21  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-24-000265] → KEEP
+17:57:27  [IQST]  TOC detection found 4 sections
+17:57:27  [IQST]  TOC detection successful: 4 sections found
+17:57:27  [IQST]    10-Q 0001663577-24-000224 section-select fallback: kept_chars 1436 below floor 5000
+17:57:37  [IQST]  TOC detection found 4 sections
+17:57:37  [IQST]  TOC detection successful: 4 sections found
+17:57:37  [IQST]    10-Q 0001663577-24-000133 section-select fallback: kept_chars 1710 below floor 5000
+17:57:46  [IQST]  TOC detection found 22 sections
+17:57:46  [IQST]  TOC detection successful: 22 sections found
+17:57:46  [IQST]    fetched 75/193 filings, 152 docs total (err=0)
+17:57:47  [IQST]    10-K 0001663577-24-000092 sections kept=['part_ii_item_5', 'part_ii_item_7', 'part_ii_item_8', 'part_ii_item_9b', 'part_iii_item_11', 'part_iii_item_12', 'part_iii_item_13'] dropped=15 kept_chars=152149 dropped_chars=447716
+17:57:47  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-24-000071] → DROP
+17:57:48  [IQST]    classify EX-10.2/ex10_2.htm [0001663577-24-000071] → DROP
+17:57:48  [IQST]    classify EX-10.3/ex10_3.htm [0001663577-24-000071] → DROP
+17:57:49  [IQST]    classify EX-10.4/ex10_4.htm [0001663577-24-000071] → DROP
+17:57:50  [IQST]    classify EX-99.11 OPIN COUNSL/ex5_1.htm [0001663577-24-000046] → KEEP
+17:58:04  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-24-000016] → KEEP
+17:58:06  [IQST]    classify EX-10.2/ex10_2.htm [0001663577-24-000016] → KEEP
+17:58:07  [IQST]    classify EX-10.3/ex10_3.htm [0001663577-24-000016] → KEEP
+17:58:13  [IQST]  TOC detection found 4 sections
+17:58:13  [IQST]  TOC detection successful: 4 sections found
+17:58:13  [IQST]    10-Q 0001663577-23-000520 section-select fallback: kept_chars 1102 below floor 5000
+17:58:16  [IQST]  TOC detection found 4 sections
+17:58:16  [IQST]  TOC detection successful: 4 sections found
+17:58:16  [IQST]    10-Q 0001663577-23-000398 section-select fallback: kept_chars 1101 below floor 5000
+17:58:21  [IQST]  TOC detection found 4 sections
+17:58:21  [IQST]  TOC detection successful: 4 sections found
+17:58:21  [IQST]    10-Q 0001663577-23-000243 section-select fallback: kept_chars 1112 below floor 5000
+17:58:26  [IQST]  TOC detection found 20 sections
+17:58:26  [IQST]  TOC detection successful: 20 sections found
+17:58:26  [IQST]    10-K 0001663577-23-000196 sections kept=['part_ii_item_5', 'part_ii_item_7', 'part_ii_item_8', 'part_ii_item_9b', 'part_iii_item_11', 'part_iii_item_12', 'part_iii_item_13'] dropped=13 kept_chars=106163 dropped_chars=69754
+17:58:27  [IQST]    fetched 100/193 filings, 203 docs total (err=0)
+17:58:48  [IQST]  TOC detection found 4 sections
+17:58:48  [IQST]  TOC detection successful: 4 sections found
+17:58:48  [IQST]    10-Q 0001663577-22-000640 section-select fallback: kept_chars 1419 below floor 5000
+17:58:52  [IQST]    classify EX-10.13/ex10_13.htm [0001663577-22-000585] → KEEP
+17:58:56  [IQST]    classify EX-10.13/ex10_13.htm [0001663577-22-000558] → KEEP
+17:58:57  [IQST]  TOC detection found 4 sections
+17:58:57  [IQST]  TOC detection successful: 4 sections found
+17:58:57  [IQST]    10-Q 0001663577-22-000455 section-select fallback: kept_chars 1112 below floor 5000
+17:58:59  [IQST]  TOC detection found 4 sections
+17:58:59  [IQST]  TOC detection successful: 4 sections found
+17:59:00  [IQST]    10-Q 0001663577-22-000303 section-select fallback: kept_chars 975 below floor 5000
+17:59:05  [IQST]    classify EX-10.1/ex10_1.htm [0001663577-22-000259] → KEEP
+17:59:07  [IQST]  TOC detection found 20 sections
+17:59:07  [IQST]  TOC detection successful: 20 sections found
+17:59:08  [IQST]    10-K 0001663577-22-000244 sections kept=['part_ii_item_5', 'part_ii_item_7', 'part_ii_item_8', 'part_ii_item_9b', 'part_iii_item_11', 'part_iii_item_12', 'part_iii_item_13'] dropped=13 kept_chars=154160 dropped_chars=539841
+17:59:15  [IQST]    fetched 125/193 filings, 257 docs total (err=0)
+17:59:38  [IQST]  All 1 candidates for part_i_item_1 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_i_item_1
+17:59:38  [IQST]  Could not find actual section for part_i_item_1 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_i_item_1
+17:59:38  [IQST]  All 1 candidates for part_i_item_3 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_i_item_3
+17:59:38  [IQST]  Could not find actual section for part_i_item_3 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_i_item_3
+17:59:38  [IQST]  All 1 candidates for part_i_item_4 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_i_item_4
+17:59:38  [IQST]  Could not find actual section for part_i_item_4 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_i_item_4
+17:59:38  [IQST]  All 1 candidates for part_ii_item_1 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_ii_item_1
+17:59:38  [IQST]  Could not find actual section for part_ii_item_1 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_ii_item_1
+17:59:38  [IQST]  All 1 candidates for part_ii_item_2 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_ii_item_2
+17:59:38  [IQST]  Could not find actual section for part_ii_item_2 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_ii_item_2
+17:59:38  [IQST]  All 1 candidates for part_ii_item_3 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_ii_item_3
+17:59:38  [IQST]  Could not find actual section for part_ii_item_3 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_ii_item_3
+17:59:38  [IQST]  All 1 candidates for part_ii_item_4 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_ii_item_4
+17:59:38  [IQST]  Could not find actual section for part_ii_item_4 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_ii_item_4
+17:59:38  [IQST]  All 1 candidates for part_ii_item_5 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_ii_item_5
+17:59:38  [IQST]  Could not find actual section for part_ii_item_5 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_ii_item_5
+17:59:38  [IQST]  All 1 candidates for part_ii_item_6 are TOC entries
+17:59:38  [IQST]  Searching HTML after TOC (position 1368323) for part_ii_item_6
+17:59:38  [IQST]  Could not find actual section for part_ii_item_6 in HTML
+17:59:38  [IQST]  Using TOC entries as fallback for part_ii_item_6
+17:59:38  [IQST]  Pattern detection successful: 9 sections found
+17:59:38  [IQST]    10-Q 0001663577-21-000616 section-select fallback: keep-section low confidence: [('part_i_item_1', 0.63)]
+17:59:47  [IQST]  TOC detection found 4 sections
+17:59:47  [IQST]  TOC detection successful: 4 sections found
+17:59:47  [IQST]    10-Q 0001663577-21-000424 section-select fallback: kept_chars 1802 below floor 5000
+17:59:51  [IQST]  All 1 candidates for part_i_item_1 are TOC entries
+17:59:51  [IQST]  Searching HTML after TOC (position 62683) for part_i_item_1
+17:59:51  [IQST]  Could not find actual section for part_i_item_1 in HTML
+17:59:51  [IQST]  Using TOC entries as fallback for part_i_item_1
+17:59:51  [IQST]  All 1 candidates for part_ii_item_1 are TOC entries
+17:59:51  [IQST]  Searching HTML after TOC (position 62683) for part_ii_item_1
+17:59:51  [IQST]  Found actual section for part_ii_item_1 after TOC region
+17:59:51  [IQST]  Pattern detection successful: 9 sections found
+17:59:51  [IQST]    10-Q 0001078782-21-000437 sections kept=['part_i_item_1', 'part_ii_item_2', 'part_ii_item_3', 'part_ii_item_5'] dropped=5 kept_chars=78133 dropped_chars=6484
+17:59:52  [IQST]  All 1 candidates for business are TOC entries
+17:59:52  [IQST]  Searching HTML after TOC (position 63412) for business
+17:59:52  [IQST]  Found actual section for business after TOC region
+17:59:52  [IQST]  All 1 candidates for properties are TOC entries
+17:59:52  [IQST]  Searching HTML after TOC (position 63412) for properties
+17:59:52  [IQST]  Could not find actual section for properties in HTML
+17:59:52  [IQST]  Using TOC entries as fallback for properties
+17:59:52  [IQST]  All 1 candidates for legal_proceedings are TOC entries
+17:59:52  [IQST]  Searching HTML after TOC (position 63412) for legal_proceedings
+17:59:52  [IQST]  Could not find actual section for legal_proceedings in HTML
+17:59:52  [IQST]  Using TOC entries as fallback for legal_proceedings
+17:59:52  [IQST]  All 1 candidates for mda are TOC entries
+17:59:52  [IQST]  Searching HTML after TOC (position 63412) for mda
+17:59:52  [IQST]  Found actual section for mda after TOC region
+17:59:52  [IQST]  All 1 candidates for financial_statements are TOC entries
+17:59:52  [IQST]  Searching HTML after TOC (position 63412) for financial_statements
+17:59:52  [IQST]  Found actual section for financial_statements after TOC region
+17:59:52  [IQST]  All 1 candidates for controls_procedures are TOC entries
+17:59:52  [IQST]  Searching HTML after TOC (position 63412) for controls_procedures
+17:59:52  [IQST]  Found actual section for controls_procedures after TOC region
+17:59:52  [IQST]  Pattern detection successful: 7 sections found
+17:59:52  [IQST]    10-K 0001078782-21-000358 section-select fallback: no keep sections present
+17:59:53  [IQST]    fetched 150/193 filings, 305 docs total (err=0)
+17:59:55  [IQST]    classify EX-10.1/f8k021621_ex10z1.htm [0001078782-21-000149] → KEEP
+17:59:56  [IQST]    classify EX-10.2/f8k021621_ex10z2.htm [0001078782-21-000149] → KEEP
+17:59:56  [IQST]    classify EX-10.3/f8k021621_ex10z3.htm [0001078782-21-000149] → DROP
+17:59:57  [IQST]    classify EX-10.1/f8k011521_ex10z1.htm [0001078782-21-000050] → KEEP
+17:59:57  [IQST]    classify EX-10.2/f8k011521_ex10z2.htm [0001078782-21-000050] → KEEP
+17:59:58  [IQST]    classify EX-10.3/f8k011521_ex10z3.htm [0001078782-21-000050] → KEEP
+18:00:11  [IQST]    classify EX-10.1/f8k112520_ex10z1.htm [0001078782-20-000969] → KEEP
+18:00:16  [IQST]  Pattern detection successful: 9 sections found
+18:00:16  [IQST]    10-Q 0001078782-20-000847 sections kept=['part_i_item_1', 'part_ii_item_2', 'part_ii_item_3', 'part_ii_item_5'] dropped=5 kept_chars=108378 dropped_chars=6227
+18:00:16  [IQST]    desc-classify drop EX-10.1/f8k110120_ex10z1.htm [0001078782-20-000821]: 'EXHIBIT 10.1 AMENDED EMPLOYMENT AGREEMENT WITH MR. IGLESIAS, DATED NOVEMBER1, 2020'
+18:00:16  [IQST]    desc-classify drop EX-10.2/f8k110120_ex10z2.htm [0001078782-20-000821]: 'EXHIBIT 10.2 AMENDED EMPLOYMENT AGREEMENT WITH MR.CARDONA, DATED NOVEMBER 1, 2020'
+18:00:16  [IQST]    desc-classify drop EX-10.3/f8k110120_ex10z3.htm [0001078782-20-000821]: 'EXHIBIT 10.3 AMENDED EMPLOYMENT AGREEMENT WITH MR. SILVA, DATED NOVEMBER 1, 2020'
+18:00:20  [IQST]    fetched 175/193 filings, 355 docs total (err=0)
+18:00:20  [IQST]    classify EX-10.1/f8k090120_ex10z1.htm [0001078782-20-000679] → KEEP
+18:00:21  [IQST]  All 2 candidates for part_i_item_1 are TOC entries
+18:00:21  [IQST]  Searching HTML after TOC (position 60692) for part_i_item_1
+18:00:21  [IQST]  Could not find actual section for part_i_item_1 in HTML
+18:00:21  [IQST]  Using TOC entries as fallback for part_i_item_1
+18:00:21  [IQST]  All 1 candidates for part_ii_item_1 are TOC entries
+18:00:21  [IQST]  Searching HTML after TOC (position 60692) for part_ii_item_1
+18:00:21  [IQST]  Found actual section for part_ii_item_1 after TOC region
+18:00:21  [IQST]  Pattern detection successful: 9 sections found
+18:00:21  [IQST]    10-Q 0001078782-20-000625 sections kept=['part_i_item_1', 'part_ii_item_2', 'part_ii_item_3', 'part_ii_item_5'] dropped=5 kept_chars=99211 dropped_chars=6375
+18:00:21  [IQST]    desc-classify drop EX-10.1/f8k080320_ex10z1.htm [0001078782-20-000581]: 'EXHIBIT 10.1 TERMINATION AND MUTUAL RELEASE AGREEMENT, DATED JUNE 10, 2020'
+18:00:21  [IQST]    desc-classify drop EX-10.2/f8k080320_ex10z2.htm [0001078782-20-000581]: 'EXHIBIT 10.2 AMENDMENT TO TERMINATION AND MUTUAL RELEASE AGREEMENT, DATED JULY 24, 2020'
+18:00:22  [IQST]    classify EX-10.3/f8k080320_ex10z3.htm [0001078782-20-000581] → DROP
+18:00:23  [IQST]    desc-classify drop EX-10.1/f8k062620_ex10z1.htm [0001078782-20-000523]: 'EXHIBIT 10.1 SETTLEMENT AND MUTUAL RELEASE AGREEMENT, DATED JUNE 26, 2020'
+18:00:23  [IQST]  Pattern detection successful: 1 sections found
+18:00:23  [IQST]    10-Q/A 0001078782-20-000508 section-select fallback: no keep sections present
+18:00:25  [IQST]  All 2 candidates for part_i_item_1 are TOC entries
+18:00:25  [IQST]  Searching HTML after TOC (position 60462) for part_i_item_1
+18:00:25  [IQST]  Could not find actual section for part_i_item_1 in HTML
+18:00:25  [IQST]  Using TOC entries as fallback for part_i_item_1
+18:00:25  [IQST]  All 1 candidates for part_ii_item_1 are TOC entries
+18:00:25  [IQST]  Searching HTML after TOC (position 60462) for part_ii_item_1
+18:00:25  [IQST]  Found actual section for part_ii_item_1 after TOC region
+18:00:25  [IQST]  Pattern detection successful: 9 sections found
+18:00:25  [IQST]    10-Q 0001078782-20-000491 sections kept=['part_i_item_1', 'part_ii_item_2', 'part_ii_item_3', 'part_ii_item_5'] dropped=5 kept_chars=89365 dropped_chars=6377
+18:00:28  [IQST]    desc-classify keep EX-10.1/f8k072020_ex10z1.htm [0001078782-20-000555]: 'EXHIBIT 10.1 SECURITIES PURCHASE AGREEMENT, DATED JULY 14, 2020'
+18:00:29  [IQST]    desc-classify keep EX-10.1/f8k052020_ex10z1.htm [0001078782-20-000369]: 'EXHIBIT 10.1 SECURITIES PURCHASE AGREEMENT, DATED MAY 20, 2020'
+18:00:29  [IQST]    desc-classify keep EX-10.1/f8k060320_ex10z1.htm [0001078782-20-000419]: 'EXHIBIT 10.1 SECURITIES PURCHASE AGREEMENT, DATED JUNE 3, 2020'
+18:00:29  [IQST]    fetched 193/193 filings, 393 docs total (err=0)
+18:00:29  [IQST]    fetch done — 193/193 filings, 393 docs, 0 errors
+18:00:29  [IQST]  STAGE walk
+18:00:29  [IQST]  seed: extracting overhang from 10-Q 0001078782-20-000491 (2020-03-31)
+18:00:37  [IQST]    redisclosure: 0001078782-20-000491 create (type=convertible) collapsed onto C-001
+18:00:37  [IQST]  seed: case A — created 3 instruments (rejected 0)
+18:00:37  [IQST]  seed case=A_periodic — 0001078782-20-000491
+18:00:37  [IQST]  walker: 193 filings to walk (cik=1527702)
+18:00:38  [IQST]    [2020-05-08] 8-K 0001078782-20-000310 — 0 mutations
+18:00:39  [IQST]    [2020-05-12] 8-K 0001078782-20-000314 — 0 mutations
+18:00:39  [IQST]    [2020-05-15] 8-K 0001078782-20-000345 — 0 mutations
+18:00:43  [IQST]    [2020-05-26] 8-K 0001078782-20-000369 — 2 mutations
+18:00:44  [IQST]    [2020-05-27] 8-K 0001078782-20-000376 — 1 mutations
+18:00:47  [IQST]    [2020-06-08] 8-K 0001078782-20-000419 — 2 mutations
+18:00:49  [IQST]    [2020-06-09] 8-K 0001078782-20-000424 — 1 mutations
+18:00:49  [IQST]    [2020-06-19] 8-K 0001078782-20-000458 — 0 mutations
+18:00:50  [IQST]    [2020-06-29] 10-Q/A 0001078782-20-000508 — 0 mutations
+18:00:51  [IQST]    [2020-07-01] 8-K 0001078782-20-000517 — 0 mutations
+18:00:52  [IQST]    [2020-07-02] 8-K 0001078782-20-000523 — 0 mutations
+18:00:54  [IQST]    [2020-07-20] 8-K 0001078782-20-000555 — 2 mutations
+18:00:55  [IQST]    [2020-07-22] 8-K 0001078782-20-000557 — 0 mutations
+18:00:56  [IQST]    [2020-07-30] 8-K 0001078782-20-000572 — 0 mutations
+18:00:58  [IQST]    [2020-08-04] 8-K 0001078782-20-000581 — 2 mutations
+18:01:03  [IQST]    [2020-08-13] 10-Q 0001078782-20-000625 — 4 mutations
+18:01:03  [IQST]    anchor 0001078782-20-000625 as_of=2020-06-30
+18:01:17  [IQST]    anchor 0001078782-20-000625 — 9 diffs (missing=3 field=0 count=1 extra=5)
+18:01:17  [IQST]    redisclosure: 0001078782-20-000625 create (type=warrant) collapsed onto W-015
+18:01:17  [IQST]    anchor corrections applied=4 rejected=0
+18:01:18  [IQST]    [2020-08-13] 8-K 0001078782-20-000632 — 0 mutations
+18:01:19  [IQST]    [2020-08-19] 8-K 0001078782-20-000660 — 0 mutations
+18:01:23  [IQST]    [2020-09-04] 8-K 0001078782-20-000679 — 4 mutations
+18:01:24  [IQST]    [2020-11-02] 8-K 0001078782-20-000798 — 0 mutations
+18:01:25  [IQST]    [2020-11-02] 8-K 0001078782-20-000800 — 0 mutations
+18:01:26  [IQST]    [2020-11-04] 8-K 0001078782-20-000806 — 0 mutations
+18:01:28  [IQST]    [2020-11-06] 8-K 0001078782-20-000821 — 1 mutations
+18:01:29  [IQST]    [2020-11-12] 8-K 0001078782-20-000838 — 0 mutations
+18:01:31  [IQST]    [2020-11-13] 10-Q 0001078782-20-000847 — 3 mutations
+18:01:31  [IQST]    anchor 0001078782-20-000847 as_of=2020-09-30
+18:01:39  [IQST]    anchor 0001078782-20-000847 — 11 diffs (missing=1 field=0 count=2 extra=8)
+18:01:39  [IQST]    anchor corrections applied=3 rejected=0
+18:01:41  [IQST]    [2020-11-13] 8-K 0001078782-20-000855 — 1 mutations
+18:01:51  [IQST]    [2020-11-17] 8-K 0001078782-20-000882 — 0 mutations
+18:01:52  [IQST]    [2020-11-19] 8-K 0001078782-20-000893 — 0 mutations
+18:01:53  [IQST]    [2020-12-03] 1-A POS 0001078782-20-000939 — 0 mutations
+18:01:53  [IQST]    [2020-12-10] 8-K 0001078782-20-000964 — 0 mutations
+18:01:55  [IQST]    [2020-12-10] 8-K 0001078782-20-000966 — 1 mutations
+18:01:57  [IQST]    [2020-12-14] 8-K 0001078782-20-000969 — 2 mutations
+18:01:58  [IQST]    [2020-12-18] 8-K 0001078782-20-000980 — 0 mutations
+18:01:59  [IQST]    [2020-12-22] 1-A POS 0001078782-20-000994 — 0 mutations
+18:02:00  [IQST]    [2021-01-08] 8-K 0001078782-21-000021 — 0 mutations
+18:02:01  [IQST]    [2021-01-08] 8-K 0001078782-21-000023 — 1 mutations
+18:02:02  [IQST]    [2021-01-11] 1-A POS 0001078782-21-000025 — 0 mutations
+18:02:03  [IQST]    [2021-01-15] 8-K 0001078782-21-000050 — 0 mutations
+18:02:04  [IQST]    [2021-01-22] 8-K 0001078782-21-000071 — 0 mutations
+18:02:04  [IQST]    [2021-02-03] 8-K 0001078782-21-000090 — 0 mutations
+18:02:07  [IQST]    [2021-02-19] 8-K 0001078782-21-000149 — 3 mutations
+18:02:08  [IQST]    [2021-03-08] 8-K 0001078782-21-000205 — 0 mutations
+18:02:09  [IQST]    [2021-03-18] 8-K 0001078782-21-000251 — 0 mutations
+18:02:09  [IQST]    [2021-03-26] 8-K 0001078782-21-000274 — 0 mutations
+18:02:12  [IQST]    [2021-04-15] 10-K 0001078782-21-000358 — 0 mutations
+18:02:12  [IQST]    [2021-04-20] 8-K 0001078782-21-000378 — 0 mutations
+18:02:16  [IQST]    [2021-05-14] 10-Q 0001078782-21-000437 — 2 mutations
+18:02:16  [IQST]    anchor 0001078782-21-000437 as_of=2021-03-31
+18:02:25  [IQST]    anchor 0001078782-21-000437 — 13 diffs (missing=0 field=0 count=2 extra=11)
+18:02:25  [IQST]    anchor corrections applied=2 rejected=0
+18:02:26  [IQST]    [2021-05-14] 8-K 0001078782-21-000447 — 0 mutations
+18:02:26  [IQST]    [2021-05-20] 8-K 0001078782-21-000471 — 0 mutations
+18:02:27  [IQST]    [2021-06-23] 8-K 0001078782-21-000584 — 0 mutations
+18:02:28  [IQST]    [2021-06-29] 8-K 0001078782-21-000610 — 0 mutations
+18:02:29  [IQST]    [2021-07-13] 1-A POS 0001078782-21-000666 — 0 mutations
+18:02:30  [IQST]    [2021-07-21] 8-K 0001078782-21-000690 — 0 mutations
+18:02:30  [IQST]    [2021-08-09] 8-K 0001663577-21-000382 — 0 mutations
+18:02:32  [IQST]    [2021-08-16] 10-Q 0001663577-21-000424 — 0 mutations
+18:02:33  [IQST]    [2021-08-20] 8-K 0001663577-21-000456 — 0 mutations
+18:02:34  [IQST]    [2021-08-25] 8-K 0001663577-21-000471 — 0 mutations
+18:02:35  [IQST]    [2021-08-27] 8-K 0001663577-21-000481 — 0 mutations
+18:02:36  [IQST]    [2021-10-06] 8-K 0001663577-21-000521 — 1 mutations
+18:02:37  [IQST]    [2021-10-27] 8-K 0001886086-21-000006 — 0 mutations
+18:02:38  [IQST]    [2021-11-15] 10-Q 0001663577-21-000616 — 0 mutations
+18:02:39  [IQST]    [2021-11-16] 8-K 0001663577-21-000630 — 0 mutations
+18:02:40  [IQST]    [2021-11-19] 8-K 0001663577-21-000643 — 0 mutations
+18:02:40  [IQST]    [2021-12-07] 8-K 0001663577-21-000654 — 0 mutations
+18:02:41  [IQST]    [2021-12-20] 8-K 0001663577-21-000689 — 0 mutations
+18:02:42  [IQST]    [2021-12-29] 8-K 0001663577-21-000700 — 0 mutations
+18:02:43  [IQST]    [2022-01-04] 8-K 0001663577-22-000002 — 0 mutations
+18:02:43  [IQST]    [2022-01-07] 8-K 0001663577-22-000014 — 0 mutations
+18:02:44  [IQST]    [2022-01-19] 8-K 0001663577-22-000043 — 0 mutations
+18:02:45  [IQST]    [2022-01-28] 8-K 0001663577-22-000069 — 0 mutations
+18:02:46  [IQST]    [2022-02-23] 8-K 0001663577-22-000109 — 0 mutations
+18:02:47  [IQST]    [2022-02-25] 8-K 0001663577-22-000119 — 0 mutations
+18:02:49  [IQST]    [2022-04-15] 10-K 0001663577-22-000244 — 0 mutations
+18:02:50  [IQST]    [2022-04-18] 8-K 0001663577-22-000248 — 0 mutations
+18:02:53  [IQST]    [2022-04-26] 8-K 0001663577-22-000259 — 1 mutations
+18:02:54  [IQST]    [2022-05-10] 8-K 0001663577-22-000279 — 0 mutations
+18:02:55  [IQST]    [2022-05-13] 8-K 0001663577-22-000297 — 0 mutations
+18:02:57  [IQST]    [2022-05-16] 10-Q 0001663577-22-000303 — 1 mutations
+18:02:57  [IQST]    anchor 0001663577-22-000303 as_of=2022-03-31
+18:03:05  [IQST]    anchor 0001663577-22-000303 — 14 diffs (missing=0 field=0 count=2 extra=12)
+18:03:05  [IQST]    anchor corrections applied=2 rejected=0
+18:03:08  [IQST]    [2022-08-15] 10-Q 0001663577-22-000455 — 1 mutations
+18:03:08  [IQST]    proposed_id W-018 in use — reallocating
+18:03:08  [IQST]    anchor 0001663577-22-000455 as_of=2022-06-30
+18:03:18  [IQST]    anchor 0001663577-22-000455 — 15 diffs (missing=0 field=0 count=2 extra=13)
+18:03:18  [IQST]    anchor corrections applied=2 rejected=0
+18:03:24  [IQST]    [2022-09-02] S-1 0001663577-22-000514 — 2 mutations
+18:03:24  [IQST]    redisclosure: 0001663577-22-000514 create (type=warrant) collapsed onto W-030
+18:03:34  [IQST]    [2022-09-22] S-1/A 0001663577-22-000558 — 2 mutations
+18:03:34  [IQST]    redisclosure: 0001663577-22-000558 create (type=s1_offering) collapsed onto S1-007
+18:03:34  [IQST]    redisclosure: 0001663577-22-000558 create (type=warrant) collapsed onto W-030
+18:03:37  [IQST]    [2022-10-05] 8-K 0001663577-22-000574 — 1 mutations
+18:03:37  [IQST]    redisclosure: 0001663577-22-000574 create (type=warrant) collapsed onto W-030
+18:03:42  [IQST]    [2022-10-06] 8-K/A 0001663577-22-000578 — 1 mutations
+18:03:49  [IQST]  walker 0001663577-22-000585 — guard dropped duplicate create warrant (matches existing W-034 strike=2.0 created=2022-09-28)
+18:03:49  [IQST]  walker 0001663577-22-000585 — guards dropped 1 dup-creates, 0 equity-on-shelf
+18:03:49  [IQST]    [2022-10-11] S-1/A 0001663577-22-000585 — 2 mutations
+18:03:49  [IQST]    redisclosure: 0001663577-22-000585 create (type=s1_offering) collapsed onto S1-007
+18:03:50  [IQST]    [2022-11-02] 8-K 0001663577-22-000612 — 0 mutations
+18:03:53  [IQST]    [2022-11-14] 10-Q 0001663577-22-000640 — 1 mutations
+18:03:53  [IQST]    redisclosure: 0001663577-22-000640 create (type=warrant) collapsed onto W-030
+18:03:53  [IQST]    anchor 0001663577-22-000640 as_of=2022-09-30
+18:04:03  [IQST]    anchor 0001663577-22-000640 — 17 diffs (missing=1 field=0 count=2 extra=14)
+18:04:03  [IQST]    anchor corrections applied=3 rejected=0
+18:04:04  [IQST]    [2022-11-16] 8-K 0001663577-22-000665 — 0 mutations
+18:04:05  [IQST]    [2022-11-18] 8-K 0001663577-22-000672 — 0 mutations
+18:04:06  [IQST]    [2022-12-14] 8-K 0001663577-22-000700 — 0 mutations
+18:04:13  [IQST]    [2022-12-16] S-1 0001663577-22-000711 — 3 mutations
+18:04:13  [IQST]    redisclosure: 0001663577-22-000711 create (type=warrant) collapsed onto W-030
+18:04:13  [IQST]    remap record_event instrument_id W-040 → W-030
+18:04:13  [IQST]    remap record_event instrument_id W-040 → W-030
+18:04:14  [IQST]    [2023-01-24] 8-K 0001663577-23-000027 — 0 mutations
+18:04:15  [IQST]    [2023-02-06] 8-K 0001663577-23-000063 — 0 mutations
+18:04:19  [IQST]    [2023-02-10] S-1/A 0001663577-23-000070 — 0 mutations
+18:04:20  [IQST]    [2023-03-21] 8-K 0001663577-23-000118 — 0 mutations
+18:04:23  [IQST]    [2023-04-14] 10-K 0001663577-23-000196 — 1 mutations
+18:04:23  [IQST]    anchor 0001663577-23-000196 as_of=2022-12-31
+18:04:33  [IQST]    anchor 0001663577-23-000196 — 16 diffs (missing=0 field=0 count=3 extra=13)
+18:04:33  [IQST]    anchor corrections applied=3 rejected=0
+18:04:34  [IQST]    [2023-04-20] 8-K 0001663577-23-000201 — 0 mutations
+18:04:36  [IQST]    [2023-05-15] 10-Q 0001663577-23-000243 — 1 mutations
+18:04:36  [IQST]    anchor 0001663577-23-000243 as_of=2023-03-31
+18:04:43  [IQST]    anchor 0001663577-23-000243 — 17 diffs (missing=0 field=0 count=3 extra=14)
+18:04:43  [IQST]    anchor corrections applied=3 rejected=0
+18:04:44  [IQST]    [2023-06-13] 8-K 0001663577-23-000305 — 0 mutations
+18:04:48  [IQST]    [2023-07-12] S-1/A 0001663577-23-000345 — 0 mutations
+18:04:49  [IQST]    [2023-07-19] 8-K 0001663577-23-000360 — 0 mutations
+18:04:51  [IQST]    [2023-08-14] 10-Q 0001663577-23-000398 — 1 mutations
+18:04:51  [IQST]    anchor 0001663577-23-000398 as_of=2023-06-30
+18:05:04  [IQST]    anchor 0001663577-23-000398 — 18 diffs (missing=1 field=0 count=3 extra=14)
+18:05:04  [IQST]    anchor corrections applied=4 rejected=0
+18:05:08  [IQST]    [2023-08-25] S-1/A 0001663577-23-000447 — 0 mutations
+18:05:09  [IQST]    [2023-09-13] 8-K 0001663577-23-000468 — 0 mutations
+18:05:12  [IQST]    [2023-11-14] 10-Q 0001663577-23-000520 — 3 mutations
+18:05:12  [IQST]    anchor 0001663577-23-000520 as_of=2023-09-30
+18:05:22  [IQST]    anchor 0001663577-23-000520 — 17 diffs (missing=0 field=0 count=2 extra=15)
+18:05:22  [IQST]    anchor corrections applied=2 rejected=0
+18:05:23  [IQST]    [2023-12-28] DEF 14A 0001663577-23-000569 — 0 mutations
+18:05:24  [IQST]    [2024-01-02] 8-K 0001663577-24-000002 — 0 mutations
+18:05:31  [IQST]    [2024-01-25] 8-K 0001663577-24-000016 — 1 mutations
+18:05:32  [IQST]    [2024-01-25] 8-K 0001663577-24-000018 — 0 mutations
+18:05:33  [IQST]    [2024-01-29] 8-K 0001663577-24-000023 — 0 mutations
+18:05:34  [IQST]    [2024-01-30] 8-K/A 0001663577-24-000029 — 0 mutations
+18:05:35  [IQST]    [2024-02-05] 8-K 0001663577-24-000031 — 0 mutations
+18:05:35  [IQST]    [2024-02-06] 8-K 0001663577-24-000037 — 0 mutations
+18:05:36  [IQST]    [2024-02-08] 8-K/A 0001663577-24-000039 — 0 mutations
+18:05:38  [IQST]    [2024-02-13] S-1 0001663577-24-000046 — 0 mutations
+18:05:44  [IQST]    [2024-02-13] 8-K 0001663577-24-000044 — 1 mutations
+18:05:44  [IQST]    [2024-03-04] 8-K 0001663577-24-000071 — 0 mutations
+18:05:45  [IQST]    [2024-03-05] 8-K 0001663577-24-000075 — 0 mutations
+18:05:50  [IQST]    [2024-04-01] 10-K 0001663577-24-000092 — 2 mutations
+18:05:50  [IQST]    anchor 0001663577-24-000092 as_of=2023-12-31
+18:06:00  [IQST]    anchor 0001663577-24-000092 — 21 diffs (missing=0 field=0 count=3 extra=18)
+18:06:00  [IQST]    anchor corrections applied=3 rejected=0
+18:06:01  [IQST]    [2024-04-02] 8-K 0001663577-24-000097 — 0 mutations
+18:06:03  [IQST]    [2024-04-12] S-1/A 0001663577-24-000106 — 1 mutations
+18:06:04  [IQST]    [2024-04-12] 8-K 0001663577-24-000108 — 0 mutations
+18:06:05  [IQST]    [2024-05-10] 8-K 0001663577-24-000127 — 0 mutations
+18:06:08  [IQST]    [2024-05-15] 10-Q 0001663577-24-000133 — 2 mutations
+18:06:08  [IQST]    anchor 0001663577-24-000133 as_of=2024-03-31
+18:06:16  [IQST]    anchor 0001663577-24-000133 — 21 diffs (missing=0 field=0 count=5 extra=16)
+18:06:16  [IQST]    anchor corrections applied=5 rejected=0
+18:06:17  [IQST]    [2024-06-05] 424B7 0001663577-24-000153 — 0 mutations
+18:06:18  [IQST]    [2024-06-05] 8-K 0001663577-24-000150 — 0 mutations
+18:06:19  [IQST]    [2024-07-02] 8-K 0001663577-24-000163 — 0 mutations
+18:06:20  [IQST]    [2024-07-12] 8-K 0001663577-24-000194 — 0 mutations
+18:06:21  [IQST]    [2024-07-16] 8-K 0001663577-24-000200 — 0 mutations
+18:06:22  [IQST]    [2024-08-06] 8-K 0001663577-24-000219 — 0 mutations
+18:06:25  [IQST]    [2024-08-14] 10-Q 0001663577-24-000224 — 2 mutations
+18:06:26  [IQST]    anchor 0001663577-24-000224 as_of=2024-06-30
+18:06:38  [IQST]    anchor 0001663577-24-000224 — 23 diffs (missing=1 field=1 count=2 extra=19)
+18:06:38  [IQST]    anchor corrections applied=4 rejected=0
+18:06:40  [IQST]    [2024-08-21] 8-K 0001663577-24-000242 — 0 mutations
+18:06:40  [IQST]    [2024-08-29] 8-K 0001663577-24-000244 — 0 mutations
+18:06:41  [IQST]    [2024-09-12] 8-K 0001663577-24-000251 — 0 mutations
+18:06:44  [IQST]    [2024-10-22] 8-K 0001663577-24-000265 — 3 mutations
+18:06:45  [IQST]    [2024-11-04] 8-K 0001663577-24-000273 — 0 mutations
+18:06:48  [IQST]    [2024-11-14] 10-Q 0001663577-24-000281 — 2 mutations
+18:06:48  [IQST]    anchor 0001663577-24-000281 as_of=2024-09-30
+18:07:10  [IQST]    anchor 0001663577-24-000281 — 27 diffs (missing=4 field=0 count=4 extra=19)
+18:07:10  [IQST]    redisclosure: 0001663577-24-000281 create (type=convertible) collapsed onto C-021
+18:07:10  [IQST]    anchor corrections applied=8 rejected=0
+18:07:11  [IQST]    [2024-12-27] DEF 14A 0001663577-24-000307 — 0 mutations
+18:07:12  [IQST]    [2025-01-06] 8-K 0001663577-25-000005 — 0 mutations
+18:07:16  [IQST]    [2025-01-17] S-1 0001663577-25-000029 — 1 mutations
+18:07:19  [IQST]    [2025-01-17] 8-K 0001663577-25-000026 — 1 mutations
+18:07:19  [IQST]    [2025-01-21] 8-K 0001663577-25-000031 — 0 mutations
+18:07:20  [IQST]    [2025-02-04] 8-K 0001663577-25-000041 — 0 mutations
+18:07:21  [IQST]    [2025-03-13] 8-K 0001663577-25-000069 — 0 mutations
+18:07:22  [IQST]    [2025-03-21] 8-K 0001663577-25-000081 — 0 mutations
+18:07:26  [IQST]    [2025-03-31] 10-K 0001663577-25-000086 — 4 mutations
+18:07:26  [IQST]    anchor 0001663577-25-000086 as_of=2024-12-31
+18:07:39  [IQST]    anchor 0001663577-25-000086 — 27 diffs (missing=0 field=0 count=2 extra=25)
+18:07:39  [IQST]    anchor corrections applied=2 rejected=0
+18:07:43  [IQST]    [2025-04-02] S-1/A 0001663577-25-000092 — 1 mutations
+18:07:44  [IQST]    [2025-04-03] 8-K 0001663577-25-000094 — 0 mutations
+18:07:45  [IQST]    [2025-05-02] 8-K 0001663577-25-000118 — 1 mutations
+18:07:46  [IQST]    [2025-05-02] 8-K 0001663577-25-000121 — 1 mutations
+18:07:47  [IQST]    [2025-05-06] 8-K 0001663577-25-000124 — 0 mutations
+18:07:48  [IQST]    [2025-05-08] 8-K 0001663577-25-000126 — 0 mutations
+18:07:49  [IQST]    [2025-05-13] 8-K 0001663577-25-000133 — 0 mutations
+18:07:51  [IQST]    [2025-05-15] 10-Q 0001663577-25-000148 — 2 mutations
+18:07:51  [IQST]    anchor 0001663577-25-000148 as_of=2025-03-31
+18:08:11  [IQST]    anchor 0001663577-25-000148 — 29 diffs (missing=5 field=0 count=2 extra=22)
+18:08:11  [IQST]    anchor corrections applied=7 rejected=0
+18:08:12  [IQST]    [2025-05-15] 8-K 0001663577-25-000151 — 0 mutations
+18:08:12  [IQST]    [2025-05-22] 8-K 0001663577-25-000158 — 0 mutations
+18:08:14  [IQST]    [2025-05-30] 8-K 0001663577-25-000175 — 0 mutations
+18:08:15  [IQST]    [2025-06-03] 8-K 0001663577-25-000179 — 1 mutations
+18:08:16  [IQST]    [2025-06-03] 8-K 0001663577-25-000181 — 0 mutations
+18:08:17  [IQST]    [2025-06-11] 8-K 0001663577-25-000191 — 1 mutations
+18:08:18  [IQST]    [2025-06-11] 8-K 0001663577-25-000193 — 0 mutations
+18:08:18  [IQST]    [2025-06-11] 8-K 0001663577-25-000195 — 0 mutations
+18:08:20  [IQST]    [2025-06-25] 8-K 0001663577-25-000215 — 1 mutations
+18:08:21  [IQST]    [2025-06-25] 8-K 0001663577-25-000217 — 0 mutations
+18:08:27  [IQST]    [2025-07-09] 8-K 0001663577-25-000222 — 4 mutations
+18:08:27  [IQST]    redisclosure: 0001663577-25-000222 create (type=preferred) collapsed onto P-020
+18:08:28  [IQST]    [2025-07-17] 8-K 0001663577-25-000243 — 0 mutations
+18:08:28  [IQST]    [2025-07-21] 8-K 0001663577-25-000247 — 0 mutations
+18:08:29  [IQST]    [2025-07-31] 8-K 0001663577-25-000249 — 0 mutations
+18:08:30  [IQST]    [2025-08-07] 8-K 0001663577-25-000256 — 0 mutations
+18:08:32  [IQST]    [2025-08-14] 10-Q 0001663577-25-000264 — 1 mutations
+18:08:32  [IQST]    anchor 0001663577-25-000264 as_of=2025-06-30
+18:08:41  [IQST]    anchor 0001663577-25-000264 — 33 diffs (missing=0 field=0 count=3 extra=30)
+18:08:41  [IQST]    anchor corrections applied=3 rejected=0
+18:08:42  [IQST]    [2025-08-14] 8-K 0001663577-25-000267 — 0 mutations
+18:08:43  [IQST]    [2025-08-27] 8-K 0001663577-25-000271 — 0 mutations
+18:08:44  [IQST]    [2025-09-03] 8-K 0001663577-25-000273 — 0 mutations
+18:08:45  [IQST]    [2025-09-19] 8-K 0001663577-25-000281 — 0 mutations
+18:08:46  [IQST]    [2025-09-19] 8-K 0001663577-25-000284 — 0 mutations
+18:08:46  [IQST]    [2025-09-26] 8-K 0001663577-25-000287 — 0 mutations
+18:08:48  [IQST]    [2025-10-10] 8-K 0001663577-25-000298 — 0 mutations
+18:08:48  [IQST]    [2025-10-10] 8-K 0001663577-25-000299 — 0 mutations
+18:08:51  [IQST]    [2025-11-14] 10-Q 0001663577-25-000314 — 1 mutations
+18:08:51  [IQST]    anchor 0001663577-25-000314 as_of=2025-09-30
+18:09:02  [IQST]    anchor 0001663577-25-000314 — 34 diffs (missing=0 field=0 count=4 extra=30)
+18:09:02  [IQST]    anchor corrections applied=4 rejected=0
+18:09:03  [IQST]    [2025-11-17] 8-K 0001663577-25-000326 — 0 mutations
+18:09:03  [IQST]    [2025-12-02] 8-K 0001663577-25-000340 — 0 mutations
+18:09:04  [IQST]    [2025-12-11] 8-K 0001663577-25-000351 — 0 mutations
+18:09:05  [IQST]    [2025-12-15] 8-K 0001663577-25-000353 — 0 mutations
+18:09:06  [IQST]    [2025-12-17] 8-K 0001663577-25-000355 — 0 mutations
+18:09:07  [IQST]    [2025-12-23] DEF 14A 0001663577-25-000357 — 0 mutations
+18:09:08  [IQST]    [2026-02-03] 8-K 0001663577-26-000034 — 0 mutations
+18:09:08  [IQST]    [2026-02-04] 8-K 0001663577-26-000039 — 0 mutations
+18:09:09  [IQST]    [2026-03-06] 8-K 0001663577-26-000059 — 0 mutations
+18:09:15  [IQST]    [2026-04-06] 10-K 0001663577-26-000094 — 5 mutations
+18:09:15  [IQST]    anchor 0001663577-26-000094 as_of=2025-12-31
+18:09:23  [IQST]    anchor 0001663577-26-000094 — 34 diffs (missing=0 field=0 count=1 extra=33)
+18:09:23  [IQST]    anchor corrections applied=1 rejected=0
+18:09:24  [IQST]    [2026-04-10] 8-K 0001663577-26-000100 — 0 mutations
+18:09:24  [IQST]    [2026-04-23] 10-K/A 0001663577-26-000112 — 0 mutations
+18:09:25  [IQST]    [2026-05-01] 8-K 0001663577-26-000126 — 0 mutations
+18:09:28  [IQST]    [2026-05-01] 8-K 0001663577-26-000128 — 1 mutations
+18:09:28  [IQST]    walk done — seed=A_periodic walked=54 skipped=138 applied=151 rejected=8 created=49 drawdowns=0 anchor_diffs=396 errors=0

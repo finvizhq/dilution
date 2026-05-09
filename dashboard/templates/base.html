@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}Dilution Dashboard{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <span class="title"><a href="/">dilution</a></span>
+  <span class="subtitle">{% block subtitle %}{% endblock %}</span>
+</div>
+<div class="container">
+  {% block content %}{% endblock %}
+</div>
+<footer>
+  Data: SEC EDGAR via <code>edgartools</code> · Extraction: grok-4-fast · {{ now }}
+</footer>
+</body>
+</html>

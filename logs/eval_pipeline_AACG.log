@@ -1,0 +1,158 @@
+18:06:34  [AACG]  langfuse: tracing enabled (host=https://cloud.langfuse.com)
+18:06:34  [AACG]  Dilution tracker — ticker=AACG stage=all events_since=2020-05-08
+18:06:34  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+18:06:35  [AACG]  resolved AACG → CIK 1420529 AACG (ATA Creativity Global)
+18:06:35  [AACG]  STAGE index
+18:06:35  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+18:06:35  [AACG]    66 relevant filings since 2020-05-08
+18:06:35  [AACG]  STAGE unit
+18:06:35  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+18:06:40  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+18:06:43  [AACG]    ads_ratio=2 for 0001104659-26-037267 — Securities registered or to be registered pursuant to Section 12(b) of the Act: Title of each class American Depositary Shares, each representing two common shares, par value $0.01 per share.
+18:06:43  [AACG]    unit ctx — is_fpi=1 ads_ratio=2.0 reporting_unit=ads
+18:06:43  [AACG]  STAGE fetch
+18:06:43  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+18:06:43  [AACG]    fetch concurrency=3 over 64 filings
+18:06:44  [AACG]    classify PRIMARY/tm269574d1_6k.htm [0001104659-26-034830] → KEEP
+18:06:45  [AACG]    classify PRIMARY/tm265071d1_6k.htm [0001104659-26-009965] → DROP
+18:06:46  [AACG]    classify PRIMARY/tm264038d1_6k.htm [0001104659-26-007470] → KEEP
+18:06:46  [AACG]  TOC detection found 31 sections
+18:06:46  [AACG]  TOC detection successful: 31 sections found
+18:06:47  [AACG]    classify PRIMARY/tm2612720d1_6k.htm [0001104659-26-056258] → DROP
+18:06:49  [AACG]    20-F 0001104659-26-037267 sections kept=['part_i_item_10', 'part_ii_item_13', 'part_ii_item_14', 'part_iii_item_17', 'part_iii_item_18', 'part_i_item_3', 'part_i_item_5', 'part_i_item_6', 'part_i_item_7', 'part_i_item_8'] dropped=21 kept_chars=430626 dropped_chars=358607
+18:07:02  [AACG]    classify PRIMARY/tm2532367d1_6k.htm [0001104659-25-117867] → KEEP
+18:07:03  [AACG]    classify PRIMARY/tm2531330d2_6k.htm [0001104659-25-113209] → KEEP
+18:07:04  [AACG]    classify PRIMARY/tm2530873d1_6k.htm [0001104659-25-110495] → DROP
+18:07:05  [AACG]    classify PRIMARY/tm2528886d1_6k.htm [0001104659-25-100867] → DROP
+18:07:06  [AACG]    classify PRIMARY/aacg-20251117x6k.htm [0001104659-25-113200] → DROP
+18:07:06  [AACG]    classify PRIMARY/tm2522603d1_6k.htm [0001104659-25-074761] → DROP
+18:07:07  [AACG]    classify PRIMARY/tm2522467d1_6ka.htm [0001104659-25-073268] → KEEP
+18:07:07  [AACG]    classify PRIMARY/tm2522334d1_6k.htm [0001104659-25-073110] → KEEP
+18:07:08  [AACG]    classify PRIMARY/tm2515524d1_6k.htm [0001104659-25-050225] → DROP
+18:07:08  [AACG]    classify PRIMARY/tm2515058d1_6k.htm [0001104659-25-049786] → DROP
+18:07:09  [AACG]    classify PRIMARY/tm2514924d1_6k.htm [0001104659-25-048600] → DROP
+18:07:10  [AACG]    classify PRIMARY/tm2510111d1_6k.htm [0001104659-25-027816] → DROP
+18:07:11  [AACG]    classify PRIMARY/tm256692d1_6k.htm [0001104659-25-014440] → DROP
+18:07:16  [AACG]  TOC detection found 31 sections
+18:07:16  [AACG]  TOC detection successful: 31 sections found
+18:07:20  [AACG]    20-F 0001410578-25-000679 sections kept=['part_i_item_10', 'part_ii_item_13', 'part_ii_item_14', 'part_iii_item_17', 'part_iii_item_18', 'part_i_item_3', 'part_i_item_5', 'part_i_item_6', 'part_i_item_7', 'part_i_item_8'] dropped=21 kept_chars=432845 dropped_chars=345339
+18:07:25  [AACG]    classify PRIMARY/tm2427522d1_6k.htm [0001104659-24-115370] → DROP
+18:07:25  [AACG]    classify PRIMARY/tm2429803d1_6k.htm [0001104659-24-124819] → KEEP
+18:07:26  [AACG]    classify PRIMARY/tm2426267d1_6k.htm [0001104659-24-109881] → DROP
+18:07:26  [AACG]    classify PRIMARY/tm2429881d1_6k.htm [0001104659-24-124894] → KEEP
+18:07:27  [AACG]    classify PRIMARY/tm2420970d1_6k.htm [0001104659-24-086803] → DROP
+18:07:27  [AACG]    fetched 22/64 filings, 50 docs total (err=0)
+18:07:27  [AACG]    classify PRIMARY/tm2416130d1_6k.htm [0001104659-24-067846] → DROP
+18:07:28  [AACG]    classify PRIMARY/tm2414247d1_6k.htm [0001104659-24-062184] → KEEP
+18:07:29  [AACG]    classify PRIMARY/tm249661d1_6k.htm [0001104659-24-039100] → KEEP
+18:07:38  [AACG]  TOC detection found 31 sections
+18:07:38  [AACG]  TOC detection successful: 31 sections found
+18:07:40  [AACG]    classify PRIMARY/tm2333923d1_6k.htm [0001104659-23-130220] → DROP
+18:07:40  [AACG]    classify PRIMARY/tm2332890d1_6k.htm [0001104659-23-126382] → DROP
+18:07:40  [AACG]    20-F 0001104659-24-045459 sections kept=['part_i_item_10', 'part_ii_item_13', 'part_ii_item_14', 'part_iii_item_17', 'part_iii_item_18', 'part_i_item_3', 'part_i_item_5', 'part_i_item_6', 'part_i_item_7', 'part_i_item_8'] dropped=21 kept_chars=438856 dropped_chars=356543
+18:07:41  [AACG]    classify PRIMARY/tm2331923d1_6k.htm [0001104659-23-123397] → KEEP
+18:07:41  [AACG]    classify PRIMARY/tm2330415d1_6k.htm [0001104659-23-117311] → KEEP
+18:07:42  [AACG]    classify PRIMARY/tm2328682d1_6k.htm [0001104659-23-110534] → DROP
+18:07:42  [AACG]    classify PRIMARY/d520605d6k.htm [0001193125-23-209156] → DROP
+18:07:43  [AACG]    classify PRIMARY/d524774d6k.htm [0001193125-23-180912] → DROP
+18:07:43  [AACG]    classify PRIMARY/d462938d6k.htm [0001193125-23-142143] → DROP
+18:07:45  [AACG]    classify PRIMARY/d366763d6k.htm [0001193125-23-085732] → KEEP
+18:07:56  [AACG]  TOC detection found 29 sections
+18:07:56  [AACG]  TOC detection successful: 29 sections found
+18:07:56  [AACG]    classify PRIMARY/d396847d6k.htm [0001193125-22-295474] → KEEP
+18:07:57  [AACG]    classify PRIMARY/d416933d6k.htm [0001193125-22-296984] → DROP
+18:07:58  [AACG]    classify PRIMARY/d412926d6k.htm [0001193125-22-265348] → DROP
+18:07:58  [AACG]    classify PRIMARY/d396323d6ka.htm [0001193125-22-270975] → DROP
+18:07:58  [AACG]    20-F 0001193125-23-098383 sections kept=['part_i_item_6', 'part_i_item_7', 'part_i_item_8', 'part_i_item_10', 'part_ii_item_13', 'part_ii_item_14', 'part_iii_item_17', 'part_iii_item_18', 'part_i_item_3', 'part_i_item_5'] dropped=19 kept_chars=454606 dropped_chars=383277
+18:07:59  [AACG]    classify PRIMARY/aacg-6k_20220606.htm [0001564590-22-022530] → DROP
+18:07:59  [AACG]    classify PRIMARY/d388294d6k.htm [0001193125-22-218899] → KEEP
+18:08:00  [AACG]    classify PRIMARY/aacg-6k_20220331.htm [0001564590-22-019935] → DROP
+18:08:00  [AACG]    classify PRIMARY/aacg-6k_20220506.htm [0001564590-22-018453] → DROP
+18:08:01  [AACG]    classify PRIMARY/aacg-6k_20211231.htm [0001564590-22-010901] → DROP
+18:08:12  [AACG]    classify PRIMARY/aacg-6k_20211203.htm [0001564590-21-059263] → DROP
+18:08:12  [AACG]    fetched 45/64 filings, 99 docs total (err=0)
+18:08:13  [AACG]    classify PRIMARY/aacg-6k_20210930.htm [0001564590-21-056264] → DROP
+18:08:13  [AACG]    classify PRIMARY/aacg-6k_20211022.htm [0001564590-21-051485] → DROP
+18:08:13  [AACG]  TOC detection found 29 sections
+18:08:13  [AACG]  TOC detection successful: 29 sections found
+18:08:14  [AACG]    classify PRIMARY/aacg-6k_20210331.htm [0001564590-21-027634] → DROP
+18:08:14  [AACG]    classify PRIMARY/aacg-6k_20210630.htm [0001564590-21-044159] → DROP
+18:08:16  [AACG]    20-F 0001564590-22-015529 sections kept=['part_i_item_10', 'part_ii_item_13', 'part_ii_item_14', 'part_iii_item_17', 'part_iii_item_18', 'part_i_item_3', 'part_i_item_5', 'part_i_item_6', 'part_i_item_7', 'part_i_item_8'] dropped=19 kept_chars=416514 dropped_chars=347663
+18:08:16  [AACG]    classify PRIMARY/aacg-6k_20201231.htm [0001564590-21-016200] → DROP
+18:08:23  [AACG]  TOC detection found 28 sections
+18:08:23  [AACG]  TOC detection successful: 28 sections found
+18:08:25  [AACG]    20-F 0001564590-21-018581 sections kept=['part_i_item_10', 'part_ii_item_13', 'part_ii_item_14', 'part_iii_item_17', 'part_iii_item_18', 'part_i_item_3', 'part_i_item_5', 'part_i_item_6', 'part_i_item_7', 'part_i_item_8'] dropped=18 kept_chars=323999 dropped_chars=386283
+18:08:28  [AACG]    classify PRIMARY/aacg-6k_20201218.htm [0001564590-20-057529] → DROP
+18:08:28  [AACG]    classify PRIMARY/aacg-6k_20200930.htm [0001564590-20-053603] → DROP
+18:08:28  [AACG]    classify PRIMARY/aacg-6k_20201105.htm [0001564590-20-050947] → DROP
+18:08:29  [AACG]    classify PRIMARY/aacg-6k_20200630.htm [0001564590-20-039759] → DROP
+18:08:29  [AACG]    classify PRIMARY/aacg-6k_20200331.htm [0001564590-20-025549] → DROP
+18:08:30  [AACG]    classify PRIMARY/aacg-6k_20200514.htm [0001564590-20-025524] → DROP
+18:08:30  [AACG]    fetched 59/64 filings, 137 docs total (err=0)
+18:08:30  [AACG]    fetch done — 59/64 filings, 137 docs, 0 errors
+18:08:30  [AACG]  STAGE walk
+18:08:30  [AACG]  seed: extracting overhang from 20-F 0001564590-21-018581 (2020-12-31)
+18:08:36  [AACG]  seed: 0001564590-21-018581 extracted empty overhang — case C
+18:08:36  [AACG]  seed case=C_empty_extract — 0001564590-21-018581
+18:08:36  [AACG]  walker: 59 filings to walk (cik=1420529)
+18:08:37  [AACG]    [2020-05-14] 6-K 0001564590-20-025524 — 0 mutations
+18:08:38  [AACG]    [2020-05-15] 6-K 0001564590-20-025549 — 0 mutations
+18:08:39  [AACG]    [2020-08-13] 6-K 0001564590-20-039759 — 0 mutations
+18:08:41  [AACG]    [2020-11-05] 6-K 0001564590-20-050947 — 0 mutations
+18:08:42  [AACG]    [2020-11-12] 6-K 0001564590-20-053603 — 0 mutations
+18:08:44  [AACG]    [2020-12-18] 6-K 0001564590-20-057529 — 0 mutations
+18:08:45  [AACG]    [2021-03-30] 6-K 0001564590-21-016200 — 0 mutations
+18:08:47  [AACG]    [2021-04-13] F-3 0001193125-21-113952 — 1 mutations
+18:08:48  [AACG]    [2021-05-13] 6-K 0001564590-21-027634 — 0 mutations
+18:08:49  [AACG]    [2021-08-13] 6-K 0001564590-21-044159 — 0 mutations
+18:08:50  [AACG]    [2021-10-22] 6-K 0001564590-21-051485 — 0 mutations
+18:08:50  [AACG]    [2021-11-10] 6-K 0001564590-21-056264 — 0 mutations
+18:08:51  [AACG]    [2021-12-03] 6-K 0001564590-21-059263 — 0 mutations
+18:08:52  [AACG]    [2022-03-17] 6-K 0001564590-22-010901 — 0 mutations
+18:08:59  [AACG]    [2022-04-26] 20-F 0001564590-22-015529 — 0 mutations
+18:08:59  [AACG]    [2022-05-06] 6-K 0001564590-22-018453 — 0 mutations
+18:09:00  [AACG]    [2022-05-12] 6-K 0001564590-22-019935 — 0 mutations
+18:09:02  [AACG]    [2022-06-06] 6-K 0001564590-22-022530 — 0 mutations
+18:09:03  [AACG]    [2022-08-12] 6-K 0001193125-22-218899 — 0 mutations
+18:09:04  [AACG]    [2022-10-19] 6-K 0001193125-22-265348 — 0 mutations
+18:09:04  [AACG]    [2022-10-27] 6-K/A 0001193125-22-270975 — 0 mutations
+18:09:05  [AACG]    [2022-11-30] 6-K 0001193125-22-295474 — 0 mutations
+18:09:06  [AACG]    [2022-12-02] 6-K 0001193125-22-296984 — 0 mutations
+18:09:07  [AACG]    [2023-03-30] 6-K 0001193125-23-085732 — 0 mutations
+18:09:14  [AACG]    [2023-04-12] 20-F 0001193125-23-098383 — 0 mutations
+18:09:15  [AACG]    [2023-05-11] 6-K 0001193125-23-142143 — 0 mutations
+18:09:15  [AACG]    [2023-07-03] 6-K 0001193125-23-180912 — 0 mutations
+18:09:17  [AACG]    [2023-08-10] 6-K 0001193125-23-209156 — 0 mutations
+18:09:17  [AACG]    [2023-10-20] 6-K 0001104659-23-110534 — 0 mutations
+18:09:18  [AACG]    [2023-11-13] 6-K 0001104659-23-117311 — 0 mutations
+18:09:18  [AACG]    [2023-12-05] 6-K 0001104659-23-123397 — 0 mutations
+18:09:19  [AACG]    [2023-12-15] 6-K 0001104659-23-126382 — 0 mutations
+18:09:20  [AACG]    [2024-03-26] 6-K 0001104659-24-039100 — 0 mutations
+18:09:26  [AACG]    [2024-04-10] 20-F 0001104659-24-045459 — 0 mutations
+18:09:30  [AACG]    [2024-04-25] F-3 0001104659-24-051447 — 1 mutations
+18:09:31  [AACG]    [2024-05-16] 6-K 0001104659-24-062184 — 0 mutations
+18:09:32  [AACG]    [2024-08-07] 6-K 0001104659-24-086803 — 0 mutations
+18:09:33  [AACG]    [2024-10-18] 6-K 0001104659-24-109881 — 0 mutations
+18:09:34  [AACG]    [2024-11-07] 6-K 0001104659-24-115370 — 0 mutations
+18:09:35  [AACG]    [2024-12-03] 6-K 0001104659-24-124819 — 0 mutations
+18:09:35  [AACG]    [2024-12-03] 6-K 0001104659-24-124894 — 0 mutations
+18:09:36  [AACG]    [2025-03-25] 6-K 0001104659-25-027816 — 0 mutations
+18:09:43  [AACG]    [2025-04-10] 20-F 0001410578-25-000679 — 0 mutations
+18:09:44  [AACG]    [2025-05-14] 6-K 0001104659-25-048600 — 0 mutations
+18:09:45  [AACG]    [2025-05-16] 6-K 0001104659-25-049786 — 0 mutations
+18:09:45  [AACG]    [2025-08-01] 6-K 0001104659-25-073110 — 0 mutations
+18:09:46  [AACG]    [2025-08-04] 6-K/A 0001104659-25-073268 — 0 mutations
+18:09:47  [AACG]    [2025-08-06] 6-K 0001104659-25-074761 — 0 mutations
+18:09:48  [AACG]    [2025-10-20] 6-K 0001104659-25-100867 — 0 mutations
+18:09:48  [AACG]    [2025-11-12] 6-K 0001104659-25-110495 — 0 mutations
+18:09:51  [AACG]    [2025-11-17] 6-K 0001104659-25-113200 — 0 mutations
+18:09:53  [AACG]    [2025-11-17] 6-K 0001104659-25-113209 — 1 mutations
+18:09:57  [AACG]    [2025-11-19] 424B5 0001104659-25-114090 — 1 mutations
+18:09:57  [AACG]  drawdown re-disclosure suppressed: instrument=SH-012 date=2025-11-17 amount=8854039.0 accession=0001104659-25-114090
+18:09:58  [AACG]    [2025-12-03] 6-K 0001104659-25-117867 — 0 mutations
+18:09:59  [AACG]    [2026-01-28] 6-K 0001104659-26-007470 — 1 mutations
+18:09:59  [AACG]  drawdown re-disclosure suppressed: instrument=SH-012 date=2026-01-28 amount=8850000.0 accession=0001104659-26-007470
+18:10:00  [AACG]    [2026-03-26] 6-K 0001104659-26-034830 — 0 mutations
+18:10:06  [AACG]    [2026-03-31] 20-F 0001104659-26-037267 — 0 mutations
+18:10:11  [AACG]    [2026-05-06] 6-K 0001104659-26-056258 — 0 mutations
+18:10:11  [AACG]    walk done — seed=C_empty_extract walked=5 skipped=53 applied=5 rejected=0 created=2 drawdowns=1 anchor_diffs=0 errors=0

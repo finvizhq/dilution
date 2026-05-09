@@ -1,0 +1,116 @@
+{
+  "ticker": "FCEL",
+  "source": "DilutionTracker screenshots, manually transcribed",
+  "cards": {
+    "warrant": [],
+    "convertible": [],
+    "convertible_preferred": [
+      {
+        "issue_date": null,
+        "title_contains": "Series 1",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 0,
+        "principal_remaining": 0,
+        "conversion_price": 69.0,
+        "total_shares_issuable": 289855,
+        "principal_total": 20000000,
+        "known_owners": [
+          "Board",
+          "Enbridge"
+        ],
+        "price_protection": "variable_rate"
+      }
+    ],
+    "atm": [
+      {
+        "agreement_start_date": "2025-12-30",
+        "title_contains": "December 2025",
+        "registered": "Registered",
+        "remaining_capacity": 145853000,
+        "total_capacity": 200000000,
+        "limited_by_baby_shelf": "No",
+        "remaining_without_baby_shelf": 145853000,
+        "placement_agent": "Jefferies"
+      },
+      {
+        "agreement_start_date": "2024-04-10",
+        "title_contains": "April 2024",
+        "registered": "Registered",
+        "remaining_capacity": 1100000,
+        "total_capacity": 300000000,
+        "limited_by_baby_shelf": "No",
+        "remaining_without_baby_shelf": 1100000,
+        "placement_agent": "Jefferies"
+      },
+      {
+        "agreement_start_date": "2020-06-16",
+        "title_contains": "June 2020",
+        "registered": "Registered",
+        "remaining_capacity": 0,
+        "total_capacity": 75000000,
+        "limited_by_baby_shelf": "No",
+        "remaining_without_baby_shelf": 0,
+        "placement_agent": "Jefferies"
+      },
+      {
+        "agreement_start_date": "2022-07-12",
+        "title_contains": "July 2022",
+        "registered": "Replaced",
+        "remaining_capacity": 165700000,
+        "total_capacity": 332500000,
+        "limited_by_baby_shelf": "No",
+        "remaining_without_baby_shelf": 165700000,
+        "placement_agent": "Jefferies"
+      },
+      {
+        "agreement_start_date": "2021-06-11",
+        "title_contains": "June 2021",
+        "registered": "Replaced",
+        "remaining_capacity": 1900000,
+        "total_capacity": 500000000,
+        "limited_by_baby_shelf": "No",
+        "remaining_without_baby_shelf": 1900000,
+        "placement_agent": "Jefferies"
+      }
+    ],
+    "equity_line": [],
+    "s1_offering": [],
+    "shelf": [
+      {
+        "effect_date": "2023-10-13",
+        "title_contains": "October 2023",
+        "registered": "Registered",
+        "current_raisable_amount": 999999999,
+        "total_shelf_capacity": 405000000,
+        "baby_shelf_restriction": "No",
+        "total_amount_raised": 96129000,
+        "highest_60_day_close": 13.64,
+        "last_banker": "Jefferies",
+        "expiration_date": "2026-10-13"
+      },
+      {
+        "effect_date": "2025-05-08",
+        "title_contains": "April 2025",
+        "registered": "Registered",
+        "current_raisable_amount": 0,
+        "total_shelf_capacity": 200000000,
+        "baby_shelf_restriction": "No",
+        "total_amount_raised": 262803913,
+        "highest_60_day_close": 13.64,
+        "expiration_date": "2028-05-08"
+      },
+      {
+        "effect_date": "2020-12-01",
+        "title_contains": "December 2020",
+        "registered": "Registered",
+        "current_raisable_amount": 999999999,
+        "total_shelf_capacity": 999999999,
+        "baby_shelf_restriction": "No",
+        "total_amount_raised": 902448304,
+        "highest_60_day_close": 13.64,
+        "last_banker": "Jefferies",
+        "expiration_date": "2023-12-01"
+      }
+    ]
+  }
+}
