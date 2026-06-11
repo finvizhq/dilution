@@ -5,7 +5,8 @@ Tables:
   dilution_filings       — filing index (form, date, accession)
   dilution_raw           — raw markdown of narrative filings (walker input)
   dilution_ledger        — capitalization table: one row per instrument tranche
-  dilution_walk_state    — per-ticker walker progress (resume + id sequence)
+  dilution_walk_state    — per-ticker id-sequence allocator + last-walk marker
+  dilution_walked        — per-accession walked set (resume / back-fill safe)
   dilution_anchor_diffs  — periodic-filing reconciliation discrepancies
   dilution_walk_errors   — dropped-mutation audit trail
 
@@ -46,6 +47,16 @@ CREATE TABLE IF NOT EXISTS dilution_filings (
     primary_doc_url TEXT,
     homepage_url TEXT,
     items TEXT,
+    -- SEC Securities Act file number (e.g. "333-256827") OR Exchange
+    -- Act file number ("001-36404"). The 333- prefix is the canonical
+    -- linkage between a registration statement (S-1, S-3) and all its
+    -- children (424B prospectus take-downs, S-3/A amendments, POS AM,
+    -- RW withdrawals, EFFECT notices). Lets us deterministically group
+    -- shelf families, distinguish primary vs resale 424Bs, and detect
+    -- withdrawn / expired registrations without LLM prose-parsing.
+    -- Exchange Act forms (10-K/10-Q/8-K) carry the 001- listing number
+    -- which is per-ticker, not per-registration — useful but separate.
+    file_number TEXT,
     fetched_at TEXT,
     -- Set when the two-stage extractor has run on this accession.
     -- Distinguishes "filing has 0 events because none were found"
@@ -60,6 +71,8 @@ CREATE TABLE IF NOT EXISTS dilution_filings (
 CREATE INDEX IF NOT EXISTS idx_dilution_filings_cik ON dilution_filings(cik);
 CREATE INDEX IF NOT EXISTS idx_dilution_filings_form ON dilution_filings(form);
 CREATE INDEX IF NOT EXISTS idx_dilution_filings_date ON dilution_filings(filing_date);
+CREATE INDEX IF NOT EXISTS idx_dilution_filings_file_number
+    ON dilution_filings(cik, file_number);
 
 CREATE TABLE IF NOT EXISTS dilution_raw (
     accession_number TEXT NOT NULL REFERENCES dilution_filings(accession_number),
@@ -81,11 +94,21 @@ CREATE TABLE IF NOT EXISTS dilution_ledger (
     cik INTEGER NOT NULL,
     type TEXT NOT NULL,                         -- warrant|convertible|preferred|atm|equity_line|shelf|s1_offering|equity
     created_at TEXT NOT NULL,                   -- filing_date the instrument was first disclosed
-    created_accession TEXT NOT NULL,
-    counterparty TEXT,                          -- the INVESTOR/BUYER/LENDER putting capital into the issuer (e.g. "Streeterville Capital", "Hudson Bay")
-    counterparty_canonical TEXT,
-    placement_agent TEXT,                       -- the BANK running the offering (e.g. "Maxim Group LLC", "ThinkEquity LLC"). Distinct from counterparty.
-    placement_agent_canonical TEXT,
+    created_accession TEXT NOT NULL,            -- IMMUTABLE provenance: the filing that birthed this instrument. Never repointed.
+    -- Mutable registration pointer. NULL until the instrument is re-
+    -- registered onto a successor shelf via the redisclosure shelf-
+    -- rollover path (store._append_redisclosure). When set, it holds the
+    -- accession of the shelf-host filing (S-3/F-3) the instrument now
+    -- lives under, and the file_number-walk rollups (_parent_shelf,
+    -- _shelf_family_drawn, _last_banker_for_shelf) join on
+    -- COALESCE(registration_accession, created_accession) so takedowns
+    -- credit the LIVE shelf instead of the original (often expired) one.
+    -- See the CGEN SVB ATM: created under the 2020 F-3 (333-240183),
+    -- re-registered under the 2023 F-3 (333-270985).
+    registration_accession TEXT,
+    counterparty_canonical TEXT,                -- the INVESTOR/BUYER/LENDER putting capital into the issuer (e.g. "Streeterville", "Hudson Bay")
+    counterparty_status TEXT,                   -- named|generic|absent — distinguishes "filing named an entity" (named, canonical populated) from "filing used a generic descriptor like 'institutional investor' so NULLING RULE applied" (generic, canonical null) from "filing didn't mention a counterparty at all" (absent, canonical null). Lets the view render "n/a" vs "—" instead of conflating both into a single em-dash.
+    placement_agent_canonical TEXT,             -- the BANK running the offering (e.g. "Maxim", "ThinkEquity"). Distinct from counterparty.
     label TEXT,                                 -- clean human-readable instrument label, e.g. "Series 9 Preferred", "Inducement Warrants", "December 2022 Streeterville Note"
     terms_json TEXT NOT NULL,                   -- type-specific fields (strike, conv_price, principal, capacity, maturity, …)
     outstanding_json TEXT NOT NULL,             -- count, principal_remaining, sold_to_date, drawn_usd, etc.
@@ -93,7 +116,18 @@ CREATE TABLE IF NOT EXISTS dilution_ledger (
     status_at TEXT,                             -- date the current status was set
     history_json TEXT NOT NULL,                 -- append-only array of {date, accession, form, action, fields_changed, snippet}
     last_seen_accession TEXT,
-    last_seen_date TEXT
+    last_seen_date TEXT,
+    -- Anchor-reconciliation consecutive-miss counter. Incremented each
+    -- time a periodic-filing overhang pass does NOT match this row;
+    -- reset to 0 when the row IS matched. After 2 consecutive misses,
+    -- warrants/convertibles/preferreds without an objective dead-signal
+    -- (Tier 1) are auto-closed by anchor.py — this is "Tier 2" closure
+    -- for warrants whose stated expiration is far enough out that the
+    -- date-based Tier 1 check would never fire even though the issuer
+    -- has clearly stopped disclosing the row. Shelves / ATMs / equity
+    -- lines are excluded from Tier 2 — they have legal duration and
+    -- close on date-based Tier 1 (3y agreement / Rule 415 3y) only.
+    anchor_miss_count INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_dilution_ledger_cik
@@ -114,6 +148,54 @@ CREATE TABLE IF NOT EXISTS dilution_walk_state (
     pipeline_version TEXT,
     walked_at TEXT
 );
+
+-- Per-accession walker progress. One row per (cik, accession) the
+-- walker has processed. Replaces the single positional
+-- last_processed_accession marker in dilution_walk_state for resume
+-- decisions: that marker skipped any filing sorting BEFORE the resume
+-- point on a later run, so a back-filled filing whose raw text arrived
+-- after the first walk (dilution_raw is INNER-JOINed in _list_filings)
+-- never got picked up without a --force re-walk. With this set the
+-- walker processes any in-scope filing NOT already recorded here,
+-- regardless of sort position. (next_id_seq_json stays in
+-- dilution_walk_state — id sequencing is independent of resume.)
+CREATE TABLE IF NOT EXISTS dilution_walked (
+    cik INTEGER NOT NULL,
+    accession_number TEXT NOT NULL,
+    filing_date TEXT,
+    pipeline_version TEXT,
+    walked_at TEXT NOT NULL,
+    PRIMARY KEY (cik, accession_number)
+);
+
+CREATE INDEX IF NOT EXISTS idx_dilution_walked_cik
+    ON dilution_walked(cik);
+
+-- Stock splits sourced from market-data vendors (Finviz, yfinance).
+-- Walked-in to the ledger as synthetic `apply_split` mutations BEFORE
+-- the chronologically corresponding filings, so any pre-existing
+-- instrument is scaled by the time the filing is processed.
+--   pre / post: as in the ApplySplit Pydantic model — 1-for-100 is
+--               post=1, pre=100; 4-for-1 is post=4, pre=1.
+--   units:      "common" for US issuers, "ads" for FPIs (the store's
+--               _apply_split filters by this so an ADS-ratio change
+--               doesn't rescale underlying-common warrants).
+--   source:     "finviz", "yfinance", or "finviz+yfinance" when both
+--               vendors agreed; lets us audit conflict-resolution.
+CREATE TABLE IF NOT EXISTS dilution_splits (
+    cik INTEGER NOT NULL,
+    effective_date TEXT NOT NULL,
+    pre INTEGER NOT NULL,
+    post INTEGER NOT NULL,
+    direction TEXT NOT NULL,
+    units TEXT NOT NULL,
+    source TEXT NOT NULL,
+    fetched_at TEXT NOT NULL,
+    PRIMARY KEY (cik, effective_date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_dilution_splits_cik
+    ON dilution_splits(cik);
 
 -- Periodic-filing anchor reconciliation log. After processing each
 -- 10-K/10-Q/20-F/40-F, the walker diffs the ledger against the
@@ -167,12 +249,15 @@ CREATE TABLE IF NOT EXISTS dilution_ledger_drawdowns (
     amount_usd REAL,
     shares REAL,
     price REAL,
-    -- Placement agent / underwriter on this drawdown. Distinct from
-    -- the parent shelf's counterparty (shelves have no counterparty;
-    -- each takedown is sold by a different banker — Jefferies, B. Riley,
-    -- etc.). Powers shelf cards' "Last Banker" field.
-    counterparty TEXT,
-    counterparty_canonical TEXT,
+    -- Canonical name of the party that sold the shares on this
+    -- takedown. For ATM / shelf / s1_offering this is the placement
+    -- agent / underwriter (Jefferies, B. Riley); for equity_line it's
+    -- the named investor buying direct (Yorkville, M2B). The role
+    -- column distinguishes the two so the "Last Banker" shelf card
+    -- query can filter to 'bank' without conflating direct-investor
+    -- takedowns into the banker slot.
+    drawdown_party_canonical TEXT,
+    drawdown_party_role TEXT,  -- 'bank' | 'investor' | NULL
     detected_at TEXT NOT NULL
 );
 
@@ -190,6 +275,22 @@ CREATE TABLE IF NOT EXISTS dilution_ledger_narrative (
     headline TEXT,
     counterparty_role TEXT,                     -- bank|investor|strategic|undisclosed
     terms_summary TEXT,
+    generated_at TEXT NOT NULL,
+    model TEXT
+);
+
+-- Per-ticker AI dilution brief cache (headline + bullets + watch
+-- items) for the dashboard. dilution/ticker_brief.py owns the working
+-- copy of this DDL (keep in sync) and self-bootstraps on first use;
+-- the copy here only exists so reset_db.py produces a complete
+-- schema. Keyed by a hash of the deterministic facts block so the
+-- dashboard can flag a cached brief as stale without an LLM call.
+CREATE TABLE IF NOT EXISTS dilution_ticker_brief (
+    cik INTEGER PRIMARY KEY,
+    facts_hash TEXT NOT NULL,
+    headline TEXT NOT NULL,
+    bullets_json TEXT NOT NULL,
+    watch_json TEXT NOT NULL,
     generated_at TEXT NOT NULL,
     model TEXT
 );

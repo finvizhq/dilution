@@ -1,0 +1,116 @@
+Skip to main content
+DilutionTracker Knowledge Base
+English
+Search for articles...
+
+    All Collections
+
+Dilution Course
+
+    What is a Shelf Registration Statement?
+
+What is a Shelf Registration Statement?
+Written by Shawn Stevenson
+March 14, 2024
+
+Reminder: You can always ask questions by messaging us! We'll clarify technical dilution concepts for you!
+
+ 
+
+Summary:
+
+    Shelf Registration Overview:
+
+        Shelf registrations allow companies, especially high cash-burning, small-cap ones, to raise money by issuing shares over the next three years without needing to register each offering with the SEC.
+
+        This process provides flexibility to issue equity as needed without immediate plans for an offering.
+
+        Common uses include Registered Direct Offerings (RDO), ATMs (At The Market Agreements), and Equity Lines of Credit.
+
+         
+
+    Impact and Importance:
+
+        A shelf registration can signal potential future dilution of shares, putting downward pressure on the stock price if the market anticipates share issuance above fair value.
+
+        It's a preparatory step for various financing activities, including ATM, equity lines, or convertible debt offerings.
+
+        The shelf's capacity decreases with the capital raised, impacting the company's ability to raise further funds without re-registering.
+
+         
+
+    FAQs Simplified:
+
+        Relation to Other Offerings: An active shelf is a prerequisite for registering ATMs and other financing instruments. Utilizing these instruments reduces the shelf's remaining capacity.
+
+        Having Only a Shelf: Indicates the company can either announce an offering (often negatively impacting the stock price) or register for an ATM/equity line to sell shares gradually.
+
+        Large Shelf Capacity: A significantly large shelf relative to market cap suggests potential for dilution but is not a definite plan for immediate use. It's more indicative of a company's financing strategy over three years.
+
+         
+
+    Key Takeaways:
+
+        Shelf registrations provide strategic financial flexibility for companies but can influence market perception and stock price due to potential dilution.
+
+        The actual impact of a shelf on the stock price varies based on the company's actions, market conditions, and investor interpretations.
+        ​
+
+ 
+Why does a shelf matter?
+
+If a high cash burning small cap has room to raise money off its shelf and it is trading significantly above fair value, it is highly likely that the company will issue additional shares either through a one time offering (RDO or underwritten deal), or file a ATM/Equity line and bleed shares out on the open market. These actions will dilute existing shareholders and have significant downward pressure on the stock price.
+
+ 
+
+ 
+What is a shelf?
+
+Shelf registrations are perhaps one of the most confusing and misunderstood topics in the trading community. Simply put, an effective S-3/F-3 shelf registration allows a company to raise money anytime and as many times within the next three years using the same registration statement up to the maximum dollar amount registered in the filing. 
+
+ 
+
+The purpose of the shelf registration is so that the company does not need to go back to the SEC each time and ask them to approve a registration statement for each subsequent offering. Each subsequent offering is considered a “shelf take-down” and will “incorporate by reference” the latest and already filed financial information about the company, thus avoiding additional SEC review. 
+
+ 
+
+The main benefit to the company is the flexibility it gains in issuing equity whenever it wants over the next three years; therefore, a shelf registration is NOT an immediate offering of shares, even though the issuer has the flexibility to do so if it wants to at the moment it is effective. The company also has many options in how it wants to use the shelf. Currently the most common types of offerings used by companies in a shelf take-down are Registered Direct Offerings (RDO), ATMs, and Equity Line of Credits.
+
+ 
+
+ 
+OK that was confusing 😂 Here are some FAQs
+
+How is a shelf related to other forms of offerings such as ATM, equity line, convertible debt etc... ?
+
+    The company must have an active shelf before they can register for ATM
+
+    Usage of any of the above mentioned financing instruments will decrease the shelf capacity by the amount of capital raised. For example, if a company raises $20 million through an ATM, the shelf's 'Current Raisable Amount' will also decrease by $20 million.
+
+     
+
+If a company only has a shelf, what does that mean?
+
+In this case, the company has 2 options
+
+    They can raise through an offering, which requires the company to put out news that discloses the pricing and amount. Usually, the market reacts instantly and negatively to such a news.
+
+    An example headline is "Senmiao Technology Announces $6.5 Million Registered Direct Offering"
+
+    The company can file for ATM or equity line, which allows the company to issue shares on the open market.
+
+ 
+
+Company has a huge shelf, in the realms of  hundreds of millions, what does that mean?
+
+    When the shelf capacity is huge, such as many times the market cap, the shelf capacity is only directionally informative of potential dilution. 
+
+    Generally, companies file shelves to use over 3 years, which means it is highly unlikely that a company will use a large proportion of the shelf capacity in a single offering.
+
+Did this answer your question?
+DilutionTracker Knowledge Base
+
+    HomeApp
+
+We run on Intercom
+

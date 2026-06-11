@@ -1,0 +1,67 @@
+Skip to main content
+DilutionTracker Knowledge Base
+English
+Search for articles...
+
+    All Collections
+
+Dilution Course
+
+    What are Warrants?
+
+What are Warrants?
+Written by Shawn Stevenson
+March 14, 2024
+
+Reminder: You can always ask questions by messaging us! We'll clarify technical dilution concepts for you!
+
+ 
+
+TLDR:
+
+    Warrants vs. Call Options: Warrants are similar to call options, allowing the holder to acquire shares at a predetermined price but are typically issued by companies alongside common stock to attract investors.
+
+    Common Holders and Purpose: Often, hedge funds participating in small cap equity offerings hold these warrants, which provide additional upside without downside risk unless they decide to exercise them.
+
+    Impact on Stock Price: When the stock price significantly exceeds the exercise price (by more than 40%), warrant holders might exercise and sell their shares, potentially putting downward pressure on the stock price, especially if the volume of exercised warrants is large compared to trading volume and outstanding shares.
+
+    Exceptions and Strategic Considerations:
+
+        Warrant holders may delay exercising if they anticipate further stock appreciation based on solid fundamentals or positive news catalysts.
+
+        The decision to exercise warrants can also be influenced by special features like price protection, which can make warrants more dilutive.
+
+        Example: In the case of VXRT, a significant delay in warrant exercise was observed as holders anticipated further gains from vaccine development news and possible inclusion in Operation Warp Speed.
+
+    Analysis: The effect of warrants on stock price is complex and depends on the behavior of warrant holders, which is influenced by market conditions, company performance, and news catalysts.
+
+ 
+
+Warrants are fundamentally equivalent to call options, where the holder can pay the exercise price and receive shares for each warrant they hold. In the context of small-cap financing, many companies issue common stock combined with warrants that act as a deal sweetener for the buyers of the deal. Therefore the typical holders of warrants in small caps are hedge funds that participate in small cap equity offerings. Since the warrant holders don’t need to pay anything to the company unless the stock price moves above the exercise price, the warrants give the holders additional upside without exposing them to any downside. If the warrants contain price protection features (see What are Price Protection Features?), then the warrants will be even more dilutive. 
+
+ 
+
+How can warrants affect the stock price?
+
+ 
+
+If the stock price moves significantly above the exercise price (>40%), then the warrant holders may have an incentive to exercise their warrants and sell it on the open market. If the amount of warrants being exercised is large relative to the trading volume and outstanding shares, then their selling will put significant downward pressure on the stock price. 
+
+ 
+
+Exceptions
+
+ 
+
+If the reason that the stock is up is fundamentally sound, the warrant holders may delay their exercise if they think there is further upside on the stock. Recent example of this is VXRT, where Armistice Capital did not exercise their $0.30 exercise price warrants until the stock hit $10.00 potentially because they saw further upside on the vaccine hype wave or they had knowledge of VXRT being included in operation WarpSpeed. Therefore it is important to consider the quality of the news catalyst before assuming warrant holders will exercise the stock and dump.
+
+ 
+
+ 
+Did this answer your question?
+DilutionTracker Knowledge Base
+
+    HomeApp
+
+We run on Intercom
+

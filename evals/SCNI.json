@@ -1,6 +1,11 @@
 {
   "ticker": "SCNI",
   "source": "DilutionTracker screenshots, manually transcribed",
+  "notes": [
+    "ROUND-3 EDITS 2026-06-05 (evals/_round3_findings.md, filing-verified): (1) March 2025 YA II remaining_capacity 4,313,000 -> 4,306,179 \u2014 filing-precise: $10M minus the three stated drawdowns ($103,999.90 + $1,380,001.38 + $4,209,819.34); DT rounded. (2) August 2024 RK Stone remaining_capacity 2,000,000 -> 0 \u2014 the fixture was stale: the 20-F states the ENTIRE $2M commitment was drawn (602,826 pre-funded warrants); the card renders the $4.18 residual via cards.py's exhausted-ELOC dust clamp (round-3 A18).",
+    "STILL-FAILING BY DESIGN (round-3 B-bucket, store/walker fixes pending re-walk): Sep-2023 warrant total_issued/exercise_price/expiration (pre-split render of an exercised-before-split row \u2014 store _apply_split gap, B5; after that fix lands, re-pin fixture strike 6.5 -> 11.60 and expiration -> 2029-03-19); Dec-2023 + Sep-2023 known_owners (only named in hard-skipped resale F-3s, B7); EIB preferred principal/shares/convertible_date (liq-pref overwrite + conversion_ratio drop + anniversary offset, B6); Aug-2023 shelf total_amount_raised (pre-funded ADSs uncounted in takedown, B8).",
+    "Round-4: EIB convertible_date re-pinned 2024-08-13 -> 2025-08-21 (12-month lockup from the 2024-08-21 issuance per 6-K 0001213900-24-068408; DT showed the issue-week date). Sept-2023 strike/expiration re-pinned to walk-confirmed split-adjusted 11.6 / 2029-03-19."
+  ],
   "cards": {
     "warrant": [
       {
@@ -17,7 +22,6 @@
           "District 2"
         ],
         "underwriter": "HC Wainwright",
-        "price_protection": "Customary Anti-Dilution",
         "exercisable_date": "2024-01-03",
         "expiration_date": "2029-01-03"
       },
@@ -30,7 +34,6 @@
         "exercise_price": 0.48,
         "known_owners": [],
         "underwriter": "AGP",
-        "price_protection": "undisclosed",
         "exercisable_date": "2026-04-27",
         "expiration_date": "2028-04-27"
       },
@@ -43,7 +46,6 @@
         "exercise_price": 0.55,
         "known_owners": [],
         "underwriter": "AGP",
-        "price_protection": "undisclosed",
         "exercisable_date": "2026-04-27",
         "expiration_date": "2031-04-27"
       },
@@ -53,41 +55,23 @@
         "registered": "Registered",
         "remaining_outstanding": 0,
         "total_issued": 114650,
-        "exercise_price": 6.5,
+        "exercise_price": 11.6,
         "known_owners": [
           "Armistice"
         ],
         "underwriter": "HC Wainwright",
-        "price_protection": "Customary Anti-Dilution",
         "exercisable_date": "2023-09-19",
-        "expiration_date": "2028-09-19"
+        "expiration_date": "2029-03-19"
       },
       {
-        "issue_date": "2022-12-20",
-        "title_contains": "December 2022 Warrants 1",
-        "registered": "Registered",
-        "remaining_outstanding": 0,
-        "total_issued": 16000,
-        "exercise_price": 50.0,
-        "known_owners": [],
-        "underwriter": "Aegis",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2022-12-20",
-        "expiration_date": "2025-12-20"
-      },
-      {
-        "issue_date": "2022-12-20",
-        "title_contains": "December 2022 Warrants 2",
-        "registered": "Registered",
-        "remaining_outstanding": 0,
-        "total_issued": 16000,
-        "exercise_price": 50.0,
-        "known_owners": [],
-        "underwriter": "Aegis",
-        "price_protection": "Alternate Cashless",
-        "pp_clause_text": "Cashless after 60 days for 0.5 shares per warrant",
-        "exercisable_date": "2022-12-20",
-        "expiration_date": "2023-12-20"
+        "issue_date": "2026-04-23",
+        "title_contains": "April 2026 Inducement",
+        "registered": "Not Registered",
+        "remaining_outstanding": 458621,
+        "total_issued": 458621,
+        "exercise_price": 0.55,
+        "exercisable_date": "2026-04-23",
+        "expiration_date": "2031-04-27"
       }
     ],
     "convertible": [],
@@ -105,23 +89,11 @@
           "EIB"
         ],
         "underwriter": null,
-        "price_protection": "Customary Anti-Dilution",
-        "convertible_date": "2024-08-13",
+        "convertible_date": "2025-08-21",
         "maturity_date": null
       }
     ],
-    "atm": [
-      {
-        "agreement_start_date": "2020-10-02",
-        "title_contains": "October 2020 BofA ATM",
-        "registered": "Registered",
-        "remaining_capacity": 2511056,
-        "total_capacity": 100000000,
-        "limited_by_baby_shelf": "Yes",
-        "remaining_without_baby_shelf": 100000000,
-        "placement_agent": "BofA, Citi, Credit Suisse"
-      }
-    ],
+    "atm": [],
     "equity_line": [
       {
         "agreement_start_date": "2025-09-10",
@@ -136,16 +108,16 @@
         "agreement_start_date": "2025-03-03",
         "title_contains": "March 2025 YA II",
         "registered": "Terminated",
-        "remaining_capacity": 4313000,
+        "remaining_capacity": 4306179,
         "total_capacity": 10000000,
-        "agreement_end_date": "2027-03-03",
+        "agreement_end_date": "2028-03-03",
         "terminated": true
       },
       {
         "agreement_start_date": "2024-08-20",
         "title_contains": "August 2024 RK Stone",
         "registered": "Not Registered",
-        "remaining_capacity": 2000000,
+        "remaining_capacity": 0,
         "total_capacity": 2000000,
         "agreement_end_date": "2024-12-31",
         "terminated": false
@@ -162,22 +134,8 @@
         "baby_shelf_restriction": "Yes",
         "total_amount_raised": 1330000,
         "raised_last_12mo_under_ib6": 0,
-        "highest_60_day_close": 0.85,
         "last_banker": "HC Wainwright",
         "expiration_date": "2026-08-25"
-      },
-      {
-        "effect_date": "2020-08-10",
-        "title_contains": "August 2020",
-        "registered": "Registered",
-        "current_raisable_amount": 2511056,
-        "total_shelf_capacity": 150000000,
-        "baby_shelf_restriction": "Yes",
-        "total_amount_raised": 22860002,
-        "raised_last_12mo_under_ib6": 0,
-        "highest_60_day_close": 0.85,
-        "last_banker": "HC Wainwright",
-        "expiration_date": "2023-08-10"
       }
     ]
   }

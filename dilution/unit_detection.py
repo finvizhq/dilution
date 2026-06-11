@@ -15,6 +15,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import math
 import re
 
 from edgar import get_by_accession_number, set_identity
@@ -22,6 +23,7 @@ from edgar import get_by_accession_number, set_identity
 import config
 from db import get_conn, now_iso
 
+from .ledger._llm_utils import make_chat, normalize_filing_text
 from .llm_provider import make_async_client, system, user
 
 log = logging.getLogger(__name__)
@@ -120,22 +122,22 @@ def _load_text_for(accession: str, max_chars: int = 80_000) -> str | None:
             return None
         if not f:
             return None
+        # The $-adjacency bug in edgartools is patched at import time
+        # via dilution/_edgar_patches.py (loaded by fetch_raw on first
+        # pipeline import); rely on filing.markdown() directly.
+        from . import _edgar_patches  # noqa: F401
         try:
-            from .html_to_text import html_to_text
-            html = f.html() or ""
-            if html:
-                md = html_to_text(html)
+            md = f.markdown() or ""
         except Exception as e:
-            log.warning("unit_detection: html fetch failed for %s: %s",
+            log.warning("unit_detection: markdown fetch failed for %s: %s",
                         accession, e)
-        if not md:
-            try:
-                md = f.markdown() or ""
-            except Exception as e:
-                log.warning("unit_detection: markdown fetch failed for %s: %s",
-                            accession, e)
-                return None
+            return None
 
+    if md:
+        # Same whitespace collapse as the walker/overhang loaders —
+        # token savings + Gemini fragile-payload 400 guard. Normalize
+        # BEFORE capping so the cap buys more real content.
+        md = normalize_filing_text(md)
     if md and len(md) > max_chars:
         md = md[:max_chars]
     return md
@@ -172,15 +174,22 @@ def _heuristic_ads_ratio(text: str) -> float | None:
         except ValueError:
             pass
 
-    # "ratio of ADSs to ordinary shares is N:1" / "ratio is 1 ADS to N ordinary"
+    # "ratio of ADSs to ordinary shares is N:1" (N:1 direction) or
+    # "the ratio is 1:N" (1:N direction, per the docstring supersession
+    # example "1:100 to 1:400"). Either way the ratio is the non-unit number.
+    # The 1:N arm requires a LITERAL colon (not the loose [:\s] separator) so
+    # it can't swallow distractor MD&A prose like "the coverage ratio is 1 3
+    # of EBITDA" (which would otherwise yield a bogus ratio of 3 and, being
+    # appended last, override the correct ADS ratio). The N:1 arm keeps the
+    # historical loose separator for back-compat.
     for m in re.finditer(
         r"ratio\s+(?:of\s+ads[sr]?\s+to\s+(?:ordinary|common)\s+shares\s+)?"
-        r"(?:is|of)\s+(?:1\s*[:\s]\s*)?([\d,\.]+)\s*[:\s]\s*1",
+        r"(?:is|of)\s+(?:1\s*:\s*([\d,\.]+)|([\d,\.]+)\s*[:\s]\s*1)",
         lower,
     ):
         try:
-            candidates.append(float(m.group(1).replace(",", "")))
-        except ValueError:
+            candidates.append(float((m.group(1) or m.group(2)).replace(",", "")))
+        except (ValueError, AttributeError):
             pass
 
     # Treat the LAST candidate in the doc as authoritative — change-in-
@@ -199,7 +208,13 @@ async def _llm_ads_ratio(filing: dict) -> float | None:
     )
     client = make_async_client()
     try:
-        chat = client.chat.create(model=config.LLM_MODEL, max_tokens=1024)
+        # Route through make_chat so the ADS-ratio call gets the same
+        # pinned temperature (EXTRACT_TEMPERATURE) as every other
+        # extractor. Calling client.chat.create directly bypassed that
+        # and left this call at the provider default — and its output
+        # feeds unit_preamble() into every downstream walker/overhang
+        # prompt, so its variance cascades issuer-wide.
+        chat = make_chat(client, max_tokens=1024)
         chat.append(system(
             "You extract the ADS-to-ordinary share ratio from the cover "
             "page or Description of Securities of a Form 20-F/40-F. "
@@ -227,7 +242,9 @@ async def _llm_ads_ratio(filing: dict) -> float | None:
         ratio = float(val)
     except (TypeError, ValueError):
         return None
-    if ratio <= 0 or ratio > 100_000:
+    if not math.isfinite(ratio) or ratio <= 0 or ratio > 100_000:
+        # NaN/Infinity are as implausible as an out-of-range number and must
+        # not flow into unit_preamble() — math.isfinite rejects both.
         log.warning("unit_detection: implausible ratio %r for %s",
                     ratio, filing["accession_number"])
         return None

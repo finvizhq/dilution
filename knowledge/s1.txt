@@ -1,0 +1,91 @@
+Skip to main content
+DilutionTracker Knowledge Base
+English
+Search for articles...
+
+    All Collections
+
+Dilution Course
+
+    What are S-1 Registration Statements and Offerings?
+
+What are S-1 Registration Statements and Offerings?
+Written by Shawn Stevenson
+March 14, 2024
+
+Reminder: You can always ask questions by messaging us! We'll clarify technical dilution concepts for you!
+
+ 
+
+TLDR:
+
+    S-1 Registration Statements are commonly known for their use in traditional IPOs but are also utilized by small cap companies for secondary offerings to raise capital, often in the $5m to $20m range.
+
+    These offerings can be more dilutive than traditional secondary offerings because they frequently include warrants as an incentive for investors.
+
+    Typically conducted with lower-tier boutique investment banks that place shares with hedge funds inclined to quickly sell the shares for a profit.
+
+    Volatility:
+
+        Companies may engage in stock promotion via favourable press releases to increase demand before the offering, potentially leading to suspicious trading activity.
+
+        Some companies might also perform a reverse stock split to decrease the float and make the stock easier to move, aiming to increase the stock price before the offering.
+
+         
+
+    Example: Cyclacel Pharmaceuticals (CYCC):
+
+        Filed an S-1 to raise $20m plus warrants, leading to speculation about stock manipulation due to the involvement of certain investment banks known for such practices.
+
+        Performed a 1:20 reverse split, significantly reducing its float, followed by a press release that spiked the stock price.
+
+        The eventual offering priced at $5.00 per share with 100% warrant coverage, resulting in a significant drop from the peak price.
+
+         
+
+    Strategic Considerations for Traders:
+
+        Awareness of an in-progress S-1 offering can be crucial for traders as it may indicate a potential pump and dump scenario.
+
+        Traders can strategize to profit by either going long in anticipation of a pump or shorting after the pump occurs.
+
+        Check our Pending S-1 page for a list of in progress S-1 offerings.
+
+ 
+
+Most people know that an S-1 is used when a company conducts a traditional IPO. However, they are also used by small cap companies to register new shares and raise capital in a secondary offering. The majority of these small cap deals are done in the range of $5m - $20m blocks and tend to be more dilutive than traditional secondary offerings because they typically include warrants (see what are warrants?) to sweeten the deal. These smaller deals are also typically conducted with lower tier boutique investment banks. These banks tend to place the new shares with certain hedge funds that like to flip the shares for immediate profit. As a result, a small cap company trying to raise money through a S-1 will experience significant volatility in its share price between the initial filing and final pricing. 
+
+ 
+
+Certain companies may also try to pump its stock with favourable press releases in order to generate demand for its shares prior to the offering. We won’t go into details here but during this pump period, there is suspicious trading activity in the stock. Some experienced traders know that these companies like to reverse split the stock so they become low float and easy to pump, then dump the shares on unsuspecting day traders that were not aware of a looming offering in the works.
+
+ 
+
+Example
+
+One example of this was Cyclacel Pharmaceuticals (CYCC). CYCC filed a form S-1 registration statement on March 13, 2020 stating that it was planning to raise $20m in stock plus warrants. The lead placement agent was Roth Capital, although Ladenburg Thalmann and Brookline Capital were added as co-placement agents afterwards. These three banks are the trifecta of pump and dumps so it was highly likely manipulation was going to happen. 
+
+ 
+
+A pump was also likely to happen given the current market conditions and CYCC’s existing drug pipeline. There was a large increase in daytraders that were interested in chasing action in biotechs with COVID-19 related treatments or vaccines. One of CYCC’s lead drug candidates, seliciclib, has been shown in past trials to suppress IL-6. High levels of IL-6 was theorized to be a major contributor to hyper-inflammatory immune response in severe COVID-19 patients. Naturally, all CYCC had to do to get volume in its stock was to say it was testing seliciclib on COVID-19 patients.
+
+ 
+
+ 
+
+Before the pump though, a reverse split needs to occur to make the stock easier to manipulate. CYCC completed a 1:20 reverse split on April 15, 2020, which reduced the float to less than 800k shares. Then on April 20 pre-market, CYCC released the following headline: “Cyclacel Pharmaceuticals Announces Collaboration With the University of Edinburgh to Study Its CDK Inhibitors to Reduce Runaway Inflammation in COVID-19 Disease”. What followed was a frenzy to buy the shares in the first 30 minutes of opening. CYCC was halted multiple times on the way up as the combination of low float, low liquidity, and overall hype drove prices to as high as $19 per share. 
+
+ 
+
+The whole purpose of this pump though, was to generate demand for CYCC’s shares so that it could dump the $20m offering. The offering ended up pricing at $5.00 per share with 100% warrant coverage, which resulted in a price drop of nearly a 75% drop from the peak.
+
+ 
+
+As a trader, it is important to know that the company has a S-1 offering in progress because it is a signal that a pump and dump could occur. A trader can attempt to profit from this by either anticipating a pump and going long or shorting the spike after it pumps. Dilution Tracker maintains a list of all ongoing S-1 offerings in the database under “Pending S-1 Offerings”.
+Did this answer your question?
+DilutionTracker Knowledge Base
+
+    HomeApp
+
+We run on Intercom
+

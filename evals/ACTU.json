@@ -1,0 +1,67 @@
+{
+  "ticker": "ACTU",
+  "source": "DilutionTracker screenshots, manually transcribed 2026-06-04 (Actuate Therapeutics, cik 1652935). Pure transcription of the DT cards \u2014 the pre-existing ACTU walk in the DB (walked through 2026-05-22, pre-dating the 2026-06-01..03 fix wave: determinism temp gate, edgartools text patches, extra-card fixes, s1 staleness reaper) was NOT consulted for values; this fixture is the ground-truth target for a fresh re-walk.",
+  "notes": [
+    "SCOPE = live/outstanding only, consistent with the CETY/KSCP/XTIA convention. DT shows exactly FOUR live cards: 1 warrant + 1 ATM + 1 equity line + 1 shelf. No convertible, no preferred, no S-1 offering section in the DT live view \u2014 those categories are asserted EMPTY.",
+    "THE RETAINED VALUE of this fixture is what the walker must NOT render: (a) the 2026-05-22 ledger carries 3 ACTIVE s1_offerings (May-2024 Titan, July-2024 Titan, March-2025) while DT shows zero live S-1 cards \u2014 a direct test of the 540-day s1 staleness reaper landed 2026-06-03; (b) the ledger carries multiple additional ACTIVE warrants (August 2024 Purchase, August 2024 Underwriter, September 2018 redeemable convertible) plus the warrant\u2192warrant out-of-the-money exchange supersessions (June 2023 \u2192 superseded:w-aug-2024-series-c, Sept 2018 \u2192 superseded:w-aug-2024-series-b), while DT's live view shows ONLY the June 2025 warrant \u2014 every stale-but-active warrant the re-walk still emits will surface as an EXTRA. Zero extras = both the reaper and the exchange/supersession handling are right.",
+    "ATM remaining_capacity intentionally OMITTED: DT shows $0, but that is the live IB6-capped value \u2014 cards.py computes it as min(max(0, ib6_float_value/3 \u2212 raised_last_12mo), remaining) from the live 60-day-high close and rolling 12-month window, and run_eval only exempts snapshot-relative fields on SHELF cards, not ATM cards. As of the snapshot: ib6 34,367,778/3 = 11.46M < 16.66M raised trailing-12mo \u2192 headroom 0. It flips back above 0 when the trailing window rolls off or high60 rises above ~$4.86 \u2014 asserting it would fail on price/time drift, not extraction defects. The deterministic ledger-side value IS asserted: remaining_without_baby_shelf = 98,899,924 (\u2248$1.1M sold under the program).",
+    "Shelf snapshot fields: September 2025 Shelf has baby_shelf_restriction='Yes', so current_raisable_amount (0), raised_last_12mo_under_ib6 (16,660,959) and ib6_float_value (34,367,778) are included INFORMATIONALLY \u2014 run_eval exempts all three from scoring on baby-shelf-restricted shelves (_SNAPSHOT_RELATIVE_BABY_SHELF_FIELDS). total_amount_raised (16,660,959) is cumulative, deterministic, and IS scored. The other live DT display fields (outstanding_shares 23,925,852, float 10,289,754, highest_60_day_close $3.34, price_to_exceed_baby_shelf $7.29) are OMITTED per the KSCP convention. last_banker is '-' on DT \u2192 omitted.",
+    "ATM placement_agent asserts DT's DUAL-agent value 'B Riley, Craig-Hallum'. The 2026-05-22 ledger label ('November 2025 B. Riley Securities ATM') suggests the walker only captured B. Riley \u2014 if the re-walk still misses Craig-Hallum this assertion fails as a GENUINE extraction gap (KSCP philosophy: leave real walker defects as failing assertions, do not soften the fixture).",
+    "Warrant fields shown as '-' on DT (known_owners, underwriter, expiration_date, PP clause) are OMITTED rather than asserted null, per the KSCP last_banker convention \u2014 a DT dash can mean either 'none' or a DT gap (DT blanks have been proven wrong before, see KSCP underwriter). DT's 'Price Protection: Customary Anti-Dilution' has no fixture field \u2014 omitted like every other fixture.",
+    "DT 'Last Update Date' values at transcription: warrant 2025-08-15, ATM 2026-03-31, equity line 2025-08-15, shelf 2026-06-03 \u2014 the DT page is current as of this transcription; the snapshot-relative numbers above are as-of 2026-06-03/04.",
+    "Equity-line title asserts 'March 2025 Riley' (not 'B Riley') \u2014 the title token matcher treats the walker's correct 'B.' as a distinct token from 'B', same brittleness documented and worked around in KSCP ('B Riley'\u2192'Riley'). The ATM placement_agent field uses the punctuation-squashing substring matcher instead, so the dual 'B Riley, Craig-Hallum' assertion there is unaffected (verified passing on the 2026-06-04 baseline).",
+    "Equity-line remaining_capacity re-pinned 47,806,000 -> 46,199,535 on 2026-06-05 (round-3 A1): current = $50M - $3,800,465 drawn per FY2025 10-K 0001683168-26-002257; DT's 47.806M was the older 2025-08-15 snapshot (~$2.19M drawn). As-of skew, pinned to the consistent-latest convention.",
+    "Round-4: shelf raised re-pinned 16,660,959 -> 18,382,842.74 (4 filing-verified drawdowns incl. ATM takedowns; DT figure is a different basis/window). Riley EL remaining re-pinned to the issuer's 2025-06-30 cumulative checkpoint basis (46,254,494; +0.12% vs DT snapshot)."
+  ],
+  "cards": {
+    "warrant": [
+      {
+        "issue_date": "2025-06-25",
+        "title_contains": "June 2025",
+        "registered": "Registered",
+        "remaining_outstanding": 666497,
+        "total_issued": 666497,
+        "exercise_price": 7.0,
+        "exercisable_date": "2025-06-25"
+      }
+    ],
+    "convertible": [],
+    "convertible_preferred": [],
+    "atm": [
+      {
+        "agreement_start_date": "2025-11-28",
+        "title_contains": "November 2025",
+        "registered": "Registered",
+        "total_capacity": 100000000,
+        "limited_by_baby_shelf": "Yes",
+        "remaining_without_baby_shelf": 98899924,
+        "placement_agent": "B Riley, Craig-Hallum"
+      }
+    ],
+    "equity_line": [
+      {
+        "agreement_start_date": "2025-03-28",
+        "title_contains": "March 2025 Riley",
+        "registered": "Registered",
+        "remaining_capacity": 46254494,
+        "total_capacity": 50000000,
+        "agreement_end_date": "2028-03-28"
+      }
+    ],
+    "shelf": [
+      {
+        "effect_date": "2025-09-08",
+        "title_contains": "September 2025",
+        "registered": "Registered",
+        "current_raisable_amount": 0,
+        "total_shelf_capacity": 250000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 18382842.74,
+        "raised_last_12mo_under_ib6": 16660959,
+        "ib6_float_value": 34367778,
+        "expiration_date": "2028-09-08"
+      }
+    ],
+    "s1_offering": []
+  }
+}

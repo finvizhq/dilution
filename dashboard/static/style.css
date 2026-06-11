@@ -25,6 +25,18 @@ a:hover { text-decoration: underline; }
 .topbar a { color: #fff; font-weight: bold; }
 .topbar .title { font-size: 16px; }
 .topbar .subtitle { font-size: 10px; opacity: 0.85; margin-left: 10px; }
+.topbar .topbar-nav { float: right; font-size: 12px; }
+.topbar .topbar-nav a { margin-left: 14px; font-weight: normal; }
+
+.status-pill {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.status-pill.status-pending   { background: #fde7c4; color: #7a4400; }
+.status-pill.status-effective { background: #cfe6cb; color: #265c1c; }
 
 .container {
     max-width: 1400px;
@@ -91,6 +103,40 @@ table.kv td:nth-child(3) { width: 40%; color: #888; font-size: 10px; }
     font-size: 11px;
 }
 .panel .body { padding: 6px 8px; }
+
+/* ─── AI dilution brief panel ─────────────────────────────────────── */
+.brief-panel { margin-bottom: 10px; }
+.brief-panel .hdr { display: flex; align-items: center; gap: 8px; }
+.brief-meta {
+    flex: 1;
+    font-weight: normal;
+    font-size: 10px;
+    opacity: 0.8;
+}
+.brief-stale {
+    margin-left: 6px;
+    padding: 0 5px;
+    border-radius: 7px;
+    background: #fde7c4;
+    color: #7a4400;
+    font-weight: bold;
+}
+.brief-headline {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 2px 0 5px;
+}
+.brief-bullets {
+    margin: 0 0 4px;
+    padding-left: 18px;
+}
+.brief-bullets li { margin-bottom: 2px; }
+.brief-watch {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 5px;
+    padding-top: 4px;
+}
+.brief-watch-item { color: #7a4400; margin-bottom: 1px; }
 
 /* Dense table */
 table.tight {
@@ -163,6 +209,109 @@ table.tight td.mono { font-family: 'Courier New', monospace; }
 .pill-med, .pill-medium { background: #c67e00; }
 .pill-high { background: #b13030; }
 .pill-neutral { background: #666; }
+
+/* ─── Dilution-risk badge strip (Overall + 4 drivers) ─────────────── */
+.badge-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: #aaa;
+    border: 1px solid #aaa;
+    margin-bottom: 10px;
+}
+.badge-cell {
+    position: relative;
+    background: #fff;
+    padding: 5px 8px 6px;
+    text-align: center;
+    cursor: help;
+}
+.badge-label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+}
+.badge-info { color: #9bb3d4; font-size: 10px; }
+
+/* Pills. Driver bands share the existing low/med/high palette; the
+   overall score gets the 5-band green→red heat ramp. */
+.bpill {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+}
+.bpill-low      { background: #3d863d; }
+.bpill-medium   { background: #c67e00; }
+.bpill-high     { background: #b13030; }
+.bpill-na       { background: #999; }
+.bpill-minimal  { background: #2f8f2f; }
+.bpill-moderate { background: #c6a000; }
+.bpill-severe   { background: #8f1f1f; }
+/* overall 'low'/'high' reuse the driver colors above */
+
+/* DT-style light-blue hover tooltip */
+.badge-tip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    background: #eef5fc;
+    border: 1px solid #b8d4ee;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 10px 12px;
+    text-align: left;
+    z-index: 200;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #333;
+    cursor: auto;
+}
+.badge-cell:hover .badge-tip { display: block; }
+.badge-tip-right { left: auto; right: 0; transform: none; }
+.badge-tip-title {
+    font-weight: bold;
+    color: #355e93;
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+.badge-tip-desc { color: #444; margin-bottom: 8px; }
+.badge-tip-facts {
+    margin: 0 0 8px;
+    padding: 6px 8px 6px 22px;
+    background: #fff;
+    border: 1px solid #d4e4f4;
+    border-radius: 3px;
+}
+.badge-tip-facts li { padding: 1px 0; color: #222; }
+.badge-tip-legend {
+    border-top: 1px solid #cfe0f1;
+    padding-top: 6px;
+}
+.badge-tip-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 2px 0;
+    color: #555;
+}
+.badge-tip-row .bpill {
+    flex: 0 0 auto;
+    font-size: 9px;
+    padding: 1px 6px;
+    min-width: 52px;
+    text-align: center;
+}
 
 /* DT-style risk strip — five labelled pills across the top */
 .risk-strip {
@@ -467,3 +616,102 @@ footer {
     border-top: 1px solid #ddd;
     text-align: center;
 }
+
+/* ─── Cash Position chart ────────────────────────────────────────── */
+.cash-position { margin: 0 0 16px 0; }
+.cash-summary {
+    color: #333;
+    font-size: 13px;
+    margin: 4px 0 12px 0;
+    line-height: 1.5;
+}
+.cash-summary strong { color: #000; }
+.cash-stale {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 6px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 3px;
+    font-size: 11px;
+}
+.cash-chart-wrap {
+    position: relative;
+    max-width: 920px;
+}
+.cash-chart {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+}
+.cash-bar { cursor: default; }
+.cash-bar:hover rect { filter: brightness(1.1); }
+.cash-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    padding: 10px 14px;
+    min-width: 200px;
+    max-width: 320px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.4;
+    z-index: 100;
+}
+.cash-tooltip-title {
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
+}
+.cash-tooltip-amount {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+.cash-tooltip-note {
+    color: #666;
+    font-style: italic;
+    font-size: 11px;
+}
+.cash-empty {
+    padding: 24px;
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    background: #fafafa;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+}
+
+/* ─── Historical O/S & Potential Dilution chart ──────────────────── */
+.os-legend {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+.os-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #555;
+    white-space: nowrap;
+}
+.os-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+/* Form 144 rows: live (≤90d, sale window open) vs expired context */
+tr.f144-context td { color: #999; }
+tr.f144-context td a { color: #8aa3c0; }

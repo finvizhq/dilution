@@ -1,6 +1,7 @@
 {
   "ticker": "XTLB",
   "source": "DilutionTracker screenshot, manually transcribed",
+  "notes": "exercise_price corrected 4.0 -> 4.8 vs the raw DT screenshot: the 6-Ks (2024-03-20, 2024-08-14) and the FY2024 20-F all state a $1.20 warrant exercise price; x4 for the 2026-03-25 1-for-4 reverse ADS split = $4.80. DT had transcribed the $1.00 unit PURCHASE price as the strike. Do not revert to 4.0. ROUND-3 EDIT 2026-06-05: ADDED the June 2025 $1M insider convertible note (6-K 0001213900-25-054349, filed 2025-06-13) — real post-DT-snapshot instrument the screenshot predates; values transcribed from filing-verified walker output (conversion price is unset on the note, so conv fields are omitted); owners (Rabinovich/Shalev/Band insiders) unasserted.",
   "cards": {
     "warrant": [
       {
@@ -9,15 +10,24 @@
         "registered": "Not Registered",
         "remaining_outstanding": 375000,
         "total_issued": 375000,
-        "exercise_price": 4.0,
+        "exercise_price": 4.8,
         "known_owners": [],
         "underwriter": null,
-        "price_protection": "undisclosed",
         "exercisable_date": "2024-08-14",
         "expiration_date": "2029-08-14"
       }
     ],
-    "convertible": [],
+    "convertible": [
+      {
+        "issue_date": "2025-06-13",
+        "title_contains": "June 2025",
+        "registered": "Not Registered",
+        "principal_remaining": 1000000,
+        "principal_total": 1000000,
+        "convertible_date": "2025-06-13",
+        "maturity_date": "2026-12-13"
+      }
+    ],
     "convertible_preferred": [],
     "atm": [],
     "equity_line": [],

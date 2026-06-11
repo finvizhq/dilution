@@ -4,8 +4,13 @@ venv/
 dilution.db
 dilution.db-wal
 dilution.db-shm
+dilution.db.bak*
+*.db.bak*
+*.bak
+*.bak-*
 dilution.log*
 dashboard.log*
 dilution_reports/
 __pycache__/
 *.pyc
+.log

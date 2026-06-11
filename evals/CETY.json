@@ -1,0 +1,258 @@
+{
+  "ticker": "CETY",
+  "source": "DilutionTracker screenshots, manually transcribed 2026-06-02 (Clean Energy Technologies, Inc.). Pure transcription of the DT cards \u2014 the pre-existing CETY ledger in the DB was produced by an older/less-accurate pipeline and was NOT consulted; this fixture is the ground-truth target for a fresh re-walk.",
+  "notes": [
+    "SCOPE = live/outstanding only. DT shows CETY's full history; this fixture keeps only instruments still outstanding, consistent with the XTIA convention (converted/extinguished tranches are not live cap-table items; the pipeline emits statuses=active+superseded only). DROPPED on purpose, do NOT restore from a DT screenshot: (a) the fully-converted Series E Convertible Preferred (FirstFire, $0 remaining, 233,333 sh / $3.5M issued, issue 2023-10-31); (b) 10 convertible notes shown by DT with $0 remaining principal: 'Various Convertible Notes Pre Uplist' (Registered aggregate, 2023-03-08), January 2024 (FirstFire), February 2024 (Coventry), March 2024 (FirstFire), September 2024 Note 2 (Mast Hill, 2024-09-10), August 2024 (1800 Diagonal), October 2024 (1800 Diagonal), December 2024 (Lucas Ventures, issued 2024-11-29), November 2024 (Coventry), March 2025 (Mast Hill, issued 2025-02-28); (c) July 2023 (Mast Hill $556,000, conv $6.00 pre-split = $90 post-split) \u2014 removed 2026-06-05 (round-3 A8): converted in full into Series E preferred on 2023-11-08 per 10-Q 0001493152-25-024235 ('On that day this note was converted into Series E preferred shares of CETY').",
+    "CETY is a deep variable-rate ('toxic') convertible ladder (Mast Hill, 1800 Diagonal, FirstFire, Pacific Pier, Coventry) \u2014 the regression target for convertible-note lifecycle + split-adjusted conversion prices. Two reverse splits apply: 1-for-40 on 2023-01-19 and 1-for-15 on 2025-10-06. All DT values here are post-split as displayed.",
+    "FIELD-INCLUSION choices for indeterminate variable-rate fields: (1) April 2026 note is not convertible until 2026-10-20 \u2014 DT shows Conversion Price $0.00 and 0 shares because the VWAP-based price is not yet fixed; conversion_price / total_shares_issuable / remaining_shares_issuable are intentionally OMITTED (only principal + dates + owner asserted). (2) August 2025 note shows Remaining Shares = 0 with positive remaining principal ($206,745) \u2014 a DT display convention for an unfixed variable price; remaining_shares_issuable is OMITTED there.",
+    "SNAPSHOT_FIELDS markers (round-3 C1 decision 2026-06-05): the no-conversion variable-rate notes (April-23, July, August 2025) and the Jan-2025 warrant's post-ratchet strike/count carry \"snapshot_fields\" lists \u2014 DT derives those values from market data at ITS OWN card-update date (the 3.75s = 90% x ~$4.17, CETY's early-Oct-2025 price; CETY now trades ~$0.73), so no filing-derived computation can ever match the frozen numbers. They are recorded for documentation and EXCLUDED from scoring; cards render a live effective price instead (conversion-derived when conversions exist, else discount x market once discount-term extraction lands). The Jan-2025 and April-4 2025 CONVERTIBLES stay fully scored: their DT prices (2.86 / 0.96) are conversion-derived and the pipeline reproduces them via _effective_conv_price once the walker records the conversions (April-4 already passes; Jan-2025 self-heals with the round-3 B1 re-walk).",
+    "DATE ANOMALIES carried verbatim from DT (verify against EDGAR on next pass): the warrant DT titles 'March 2025 Warrant' has Issue/Exercisable Date 2025-02-28; the shelf DT titles 'October 2023 Shelf' shows Effect Date 2025-08-29 / Expiration 2028-08-29 (a 3-yr window starting Aug-2025, not Oct-2023). Cards are matched by date, so title_contains is secondary.",
+    "Baby-shelf I.B.6 snapshot fields (current_raisable_amount, raised_last_12mo_under_ib6, ib6_float_value) are excluded from scoring by run_eval.py for baby_shelf_restriction=='Yes' shelves; recorded here for documentation only.",
+    "Warrants/ATM/ELOC/shelf: DT shows exactly one ATM (Roth), one equity line (Mast Hill SPA), one shelf (baby shelf), and four live warrants \u2014 the complete live non-convertible set per the screenshots.",
+    "ROUND-3 EDITS 2026-06-05 (evals/_round3_findings.md, all filing-verified): (1) DELETED the 'March 2024' warrant \u2014 DT ghost; the real Mar-2024 warrant (8-K 0001493152-24-010697) was $1.60 strike, 1-year expiry, i.e. expired 2025; the fixture's 133,333 @ $13.50 / 2029 expiry appears in no filing. (2) 'Convertible Portion of Loan' re-pinned to filing truth (8-K 0001493152-24-025276): conversion right belongs to the LENDERS (FPM Development / Evergreen Credit Facility I / AMEC, not borrower Vermont Renewable Gas) at a 15%-discount VARIABLE price \u2014 conversion_price/shares fields OMITTED per the April-2026 variable-rate convention; principal kept at DT's $3.6M convertible-portion basis (vs walker's $12M full loan face) pending the gross-vs-net convention decision (C1). (3) shelf total_shelf_capacity 75M -> 70M per the S-3/A filed 2025-03-13. (4) ADDED post-DT-snapshot real instruments transcribed from filing-verified walker values: Aug-2022 Jefferson Street warrant (SPA 8-K 0001493152-22-023181; underwriter key omitted \u2014 walker's 'J.H. Darbie' broker misattribution is a tracked prompt fix), June-2025 Mast Hill note (principal_remaining 335,000 is the walker's value; the Nov-2025 10-Q reports $223,184 as of 2025-09-30 \u2014 re-pin after the periodic-balance walker fix lands), and the three March-2026 notes (8-K 0001493152-26-009577: 1800 Diagonal $147,840, Mega Sincere $664,916, Noblebear $660,000).",
+    "ROUND-5 DROPS 2026-06-06 (evals/_round5_triage.md, all verified against the NEW FY2025 10-K 0001493152-26-027409 filed 2026-06-05, which postdates the DT screenshots): (1) June 2024 FPM/Evergreen convertible-portion card DELETED \u2014 no tranche was ever disbursed; Sept-2024 10-Q 'There was no balance owed as of September 30, 2024' and 10-K 'FPM Development is in default, and there was $0 owed as of December 31, 2025'; $0 outstanding = dropped per the live-only SCOPE rule (its $3.6M was the speculative 30%-of-$12M DT basis, C1 still open). (2) Sept-2024 Coventry card DELETED \u2014 fully repaid, 10-K 'The balance of this note as of December 31, 2025, was $0'; the old 10,120 was one remaining payment captured before final payoff. (3) June 2025 Mast Hill card DELETED \u2014 10-K Item 5 conversion notices report it fully converted (the 223,184 was true as of the Nov-2025 10-Q). Walker behavior is CORRECT on all three; do not restore from stale DT screenshots.",
+    "ROUND-6c RE-PIN 2026-06-06: Jan-2025 Mast Hill principal_remaining 810,228 -> 702,581. Verified against source: 810,228 appears in NO CETY filing (searched all of dilution_raw); the DT screenshot (2026-06-02) PREDATES the 2026-06-05 amendment batch. 702,581 is the verbatim restated balance in the Q3-2025 10-Q/A (0001493152-26-027406, as-of 2025-09-30), the latest filing-stated figure for this note. The shares/conversion_price fields on this card remain blocked on the conv-price ping-pong follow-up (DT 2.86 conversion-derived vs walker 0.63), unchanged by this re-pin."
+  ],
+  "cards": {
+    "warrant": [
+      {
+        "issue_date": "2022-08-05",
+        "title_contains": "August 2022",
+        "registered": "Not Registered",
+        "remaining_outstanding": 2894,
+        "total_issued": 2894,
+        "exercise_price": 24.0,
+        "known_owners": [
+          "Jefferson Street"
+        ],
+        "exercisable_date": "2023-02-05",
+        "expiration_date": "2027-08-05"
+      },
+      {
+        "issue_date": "2024-12-05",
+        "title_contains": "December 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 33333,
+        "total_issued": 33333,
+        "exercise_price": 30.0,
+        "known_owners": [
+          "Mast Hill"
+        ],
+        "underwriter": null,
+        "exercisable_date": "2024-12-05",
+        "expiration_date": "2026-12-05"
+      },
+      {
+        "issue_date": "2025-02-28",
+        "title_contains": "March 2025",
+        "registered": "Not Registered",
+        "remaining_outstanding": 20667,
+        "total_issued": 20667,
+        "exercise_price": 37.5,
+        "known_owners": [
+          "Mast Hill"
+        ],
+        "underwriter": null,
+        "exercisable_date": "2025-02-28",
+        "expiration_date": "2030-02-28"
+      },
+      {
+        "issue_date": "2025-01-16",
+        "title_contains": "January 2025",
+        "registered": "Not Registered",
+        "remaining_outstanding": 672309,
+        "total_issued": 2132596,
+        "exercise_price": 0.96,
+        "known_owners": [
+          "Mast Hill"
+        ],
+        "underwriter": null,
+        "exercisable_date": "2025-01-16",
+        "expiration_date": "2030-01-16",
+        "snapshot_fields": [
+          "exercise_price",
+          "total_issued"
+        ]
+      }
+    ],
+    "convertible": [
+      {
+        "issue_date": "2025-01-16",
+        "title_contains": "January 2025",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 282827,
+        "principal_remaining": 702581,
+        "conversion_price": 2.86,
+        "total_shares_issuable": 571719,
+        "principal_total": 1637833,
+        "known_owners": [
+          "Mast Hill"
+        ],
+        "convertible_date": "2025-01-16",
+        "maturity_date": "2026-01-16"
+      },
+      {
+        "issue_date": "2025-04-04",
+        "title_contains": "April 2025",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 51885,
+        "principal_remaining": 49835,
+        "conversion_price": 0.96,
+        "total_shares_issuable": 359189,
+        "principal_total": 345000,
+        "known_owners": [
+          "Pacific Pier"
+        ],
+        "convertible_date": "2025-10-04",
+        "maturity_date": "2026-04-04"
+      },
+      {
+        "issue_date": "2025-04-23",
+        "title_contains": "April 2025",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 68267,
+        "principal_remaining": 256000,
+        "conversion_price": 3.75,
+        "total_shares_issuable": 68267,
+        "principal_total": 256000,
+        "known_owners": [
+          "Pacific Pier"
+        ],
+        "convertible_date": "2025-10-23",
+        "maturity_date": "2026-04-23",
+        "snapshot_fields": [
+          "conversion_price",
+          "total_shares_issuable",
+          "remaining_shares_issuable"
+        ]
+      },
+      {
+        "issue_date": "2025-07-18",
+        "title_contains": "July 2025",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 22286,
+        "principal_remaining": 83572,
+        "conversion_price": 3.75,
+        "total_shares_issuable": 53667,
+        "principal_total": 201250,
+        "known_owners": [
+          "FirstFire"
+        ],
+        "convertible_date": "2025-07-18",
+        "maturity_date": "2026-07-18",
+        "snapshot_fields": [
+          "conversion_price",
+          "total_shares_issuable",
+          "remaining_shares_issuable"
+        ]
+      },
+      {
+        "issue_date": "2025-08-18",
+        "title_contains": "August 2025",
+        "registered": "Not Registered",
+        "principal_remaining": 206745,
+        "conversion_price": 3.75,
+        "total_shares_issuable": 103703,
+        "principal_total": 388888,
+        "known_owners": [
+          "Mast Hill"
+        ],
+        "convertible_date": "2025-08-18",
+        "maturity_date": "2026-08-18",
+        "snapshot_fields": [
+          "conversion_price",
+          "total_shares_issuable"
+        ]
+      },
+      {
+        "issue_date": "2026-04-20",
+        "title_contains": "April 2026",
+        "registered": "Not Registered",
+        "principal_remaining": 406000,
+        "principal_total": 406000,
+        "known_owners": [
+          "Pacific Pier"
+        ],
+        "convertible_date": "2026-10-20",
+        "maturity_date": "2027-04-20"
+      },
+      {
+        "issue_date": "2026-03-04",
+        "title_contains": "March 2026 1800 Diagonal",
+        "registered": "Not Registered",
+        "principal_remaining": 147840,
+        "principal_total": 147840,
+        "known_owners": [
+          "1800 Diagonal Lending"
+        ],
+        "convertible_date": "2026-03-04",
+        "maturity_date": "2026-12-15"
+      },
+      {
+        "issue_date": "2026-03-06",
+        "title_contains": "March 2026 Mega Sincere",
+        "registered": "Not Registered",
+        "principal_remaining": 664916,
+        "principal_total": 664916,
+        "conversion_price": 0.646,
+        "known_owners": [
+          "Mega Sincere"
+        ],
+        "convertible_date": "2026-03-06",
+        "maturity_date": "2027-03-06"
+      },
+      {
+        "issue_date": "2026-03-06",
+        "title_contains": "March 2026 Noblebear",
+        "registered": "Not Registered",
+        "principal_remaining": 660000,
+        "principal_total": 660000,
+        "conversion_price": 0.646,
+        "known_owners": [
+          "Noblebear"
+        ],
+        "convertible_date": "2026-03-06",
+        "maturity_date": "2026-09-06"
+      }
+    ],
+    "convertible_preferred": [],
+    "atm": [
+      {
+        "agreement_start_date": "2023-10-06",
+        "title_contains": "October 2023 Roth",
+        "registered": "Registered",
+        "remaining_capacity": 25000000,
+        "total_capacity": 25000000,
+        "limited_by_baby_shelf": "Yes",
+        "remaining_without_baby_shelf": 25000000,
+        "placement_agent": "Roth"
+      }
+    ],
+    "equity_line": [
+      {
+        "agreement_start_date": "2024-12-05",
+        "title_contains": "December 2024 Mast Hill",
+        "registered": "Not Registered",
+        "remaining_capacity": 5000000,
+        "total_capacity": 5000000,
+        "agreement_end_date": "2026-12-05"
+      }
+    ],
+    "shelf": [
+      {
+        "effect_date": "2025-08-29",
+        "title_contains": "October 2023",
+        "registered": "Registered",
+        "current_raisable_amount": 3150446,
+        "total_shelf_capacity": 70000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 0,
+        "raised_last_12mo_under_ib6": 0,
+        "ib6_float_value": 9451337,
+        "last_banker": "Roth",
+        "expiration_date": "2028-08-29"
+      }
+    ],
+    "s1_offering": []
+  }
+}

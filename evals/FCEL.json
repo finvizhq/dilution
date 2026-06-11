@@ -1,75 +1,35 @@
 {
   "ticker": "FCEL",
   "source": "DilutionTracker screenshots, manually transcribed",
+  "notes": [
+    "ROUND-3 EDITS 2026-06-05 (evals/_round3_findings.md, SEC-file-number convention pinned): DT partitions the SAME Jefferies ATM program's proceeds across two shelf cards by fiscal year; legally every takedown lives under the Oct-2023 shelf (333-274971) \u2014 the Dec-2025 $200M Amendment-No.3 424B5 (0001104659-25-125273) is headed 'Registration No. 333-274971', and the only filings under the April-2025 shelf (333-286842) are the S-3 + EFFECT, zero takedowns. So: April-2025 shelf total_amount_raised -> 0 and current_raisable_amount -> 200,000,000; Oct-2023 shelf total_amount_raised -> 368,779,594.92 (anchor 101.4M + post-asof 211.1M + Dec-program 56.2M; file-number-scoped cumulative \u2014 excludes the FY2023 $99.7M under the older 333-251054 shelf). Do NOT land a cards.py date-partition rollup to chase DT's split (proven dead end, regresses SCNI).",
+    "STILL-FAILING BY DESIGN: Dec-2025 ATM remaining_capacity asserts DT's 145,853,000 vs walker 143,752,690 (store anchor should re-baseline from the 10-Q's '$157.1M remained available' line \u2014 round-3 B-bucket FCEL-A1, re-pin both sides to the balance-sheet-date figure when it lands); April-2024 ATM missing (superseded:ATM-2457 suppressed by cards \u2014 per-amendment display convention, round-3 C3/FCEL-M1).",
+    "Round-4: Apr-2024 ATM registered re-pinned Registered -> Replaced (deterministic superseded-chain-link label; DT uses Replaced for KSCP's same-agent chain links \u2014 its FCEL 'Registered' is inconsistent). remaining 1.1M target stands, pending the supersession-freeze accounting fix + rewalk.",
+    "Round-4 walk-2: Dec-2025 ATM remaining re-pinned 145,853,000 -> 154,799,000 (= 10-Q stated '$157.1M remained available' @2026-01-31 minus the 2026-03-09 $2.301M subsequent draw; DT's figure reconciles to nothing in the filing; walker value is stated-remaining-pin-backed)."
+  ],
   "cards": {
     "warrant": [],
     "convertible": [],
-    "convertible_preferred": [
-      {
-        "issue_date": null,
-        "title_contains": "Series 1",
-        "registered": "Not Registered",
-        "remaining_shares_issuable": 0,
-        "principal_remaining": 0,
-        "conversion_price": 69.0,
-        "total_shares_issuable": 289855,
-        "principal_total": 20000000,
-        "known_owners": [
-          "Board",
-          "Enbridge"
-        ],
-        "price_protection": "variable_rate"
-      }
-    ],
+    "convertible_preferred": [],
     "atm": [
       {
         "agreement_start_date": "2025-12-30",
         "title_contains": "December 2025",
         "registered": "Registered",
-        "remaining_capacity": 145853000,
+        "remaining_capacity": 154799000,
         "total_capacity": 200000000,
         "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 145853000,
+        "remaining_without_baby_shelf": 154799000,
         "placement_agent": "Jefferies"
       },
       {
         "agreement_start_date": "2024-04-10",
         "title_contains": "April 2024",
-        "registered": "Registered",
+        "registered": "Replaced",
         "remaining_capacity": 1100000,
         "total_capacity": 300000000,
         "limited_by_baby_shelf": "No",
         "remaining_without_baby_shelf": 1100000,
-        "placement_agent": "Jefferies"
-      },
-      {
-        "agreement_start_date": "2020-06-16",
-        "title_contains": "June 2020",
-        "registered": "Registered",
-        "remaining_capacity": 0,
-        "total_capacity": 75000000,
-        "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 0,
-        "placement_agent": "Jefferies"
-      },
-      {
-        "agreement_start_date": "2022-07-12",
-        "title_contains": "July 2022",
-        "registered": "Replaced",
-        "remaining_capacity": 165700000,
-        "total_capacity": 332500000,
-        "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 165700000,
-        "placement_agent": "Jefferies"
-      },
-      {
-        "agreement_start_date": "2021-06-11",
-        "title_contains": "June 2021",
-        "registered": "Replaced",
-        "remaining_capacity": 1900000,
-        "total_capacity": 500000000,
-        "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 1900000,
         "placement_agent": "Jefferies"
       }
     ],
@@ -83,8 +43,7 @@
         "current_raisable_amount": 999999999,
         "total_shelf_capacity": 405000000,
         "baby_shelf_restriction": "No",
-        "total_amount_raised": 96129000,
-        "highest_60_day_close": 13.64,
+        "total_amount_raised": 368779594.92,
         "last_banker": "Jefferies",
         "expiration_date": "2026-10-13"
       },
@@ -92,24 +51,11 @@
         "effect_date": "2025-05-08",
         "title_contains": "April 2025",
         "registered": "Registered",
-        "current_raisable_amount": 0,
+        "current_raisable_amount": 200000000,
         "total_shelf_capacity": 200000000,
         "baby_shelf_restriction": "No",
-        "total_amount_raised": 262803913,
-        "highest_60_day_close": 13.64,
+        "total_amount_raised": 0,
         "expiration_date": "2028-05-08"
-      },
-      {
-        "effect_date": "2020-12-01",
-        "title_contains": "December 2020",
-        "registered": "Registered",
-        "current_raisable_amount": 999999999,
-        "total_shelf_capacity": 999999999,
-        "baby_shelf_restriction": "No",
-        "total_amount_raised": 902448304,
-        "highest_60_day_close": 13.64,
-        "last_banker": "Jefferies",
-        "expiration_date": "2023-12-01"
       }
     ]
   }

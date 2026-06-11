@@ -1,0 +1,117 @@
+Skip to main content
+DilutionTracker Knowledge Base
+English
+Search for articles...
+
+    All Collections
+
+Dilution Course
+
+    Terminology - TLDR Edition
+
+Terminology - TLDR Edition
+
+Explanation of dilution terms
+Written by Shawn Stevenson
+August 20, 2021
+
+Reminder: You can always ask questions by messaging us! We'll clarify technical dilution concepts for you!
+
+ 
+
+Affiliate Status- Shares are considered to be owned by an affiliate of the company if the owner is either part of management, the board of directors, or the owner holds more than 10% of the voting power in the company.
+
+ 
+
+At-the-market agreements (ATM) - A way for company to issue shares directly on the open market through a broker-dealer up to the amount registered on a prospectus.
+
+ 
+
+Cashless exercise - A price protection feature allows the warrant holder to exercise shares without payment if predetermined conditions are met.
+
+ 
+
+Conversion price - The price that determines how many shares a convertible debt or preferred holder receives on conversion. (Shares received) = ($ Amount of debt)/(Conversion price).
+
+ 
+
+Death spiral financing - A form of financing that allows the financier to receive more shares as the stock price goes down as a result of price protection clauses, leading to a downward spiral of selling pressure.
+
+ 
+
+Equity Line of Credit - A form of equity financing that allows the company to sell newly issued shares to an institution in amounts and prices predetermined based on a Share Purchase Agreement.
+
+ 
+
+Exercise price - The price that a warrant holder pays to exercise a warrant for shares.
+
+ 
+
+Full Ratchet - A price protection feature that lowers the exercise/conversion price of warrants/convertibles in the event that the company issues securities in the future at a lower price than the original exercise/conversion price. Also known as down-round protection. 
+
+ 
+
+IB6/Baby shelf restriction - A legal rule that prohibits a company from raising more than 1/3 of its publicly traded float off a shelf registration if the public float is less than $75m.
+
+ 
+
+Market Value of Public Held Shares (MVPHS) - Calculated as the number of shares held by non-affiliates multiplied by the highest closing price of the stock in the last 60 calendar days. Used as the value of the public float in IB6/baby shelf restriction.
+
+ 
+
+Pre-funded warrant - A warrant with an exercise price of $0.01. The purpose of the pre-funded warrant is to allow purchasers to acquire economic equivalent of a share without triggering the 10% affiliate ownership rule since warrants do not count towards ownership calculations. 
+
+ 
+
+Price protection features - Legal clauses that can reduce the exercise or conversion price of warrants and convertibles, which allows the holder to acquire shares cheaper or acquire more shares. 
+
+ 
+
+Private Placement - A form of financing where unregistered shares or debt are issued to a small group of buyers. The shares will need to be registered with the SEC through an effective prospectus before they can be sold on the open market. 
+
+ 
+
+Registered Direct Offering (RDO) - A type of offering where newly issued registered shares are directly placed with institutional buyers through a placement agent. These are a common form of offering using a previously registered shelf.
+
+ 
+
+Registration - Restricted shares must be registered with the SEC before they can be sold to the public via open market sales. The exemption is through rule 144.
+
+ 
+
+Rule 144 - An exemption that allows the sale of restricted shares if five specific conditions are met. The maximum that can be sold is the greater of 1% or the average reported weekly trading volume during the four weeks preceding the filing of a notice of sale on Form 144.
+
+ 
+
+Shelf Registration - A S-3/F-3/F-10 shelf registration allows a company to raise money anytime and as many times within the next three years using the same registration statement up to the maximum dollar amount registered in the filing.
+
+ 
+
+Underwriter/Placement agent- The investment bank that facilitates the issuance of new securities.
+
+ 
+
+Variable rate security - A price protection feature that adjusts the exercise/conversion price based on a formula involving the latest market price (e.g. 80% of previous day's VWAP).
+
+ 
+
+Warrant - Similar to a call option, gives the holder the right but not the obligation to purchase shares at the exercise price.
+
+ 
+
+Warrant coverage - The number of warrants given for each share purchased in an offering stated as a ratio.
+
+ 
+
+ 
+
+ 
+
+ 
+Did this answer your question?
+DilutionTracker Knowledge Base
+
+    HomeApp
+
+We run on Intercom
+

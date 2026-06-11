@@ -1,6 +1,7 @@
 {
   "ticker": "XTIA",
   "source": "DilutionTracker screenshots, manually transcribed",
+  "notes": "Dropped the September 2021 (strike 2,343,750, out 0) and March 2022 (strike 884,437.5, out 0) warrant entries: both correspond to walker rows W-2641 / W-2657 with status=converted (Feb 2023 exchange), which warrant_cards() correctly hides — converted/extinguished tranches no longer exist on the cap table. DT keeps them as out=0 historical entries; we do not. Do not restore from a DT screenshot. Dropped the 'June 2023 Maxim' ATM entry: the Maxim Equity Distribution Agreement (dated 2022-07-22) expired 2024-12-31 per 10-Q 0001213900-25-112615 ('now expired'); the program is terminated with remaining=0, so no live/Registered ATM card exists. DT's stale 38.6M-remaining snapshot predates the wind-down. Do not restore.",
   "cards": {
     "warrant": [
       {
@@ -11,7 +12,6 @@
         "total_issued": 12500000,
         "exercise_price": 2.0,
         "underwriter": "ThinkEquity",
-        "price_protection": "Customary Anti-Dilution",
         "exercisable_date": "2025-09-15",
         "expiration_date": "2030-09-15"
       },
@@ -19,11 +19,10 @@
         "issue_date": "2025-06-26",
         "title_contains": "June 2025",
         "registered": "Registered",
-        "remaining_outstanding": 9143000,
-        "total_issued": 9143000,
+        "remaining_outstanding": 6483892,
+        "total_issued": 10514000,
         "exercise_price": 2.0,
         "underwriter": "ThinkEquity",
-        "price_protection": "Customary Anti-Dilution",
         "exercisable_date": "2025-06-24",
         "expiration_date": "2030-06-24"
       },
@@ -31,11 +30,10 @@
         "issue_date": "2025-03-31",
         "title_contains": "March 2025",
         "registered": "Registered",
-        "remaining_outstanding": 171700,
+        "remaining_outstanding": 56700,
         "total_issued": 2941200,
         "exercise_price": 1.36,
         "underwriter": "ThinkEquity",
-        "price_protection": "Customary Anti-Dilution",
         "exercisable_date": "2025-03-28",
         "expiration_date": "2030-03-28"
       },
@@ -47,195 +45,12 @@
         "total_issued": 154,
         "exercise_price": 146250,
         "underwriter": "Maxim",
-        "price_protection": "undisclosed",
         "exercisable_date": "2022-10-20",
         "expiration_date": "2027-10-20"
-      },
-      {
-        "issue_date": "2022-10-20",
-        "title_contains": "October 2022 Pre-funded",
-        "registered": "Registered",
-        "remaining_outstanding": 0,
-        "total_issued": 92,
-        "exercise_price": 250,
-        "underwriter": "Maxim",
-        "price_protection": "undisclosed",
-        "exercisable_date": "2022-10-20"
-      },
-      {
-        "issue_date": "2023-12-15",
-        "title_contains": "December 2023 Inducement",
-        "registered": "Pending Effect",
-        "remaining_outstanding": 0,
-        "total_issued": 1965,
-        "exercise_price": 1282.5,
-        "known_owners": [
-          "Kantor Family",
-          "SmartNet",
-          "Streeterville",
-          "Various Individuals"
-        ],
-        "underwriter": "Joseph Gunnar",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2023-12-15",
-        "expiration_date": "2028-12-15"
-      },
-      {
-        "issue_date": "2021-09-15",
-        "title_contains": "September 2021",
-        "registered": "Registered",
-        "remaining_outstanding": 0,
-        "total_issued": 25,
-        "exercise_price": 2343750,
-        "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2021-09-15",
-        "expiration_date": "2026-09-15"
-      },
-      {
-        "issue_date": "2022-03-24",
-        "title_contains": "March 2022",
-        "registered": "Registered",
-        "remaining_outstanding": 0,
-        "total_issued": 60,
-        "exercise_price": 884437.5,
-        "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2022-03-24",
-        "expiration_date": "2027-03-24"
-      },
-      {
-        "issue_date": "2021-01-27",
-        "title_contains": "January 2021",
-        "registered": "Registered",
-        "remaining_outstanding": 10,
-        "total_issued": 10,
-        "exercise_price": 2906250,
-        "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2021-01-27",
-        "expiration_date": "2026-01-27"
-      },
-      {
-        "issue_date": "2021-02-16",
-        "title_contains": "February 2021 Warrants",
-        "registered": "Registered",
-        "remaining_outstanding": 8,
-        "total_issued": 8,
-        "exercise_price": 3750000,
-        "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2021-02-16",
-        "expiration_date": "2026-02-16"
-      },
-      {
-        "issue_date": "2021-02-18",
-        "title_contains": "February 2021 Warrants 2",
-        "registered": "Registered",
-        "remaining_outstanding": 5,
-        "total_issued": 5,
-        "exercise_price": 3768750,
-        "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2021-02-18",
-        "expiration_date": "2026-02-18"
-      },
-      {
-        "issue_date": "2020-11-30",
-        "title_contains": "November 2020",
-        "registered": "Registered",
-        "remaining_outstanding": 4,
-        "total_issued": 4,
-        "exercise_price": 2343750,
-        "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
-        "exercisable_date": "2020-11-30",
-        "expiration_date": "2025-11-30"
-      },
-      {
-        "issue_date": "2023-05-15",
-        "title_contains": "May 2023",
-        "registered": "Registered",
-        "remaining_outstanding": 0,
-        "total_issued": 6000,
-        "exercise_price": 1831,
-        "known_owners": [
-          "Anson",
-          "Streeterville"
-        ],
-        "underwriter": "Maxim",
-        "price_protection": "variable_rate",
-        "pp_clause_text": "Upon receipt of stockholder approval the exercise price will equal the lower of (i) the Initial Exercise Price and (ii) 90% of the lowest VWAP",
-        "exercisable_date": "2023-05-15",
-        "expiration_date": "2024-05-15"
       }
     ],
-    "convertible": [
-      {
-        "issue_date": "2022-12-30",
-        "title_contains": "December 2022 Streeterville",
-        "registered": "Not Registered",
-        "remaining_shares_issuable": 1762,
-        "principal_remaining": 8813014,
-        "conversion_price": 5000,
-        "total_shares_issuable": 1680,
-        "principal_total": 8400000,
-        "known_owners": [
-          "Streeterville"
-        ],
-        "price_protection": "variable_rate",
-        "pp_clause_text": "Can be repaid with shares based on recent stock price values",
-        "convertible_date": "2022-12-30",
-        "maturity_date": "2023-12-30"
-      },
-      {
-        "issue_date": "2022-07-22",
-        "title_contains": "July 2022 Streeterville",
-        "registered": "Not Registered",
-        "remaining_shares_issuable": 400,
-        "principal_remaining": 2000000,
-        "conversion_price": 5000,
-        "total_shares_issuable": 1300,
-        "principal_total": 6500000,
-        "known_owners": [
-          "Streeterville"
-        ],
-        "price_protection": "variable_rate",
-        "pp_clause_text": "Can be repaid with shares based on recent stock price values",
-        "convertible_date": "2022-07-22",
-        "maturity_date": "2024-05-17"
-      }
-    ],
+    "convertible": [],
     "convertible_preferred": [
-      {
-        "issue_date": "2024-03-12",
-        "title_contains": "Series 9",
-        "registered": "Not Registered",
-        "remaining_shares_issuable": 172200,
-        "principal_remaining": 1859755,
-        "conversion_price": 10.8,
-        "total_shares_issuable": 1098806,
-        "principal_total": 11867100,
-        "known_owners": [
-          "3AM",
-          "Streeterville"
-        ],
-        "price_protection": "variable_rate",
-        "convertible_date": "2024-03-12"
-      },
-      {
-        "issue_date": "2021-09-15",
-        "title_contains": "September 2021 Series 7",
-        "registered": "Registered",
-        "remaining_shares_issuable": 0,
-        "principal_remaining": 0,
-        "conversion_price": 2343750,
-        "total_shares_issuable": 25,
-        "principal_total": 58750000,
-        "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
-        "convertible_date": "2021-09-15"
-      },
       {
         "issue_date": "2022-03-24",
         "title_contains": "March 2022 Series 8",
@@ -246,57 +61,10 @@
         "total_shares_issuable": 60,
         "principal_total": 53198000,
         "underwriter": "Maxim",
-        "price_protection": "Customary Anti-Dilution",
         "convertible_date": "2022-03-24"
-      },
-      {
-        "issue_date": "2025-11-10",
-        "title_contains": "Series 10",
-        "registered": "Registered",
-        "remaining_shares_issuable": 0,
-        "principal_remaining": 0,
-        "conversion_price": 1.49,
-        "total_shares_issuable": 16778523,
-        "principal_total": 25000000,
-        "known_owners": [
-          "Unusual Machines"
-        ],
-        "price_protection": "Customary Anti-Dilution",
-        "convertible_date": "2025-11-10"
       }
     ],
-    "atm": [
-      {
-        "agreement_start_date": "2023-06-13",
-        "title_contains": "June 2023 Maxim",
-        "registered": "Registered",
-        "remaining_capacity": 38600000,
-        "total_capacity": 83800000,
-        "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 38600000,
-        "placement_agent": "Maxim"
-      },
-      {
-        "agreement_start_date": "2022-07-22",
-        "title_contains": "July 2022 Maxim",
-        "registered": "Registered",
-        "remaining_capacity": 0,
-        "total_capacity": 25000000,
-        "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 0,
-        "placement_agent": "Maxim"
-      },
-      {
-        "agreement_start_date": "2020-06-22",
-        "title_contains": "June 2020 Maxim",
-        "registered": "Terminated",
-        "remaining_capacity": 102474227,
-        "total_capacity": 150000000,
-        "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 102474227,
-        "placement_agent": "Maxim"
-      }
-    ],
+    "atm": [],
     "equity_line": [],
     "s1_offering": [
       {
@@ -311,13 +79,6 @@
         "final_shares_offered": 9143400,
         "final_warrant_coverage_pct": 100,
         "exercise_price": 2.0
-      },
-      {
-        "filing_date": "2023-12-20",
-        "title_contains": "December 2023",
-        "status": "Withdrawn",
-        "anticipated_deal_size": 10000000,
-        "warrant_coverage_pct": 0
       }
     ],
     "shelf": [
@@ -329,7 +90,6 @@
         "total_shelf_capacity": 1000000000,
         "baby_shelf_restriction": "No",
         "total_amount_raised": 20000000,
-        "highest_60_day_close": 3.06,
         "last_banker": null,
         "expiration_date": "2028-08-12"
       },
@@ -341,21 +101,8 @@
         "total_shelf_capacity": 350000000,
         "baby_shelf_restriction": "No",
         "total_amount_raised": 43700032,
-        "highest_60_day_close": 3.06,
         "last_banker": "Maxim",
         "expiration_date": "2027-06-18"
-      },
-      {
-        "effect_date": "2021-06-17",
-        "title_contains": "June 2021",
-        "registered": "Registered",
-        "current_raisable_amount": 69300003,
-        "total_shelf_capacity": 350000000,
-        "baby_shelf_restriction": "No",
-        "total_amount_raised": 280699997,
-        "highest_60_day_close": 3.06,
-        "last_banker": "Maxim",
-        "expiration_date": "2024-06-17"
       }
     ]
   }

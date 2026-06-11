@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Single-ticker dilution tracker — cards-only build.
 
-Runs the bare pipeline that feeds the DT-style instrument cards:
+End-to-end pipeline: resolve ticker → CIK, pull SEC filing index, detect
+unit context (FPI / ADS ratio), pull split history, fetch filing text,
+walk the event stream with the LLM extractor.
 
 Usage:
-    python run_dilution.py MULN                     # full pipeline, 6y
+    python run_dilution.py MULN              # 6-year default window
     python run_dilution.py MULN --years 3
-    python run_dilution.py MULN --stage extract --limit 5
+    python run_dilution.py MULN --force      # re-walk from scratch
 """
 
 import argparse
@@ -19,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import config
 from config import PIPELINE_LOG_PATH, set_log_ticker, setup_logging
-from dilution.company import ensure_company, get_company_by_ticker
+from dilution.company import ensure_company, get_unit_context
 from dilution.fetch_raw import fetch_extractable_for_cik
 from dilution.filings import pull_filing_index
 from dilution.ledger.walker import walk_ticker
@@ -27,14 +29,12 @@ from dilution.observability import (
     flush_observability,
     pipeline_session,
     setup_observability,
-    stage,
 )
+from dilution.splits import fetch_and_persist_splits
 from dilution.unit_detection import populate_company_unit
 
 setup_logging(PIPELINE_LOG_PATH)
 log = logging.getLogger("run_dilution")
-
-STAGES = ("resolve", "index", "unit", "fetch", "walk", "all")
 
 
 def _since(years: int) -> str:
@@ -44,86 +44,69 @@ def _since(years: int) -> str:
 def main():
     ap = argparse.ArgumentParser(description="Single-ticker SEC dilution tracker")
     ap.add_argument("ticker", help="e.g. MULN")
-    ap.add_argument("--stage", choices=STAGES, default="all")
     ap.add_argument("--years", type=int, default=6,
                     help="history window in years (default 6)")
-    ap.add_argument("--limit", type=int, default=None,
-                    help="limit filings processed (for extract, debugging)")
     ap.add_argument("--concurrency", type=int, default=config.LLM_CONCURRENCY,
-                    help=f"max concurrent xAI calls in extract/overhang "
-                         f"(default {config.LLM_CONCURRENCY}, set 1 for serial)")
+                    help=f"max concurrent LLM calls (default {config.LLM_CONCURRENCY})")
     ap.add_argument("--force", action="store_true",
-                    help="re-extract every filing even when its model/"
-                         "handler version matches the current pipeline. "
-                         "Use after card-layer or schema fixes when you "
-                         "want a fresh extraction without bumping "
-                         "STAGE1_VERSION/STAGE2_VERSION.")
+                    help="drop ledger and re-walk every filing from scratch")
     args = ap.parse_args()
 
     set_log_ticker(args.ticker)
     setup_observability()
     since = _since(args.years)
-    log.info("Dilution tracker — ticker=%s stage=%s events_since=%s",
-             args.ticker, args.stage, since)
-
-    stages = STAGES[:-1] if args.stage == "all" else [args.stage]
+    log.info("Dilution tracker — ticker=%s since=%s "
+             "llm_provider=%s llm_model=%s llm_model_periodic=%s",
+             args.ticker, since, config.LLM_PROVIDER,
+             config.LLM_MODEL, config.LLM_MODEL_PERIODIC)
 
     try:
         with pipeline_session(
             args.ticker,
             metadata={
-                "stage": args.stage,
                 "years": args.years,
                 "concurrency": args.concurrency,
                 "force": args.force,
                 "llm_provider": config.LLM_PROVIDER,
                 "llm_model": config.LLM_MODEL,
+                "llm_model_periodic": config.LLM_MODEL_PERIODIC,
             },
         ):
-            if "resolve" in stages or args.stage == "all":
-                company = ensure_company(args.ticker)
-            else:
-                company = (get_company_by_ticker(args.ticker)
-                           or ensure_company(args.ticker))
+            company = ensure_company(args.ticker)
             set_log_ticker(company["ticker"])
             cik = company["cik"]
 
-            if "index" in stages:
-                log.info("STAGE index")
-                with stage("index", input={"cik": cik, "since": since}):
-                    pull_filing_index(cik, since_date=since)
+            pull_filing_index(cik, since_date=since)
 
-            if "unit" in stages:
-                log.info("STAGE unit")
-                with stage("unit", input={"cik": cik}):
-                    ctx = populate_company_unit(cik)
-                log.info("  unit ctx — is_fpi=%s ads_ratio=%s reporting_unit=%s",
-                         ctx["is_fpi"], ctx["ads_ratio"], ctx["reporting_unit"])
+            ctx = populate_company_unit(cik)
+            log.info("  unit ctx — is_fpi=%s ads_ratio=%s reporting_unit=%s",
+                     ctx["is_fpi"], ctx["ads_ratio"], ctx["reporting_unit"])
 
-            if "fetch" in stages:
-                log.info("STAGE fetch")
-                with stage("fetch", input={"cik": cik, "since": since}):
-                    fetch_extractable_for_cik(
-                        cik, since_date=since,
-                        concurrency=args.concurrency)
+            unit_ctx_for_splits = get_unit_context(cik)
+            events = fetch_and_persist_splits(
+                cik=cik, ticker=company["ticker"],
+                is_fpi=bool(unit_ctx_for_splits.get("is_fpi")),
+            )
+            log.info("  splits — %d events persisted", len(events))
 
-            if "walk" in stages:
-                log.info("STAGE walk")
-                with stage("walk", input={
-                        "cik": cik, "since": since, "force": args.force}):
-                    summary = walk_ticker(
-                        cik=cik, ticker=company["ticker"], since_date=since,
-                        force=args.force, concurrency=args.concurrency,
-                    )
-                log.info(
-                    "  walk done — seed=%s walked=%d skipped=%d "
-                    "applied=%d rejected=%d created=%d drawdowns=%d "
-                    "anchor_diffs=%d errors=%d",
-                    summary.seed_case, summary.walked, summary.skipped,
-                    summary.mutations_applied, summary.mutations_rejected,
-                    summary.instruments_created, summary.drawdowns_recorded,
-                    summary.anchor_diffs, summary.errors,
-                )
+            fetch_extractable_for_cik(
+                cik, since_date=since, concurrency=args.concurrency)
+
+            summary = walk_ticker(
+                cik=cik, ticker=company["ticker"], since_date=since,
+                force=args.force, concurrency=args.concurrency,
+            )
+            log.info(
+                "  walk done — seed=%s walked=%d skipped=%d "
+                "(resale=%d empty8k=%d) "
+                "applied=%d rejected=%d created=%d drawdowns=%d "
+                "anchor_diffs=%d errors=%d",
+                summary.seed_case, summary.walked, summary.skipped,
+                summary.skipped_resale, summary.skipped_no_dilution,
+                summary.mutations_applied, summary.mutations_rejected,
+                summary.instruments_created, summary.drawdowns_recorded,
+                summary.anchor_diffs, summary.errors,
+            )
     finally:
         flush_observability()
 

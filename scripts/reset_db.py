@@ -8,6 +8,7 @@ Usage:
 
 import argparse
 import shutil
+import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -17,6 +18,36 @@ sys.path.insert(0, str(ROOT))
 
 from config import DB_PATH
 from dilution.schema import init_dilution_db
+
+
+def _abort_if_active(db: Path) -> None:
+    """Refuse to reset when another process has the DB open with pending
+    state. Catches the orphan-pipeline race where reset_db.py wipes the
+    file mid-fetch and the still-running worker's next `_store` insert
+    hits FOREIGN KEY constraint failed against the freshly-empty schema.
+
+    Detection: try BEGIN EXCLUSIVE with a 0.5s timeout. SQLite's
+    exclusive lock conflicts with ANY other connection's read or write
+    transaction, so this fails fast when a `run_dilution.py` worker is
+    active. Clean idle state acquires the lock instantly and releases it.
+    """
+    if not db.exists():
+        return
+    try:
+        conn = sqlite3.connect(str(db), timeout=0.5)
+    except sqlite3.OperationalError as exc:
+        raise SystemExit(f"refusing to reset: cannot open {db} ({exc})")
+    try:
+        conn.execute("BEGIN EXCLUSIVE")
+        conn.rollback()
+    except sqlite3.OperationalError as exc:
+        raise SystemExit(
+            f"refusing to reset: {db} is in use ({exc}). Kill any active "
+            "run_dilution.py / eval pipeline processes first — try "
+            "`pgrep -fa run_dilution` to find them."
+        )
+    finally:
+        conn.close()
 
 
 def main() -> int:
@@ -33,6 +64,8 @@ def main() -> int:
         if resp not in ("y", "yes"):
             print("Aborted.")
             return 1
+
+    _abort_if_active(db)
 
     if db.exists():
         if not args.no_backup:

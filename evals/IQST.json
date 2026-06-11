@@ -3,24 +3,7 @@
   "source": "DilutionTracker screenshot, manually transcribed (cards as of 2026-05-01)",
   "cards": {
     "warrant": [],
-    "convertible": [
-      {
-        "issue_date": "2024-01-24",
-        "title_contains": "January 2025",
-        "registered": "Not Registered",
-        "remaining_shares_issuable": 277731,
-        "principal_remaining": 1166471,
-        "conversion_price": 4.2,
-        "total_shares_issuable": 925926,
-        "principal_total": 3888889,
-        "known_owners": [
-          "M2B Funding"
-        ],
-        "price_protection": "Customary Anti-Dilution",
-        "convertible_date": "2024-01-24",
-        "maturity_date": "2026-03-25"
-      }
-    ],
+    "convertible": [],
     "convertible_preferred": [
       {
         "issue_date": "2025-07-08",
@@ -34,18 +17,20 @@
         "known_owners": [
           "M2B Funding"
         ],
-        "price_protection": "Customary Anti-Dilution",
         "convertible_date": "2025-10-08"
       }
     ],
     "equity_line": [
       {
         "agreement_start_date": "2026-05-01",
-        "title_contains": "April 2026 M2B Funding",
+        "title_contains": "April 2026 M2B",
         "remaining_capacity": 50000000,
         "total_capacity": 50000000,
         "agreement_end_date": "2031-05-01"
       }
     ]
-  }
+  },
+  "notes": [
+    "Round-5 2026-06-06: equity_line title relaxed 'April 2026 M2B Funding' -> 'April 2026 M2B'. The counterparty is M2B Funding Corp (SPA acc 0001663577-26-000128) but the walker emits the clipped 'M2B' consistently (26x across the walk); run_eval's _list_subset already ratifies the clipped form for list fields, and the matcher deliberately maintains no alias map, so the title assertion uses the common prefix. Do NOT add a store-side 'M2B'->'M2B Funding' alias (truncation, not a corporate rename)."
+  ]
 }

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}raw {{ accession }}{% endblock %}
+{% block subtitle %}raw · {{ ticker }} · {{ accession }}{% endblock %}
+
+{% block content %}
+<style>
+  .raw .meta-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap:2px 16px; margin-bottom:8px; }
+  .raw .meta-grid .k { color:#666; min-width:120px; display:inline-block; }
+  .raw .docs a { margin-right: 10px; }
+  .raw .docs .cur { font-weight: bold; text-decoration: underline; }
+  .raw pre { background:#fbfbfb; border:1px solid #e0e0e0; padding:10px 12px;
+             font-family:"SFMono-Regular",Consolas,monospace; font-size:11px;
+             white-space:pre-wrap; word-break:break-word; }
+</style>
+<div class="raw">
+  <p><a href="/inspect/{{ ticker }}">↩ back to {{ ticker }}</a>
+     · <a href="{{ edgar_url(accession, company.cik) }}" target="_blank">view on EDGAR ↗</a></p>
+
+  {% if filing %}
+  <div class="meta-grid">
+    <div><span class="k">form</span> {{ filing.form }}</div>
+    <div><span class="k">filing_date</span> {{ filing.filing_date }}</div>
+    <div><span class="k">report_date</span> {{ filing.report_date or '—' }}</div>
+    <div><span class="k">items</span> {{ filing.items or '—' }}</div>
+    <div><span class="k">file_number</span> {{ filing.file_number or '—' }}</div>
+    <div><span class="k">extracted_by</span> {{ filing.extracted_by or '—' }}</div>
+  </div>
+  {% endif %}
+
+  <div class="docs">
+    {% for d in docs %}
+      <a href="?doc={{ d.doc_name }}" class="{{ 'cur' if d.doc_name == chosen else '' }}">{{ d.doc_name }}</a><span class="muted">({{ d.len }} ch{{ ', ' ~ d.doc_type if d.doc_type else '' }})</span>
+    {% else %}
+      <span class="muted">No raw markdown stored for this accession.</span>
+    {% endfor %}
+  </div>
+
+  {% if content %}<pre>{{ content }}</pre>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{
+  "ticker": "VRM",
+  "source": "DilutionTracker screenshots (3 sections: Convertible Note / ATM / Shelf), manually transcribed 2026-06-11 then triaged against EDGAR. Vroom, Inc., cik 1580864 (not FPI). Picked as the REALISM / larger-cap balanced-cap-table fixture — every other fixture is a nano-cap toxic-financing churner; VRM is a post-SPAC used-car retailer that wound down operations (Jan-2024 value-maximization plan), emerged from a PREPACKAGED CHAPTER 11 (Jan-2025), raised a $625M investment-grade convertible (June-2021 Notes Due 2026, since fully converted) and now runs small Virtu ATMs off registered shelves. Re-walked `run_dilution.py VRM --force` 2026-06-11 (gemini-3.5-flash; walked=42 created=9 errors=0). 142 filings / 6-yr window.",
+  "notes": [
+    "SCOPE = live/outstanding only, what cards.py emits. DT shows ONLY 3 card sections (Convertible / ATM / Shelf) but the FILINGS carry one more live instrument DT misses — see the warrant note. convertible_preferred=[], equity_line=[], s1_offering=[] are asserted reaper tests.",
+    "BASELINE 2026-06-11 (first scored re-walk, after EDGAR triage): the walker handles this clean larger-cap cap table very well — this fixture is primarily a REGRESSION GUARD against the over-creation the OLD v5 walk exhibited (it had 2 active warrants + 3 active preferred + 1 active s1 + 1 ELOC that DT/filings do NOT support; the fresh --force walk reaped them all). Reaper PASSES: convertible_preferred=[] (the 'preferred' in the 10-Q is SUBSIDIARY preferred held as a noncontrolling interest — 'Preferred stock dividends attributable to noncontrolling interests of subsidiary' — NOT parent-VRM preferred convertible into VRM common, so correctly not carded); equity_line=[] (the '$8M Delayed Draw Facility' is term debt, correctly NOT mis-created as an ELOC); s1_offering=[].",
+    "WALKER BEATS DT — January-2025 warrant: DT shows NO warrant section, but the filings (10-Q acc 0001193125-26-224748) disclose 364,516 warrants @ $60.95 issued 2025-01-14 on the Chapter 11 plan Effective Date to predecessor stockholders, immediately exercisable, expiring 5 years out (2030-01-14), now trading on OTCQX as 'VRMWW'. These are real and outstanding; DT omits them. The walker captured them correctly → asserted as a live card ([[fixture-can-be-wrong]], walker-beats-DT, like BNKK's Series B owner). known_owners omitted (warrants went to ALL predecessor stockholders; the walker's director roster is a partial list).",
+    "DROPPED convertible: June-2021 Convertible Notes Due 2026 ($625,000,000 issued, conv $4,480.80 post-split, 139,484 as-converted) — $0 remaining (fully converted/repaid) → _convertible_dead (XTIA $0-converted convention). The Aug-2025 Note is the only live convertible: $10.0M 5.00% unsecured Convertible Notes due 2030, issued 2025-08-29 to Annox Capital LLC + Robert J. Mylod Jr. (Independent Executive Chair) — DT labels the owner generically 'Directors'; fixture asserts the filing-true specific holders the walker extracted (verified in the 10-Q). $10M / 28.5714 sh-per-$1,000 = conv ~$35.00, 285,714 as-converted.",
+    "DROPPED atm: December-2023 Virtu ATM ($50M, $47.5M remaining) is 'Shelf Expired' on DT — parent September-2022 Shelf expired 2025-09-20, program dead → correctly not carded (walker reaped it). May-2026 Virtu ATM ($6M) is the only live ATM.",
+    "DROPPED shelf: September-2022 Shelf ($300M, effect 2022-09-20, exp 2025-09-20 — EXPIRED). DT still shows it 'Registered' (stale label, last-update 2026-06-10) but expiration is 8+ months past; shelf_cards reaps it → dropped. Kept only the May-2026 Shelf.",
+    "ATM limited_by_baby_shelf OMITTED from scoring: DT shows 'No', walker emits 'Yes'. This flips on the live non-affiliate FLOAT source — walker resolves 730,474 (Yahoo/Finviz) → IB6 1/3 cap $4.30M < $6M ATM capacity → 'Yes'; DT uses 1,202,847 → cap $7.08M > $6M → 'No'. A live-data/float-source divergence on a derived baby-shelf field (same volatile family as current_raisable_amount/ib6_float_value, which the scorer already exempts), not a stable extraction defect — informational, worth watching whether the walker's float source systematically under-counts vs DT.",
+    "DT FRESHNESS verified (SUNE/QTEX lesson): DT last-update 2026-06-10 with the brand-new May-2026 Shelf (effect 2026-05-29) and May-2026 Virtu ATM present — DT is current. May-2026 shelf baby_shelf_restriction='Yes' (IB6 float value < $75M); its current_raisable/raised_last_12mo/ib6_float_value auto-exempt."
+  ],
+  "cards": {
+    "warrant": [
+      {
+        "issue_date": "2025-01-14",
+        "title_contains": "January 2025",
+        "registered": "Not Registered",
+        "remaining_outstanding": 364516,
+        "total_issued": 364516,
+        "exercise_price": 60.95,
+        "exercisable_date": "2025-01-14",
+        "expiration_date": "2030-01-14"
+      }
+    ],
+    "convertible": [
+      {
+        "issue_date": "2025-08-29",
+        "title_contains": "August 2025",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 285714,
+        "principal_remaining": 10000000,
+        "conversion_price": 35.00,
+        "total_shares_issuable": 285714,
+        "principal_total": 10000000,
+        "known_owners": ["Annox Capital", "Robert J. Mylod"],
+        "convertible_date": "2025-08-29",
+        "maturity_date": "2030-08-29"
+      }
+    ],
+    "convertible_preferred": [],
+    "atm": [
+      {
+        "agreement_start_date": "2026-05-15",
+        "title_contains": "May 2026",
+        "registered": "Registered",
+        "remaining_capacity": 6000000,
+        "total_capacity": 6000000,
+        "placement_agent": "Virtu"
+      }
+    ],
+    "equity_line": [],
+    "shelf": [
+      {
+        "effect_date": "2026-05-29",
+        "title_contains": "May 2026",
+        "registered": "Registered",
+        "total_shelf_capacity": 6000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 0,
+        "expiration_date": "2029-05-29"
+      }
+    ],
+    "s1_offering": []
+  }
+}

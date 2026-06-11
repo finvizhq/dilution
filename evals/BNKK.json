@@ -1,0 +1,149 @@
+{
+  "ticker": "BNKK",
+  "source": "DilutionTracker screenshots (5 sections: Warrant / Convertible Note / Convertible Preferred / ATM / Shelf), manually transcribed 2026-06-10, snapshot last-update dates 2024-04-01 → 2026-06-09. BONK, INC., cik 1760903 (ticker BNKK; not an FPI). Picked as the preferred-exchange-lifecycle fixture: the ledger carries convertible→Series-B-preferred and warrant→preferred-A exchanges (status prefixes superseded:p-series-b-exchange, superseded:pref-a3-exchange, superseded:w-warrant-exchange-2025) that NO other fixture exercises. Re-walked `run_dilution.py BNKK --force` 2026-06-10 (gemini-3.5-flash; walked=94 created=62 errors=0). 401 filings / 6-yr window; 1:35 REVERSE SPLIT effective 2025-12-11.",
+  "notes": [
+    "SCOPE = live/outstanding only, what cards.py emits (QTEX/ACTU/KSCP convention). DT shows 5 card sections; there is NO S-1 Offering section and NO Equity Line section in the snapshot, so s1_offering=[] and equity_line=[] are asserted reaper tests.",
+    "BASELINE 2026-06-10/11 (first scored re-walk, after filing-truth triage incl. verified Series B owner): 2/11 exact, 10/11 found, 49/71 fields (69%), 5 extra. (Issuer files under former name 'Safety Shot, Inc.' through 2025; renamed BONK, INC. — keep in mind when reading the filings.) Low exact-count is expected for a new stressor fixture (cf. CETY 1/16) — every mismatch below is a genuine walker finding, none are fixture transcription errors (each value verified against the 2026-05-13 10-Q). Reaper tests PASS: atm=[] (Dec-2024 Maxim correctly Terminated), shelf reaped the EXPIRED September-2022 shelf (kept only April-2026), s1_offering=[] (stale 5-row ledger cleared by --force). Clean passes: February-2025 warrant (6/6), April-2026 shelf (6/6).",
+    "HEADLINE WALKER FINDING — the 1:35 split (2025-12-11) is NOT applied to preferred conversion_price: walker emits Series A conv $4.3935 (should be $153.77), Series B $0.34 (should be $11.90), Series C $0.5582 (should be $19.54). Every preferred as-converted share count is therefore inflated ~35× (Series C 241,848,799 vs 6,909,966). DT shows the correct post-split prices. This is the fixture's primary target. (Warrant strikes are split-MISapplied too: Jan-2025 count IS split-adjusted (152,368) but strike is NOT ($0.4348, raw pre-split); July-2025 warrant is wholly un-adjusted — count 8,676,790 vs DT total 1,637,066.)",
+    "SECOND WALKER FINDING — the May-2025 Silverback Capital (SCC) $14,580,395.73 facility is DOUBLE-BOOKED: emitted both as a convertible note (C-999, 'May 2025 SCC Convertible Note') AND as an equity line ('May 2025 Silverback Capital Corporation ELOC'), same dollar amount. DT shows NEITHER (no convertible/ELOC for Silverback in the snapshot). Both render as EXTRAS. One classification is wrong; likely the ELOC is correct and the convertible is the artifact (or vice-versa) — needs design triage.",
+    "PREFERRED filing-truth (10-Q acc 0001493152-26-022743, balance sheet 2026-03-31): Series A 39,993 sh / Series B 1,813 sh / Series C 135,000 sh, each $750 stated (A,B) / $1,000 stated (C). (1) Series A (May-2025, Core 4 exchange): 39,993 × $750 = $29,994,750 aggregate, conv $153.77 post-split → 195,062 common. DT's $63,612,000 / 413,676 is WRONG (~2.12× the filing); the walker's $46,461,750 is independently wrong; fixture asserts the FILING value. None converted, so remaining=total. (2) Series B (July-2025, Bigger Notes exchange): issued 7,212 sh = $5,409,000, conv $11.90 → 454,538 common; REDUCED to 1,813 sh = $1,359,750 → 114,265 common remaining (5,399 converted). DT shows the stale full $5,409,000/454,538; walker shows principal_remaining $3,606 (also wrong). Fixture asserts filing-true remaining. (3) Series C (Aug-2025, revenue-share + SPA): 135,000 sh × $1,000 = $135,000,000, conv $19.54 → 6,909,966 common (DT & walker agree on $135M aggregate via the stated-value/conv-price convention, though the filing's actual fixed conversion is 67.8M pre-split / 1.94M post-split common — a shared DT/cards.py modeling convention, not corrected here).",
+    "PREFERRED owner findings: Series A [Core 4] PASSES (walker [Core 4]). Series B = [Trajan Holdings, Fried] — VERIFIED 2026-06-11 against the July-2-2025 8-K Exchange Agreement (acc 0001641172-25-018310, EX-10.2, issuer then named Safety Shot Inc.): the Jan-20-2025 Bigger Notes were PURCHASED FROM Bigger (spelled 'Biggar') Capital LLC BY Trajan Holdings LLC + Fried LLC, who then exchanged them for 3,606 + 3,606 = 7,212 Series B shares. So the WALKER is right (it followed the assignment chain) and DT's 'Bigger Capital' is WRONG (it named the original note issuer, not the current Series B holder) — fixture corrected Bigger→[Trajan Holdings, Fried] ([[fixture-can-be-wrong]]). The walker's principal_remaining=3606 is the per-holder SHARE count (3,606) mis-stored as a dollar amount — owner correct, $-mapping buggy. Series C no owner on DT (walker [] too).",
+    "convertible=[] CONFIRMED filing-true: the Bigger Notes were exchanged into the 7,212 Series B shares (extinguishment, balance $0 as of 2025-12-31); May-2021 + Jan-2025 notes are $0-remaining (XTIA $0-converted convention); the April-2022 note ($1.5M on DT, matured 2024-01-31, DT last-update 2024-04-01) is ABSENT from the latest 10-Q → gone. The walker's only convertible is the spurious Silverback double-book (see above).",
+    "DROPPED warrants (DT 0-remaining / expired, but the WALKER over-retains them as live EXTRAS — exercise/cancellation not tracked): July-2021 ($32.62, DT 0; walker 83,793 @ $49), April-2025 ($14.35, DT 0; walker 114,286 full), July-2025 ($12.95, DT 0; walker 8,676,790 un-split), November-2020 IPO ($297.50, exp 2025-11-03 EXPIRED; walker omits). The walker's warrant set does not reconcile to the 10-Q aggregate (685,254 @ $59.57 weighted, post-split): it under-detects the high-strike warrants (MISSES May-2021 Note Warrants @ $210 entirely) and over-retains exercised low-strike ones.",
+    "Two January-2023 warrant tranches share issue 2023-01-23, strike $32.55, total_issued ~131,693, differing only in expiration (DT: 2028-07-23 rem 131,693 / 2026-07-23 rem 84,549). The walker emits both at the SAME rem 131,693 (didn't track the 2026-tranche partial exercise) with owners=[] (DT lists 6 holders) and total_issued 132,294 (DT 131,693). Fixture orders the 2026-tranche first to pin the date+title-tied matcher pairing; both labelled 'January 2023'.",
+    "September-2024 warrant: DT 'September 2024' / [Insiders] / rem 14,446; walker 'August 2024' / [Core 4 Capital] / rem 96,308 (full — exercise untracked). Kept DT values; title-month + owner + remaining are findings (Core 4 is plausibly the 'insider', and Aug-30 vs Sep-04 issue is within match tolerance)."
+  ],
+  "cards": {
+    "warrant": [
+      {
+        "issue_date": "2025-01-20",
+        "title_contains": "January 2025",
+        "registered": "Registered",
+        "remaining_outstanding": 152368,
+        "total_issued": 152368,
+        "exercise_price": 11.90,
+        "known_owners": ["Bigger Capital"],
+        "exercisable_date": "2025-01-20",
+        "expiration_date": "2030-01-20"
+      },
+      {
+        "issue_date": "2023-01-23",
+        "title_contains": "January 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 84549,
+        "total_issued": 131693,
+        "exercise_price": 32.55,
+        "known_owners": ["Armistice", "Bigger Capital", "District 2", "Hudson Bay", "Intracoastal", "Sabby"],
+        "underwriter": "Aegis",
+        "exercisable_date": "2023-07-23",
+        "expiration_date": "2026-07-23"
+      },
+      {
+        "issue_date": "2023-01-23",
+        "title_contains": "January 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 131693,
+        "total_issued": 131693,
+        "exercise_price": 32.55,
+        "known_owners": ["Armistice", "Bigger Capital", "District 2", "Hudson Bay", "Intracoastal", "Sabby"],
+        "underwriter": "Aegis",
+        "exercisable_date": "2023-07-23",
+        "expiration_date": "2028-07-23"
+      },
+      {
+        "issue_date": "2025-02-04",
+        "title_contains": "February 2025",
+        "registered": "Not Registered",
+        "remaining_outstanding": 78666,
+        "total_issued": 78666,
+        "exercise_price": 15.75,
+        "exercisable_date": "2025-02-04",
+        "expiration_date": "2030-02-04"
+      },
+      {
+        "issue_date": "2024-09-04",
+        "title_contains": "September 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 14446,
+        "total_issued": 96308,
+        "exercise_price": 31.15,
+        "known_owners": ["Insiders"],
+        "exercisable_date": "2024-09-04"
+      },
+      {
+        "issue_date": "2022-04-20",
+        "title_contains": "April 2022",
+        "registered": "Registered",
+        "remaining_outstanding": 7429,
+        "total_issued": 41714,
+        "exercise_price": 32.62,
+        "known_owners": ["GreenTree", "L&H"],
+        "exercisable_date": "2022-04-20",
+        "expiration_date": "2027-04-20"
+      },
+      {
+        "issue_date": "2021-05-11",
+        "title_contains": "May 2021",
+        "registered": "Registered",
+        "remaining_outstanding": 15000,
+        "total_issued": 15000,
+        "exercise_price": 210.00,
+        "known_owners": ["GPL", "GreenTree", "L&H"],
+        "exercisable_date": "2021-05-11",
+        "expiration_date": "2026-05-11"
+      }
+    ],
+    "convertible": [],
+    "convertible_preferred": [
+      {
+        "issue_date": "2025-08-08",
+        "title_contains": "Series C",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 6909966,
+        "principal_remaining": 135000000,
+        "conversion_price": 19.54,
+        "total_shares_issuable": 6909966,
+        "principal_total": 135000000,
+        "convertible_date": "2025-08-08"
+      },
+      {
+        "issue_date": "2025-07-02",
+        "title_contains": "Series B",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 114265,
+        "principal_remaining": 1359750,
+        "conversion_price": 11.90,
+        "total_shares_issuable": 454538,
+        "principal_total": 5409000,
+        "known_owners": ["Trajan Holdings", "Fried"],
+        "convertible_date": "2025-07-02"
+      },
+      {
+        "issue_date": "2025-05-02",
+        "title_contains": "May 2025",
+        "registered": "Not Registered",
+        "remaining_shares_issuable": 195062,
+        "principal_remaining": 29994750,
+        "conversion_price": 153.77,
+        "total_shares_issuable": 195062,
+        "principal_total": 29994750,
+        "known_owners": ["Core 4"],
+        "convertible_date": "2025-05-02"
+      }
+    ],
+    "atm": [],
+    "equity_line": [],
+    "shelf": [
+      {
+        "effect_date": "2026-05-01",
+        "title_contains": "April 2026",
+        "registered": "Registered",
+        "total_shelf_capacity": 100000000,
+        "baby_shelf_restriction": "Yes",
+        "total_amount_raised": 0,
+        "expiration_date": "2029-05-01"
+      }
+    ],
+    "s1_offering": []
+  }
+}

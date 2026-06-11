@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Pending S-1 Offerings{% endblock %}
+{% block subtitle %}Pending S-1 / F-1 offerings{% endblock %}
+
+{% block content %}
+<h2 class="section">Pending S-1 / F-1 offerings</h2>
+<p class="muted" style="margin: -8px 0 16px 0;">
+  In-progress primary registrations across every tracked issuer:
+  <code>pending</code> = filed, no EFFECT yet ·
+  <code>effective</code> = SEC-effective, awaiting 424B pricing.
+</p>
+
+<div class="panel">
+  <table class="tight">
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Company</th>
+        <th>Status</th>
+        <th class="mono">Filed</th>
+        <th class="num">Anticipated</th>
+        <th>Underwriter</th>
+        <th>Form</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for o in offerings %}
+      <tr>
+        <td>
+          {% if o.ticker %}
+            <a href="/t/{{ o.ticker }}"><strong>{{ o.ticker }}</strong></a>
+          {% else %}
+            <span class="muted mono">{{ o.cik }}</span>
+          {% endif %}
+        </td>
+        <td>{{ o.company_name or '—' }}</td>
+        <td>
+          <span class="status-pill status-{{ o.s1_status }}">{{ o.status }}</span>
+        </td>
+        <td class="mono">{{ o.filing_date or '—' }}</td>
+        <td class="num">{{ o.anticipated_deal_size | usd if o.anticipated_deal_size else '—' }}</td>
+        <td>{{ o.underwriter or '—' }}</td>
+        <td class="mono muted">{{ o.title.split(' ')[-1] if o.title else '—' }}</td>
+        <td>
+          {% if o.edgar_url %}
+            <a href="{{ o.edgar_url }}" target="_blank" rel="noopener">EDGAR ↗</a>
+          {% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="8" class="muted">No pending S-1 / F-1 offerings across tracked issuers.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

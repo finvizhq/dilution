@@ -1,10 +1,14 @@
-"""Section selection for periodic filings (10-K, 10-Q, 20-F).
+"""Section selection for periodic and current-report filings
+(10-K, 10-Q, 20-F, 8-K).
 
 Drops obvious-noise sections (Risk Factors, Properties, Legal
 Proceedings, Mine Safety, internal controls boilerplate, exhibit
-indexes) before the markdown reaches the LLM. The goal is to shrink
-the prompt without losing dilution signal — risk factors alone are
-typically 30-50% of a 10-K.
+indexes for periodic; non-dilution items like 2.02 earnings, 5.02
+officer changes for 8-K) before the markdown reaches the LLM. The
+goal is to shrink the prompt without losing dilution signal — risk
+factors alone are typically 30-50% of a 10-K, and a multi-item 8-K
+that announces an offering buries the relevant Item 1.01 / 3.02
+amid Item 2.02 earnings prose.
 
 Uses edgartools' ``Filing.obj().sections`` for boundary detection
 rather than regex on markdown. Section headers in our raw markdown
@@ -68,12 +72,51 @@ KEEP_SECTIONS: dict[str, set[str]] = {
         "part_iii_item_17", # Financial Statements
         "part_iii_item_18", # Financial Statements
     },
+    # 8-K item numbers without dots — edgartools' CurrentReport keys
+    # are ``item_<digits>`` (e.g. Item 1.01 → ``item_101``). Curated to
+    # mirror the dilution-relevant items the walker prompt's 8-K hint
+    # already calls out (1.01 SPA / underwriter, 3.02 unregistered
+    # equity, 3.03 modification to rights, 5.03 Cert of Designation,
+    # 7.01 / 8.01 announcements, 9.01 exhibit index for EX-3 / EX-4 /
+    # EX-10 references). 1.02 termination / 2.03 direct financial
+    # obligation / 2.04 triggering events / 5.01 change in control are
+    # included for cap-table-relevant edges (close_instrument,
+    # convertible-note creation, redemption acceleration).
+    # Dropped: 2.02 earnings, 4.01 / 4.02 auditor / restatement,
+    # 5.02 officer changes (option-pool out of scope), 5.07 vote
+    # results (paired 5.03 carries the cap-table effect),
+    # 1.04 / 1.05 mine-safety / cyber, 6.x ABS.
+    "8-K": {
+        "item_101",  # Material agreement (SPA, underwriter, ATM)
+        "item_102",  # Termination of material agreement
+        "item_203",  # Creation of direct financial obligation
+        "item_204",  # Triggering events (acceleration, redemption)
+        "item_302",  # Unregistered sale of equity securities
+        "item_303",  # Material modification to rights
+        "item_501",  # Change in control
+        "item_503",  # Amendments to charter (Cert of Designation)
+        "item_701",  # Reg FD (pricing announcements)
+        "item_801",  # Other (closing announcements)
+        "item_901",  # Exhibits index
+    },
 }
 
 # Minimum size of the assembled keep-list text. Below this we assume
 # section parsing went sideways and fall back to the full document.
-# A real 10-K's keep-list is typically hundreds of KB; anything under
-# 5KB is almost certainly a parse failure or a stub filing.
+# Per-form because 10-K keep-lists are typically hundreds of KB while
+# a single-item 8-K announcing an offering can legitimately be 1-2KB
+# total. The 8-K floor (300) sits comfortably below the empirical p10
+# of ~860 chars across recent 8-Ks but still catches obvious parse
+# stubs. Kept as a dict so 6-K / Reg A+ etc. can be added without a
+# branching API change.
+_MIN_KEPT_CHARS_BY_FORM: dict[str, int] = {
+    "10-K": 5_000,
+    "10-Q": 5_000,
+    "20-F": 5_000,
+    "8-K": 300,
+}
+# Backward-compatible default for callers that want a single number
+# (covered the periodic floor before 8-K was added).
 MIN_KEPT_CHARS = 5_000
 
 # Per-section confidence floor. Edgartools tags each section with a
@@ -98,7 +141,33 @@ def _normalize_form(form: str) -> str | None:
     return None
 
 
-def select_text(filing, form: str) -> tuple[str | None, dict]:
+def _declared_keep_keys(declared_items, keep: set[str]) -> set[str]:
+    """Map EDGAR-declared 8-K item codes ("1.01,3.02,9.01" or an
+    iterable of codes) to section keys ("item_101") and intersect with
+    the keep-list.
+
+    Item 9.01 is excluded: it's the exhibit index, whose absence from
+    section parsing isn't worth abandoning section selection over —
+    the exhibits themselves are fetched separately as attachments.
+    """
+    if not declared_items:
+        return set()
+    if isinstance(declared_items, str):
+        codes = [c.strip() for c in declared_items.split(",")]
+    else:
+        codes = [str(c).strip() for c in declared_items]
+    keys = set()
+    for code in codes:
+        if not code or code == "9.01":
+            continue
+        key = f"item_{code.replace('.', '')}"
+        if key in keep:
+            keys.add(key)
+    return keys
+
+
+def select_text(filing, form: str,
+                declared_items=None) -> tuple[str | None, dict]:
     """Return (selected_text, stats) for a periodic filing.
 
     Returns (None, stats) when section selection should be skipped —
@@ -108,6 +177,15 @@ def select_text(filing, form: str) -> tuple[str | None, dict]:
       - kept: list of section keys included
       - dropped: list of section keys excluded
       - kept_chars / dropped_chars
+
+    ``declared_items`` (8-K only): the EDGAR index's item list for the
+    filing ("1.01,3.02,9.01" string or iterable of codes). Section
+    detection sometimes silently misses a declared item (measured at
+    ~4-7% of section-path 8-Ks; e.g. an Item 1.01 whose heading markup
+    the detector can't see) — and because OTHER items still parse, the
+    kept-chars floor doesn't catch it. When a declared keep-list item
+    has no parsed section, we bail to the full-document path rather
+    than store a body of cross-reference stubs.
     """
     keep_key = _normalize_form(form)
     if keep_key is None:
@@ -128,6 +206,19 @@ def select_text(filing, form: str) -> tuple[str | None, dict]:
         section_items = list(sections.items())
     except Exception as e:
         return None, {"reason": f"sections.items() failed: {e}"}
+
+    # Declared-items guard (8-K): every dilution-relevant item the
+    # EDGAR index says is in this filing must have a parsed section.
+    if keep_key == "8-K":
+        required = _declared_keep_keys(declared_items, keep)
+        parsed_keys = {key for key, _ in section_items}
+        undetected = required - parsed_keys
+        if undetected:
+            return None, {
+                "reason": (f"declared items not detected: "
+                           f"{sorted(undetected)}"),
+                "parsed": sorted(parsed_keys),
+            }
 
     kept_keys: list[str] = []
     dropped_keys: list[str] = []
@@ -181,9 +272,10 @@ def select_text(filing, form: str) -> tuple[str | None, dict]:
             "reason": "no keep sections present",
             "dropped": dropped_keys,
         }
-    if kept_chars < MIN_KEPT_CHARS:
+    floor = _MIN_KEPT_CHARS_BY_FORM.get(keep_key, MIN_KEPT_CHARS)
+    if kept_chars < floor:
         return None, {
-            "reason": f"kept_chars {kept_chars} below floor {MIN_KEPT_CHARS}",
+            "reason": f"kept_chars {kept_chars} below floor {floor}",
             "kept": kept_keys,
             "dropped": dropped_keys,
         }
@@ -199,7 +291,9 @@ def select_text(filing, form: str) -> tuple[str | None, dict]:
 
 def is_periodic_with_sections(form: str) -> bool:
     """True iff this form has a keep-list configured. False for 40-F,
-    1-K, 8-K etc., which fall through to the full-document path."""
+    1-K, 6-K, 424B, S-3 etc., which fall through to the full-document
+    path. Function name predates the 8-K extension; current keep-list
+    forms are listed in ``KEEP_SECTIONS``."""
     return _normalize_form(form) is not None
 
 

@@ -20,6 +20,12 @@ cd "$(dirname "$0")/.."
 
 PARALLEL="${PARALLEL:-5}"
 export EDGAR_RATE_LIMIT_PER_SEC="${EDGAR_RATE_LIMIT_PER_SEC:-2}"
+# Eval pipeline always rebuilds each fixture ticker from scratch
+# (--force on run_dilution.py) — anything less risks comparing the
+# eval fixture against a ledger half-populated by an older code
+# path. The reset is scoped per-cik in store.reset_walk_state so
+# only the 8 fixture tickers' rows are dropped; other tickers in
+# the DB are untouched.
 
 mkdir -p logs
 
@@ -43,7 +49,7 @@ read -r -d '' _ORDER_PY <<'PY' || true
 import json, sqlite3, sys
 from pathlib import Path
 
-fixtures = {p.stem: p for p in Path("evals").glob("*.json")}
+fixtures = {p.stem: p for p in Path("evals").glob("*.json") if not p.stem.startswith("_")}
 if not fixtures:
     sys.exit("no fixtures")
 
@@ -116,7 +122,7 @@ run_one() {
     # log file (so post-mortems don't depend on terminal scrollback);
     # sed -u prefixes each live line with [TICKER]. pipefail makes the
     # pipeline's exit code = python's, since tee/sed never fail.
-    if python -u run_dilution.py "$t" 2>&1 \
+    if python3 -u run_dilution.py "$t" --force 2>&1 \
             | tee "$logfile" \
             | sed -u "s/^/${BLUE}[$t]${RESET} /"; then
         rc=0
@@ -133,7 +139,7 @@ run_one() {
     fi
 }
 
-log "${BOLD}Running dilution pipeline for $total tickers (parallel=$PARALLEL, edgar_rps=$EDGAR_RATE_LIMIT_PER_SEC):${RESET}"
+log "${BOLD}Running dilution pipeline for $total tickers (parallel=$PARALLEL, edgar_rps=$EDGAR_RATE_LIMIT_PER_SEC, force=1):${RESET}"
 log "${BOLD}LPT order (longest first):${RESET}"
 for t in "${tickers[@]}"; do
     log "  $t  weight=${ticker_weight[$t]}  (${ticker_wsource[$t]})"

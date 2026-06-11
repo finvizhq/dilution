@@ -15,6 +15,7 @@ If this script prints "ALL OK" the ledger spine compiles end-to-end.
 import os
 import sys
 import tempfile
+from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -29,7 +30,11 @@ import config  # noqa: E402
 config.DB_PATH = _tmp.name
 
 from dilution.schema import init_dilution_db  # noqa: E402
-from dilution.ledger.mutations import MutationList  # noqa: E402
+from dilution.ledger.mutations import (  # noqa: E402
+    ApplySplit, CloseInstrument, ConfirmClosing,
+    RecordExercise, RecordConversion, RecordDrawdown,
+    amend_from_dict, create_from_dict,
+)
 from dilution.ledger.store import (  # noqa: E402
     apply_mutations,
     get_instrument,
@@ -39,11 +44,103 @@ from dilution.ledger.store import (  # noqa: E402
 from db import get_conn  # noqa: E402
 
 
-def _apply(cik, ticker, accession, form, date, payload):
-    parsed = MutationList.model_validate({"mutations": payload})
+def _d(s: str) -> date:
+    return date.fromisoformat(s)
+
+
+def _build(spec: dict):
+    """Translate a legacy-shape mutation dict into the typed dataclass.
+
+    Used only by this smoke test to keep the test cases declarative.
+    The walker LLM path constructs typed dataclasses directly via
+    dilution/ledger/tools/parse.py — this helper exists solely so the
+    smoke test can express test inputs as dicts.
+    """
+    kind = spec["kind"]
+    if kind == "create_instrument":
+        return create_from_dict(
+            type_=spec["type"],
+            terms=spec.get("terms") or {},
+            outstanding=spec.get("outstanding") or {},
+            counterparty_canonical=spec.get("counterparty_canonical"),
+            placement_agent_canonical=spec.get("placement_agent_canonical"),
+            descriptor=spec.get("descriptor"),
+            proposed_id=spec.get("proposed_id"),
+            event_date=spec.get("event_date"),
+        )
+    if kind == "amend_instrument":
+        # Need the row's type to dispatch. The smoke test never amends a
+        # row whose type isn't already known from a prior create; we hard-
+        # code the dispatch by looking at field_updates / outstanding_updates
+        # contents. Simpler: caller supplies `_type`.
+        return amend_from_dict(
+            type_=spec["_type"],
+            instrument_id=spec["instrument_id"],
+            field_updates=spec.get("field_updates") or {},
+            outstanding_updates=spec.get("outstanding_updates") or {},
+            event_date=spec.get("event_date") or "2099-01-01",
+        )
+    if kind == "record_event":
+        ev_kind = spec["event_kind"]
+        f = spec.get("fields") or {}
+        ev_date = _d(spec["event_date"])
+        iid = spec["instrument_id"]
+        if ev_kind == "exercise":
+            return RecordExercise(
+                instrument_id=iid, shares=float(f.get("shares") or 0),
+                event_date=ev_date,
+                price=f.get("price"), gross_proceeds=f.get("gross_proceeds"),
+            )
+        if ev_kind == "conversion":
+            pc = f.get("principal_converted")
+            pref = f.get("preferred_shares_converted")
+            return RecordConversion(
+                instrument_id=iid,
+                shares_issued=float(f.get("shares_issued") or 0),
+                event_date=ev_date,
+                principal_converted=float(pc) if pc is not None else None,
+                preferred_shares_converted=float(pref) if pref is not None else None,
+                principal_remaining=f.get("principal_remaining"),
+            )
+        if ev_kind == "drawdown":
+            return RecordDrawdown(
+                instrument_id=iid,
+                drawdown_amount_usd=float(f.get("drawdown_amount_usd") or 0),
+                drawdown_shares=float(f.get("drawdown_shares") or 0),
+                event_date=ev_date,
+                placement_agent_canonical=f.get("placement_agent_canonical"),
+            )
+        if ev_kind == "closing":
+            ca = f.get("count_actual")
+            gp = f.get("gross_proceeds_usd")
+            return ConfirmClosing(
+                instrument_id=iid, event_date=ev_date,
+                count_actual=float(ca) if ca is not None else None,
+                gross_proceeds_usd=float(gp) if gp is not None else None,
+            )
+        raise ValueError(f"unsupported event_kind in smoke test: {ev_kind!r}")
+    if kind == "close_instrument":
+        return CloseInstrument(
+            instrument_id=spec["instrument_id"],
+            reason=spec["reason"],
+            replaced_by=spec.get("replaced_by"),
+            event_date=_d(spec["event_date"]),
+        )
+    if kind == "apply_split":
+        return ApplySplit(
+            post=spec["post"], pre=spec["pre"],
+            direction=spec["direction"],
+            effective_date=_d(spec["effective_date"]),
+            units=spec.get("units") or "common",
+        )
+    raise ValueError(f"unknown kind in smoke test: {kind!r}")
+
+
+def _apply(cik, ticker, accession, form, dt, payload):
+    mutations = [_build(spec) for spec in payload]
     return apply_mutations(
         cik=cik, ticker=ticker, accession=accession,
-        form=form, filing_date=date, mutations=parsed.mutations,
+        form=form, filing_date=dt, mutations=mutations,
     )
 
 
@@ -56,20 +153,19 @@ def main():
     r1 = _apply(cik, ticker, "0000-00-0001", "424B5", "2024-03-15", [
         {"kind": "create_instrument", "type": "warrant",
          "proposed_id": "W-001",
-         "counterparty": "Aegis Capital", "counterparty_canonical": "Aegis",
+         "counterparty_canonical": "Aegis",
          "terms": {"strike": 2.50, "term_years": 5, "units": "common"},
          "outstanding": {"count": 2_000_000},
-         "event_date": "2024-03-15",
-         "snippet": "2,000,000 warrants @ $2.50, 5-yr term"},
+         "event_date": "2024-03-15"},
     ])
     assert r1.accepted == 1 and r1.created_ids == ["W-001"], r1
 
     # Filing 2 — 8-K announcing repricing
     r2 = _apply(cik, ticker, "0000-00-0002", "8-K", "2024-08-02", [
-        {"kind": "amend_instrument", "instrument_id": "W-001",
+        {"kind": "amend_instrument", "_type": "warrant",
+         "instrument_id": "W-001",
          "field_updates": {"strike": 1.75},
-         "event_date": "2024-08-02",
-         "snippet": "warrant strike repriced to $1.75"},
+         "event_date": "2024-08-02"},
     ])
     assert r2.accepted == 1 and r2.rejected == 0, r2
     w = get_instrument(cik, "W-001")
@@ -83,34 +179,28 @@ def main():
          "terms": {"principal": 5_000_000, "rate": 0.07, "conv_price": 1.00,
                    "units": "common"},
          "outstanding": {"principal_remaining": 5_000_000},
-         "snippet": "$5M senior convertible @ $1.00 conv price (post-split)"},
-        {"kind": "apply_split", "ratio": 0.1, "direction": "reverse",
-         "effective_date": "2024-08-15",
-         "snippet": "1-for-10 reverse stock split effective Aug 15"},
+         "event_date": "2024-08-15"},
+        {"kind": "apply_split", "post": 1, "pre": 10, "direction": "reverse",
+         "effective_date": "2024-08-15"},
     ])
     assert r3.accepted == 2 and r3.splits_applied == 1, r3
     w = get_instrument(cik, "W-001")
     # W-001 had strike $1.75, count 2M. Reverse 1-for-10 → strike $17.50, count 200K.
     assert abs(w["terms"]["strike"] - 17.5) < 1e-6, w["terms"]
     assert abs(w["outstanding"]["count"] - 200_000) < 1e-6, w["outstanding"]
-    # C-001 was created in the SAME filing as the split, but split sorts FIRST.
-    # The convertible was created with conv_price=$1.00 already in post-split
-    # terms (per the snippet) so the split doesn't re-touch it BECAUSE
-    # apply_split runs before _apply_create. Sanity-check.
     c = get_instrument(cik, "C-001")
     assert abs(c["terms"]["conv_price"] - 1.00) < 1e-6, c["terms"]
 
     # Filing 4 — re-applying the SAME split (e.g. via the next 10-Q
     # re-disclosing the split) should be idempotent.
     r4 = _apply(cik, ticker, "0000-00-0004", "10-Q", "2024-09-30", [
-        {"kind": "apply_split", "ratio": 0.1, "direction": "reverse",
-         "effective_date": "2024-08-15",
-         "snippet": "reverse split disclosed again in Q1 10-Q"},
+        {"kind": "apply_split", "post": 1, "pre": 10, "direction": "reverse",
+         "effective_date": "2024-08-15"},
     ])
     assert r4.accepted == 1, r4
     w = get_instrument(cik, "W-001")
     assert abs(w["terms"]["strike"] - 17.5) < 1e-6, ("split not idempotent",
-                                                       w["terms"])
+                                                      w["terms"])
 
     # Filing 5 — exercise + drawdown + invalid transitions
     r5 = _apply(cik, ticker, "0000-00-0005", "8-K", "2025-02-10", [
@@ -119,32 +209,32 @@ def main():
          "event_kind": "exercise",
          "fields": {"shares": 80_000, "price": 17.5,
                     "gross_proceeds": 1_400_000},
-         "event_date": "2025-02-10",
-         "snippet": "80,000 warrants exercised @ $17.50"},
+         "event_date": "2025-02-10"},
         # ATM created + draw — chained inside one filing
         {"kind": "create_instrument", "type": "atm",
          "proposed_id": "ATM-001",
-         "counterparty": "H.C. Wainwright",
-         "terms": {"capacity_usd": 25_000_000},
+         "placement_agent_canonical": "H.C. Wainwright",
+         "terms": {"capacity_usd": 25_000_000,
+                   "agreement_date": "2025-02-09"},
          "outstanding": {"remaining_capacity_usd": 25_000_000,
                          "drawn_usd": 0},
-         "snippet": "$25M ATM established"},
+         "event_date": "2025-02-10"},
         {"kind": "record_event", "instrument_id": "ATM-001",
          "event_kind": "drawdown",
          "fields": {"drawdown_amount_usd": 5_600_000,
-                    "drawdown_shares": 320_000, "avg_price": 17.5},
-         "event_date": "2025-02-10",
-         "snippet": "$5.6M drawn under ATM"},
+                    "drawdown_shares": 320_000},
+         "event_date": "2025-02-10"},
         # type mismatch — drawdown on a warrant should be REJECTED
         {"kind": "record_event", "instrument_id": "W-001",
          "event_kind": "drawdown",
-         "fields": {"drawdown_amount_usd": 100_000},
-         "event_date": "2025-02-10",
-         "snippet": "(invalid) drawdown on warrant"},
+         "fields": {"drawdown_amount_usd": 100_000,
+                    "drawdown_shares": 1},
+         "event_date": "2025-02-10"},
         # missing id — REJECTED
-        {"kind": "amend_instrument", "instrument_id": "W-999",
+        {"kind": "amend_instrument", "_type": "warrant",
+         "instrument_id": "W-999",
          "field_updates": {"strike": 1.0},
-         "snippet": "(invalid) amend on missing id"},
+         "event_date": "2025-02-10"},
     ])
     assert r5.accepted == 3, ("expected 3 accepted, got", r5)
     assert r5.rejected == 2, ("expected 2 rejected, got", r5)
@@ -177,8 +267,7 @@ def main():
     # Filing 6 — close W-001 (expired) in a standalone filing.
     r6 = _apply(cik, ticker, "0000-00-0006", "10-K", "2029-03-31", [
         {"kind": "close_instrument", "instrument_id": "W-001",
-         "reason": "expired", "event_date": "2029-03-15",
-         "snippet": "warrants expired at 5-yr term"},
+         "reason": "expired", "event_date": "2029-03-15"},
     ])
     assert r6.accepted == 1, r6
     w = get_instrument(cik, "W-001")
@@ -190,37 +279,103 @@ def main():
         {"kind": "record_event", "instrument_id": "W-001",
          "event_kind": "exercise",
          "fields": {"shares": 1},
-         "event_date": "2029-04-01",
-         "snippet": "(invalid) exercise after expiry"},
+         "event_date": "2029-04-01"},
     ])
     assert r6b.accepted == 0 and r6b.rejected == 1, r6b
 
-    # Filing 7 — superseded chain. Create W-002 then close W-001 with
-    # superseded:W-002. (W-001 already expired here so try a fresh
-    # exchange offer scenario: create C-002 superseding C-001.)
+    # Filing 7 — superseded chain.
     r7 = _apply(cik, ticker, "0000-00-0007", "8-K", "2025-06-01", [
         {"kind": "create_instrument", "type": "convertible",
          "proposed_id": "C-002",
          "terms": {"principal": 5_500_000, "rate": 0.10, "conv_price": 0.50},
          "outstanding": {"principal_remaining": 5_500_000},
-         "snippet": "exchange of C-001 for $5.5M new note"},
+         "event_date": "2025-06-01"},
         {"kind": "close_instrument", "instrument_id": "C-001",
          "reason": "superseded", "replaced_by": "C-002",
-         "event_date": "2025-06-01",
-         "snippet": "C-001 exchanged for C-002"},
+         "event_date": "2025-06-01"},
     ])
     assert r7.accepted == 2, r7
     c1 = get_instrument(cik, "C-001")
     assert c1["status"] == "superseded:C-002", c1["status"]
 
-    # Open instruments query — W-001 expired (recent), C-001 superseded
-    # (recent), W-001/W-002 not present, ATM-001 active, C-002 active.
     open_rows = get_open_instruments(cik)
     open_ids = {r["instrument_id"] for r in open_rows}
     assert "ATM-001" in open_ids and "C-002" in open_ids, open_ids
-    # Recent closed is included by include_recent_closed_days=180.
-    # But note today's date affects this — the test ran with
-    # arbitrary filing dates so don't assert on closed visibility here.
+
+    # Filing 8 — equity (off-shelf PIPE) closings → drawdown rows.
+    r8 = _apply(cik, ticker, "0000-00-0008", "8-K", "2025-07-01", [
+        # 8a: signed-AND-closed in one filing — books cash at create.
+        {"kind": "create_instrument", "type": "equity",
+         "proposed_id": "EQ-001",
+         "counterparty_canonical": "Everrise",
+         "terms": {"price_per_share": 2.0, "closing_date": "2025-07-01"},
+         "outstanding": {"count": 1_000_000},
+         "event_date": "2025-07-01"},
+        # 8b: stock-for-services (price 0) — closing stated, no cash.
+        {"kind": "create_instrument", "type": "equity",
+         "proposed_id": "EQ-002",
+         "terms": {"price_per_share": 0.0, "closing_date": "2025-07-01"},
+         "outstanding": {"count": 50_000},
+         "event_date": "2025-07-01"},
+        # 8c: signed-but-pending SPA — no closing_date, no cash booked.
+        {"kind": "create_instrument", "type": "equity",
+         "proposed_id": "EQ-003",
+         "counterparty_canonical": "Hudson Bay",
+         "terms": {"price_per_share": 1.5},
+         "outstanding": {"count": 2_000_000},
+         "event_date": "2025-07-01"},
+    ])
+    assert r8.accepted == 3 and r8.rejected == 0, r8
+    assert r8.drawdowns_recorded == 1, r8
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT instrument_id, amount_usd, shares, "
+            "       drawdown_party_canonical, drawdown_party_role "
+            "FROM dilution_ledger_drawdowns "
+            "WHERE cik=? AND instrument_id LIKE 'EQ-%'",
+            (cik,),
+        ).fetchall()
+    assert len(rows) == 1 and rows[0]["instrument_id"] == "EQ-001", \
+        [dict(r) for r in rows]
+    assert abs(rows[0]["amount_usd"] - 2_000_000) < 1e-6, rows[0]["amount_usd"]
+    assert rows[0]["drawdown_party_canonical"] == "Everrise", dict(rows[0])
+    assert rows[0]["drawdown_party_role"] == "investor", dict(rows[0])
+
+    # Filing 9 — confirm_closing on equity: ACCEPTED (validate gate),
+    # books the pending PIPE's cash; re-confirming the already-booked
+    # EQ-001 must NOT double-book (single-drawdown guard). The card
+    # label must NOT be relabeled by closing month.
+    eq1_label_before = get_instrument(cik, "EQ-001")["label"]
+    r9 = _apply(cik, ticker, "0000-00-0009", "8-K", "2025-08-15", [
+        {"kind": "record_event", "instrument_id": "EQ-003",
+         "event_kind": "closing",
+         "fields": {"gross_proceeds_usd": 3_100_000},
+         "event_date": "2025-08-15"},
+        {"kind": "record_event", "instrument_id": "EQ-001",
+         "event_kind": "closing",
+         "fields": {},
+         "event_date": "2025-08-20"},
+    ])
+    assert r9.accepted == 2 and r9.rejected == 0, r9
+    assert r9.drawdowns_recorded == 1, r9
+    eq3 = get_instrument(cik, "EQ-003")
+    assert eq3["terms"].get("closing_date") == "2025-08-15", eq3["terms"]
+    assert get_instrument(cik, "EQ-001")["label"] == eq1_label_before, \
+        "equity card must not relabel on closing"
+    with get_conn() as conn:
+        per_inst = {
+            r["instrument_id"]: (r["c"], r["amt"])
+            for r in conn.execute(
+                "SELECT instrument_id, COUNT(*) c, SUM(amount_usd) amt "
+                "FROM dilution_ledger_drawdowns "
+                "WHERE cik=? AND instrument_id LIKE 'EQ-%' "
+                "GROUP BY instrument_id",
+                (cik,),
+            )
+        }
+    assert per_inst.get("EQ-001") == (1, 2_000_000.0), per_inst
+    assert per_inst.get("EQ-003") == (1, 3_100_000.0), per_inst
+    assert "EQ-002" not in per_inst, per_inst
 
     # Cleanup
     os.unlink(_tmp.name)

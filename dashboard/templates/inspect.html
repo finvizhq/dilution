@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block title %}inspect {{ company.ticker }}{% endblock %}
+{% block subtitle %}inspect · {{ company.ticker }} · CIK {{ cik }}{% endblock %}
+
+{% block content %}
+<style>
+  .insp h2 { font-size: 14px; margin: 18px 0 6px; border-bottom: 2px solid #355e93; padding-bottom: 2px; }
+  .insp h2 .count { color: #888; font-weight: normal; font-size: 11px; }
+  .insp details { margin: 0 0 4px; }
+  .insp summary { cursor: pointer; padding: 3px 6px; background: #f2f4f8; border: 1px solid #d6dbe5; }
+  .insp summary:hover { background: #e8edf6; }
+  .insp pre { background: #f8f8f8; border: 1px solid #e0e0e0; padding: 6px 8px; margin: 4px 0;
+              font-family: "SFMono-Regular", Consolas, monospace; font-size: 10px;
+              white-space: pre-wrap; word-break: break-word; max-height: 420px; overflow: auto; }
+  .insp table { border-collapse: collapse; width: 100%; margin: 4px 0; font-size: 10px; }
+  .insp th, .insp td { border: 1px solid #dcdcdc; padding: 2px 5px; text-align: left; vertical-align: top; }
+  .insp th { background: #eef1f6; position: sticky; top: 0; }
+  .insp .meta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 2px 16px; }
+  .insp .meta-grid div { border-bottom: 1px dotted #ddd; padding: 1px 0; }
+  .insp .meta-grid .k { color: #666; display: inline-block; min-width: 130px; }
+  .insp .pills span { display:inline-block; margin: 0 4px 0 0; padding: 1px 7px; border-radius: 8px; font-weight: bold; }
+  .insp .instr { border: 1px solid #ccc; margin: 6px 0; }
+  .insp .instr > .hdr { padding: 5px 8px; background: #fafbfd; cursor: pointer; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .insp .instr .id { font-weight: bold; font-family: monospace; }
+  .insp .instr .body { padding: 6px 10px; border-top: 1px dashed #ddd; }
+  .insp .cols { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .insp .cols h4, .insp .body h4 { margin: 6px 0 2px; font-size: 11px; color:#355e93; }
+  .st { padding: 1px 7px; border-radius: 8px; font-weight: bold; font-size: 10px; }
+  .st-active     { background:#cfe6cb; color:#1f5417; }
+  .st-superseded { background:#e0e0e0; color:#555; }
+  .st-expired,.st-terminated { background:#f3d9d9; color:#7a1f1f; }
+  .st-exercised,.st-converted,.st-redeemed { background:#d9e3f3; color:#1f3a7a; }
+  .insp .filter-bar { margin: 6px 0; }
+  .insp .filter-bar input { padding: 3px 6px; width: 280px; font-size: 11px; }
+  .insp .muted { color:#999; }
+  .insp .nav-jump a { margin-right: 10px; font-size: 11px; }
+</style>
+
+<div class="insp">
+  <div class="nav-jump">
+    <a href="/t/{{ company.ticker }}">↩ product view</a>
+    <a href="#ledger">ledger</a>
+    <a href="#llm-view">LLM view</a>
+    <a href="#filings">filings</a>
+    <a href="#drawdowns">drawdowns</a>
+    <a href="#anchor">anchor diffs</a>
+    <a href="#errors">walk errors</a>
+    <a href="#splits">splits</a>
+  </div>
+
+  <h2>Company / walk state</h2>
+  <div class="meta-grid">
+    <div><span class="k">ticker</span> {{ company.ticker }}</div>
+    <div><span class="k">cik</span> {{ cik }}</div>
+    <div><span class="k">name</span> {{ company.name }}</div>
+    <div><span class="k">is_fpi</span> {{ company.is_fpi }}</div>
+    <div><span class="k">ads_ratio</span> {{ company.ads_ratio if company.ads_ratio is not none else '—' }}</div>
+    <div><span class="k">unit_detected_at</span> {{ company.unit_detected_at or '—' }}</div>
+    <div><span class="k">added_at</span> {{ company.added_at }}</div>
+    {% if walk_state %}
+    <div><span class="k">last_processed</span> {{ walk_state.last_processed_accession or '—' }}</div>
+    <div><span class="k">last_filing_date</span> {{ walk_state.last_processed_filing_date or '—' }}</div>
+    <div><span class="k">pipeline_version</span> {{ walk_state.pipeline_version or '—' }}</div>
+    <div><span class="k">walked_at</span> {{ walk_state.walked_at or '—' }}</div>
+    {% endif %}
+  </div>
+  {% if walk_state and walk_state.next_id_seq_json %}
+  <details><summary>next_id_seq_json</summary><pre>{{ walk_state.next_id_seq_json | pjson }}</pre></details>
+  {% endif %}
+
+  <h2 id="ledger">Ledger <span class="count">— {{ instruments|length }} rows
+      ({% for t,n in type_counts.items() %}{{ t }}:{{ n }} {% endfor %}|
+       {% for s,n in status_counts.items() %}{{ s }}:{{ n }} {% endfor %})</span></h2>
+  <div class="filter-bar">
+    <input id="ledger-filter" placeholder="filter rows (id, type, label, counterparty, status)…"
+           oninput="filterLedger(this.value)">
+    <label style="font-size:11px;margin-left:8px;">
+      <input type="checkbox" id="hide-dead" onchange="filterLedger(document.getElementById('ledger-filter').value)">
+      hide superseded/closed
+    </label>
+  </div>
+
+  {% for r in instruments %}
+  {% set base = (r.status or '').split(':')[0] %}
+  <div class="instr" data-search="{{ r.instrument_id }} {{ r.type }} {{ r.label }} {{ r.counterparty_canonical }} {{ r.placement_agent_canonical }} {{ r.status }}"
+       data-dead="{{ 0 if base == 'active' else 1 }}">
+    <div class="hdr" onclick="this.parentNode.querySelector('.body').style.display = (this.parentNode.querySelector('.body').style.display==='none'?'block':'none')">
+      <span class="id">{{ r.instrument_id }}</span>
+      <span class="muted">{{ r.type }}</span>
+      <span class="st st-{{ base }}">{{ r.status }}</span>
+      <span>{{ r.label or '—' }}</span>
+      {% if r.counterparty_canonical %}<span class="muted">cp: {{ r.counterparty_canonical }}</span>{% endif %}
+      {% if r.placement_agent_canonical %}<span class="muted">agent: {{ r.placement_agent_canonical }}</span>{% endif %}
+      <span class="muted">created {{ r.created_at }}</span>
+      {% if r.drawdowns %}<span class="muted">· {{ r.drawdowns|length }} drawdown(s)</span>{% endif %}
+    </div>
+    <div class="body" style="display:none">
+      <div class="meta-grid">
+        <div><span class="k">created_at</span> {{ r.created_at }}</div>
+        <div><span class="k">created_accession</span>
+          <a href="{{ edgar_url(r.created_accession, cik) }}" target="_blank">{{ r.created_accession }}</a></div>
+        <div><span class="k">registration_accession</span>
+          {% if r.registration_accession %}<a href="{{ edgar_url(r.registration_accession, cik) }}" target="_blank">{{ r.registration_accession }}</a>{% else %}—{% endif %}</div>
+        <div><span class="k">counterparty_status</span> {{ r.counterparty_status or '—' }}</div>
+        <div><span class="k">status_at</span> {{ r.status_at or '—' }}</div>
+        <div><span class="k">last_seen</span> {{ r.last_seen_date or '—' }}
+          {% if r.last_seen_accession %}
+            {% set ls_url = edgar_url(r.last_seen_accession, cik) %}
+            ({% if ls_url %}<a href="{{ ls_url }}" target="_blank">{{ r.last_seen_accession }}</a>{% else %}<span class="muted">{{ r.last_seen_accession }}</span>{% endif %})
+          {% endif %}</div>
+        <div><span class="k">anchor_miss_count</span> {{ r.anchor_miss_count }}</div>
+      </div>
+
+      <div class="cols">
+        <div><h4>terms_json</h4><pre>{{ r.terms | pjson }}</pre></div>
+        <div><h4>outstanding_json</h4><pre>{{ r.outstanding | pjson }}</pre></div>
+      </div>
+
+      {% if r.narrative %}
+      <h4>narrative <span class="muted">({{ r.narrative.model }} @ {{ r.narrative.generated_at }})</span></h4>
+      <div class="meta-grid">
+        <div><span class="k">headline</span> {{ r.narrative.headline }}</div>
+        <div><span class="k">counterparty_role</span> {{ r.narrative.counterparty_role }}</div>
+        <div style="grid-column:1/-1"><span class="k">terms_summary</span> {{ r.narrative.terms_summary }}</div>
+      </div>
+      {% endif %}
+
+      {% if r.drawdowns %}
+      <h4>drawdowns ({{ r.drawdowns|length }})</h4>
+      <table>
+        <tr><th>event_date</th><th>amount_usd</th><th>shares</th><th>price</th><th>party</th><th>role</th><th>accession</th></tr>
+        {% for d in r.drawdowns %}
+        <tr>
+          <td>{{ d.event_date }}</td>
+          <td>{{ '%0.0f'|format(d.amount_usd) if d.amount_usd is not none else '—' }}</td>
+          <td>{{ '%0.0f'|format(d.shares) if d.shares is not none else '—' }}</td>
+          <td>{{ d.price if d.price is not none else '—' }}</td>
+          <td>{{ d.drawdown_party_canonical or '—' }}</td>
+          <td>{{ d.drawdown_party_role or '—' }}</td>
+          <td><a href="{{ edgar_url(d.accession_number, cik) }}" target="_blank">{{ d.accession_number }}</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      <details>
+        <summary>history_json ({{ r.history|length }} entries)</summary>
+        <pre>{{ r.history | pjson }}</pre>
+      </details>
+    </div>
+  </div>
+  {% else %}
+  <p class="muted">No ledger rows.</p>
+  {% endfor %}
+
+  <h2 id="llm-view">LLM ledger view
+      <span class="count">— {{ llm_ledger_view|length }} chars · {{ llm_view_rows }} open/recent rows</span></h2>
+  <p class="muted" style="font-size:11px;margin:2px 0 4px;">
+    The exact markdown block <code>walker.py</code> feeds the LLM as the current cap-table state
+    (via <code>render_ledger_view</code> over <code>get_open_instruments</code>). This is the
+    <strong>current</strong> ledger — what the model would see on the next walk. Per-filing
+    snapshots the LLM actually saw mid-walk are not persisted, so this is not a historical replay.
+  </p>
+  <pre id="llm-ledger-view" style="max-height:600px;">{{ llm_ledger_view }}</pre>
+
+  <h2 id="filings">Filings <span class="count">— {{ filings|length }}</span></h2>
+  <details>
+    <summary>show filing index</summary>
+    <table>
+      <tr><th>filing_date</th><th>form</th><th>items</th><th>file_number</th><th>accession</th>
+          <th>extracted_by</th><th>raw</th><th>edgar</th></tr>
+      {% for f in filings %}
+      <tr>
+        <td>{{ f.filing_date }}</td>
+        <td>{{ f.form }}</td>
+        <td>{{ f.items or '' }}</td>
+        <td>{{ f.file_number or '' }}</td>
+        <td style="font-family:monospace">{{ f.accession_number }}</td>
+        <td>{{ f.extracted_by or '—' }}</td>
+        <td>{% if f.raw_docs %}<a href="/inspect/{{ company.ticker }}/raw/{{ f.accession_number }}">{{ f.raw_docs }} doc(s)</a>{% else %}—{% endif %}</td>
+        <td><a href="{{ edgar_url(f.accession_number, cik) }}" target="_blank">↗</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </details>
+
+  <h2 id="drawdowns">Drawdowns <span class="count">— {{ drawdowns|length }}</span></h2>
+  {% if drawdowns %}
+  <details>
+    <summary>show all drawdowns</summary>
+    <table>
+      <tr><th>event_date</th><th>instrument</th><th>amount_usd</th><th>shares</th><th>price</th><th>party</th><th>role</th><th>accession</th></tr>
+      {% for d in drawdowns %}
+      <tr>
+        <td>{{ d.event_date }}</td>
+        <td style="font-family:monospace">{{ d.instrument_id }}</td>
+        <td>{{ '%0.0f'|format(d.amount_usd) if d.amount_usd is not none else '—' }}</td>
+        <td>{{ '%0.0f'|format(d.shares) if d.shares is not none else '—' }}</td>
+        <td>{{ d.price if d.price is not none else '—' }}</td>
+        <td>{{ d.drawdown_party_canonical or '—' }}</td>
+        <td>{{ d.drawdown_party_role or '—' }}</td>
+        <td><a href="{{ edgar_url(d.accession_number, cik) }}" target="_blank">{{ d.accession_number }}</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </details>
+  {% else %}<p class="muted">none</p>{% endif %}
+
+  <h2 id="anchor">Anchor diffs <span class="count">— {{ anchor_diffs|length }}</span></h2>
+  {% if anchor_diffs %}
+  <details>
+    <summary>show anchor reconciliation diffs</summary>
+    <table>
+      <tr><th>detected_at</th><th>as_of</th><th>kind</th><th>instrument</th><th>category</th>
+          <th>ledger_value</th><th>filing_value</th><th>resolution</th><th>accession</th></tr>
+      {% for a in anchor_diffs %}
+      <tr>
+        <td>{{ a.detected_at }}</td>
+        <td>{{ a.as_of_date }}</td>
+        <td>{{ a.diff_kind }}</td>
+        <td style="font-family:monospace">{{ a.instrument_id or '—' }}</td>
+        <td>{{ a.category or '—' }}</td>
+        <td><pre style="margin:0;max-height:120px">{{ a.ledger_value_json | pjson }}</pre></td>
+        <td><pre style="margin:0;max-height:120px">{{ a.filing_value_json | pjson }}</pre></td>
+        <td>{{ a.resolution }}</td>
+        <td><a href="{{ edgar_url(a.accession_number, cik) }}" target="_blank">↗</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </details>
+  {% else %}<p class="muted">none</p>{% endif %}
+
+  <h2 id="errors">Walk errors <span class="count">— {{ walk_errors|length }}</span></h2>
+  {% if walk_errors %}
+  <details {% if walk_errors %}open{% endif %}>
+    <summary>show dropped mutations</summary>
+    <table>
+      <tr><th>detected_at</th><th>kind</th><th>message</th><th>mutation</th><th>accession</th></tr>
+      {% for e in walk_errors %}
+      <tr>
+        <td>{{ e.detected_at }}</td>
+        <td>{{ e.error_kind }}</td>
+        <td>{{ e.message or '' }}</td>
+        <td><pre style="margin:0;max-height:160px">{{ e.mutation_json | pjson }}</pre></td>
+        <td><a href="{{ edgar_url(e.accession_number, cik) }}" target="_blank">↗</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </details>
+  {% else %}<p class="muted">none</p>{% endif %}
+
+  <h2 id="splits">Splits <span class="count">— {{ splits|length }}</span></h2>
+  {% if splits %}
+  <table>
+    <tr><th>effective_date</th><th>direction</th><th>pre</th><th>post</th><th>units</th><th>source</th></tr>
+    {% for s in splits %}
+    <tr><td>{{ s.effective_date }}</td><td>{{ s.direction }}</td><td>{{ s.pre }}</td>
+        <td>{{ s.post }}</td><td>{{ s.units }}</td><td>{{ s.source }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">none</p>{% endif %}
+</div>
+
+<script>
+function filterLedger(q) {
+  q = (q || '').toLowerCase();
+  var hideDead = document.getElementById('hide-dead').checked;
+  document.querySelectorAll('.insp .instr').forEach(function(el) {
+    var hay = (el.getAttribute('data-search') || '').toLowerCase();
+    var dead = el.getAttribute('data-dead') === '1';
+    var ok = (!q || hay.indexOf(q) !== -1) && (!hideDead || !dead);
+    el.style.display = ok ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+Skip to main content
+DilutionTracker Knowledge Base
+English
+Search for articles...
+
+    All Collections
+
+Dilution Course
+
+    What are Equity Line of Credits?
+
+What are Equity Line of Credits?
+Written by Shawn Stevenson
+March 14, 2024
+
+Reminder: You can always ask questions by messaging us! We'll clarify technical dilution concepts for you!
+
+ 
+
+TLDR:
+
+    Equity lines of credit allow companies to issue shares over time, similar to ATMs.
+
+    Unlike ATMs where a placement agent sells shares for a commission, equity lines involve issuing new shares to an investment fund at a discount to the Volume Weighted Average Price (VWAP).
+
+    The fund can decide when to resell these shares but often sells immediately for a profit.
+
+    Their agreements limit share purchases to a percentage of the stock's trading volume, reducing negative impact on stock prices.
+
+    The ability to raise money is directly proportional to the stock's trading volume.
+
+    New share issuance can dampen stock price increases and amplify downtrends.
+
+    Lincoln Park and Aspire Capital are major players in small cap equity line agreements, accounting for over 90% of them.
+
+ 
+
+Equity line of credits are similar to ATMs in the sense that they allow the company to issue shares overtime. The main difference is that in an ATM a placement agent is selling shares on behalf of the company for a percentage commission, whereas in an equity line, the company issues new shares to an investment fund in small blocks of shares at a time at a discount to VWAP. This means that the fund has some discretion as to when to resell the shares it purchases from the company on the open market. In the majority of cases though, the fund would immediately sell the shares as long as it can make a profit. The terms of the equity line differs by the fund, but Lincoln Park and Aspire Capital account for over 90% of small cap equity line agreements.
+
+ 
+
+How does the equity line of credit impact the stock price?
+
+ 
+
+Both Lincoln Park and Aspire Capital equity line agreements contain restrictions on how many shares they can purchase on any given day that are based on trading volume. For Lincoln Park, the limit is 30% of the purchase day’s trading volume. For Aspire Capital, the limit is 30% of the next day’s trading volume. Therefore, the amount of money that companies can raise off of these agreements is directly proportional to its stock’s trading volume. Another implication of this volume limitation is that the equity line will not have as big of a negative pressure on the stock price since it must follow the day’s trading volume. Still, the issuance of new shares will dampen any up move and amplify a downtrend once other market participants decide to sell out. We’ll go over specific examples of equity line impacts in a more detailed article in the future.
+Did this answer your question?
+DilutionTracker Knowledge Base
+
+    HomeApp
+
+We run on Intercom
+

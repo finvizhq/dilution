@@ -1,0 +1,91 @@
+Skip to main content
+DilutionTracker Knowledge Base
+English
+Search for articles...
+
+    All Collections
+
+Dilution Course
+
+    What Are Fixed Rate Convertible Notes?
+
+What Are Fixed Rate Convertible Notes?
+Written by Shawn Stevenson
+March 14, 2024
+
+Reminder: You can always ask questions by messaging us! We'll clarify technical dilution concepts for you!
+
+ 
+
+TLDR:
+
+    Fixed Rate Convertible Notes Basics:
+
+        Fixed rate convertible notes are a type of convertible note where the conversion price is set at issuance.
+
+        They may include price protection features like full ratchet protection, reducing the conversion price if there's subsequent financing at a lower price, affecting the stock price negatively due to increased dilution.
+
+         
+
+    Profit Mechanism for Note Holders:
+
+        Holders profit when the current share price exceeds the conversion price, as they can convert the note into shares and sell them at a higher market price.
+
+        This can lead to additional supply in the market if the share price moves above the note's conversion price, potentially diluting stock value depending on the amount relative to daily trading volume.
+
+         
+
+    Example: Bio-Key International (BKYI):
+
+        Entered a convertible note agreement with Lind Global, initially $3,060,000 at $1.50 per share, later amended to $3,789,000 at a reduced price of $0.65 per share.
+
+        Following a significant contract announcement, BKYI's stock price gapped up, prompting Lind to convert and sell shares, confirmed by a significant decrease in the outstanding principal amount in a SEC filing.
+
+        This selling pressure from Lind, despite being a fraction of the day's total trading volume, significantly impacted BKYI's stock price due to their price insensitivity as long as sales were above the conversion price.
+
+         
+
+    Strategic Implications for Traders:
+
+        Awareness of such convertible notes and their conditions can help traders anticipate potential selling pressure and adjust their strategies accordingly, especially in situations where significant news or price movements make conversions advantageous for note holders.
+
+ 
+
+Fixed rate convertible notes are just another form of convertible notes where the conversion price is fixed at the time of issuance. However, it may contain other price protection features that reduces the conversion price such as a subsequent financing at a lower price than the conversion price, this is called full ratchet price protection. 
+
+ 
+
+As a side note, a price protection feature is a legal clause that can reduce the exercise or conversion price of warrants and convertibles, which allows the holder to acquire shares at a lower price or acquire more shares, thereby exhibiting further downward pressure on the price.
+
+ 
+
+Fixed rate convertible notes can convert the principal amount of the loan into shares at the original conversion price. The note holder will make profit on its notes if the current share price is above the conversion price because he can convert and immediately sell on the market to capture the difference. Therefore there is a high chance of additional supply hitting the market if the price moves above the conversion price of the notes. Like all forms of dilution, the impact of this supply will ultimately depend on its amount relative to the daily trading volume.
+
+ 
+
+Example
+
+ 
+
+On July 10, 2019, Bio-Key International (BKYI) originally entered into a convertible note with Lind Global for $3,060,000 with a conversion price of $1.50. The conversion price was later amended and restated on March 12, 2020, with a principal amount of $3,789,000 and reduced conversion price of $0.65. If the entire $3,789,000 principal amount converted into shares at $0.65, there would be 5,829,230 new shares issued to Lind. 
+
+ 
+
+Shortly after on March 27, BKYI announced that it received a $45m contract to provide biometric software and hardware solutions in support of a Nigerian Ministry of Labour program. This press release caused the stock to gap up to $2.2 pre-market, which was significantly above the conversion price. 
+
+ 
+
+Except for one small bounce around 11am, the BKYI mostly faded for the entire day as there was a constant seller of stock driving the price down. This seller was none other than Lind converting its notes into shares and selling it on the open market. This was later confirmed in a 8-k sec filing filed on April 12, 2020 where “As a result of the Investor converting a portion of the amounts due under the A&R Note into shares of the Company’s common stock, the current outstanding principal amount of the A&R Note is $1,539,000.” This means that Lind converted $2,250,000 at $0.65, which was 3,461,538 shares. Although this was less than 10% of the 53m volume that BKYI traded on March 27, it still exerted significant negative pressure on the stock because Lind was a price insensitive seller as they make profit as long as they sell above $0.65.
+
+ 
+
+A trader with knowledge of Lind’s convertible note could have deduced that the likelihood of an all day fader was high because it is highly likely that Lind will be selling its shares all day as long as the price was above $0.65.
+
+ 
+Did this answer your question?
+DilutionTracker Knowledge Base
+
+    HomeApp
+
+We run on Intercom
+

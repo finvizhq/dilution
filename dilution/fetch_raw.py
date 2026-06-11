@@ -7,8 +7,8 @@ exhibits (SPA, warrant agreement, certificate of designation), not in
 the primary prospectus.
 
 What gets pulled per filing:
-  - Primary doc (always for non-6-K extractable forms; LLM-classified
-                 for 6-K)
+  - Primary doc (always — including 6-Ks; the walker LLM re-checks
+                 dilution-relevance end-to-end)
   - EX-1.x   — Underwriting agreements (gross spread, over-allotment,
                lock-up scope) — always pulled
   - EX-2.x   — Acquisition / merger agreements (de-SPAC share issuance,
@@ -17,11 +17,13 @@ What gets pulled per filing:
                — always pulled
   - EX-4.x   — Warrant agreements, indentures, debenture forms —
                always pulled
-  - EX-10.x  — Material contracts; LLM-CLASSIFIED to drop employment
-               agreements / leases / supply agreements while keeping
-               SPAs, RRAs, placement-agency agreements, equity-line
-               agreements, equity-distribution (ATM) agreements
-  - EX-99.x  — Press releases / supplemental info; LLM-CLASSIFIED
+  - EX-10.x  — Material contracts; description-routed to drop
+               employment / lease / supply / pro-forma / earnings-deck
+               exhibits while keeping SPAs, RRAs, placement-agency,
+               equity-line, ATM agreements. Ambiguous descriptions are
+               kept (fail-open).
+  - EX-99.x  — Press releases / supplemental info; same description
+               routing as EX-10. EX-99.x on 8-K/6-K is always pulled.
 
 Skipped: GRAPHIC, XBRL XML (EX-101.*, EX-104), EX-21 (subs), EX-23
 (consents), EX-24 (POAs).
@@ -32,16 +34,12 @@ import logging
 
 from edgar import get_by_accession_number, set_identity
 
+from . import _edgar_patches  # noqa: F401 — applies $-adjacency fix on import
+
 import config
 from db import get_conn, now_iso
 
-from .exhibit_classifier import (
-    classify_by_description,
-    classify_exhibit,
-    classify_exhibit_async,
-)
-from .llm_provider import make_async_client
-from .html_to_text import html_to_text
+from .exhibit_classifier import classify_by_description
 from .periodic_sections import is_periodic_with_sections, select_text
 
 log = logging.getLogger(__name__)
@@ -51,6 +49,8 @@ EXTRACTABLE_PREFIXES = (
     "6-K",  # foreign private issuer analog of 8-K
     "424B",
     "S-1", "S-3", "S-3ASR", "S-4", "F-1", "F-3",
+    # Canadian MJDS prospectus supplement — analog of 424B5 takedown
+    "SUPPL",
     "POS AM",
     # M&A communications (Rule 425) — usually mirrors the accompanying 8-K
     "425",
@@ -59,6 +59,8 @@ EXTRACTABLE_PREFIXES = (
     "10-K", "10-Q", "20-F", "40-F",
     # Regulation A+ family
     "1-A", "1-U", "1-K", "1-SA",
+    "EFFECT",  # TEST: shelf-effective notices
+    "RW",      # TEST: registration withdrawal
 )
 
 MAX_CHARS = 2_000_000  # per-row cap
@@ -72,15 +74,14 @@ def _is_narrative_exhibit(doc_type: str | None, document: str | None,
                           form: str | None = None) -> str:
     """Classify an attachment by exhibit family. Return one of:
         'always'    — always pull (EX-1/2/3/4, primary)
-        'classify'  — pull iff LLM classifier says relevant
+        'classify'  — pull iff description router says keep / unknown
         'skip'      — never pull
 
     EX-99.x on 8-K/6-K is always kept: by SEC convention the press
     release attached as EX-99.1 contains the substance of the
     announcement (private placement, offering closing, share
-    consolidation). The classifier was over-rejecting these on
-    Moonshot — fail open is the right default per the coverage rule
-    in CLAUDE.md.
+    consolidation). Fail open is the right default per the coverage
+    rule in CLAUDE.md.
     """
     if not doc_type:
         return "skip"
@@ -97,6 +98,8 @@ def _is_narrative_exhibit(doc_type: str | None, document: str | None,
     if (dt.startswith("EX-1.") or dt.startswith("EX-2.")
             or dt.startswith("EX-3.") or dt.startswith("EX-4.")):
         return "always"
+    if dt.startswith("EX-FILING") or dt.startswith("EX-107"):
+        return "always"  # TEST: filing fee table — offering size in machine form
     if dt.startswith("EX-99.") and (f.startswith("8-K") or f.startswith("6-K")):
         return "always"
     if dt.startswith("EX-10.") or dt.startswith("EX-99."):
@@ -105,19 +108,9 @@ def _is_narrative_exhibit(doc_type: str | None, document: str | None,
 
 
 def _attachment_markdown(attachment) -> str | None:
-    """Return text/markdown for an attachment, preferring our inline-
-    preserving converter on raw HTML so iXBRL-wrapped numbers stay
-    adjacent to currency markers."""
-    try:
-        content = attachment.content
-        if isinstance(content, bytes):
-            content = content.decode("utf-8", errors="replace")
-        if content and "<" in content[:200].lower():
-            md = html_to_text(content)
-            if md and md.strip():
-                return md
-    except Exception as e:
-        log.debug("  content read failed: %s", e)
+    """Return markdown for an attachment via edgartools. The $-adjacency
+    bug in `SECHTMLParser._get_text_with_spacing` is patched at import
+    time (see `dilution/_edgar_patches.py`)."""
     try:
         md = attachment.markdown()
         if md and md.strip():
@@ -143,7 +136,7 @@ def _store(accession: str, doc_name: str, doc_type: str, md: str) -> None:
         )
 
 
-async def _fetch_filing_text_async(accession: str, client) -> int:
+async def _fetch_filing_text_async(accession: str) -> int:
     """Async sibling of fetch_filing_text.
 
     Blocking SEC HTTP calls (edgartools is sync) are wrapped via
@@ -154,7 +147,8 @@ async def _fetch_filing_text_async(accession: str, client) -> int:
     """
     with get_conn() as conn:
         row = conn.execute(
-            "SELECT form, primary_doc FROM dilution_filings WHERE accession_number = ?",
+            "SELECT form, primary_doc, items FROM dilution_filings"
+            " WHERE accession_number = ?",
             (accession,),
         ).fetchone()
     if not row:
@@ -176,16 +170,21 @@ async def _fetch_filing_text_async(accession: str, client) -> int:
     # 1) Primary document.
     md: str | None = None
 
-    # For 10-K / 10-Q / 20-F (and /A amendments) drop obvious-noise
-    # sections via edgartools' typed-object section parser before we
-    # store the markdown. Risk Factors alone is typically 30-50% of a
-    # 10-K. Safe-fail: if section selection returns None for any
-    # reason (parsing failure, low-confidence boundaries, suspiciously
-    # small result) we fall through to the full-document path.
+    # For 10-K / 10-Q / 20-F / 8-K (and /A amendments) drop obvious-
+    # noise sections via edgartools' typed-object section parser
+    # before we store the markdown. Risk Factors alone is typically
+    # 30-50% of a 10-K; on multi-item 8-Ks, dropping 2.02 earnings /
+    # 5.02 officer changes / etc. trims most of the body. Safe-fail:
+    # if section selection returns None for any reason (parsing
+    # failure, low-confidence boundaries, suspiciously small result)
+    # we fall through to the full-document path.
     if is_periodic_with_sections(form):
+        declared_items = row["items"]
+
         def _select():
             try:
-                return select_text(filing, form)
+                return select_text(filing, form,
+                                   declared_items=declared_items)
             except Exception as e:  # noqa: BLE001 - boundary log
                 return None, {"reason": f"select_text raised: {e}"}
         selected, stats = await asyncio.to_thread(_select)
@@ -203,32 +202,11 @@ async def _fetch_filing_text_async(accession: str, client) -> int:
                      form, accession, stats.get("reason"))
 
     if md is None:
-        def _get_html():
-            try:
-                return filing.html() or ""
-            except Exception as e:
-                log.debug("  html fetch failed for %s: %s", accession, e)
-                return ""
-
-        html = await asyncio.to_thread(_get_html)
-        md = html_to_text(html) if html else None
-        if not md or not md.strip():
-            try:
-                md = await asyncio.to_thread(filing.markdown)
-            except Exception as e:
-                log.warning("  markdown failed for %s: %s", accession, e)
-                md = None
-
-    primary_classified_relevant = False
-    if md and md.strip() and is_6k:
-        primary_classified_relevant = await classify_exhibit_async(
-            client,
-            doc_type="PRIMARY",
-            doc_name=row["primary_doc"] or "primary",
-            form=form,
-            content=md,
-            accession=accession,
-        )
+        try:
+            md = await asyncio.to_thread(filing.markdown)
+        except Exception as e:
+            log.warning("  markdown failed for %s: %s", accession, e)
+            md = None
 
     if md and md.strip():
         _store(accession, row["primary_doc"] or "primary", row["form"], md)
@@ -253,66 +231,41 @@ async def _fetch_filing_text_async(accession: str, client) -> int:
         if verdict == "skip":
             continue
 
-        # Deterministic description router runs BEFORE we fetch
-        # content. Hard-DROP descriptions (employment agreements,
-        # leases, pro-forma financials, etc.) skip the round-trip
-        # entirely; hard-KEEP descriptions (SPA, warrant agreement,
-        # ATM sales agreement, certificate of designation) skip the
-        # LLM classifier. UNKNOWN descriptions fall through to the
-        # LLM classifier as before.
+        # Deterministic description router. Hard-DROP descriptions
+        # (employment / lease / pro-forma / earnings-deck) skip the
+        # fetch round-trip entirely; hard-KEEP and UNKNOWN both store
+        # the exhibit (fail-open per CLAUDE.md coverage rule).
         desc = getattr(a, "description", None)
-        desc_route = "unknown"
         if verdict == "classify":
             desc_route = classify_by_description(description=desc)
             if desc_route == "drop":
                 log.info("  desc-classify drop %s/%s [%s]: %r",
                          dt, doc, accession, desc)
                 continue
+            if desc_route == "keep":
+                log.info("  desc-classify keep %s/%s [%s]: %r",
+                         dt, doc, accession, desc)
 
         ex_md = await asyncio.to_thread(_attachment_markdown, a)
         if not ex_md:
             continue
-        if verdict == "classify" and desc_route == "unknown":
-            keep = await classify_exhibit_async(
-                client,
-                doc_type=dt,
-                doc_name=doc,
-                form=form,
-                content=ex_md,
-                accession=accession,
-            )
-            if not keep:
-                continue
-        elif verdict == "classify" and desc_route == "keep":
-            log.info("  desc-classify keep %s/%s [%s]: %r",
-                     dt, doc, accession, desc)
         _store(accession, doc, dt or "EX", ex_md)
         written += 1
-
-    if is_6k and not primary_classified_relevant and written <= 1:
-        with get_conn() as conn:
-            conn.execute(
-                "DELETE FROM dilution_raw WHERE accession_number = ?",
-                (accession,),
-            )
-        log.debug("  %s — 6-K rolled back (no dilution-relevant content)",
-                  accession)
-        return 0
 
     return written
 
 
-def fetch_filing_text(accession: str, client) -> int:
+def fetch_filing_text(accession: str) -> int:
     """Synchronous wrapper preserved for any external callers. New code
     should use _fetch_filing_text_async via fetch_extractable_for_cik."""
-    return asyncio.run(_fetch_filing_text_async(accession, client))
+    return asyncio.run(_fetch_filing_text_async(accession))
 
 
-async def _fetch_worker(r, client, sem, counters, total):
+async def _fetch_worker(r, sem, counters, total):
     accession = r["accession_number"]
     async with sem:
         try:
-            n = await _fetch_filing_text_async(accession, client)
+            n = await _fetch_filing_text_async(accession)
         except Exception as e:
             counters["done"] += 1
             counters["errors"] += 1
@@ -358,14 +311,10 @@ async def _run_fetch(cik: int, since_date: str | None,
         return {"fetched": 0, "docs": 0, "total": 0, "errors": 0}
 
     log.info("  fetch concurrency=%d over %d filings", concurrency, total)
-    client = make_async_client()
-    try:
-        sem = asyncio.Semaphore(concurrency)
-        await asyncio.gather(*[
-            _fetch_worker(r, client, sem, counters, total) for r in rows
-        ])
-    finally:
-        await client.close()
+    sem = asyncio.Semaphore(concurrency)
+    await asyncio.gather(*[
+        _fetch_worker(r, sem, counters, total) for r in rows
+    ])
 
     log.info("  fetch done — %d/%d filings, %d docs, %d errors",
              counters["fetched"], total, counters["docs"], counters["errors"])
@@ -375,18 +324,12 @@ async def _run_fetch(cik: int, since_date: str | None,
 
 def fetch_extractable_for_cik(cik: int, since_date: str | None = None,
                               limit: int | None = None,
-                              concurrency: int | None = None,
-                              client=None) -> dict:
+                              concurrency: int | None = None) -> dict:
     """Fetch dilution-relevant filings + exhibits for `cik`.
 
-    Filing-level concurrency bounded by `concurrency` (default
-    config.LLM_CONCURRENCY). The LLM exhibit classifier is mandatory —
-    raises if the active provider's API key is unset. The legacy
-    `client=` kwarg is accepted but ignored (we own the async client
-    lifecycle now).
+    Pure HTTP work — no LLM calls. Filing-level concurrency bounded
+    by `concurrency` (default config.LLM_CONCURRENCY).
     """
-    from .llm_provider import require_api_key
-    require_api_key()
     if concurrency is None:
         concurrency = config.LLM_CONCURRENCY
     concurrency = max(1, int(concurrency))

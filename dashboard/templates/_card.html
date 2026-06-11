@@ -42,8 +42,6 @@
       {{ row('Total Warrants Issued', c.total_issued | shares) }}
       {% if c.known_owners %}{{ row('Known Owners', ', '.join(c.known_owners)) }}{% else %}{{ row('Known Owners', None) }}{% endif %}
       {{ row('Underwriter/Placement agent', c.underwriter) }}
-      {{ row('Price Protection', c.price_protection | replace('_', ' ') if c.price_protection else None) }}
-      {{ row('PP Clause', c.pp_clause_text) }}
       {{ row('Issue Date', c.issue_date, mono=true) }}
       {{ row('Exercisable Date', c.exercisable_date, mono=true) }}
       {{ row('Expiration Date', c.expiration_date, mono=true) }}
@@ -57,8 +55,6 @@
       {{ row('Total Principal Amount', c.principal_total | usd) }}
       {% if c.known_owners %}{{ row('Known Owners', ', '.join(c.known_owners)) }}{% else %}{{ row('Known Owners', None) }}{% endif %}
       {{ row('Underwriter/Placement agent', c.underwriter) }}
-      {{ row('Price Protection', c.price_protection | replace('_', ' ') if c.price_protection else None) }}
-      {{ row('PP Clause', c.pp_clause_text) }}
       {{ row('Issue Date', c.issue_date, mono=true) }}
       {{ row('Convertible Date', c.convertible_date, mono=true) }}
       {{ row('Maturity Date', c.maturity_date, mono=true) }}
@@ -72,8 +68,6 @@
       {{ row('Total Dollar Amount Issued', c.principal_total | usd) }}
       {% if c.known_owners %}{{ row('Known Owners', ', '.join(c.known_owners)) }}{% else %}{{ row('Known Owners', None) }}{% endif %}
       {{ row('Underwriter/Placement Agent', c.underwriter) }}
-      {{ row('Price Protection', c.price_protection | replace('_', ' ') if c.price_protection else None) }}
-      {{ row('PP Clause', c.pp_clause_text) }}
       {{ row('Issue Date', c.issue_date, mono=true) }}
       {{ row('Convertible Date', c.convertible_date, mono=true) }}
       {{ row('Maturity Date', c.maturity_date, mono=true) }}

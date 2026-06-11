@@ -1,0 +1,471 @@
+2026-05-09 10:59:21,357  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-09 10:59:21,357  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-09 10:59:27,522  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 10:59:27] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-09 10:59:27,575  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 10:59:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 10:59:29,419  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 10:59:29] "GET / HTTP/1.1" 200 -
+2026-05-09 10:59:29,462  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 10:59:29] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 10:59:32,511  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 10:59:32] "GET /t/GME HTTP/1.1" 200 -
+2026-05-09 10:59:32,572  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 10:59:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 15:19:39,380  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:19:39] "[33mGET /t/GME HTTP/1.1[0m" 404 -
+2026-05-09 15:27:53,775  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:27:53] "GET / HTTP/1.1" 200 -
+2026-05-09 15:27:53,815  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:27:53] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 15:27:55,782  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:27:55] "GET /t/GME HTTP/1.1" 200 -
+2026-05-09 15:27:55,824  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:27:55] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 15:28:06,953  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:28:06] "GET /t/GME HTTP/1.1" 200 -
+2026-05-09 15:28:06,986  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:28:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 15:38:16,658  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:38:16] "GET /t/BYND HTTP/1.1" 200 -
+2026-05-09 15:38:16,704  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 15:38:16] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 16:03:19,425  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 16:03:19] "GET /t/BYND HTTP/1.1" 200 -
+2026-05-09 16:03:19,492  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 16:03:19] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 16:10:54,477  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 16:10:54] "GET /t/BYND HTTP/1.1" 200 -
+2026-05-09 16:10:54,509  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 16:10:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 16:10:56,441  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 16:10:56] "GET /t/GME HTTP/1.1" 200 -
+2026-05-09 16:10:56,484  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 16:10:56] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 20:53:37,758  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-09 20:53:37,758  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-09 20:53:50,971  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 20:53:50] "GET / HTTP/1.1" 200 -
+2026-05-09 20:53:51,025  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 20:53:51] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 20:54:01,885  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 20:54:01] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-09 20:54:01,931  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 20:54:01] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 21:20:32,084  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:20:32] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-09 21:20:32,166  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:20:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 21:20:34,924  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:20:34] "GET /t/GME HTTP/1.1" 200 -
+2026-05-09 21:20:35,009  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:20:35] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 21:23:28,305  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:23:28] "GET /t/GME HTTP/1.1" 200 -
+2026-05-09 21:23:28,374  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:23:28] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-09 21:23:28,531  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:23:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-09 21:26:31,046  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:26:31] "GET /t/GME HTTP/1.1" 200 -
+2026-05-09 21:26:31,103  [-]  INFO     werkzeug  127.0.0.1 - - [09/May/2026 21:26:31] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 10:10:17,721  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 10:10:17] "[33mGET /t/GME HTTP/1.1[0m" 404 -
+2026-05-11 14:20:18,952  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-11 14:20:18,952  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-11 14:20:23,988  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:23] "GET / HTTP/1.1" 200 -
+2026-05-11 14:20:24,017  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:24] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-11 14:20:24,134  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:24] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-11 14:20:25,867  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-11 14:20:26,623  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-11 14:20:26,624  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-11 14:20:26,738  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:26] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-11 14:20:26,754  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:26] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:20:34,841  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:34] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:20:34,860  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:20:55,883  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:55] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:20:55,894  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:55] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-11 14:20:55,921  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:20:55] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-11 14:21:03,558  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:03] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:21:03,570  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:21:39,093  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:39] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:21:39,105  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:39] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:21:42,735  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:42] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-11 14:21:42,750  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:21:46,977  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:46] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:21:46,991  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:21:46] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:25:26,111  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:25:26] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:25:26,127  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:25:26] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-11 14:25:26,142  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:25:26] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-11 14:33:19,185  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-11 14:33:19,185  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-11 14:33:25,236  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:25] "GET / HTTP/1.1" 200 -
+2026-05-11 14:33:25,372  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:25] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-11 14:33:27,823  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-11 14:33:28,257  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-11 14:33:28,258  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-11 14:33:28,382  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:28] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-11 14:33:28,436  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:28] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:33:35,975  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:35] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:33:36,030  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:33:50,951  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:50] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:33:50,996  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:50] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:33:53,750  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:53] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 14:33:53,802  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:53] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:33:58,109  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:58] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 14:33:58,144  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:33:58] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:34:02,343  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:02] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:34:02,387  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:34:04,657  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:04] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-11 14:34:04,700  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:04] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:34:07,675  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:07] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-11 14:34:07,711  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:07] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:34:33,610  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:33] "GET /t/IQST HTTP/1.1" 200 -
+2026-05-11 14:34:33,664  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:34:33] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:42:37,205  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:37] "[33mGET /t/GME HTTP/1.1[0m" 404 -
+2026-05-11 14:42:38,371  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:38] "[33mGET /t/GME HTTP/1.1[0m" 404 -
+2026-05-11 14:42:49,580  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:49] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 14:42:49,633  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:42:51,159  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:51] "GET / HTTP/1.1" 200 -
+2026-05-11 14:42:51,217  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:51] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:42:53,999  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:53] "GET /t/IQST HTTP/1.1" 200 -
+2026-05-11 14:42:54,065  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:42:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:50:50,852  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:50:50] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 14:50:50,911  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:50:50] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 14:51:05,595  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:51:05] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 14:51:05,653  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 14:51:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:04:46,952  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:04:46] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 15:04:47,001  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:04:47] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:04:52,376  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:04:52] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 15:04:52,440  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:04:52] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:11:03,269  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:03] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 15:11:03,319  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:11:12,094  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:12] "GET / HTTP/1.1" 200 -
+2026-05-11 15:11:12,144  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:12] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:11:15,085  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:15] "GET /t/CLIK HTTP/1.1" 200 -
+2026-05-11 15:11:15,144  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:11:22,726  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:22] "GET /t/CLIK HTTP/1.1" 200 -
+2026-05-11 15:11:22,771  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:11:22] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:12:02,763  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:12:02] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 15:12:02,815  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:12:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:12:14,265  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:12:14] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 15:12:14,326  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:12:14] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 15:28:02,381  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 15:28:02] "[33mGET /t/XTLB HTTP/1.1[0m" 404 -
+2026-05-11 18:53:15,780  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-11 18:53:15,780  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-11 18:53:19,802  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-11 18:53:20,272  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-11 18:53:20,272  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-11 18:53:20,587  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:20] "GET /t/GME HTTP/1.1" 200 -
+2026-05-11 18:53:20,635  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:20] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-11 18:53:22,345  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:22] "GET / HTTP/1.1" 200 -
+2026-05-11 18:53:22,402  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:22] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:53:26,038  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:26] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-11 18:53:26,081  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:26] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:53:31,818  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:31] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 18:53:31,863  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:31] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:53:34,736  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:34] "GET /t/SMX HTTP/1.1" 200 -
+2026-05-11 18:53:34,784  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:53:44,310  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:44] "GET /t/GNS HTTP/1.1" 200 -
+2026-05-11 18:53:44,356  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:44] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:53:49,879  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:49] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-11 18:53:49,933  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:53:54,174  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:54] "GET /t/DJT HTTP/1.1" 200 -
+2026-05-11 18:53:54,242  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:53:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:56:08,661  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:56:08] "GET /t/SMX HTTP/1.1" 200 -
+2026-05-11 18:56:08,715  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:56:08] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:57:00,435  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:57:00] "GET /t/BYND HTTP/1.1" 200 -
+2026-05-11 18:57:00,478  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:57:00] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:57:00,531  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:57:00] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-11 18:58:15,237  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:58:15] "GET /t/qubt HTTP/1.1" 200 -
+2026-05-11 18:58:15,305  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:58:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 18:59:46,752  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:59:46] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-11 18:59:46,813  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 18:59:46] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-11 19:16:26,030  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 19:16:26] "GET / HTTP/1.1" 200 -
+2026-05-11 19:16:26,071  [-]  INFO     werkzeug  127.0.0.1 - - [11/May/2026 19:16:26] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-14 12:39:15,300  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-14 12:39:15,300  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-14 12:39:19,576  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 12:39:19] "GET / HTTP/1.1" 200 -
+2026-05-14 12:39:19,631  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 12:39:19] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-14 12:39:22,348  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-14 12:39:22,686  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-14 12:39:22,687  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-14 12:39:22,753  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 12:39:22] "GET /t/SMX HTTP/1.1" 200 -
+2026-05-14 12:39:22,791  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 12:39:22] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-14 13:02:15,767  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 13:02:15] "GET / HTTP/1.1" 200 -
+2026-05-14 13:02:15,816  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 13:02:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-14 13:02:18,627  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 13:02:18] "GET /t/DJT HTTP/1.1" 200 -
+2026-05-14 13:02:18,669  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 13:02:18] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-14 16:20:37,385  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 16:20:37] "GET / HTTP/1.1" 200 -
+2026-05-14 16:20:37,446  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 16:20:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-14 16:20:41,696  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 16:20:41] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-14 16:20:41,792  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 16:20:41] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-14 16:22:06,308  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 16:22:06] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-14 16:22:06,349  [-]  INFO     werkzeug  127.0.0.1 - - [14/May/2026 16:22:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-15 14:57:16,177  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-15 14:57:16,177  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-15 14:57:18,387  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-15 14:57:19,160  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-15 14:57:19,161  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-15 14:57:19,389  [-]  INFO     werkzeug  127.0.0.1 - - [15/May/2026 14:57:19] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-15 14:57:19,429  [-]  INFO     werkzeug  127.0.0.1 - - [15/May/2026 14:57:19] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-15 14:57:19,523  [-]  INFO     werkzeug  127.0.0.1 - - [15/May/2026 14:57:19] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-18 17:51:27,197  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-18 17:51:27,198  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-18 17:51:50,934  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 17:51:50] "GET / HTTP/1.1" 200 -
+2026-05-18 17:51:50,984  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 17:51:50] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-18 17:51:53,445  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-18 17:51:53,905  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-18 17:51:53,906  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-18 17:51:54,069  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 17:51:54] "GET /t/SBFM HTTP/1.1" 200 -
+2026-05-18 17:51:54,111  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 17:51:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-18 17:59:58,310  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 17:59:58] "GET /t/SBFM HTTP/1.1" 200 -
+2026-05-18 17:59:58,350  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 17:59:58] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-18 19:10:13,220  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 19:10:13] "GET /t/SBFM HTTP/1.1" 200 -
+2026-05-18 19:10:13,281  [-]  INFO     werkzeug  127.0.0.1 - - [18/May/2026 19:10:13] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-19 00:03:57,474  [-]  WARNING  dilution.finviz_client  finviz GET export.ashx failed: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-05-19 00:03:57,490  [-]  INFO     werkzeug  127.0.0.1 - - [19/May/2026 00:03:57] "GET /t/SBFM HTTP/1.1" 200 -
+2026-05-19 00:03:57,523  [-]  INFO     werkzeug  127.0.0.1 - - [19/May/2026 00:03:57] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-20 23:06:49,391  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-20 23:06:49,391  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-20 23:06:54,239  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:06:54] "GET / HTTP/1.1" 200 -
+2026-05-20 23:06:54,319  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:06:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-20 23:06:54,501  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:06:54] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-20 23:07:01,143  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-20 23:07:01,888  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-20 23:07:01,889  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-20 23:07:01,957  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:07:01] "GET /t/GENK HTTP/1.1" 200 -
+2026-05-20 23:07:02,007  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:07:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-20 23:39:04,844  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-20 23:39:04,845  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-20 23:39:09,183  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:09] "GET / HTTP/1.1" 200 -
+2026-05-20 23:39:09,279  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:09] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-20 23:39:09,445  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:09] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-20 23:39:11,282  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-20 23:39:11,624  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-20 23:39:11,625  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-20 23:39:11,696  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:11] "GET /t/GENK HTTP/1.1" 200 -
+2026-05-20 23:39:11,787  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:11] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-20 23:39:15,688  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:15] "GET /t/GENK HTTP/1.1" 200 -
+2026-05-20 23:39:15,764  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-20 23:39:42,092  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:42] "GET /t/GENK HTTP/1.1" 200 -
+2026-05-20 23:39:42,128  [-]  INFO     werkzeug  127.0.0.1 - - [20/May/2026 23:39:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 00:28:58,298  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-21 00:28:58,305  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-21 00:29:02,598  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 00:29:02] "GET / HTTP/1.1" 200 -
+2026-05-21 00:29:02,684  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 00:29:02] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-21 00:29:02,853  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 00:29:02] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 00:29:04,555  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-21 00:29:05,183  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-21 00:29:05,470  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-21 00:29:05,470  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-21 00:29:05,569  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 00:29:05] "GET /t/GENK HTTP/1.1" 200 -
+2026-05-21 00:29:05,652  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 00:29:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:03:34,005  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-21 13:03:34,005  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-21 13:03:37,244  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:03:37] "GET / HTTP/1.1" 200 -
+2026-05-21 13:03:37,296  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:03:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:03:37,426  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:03:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 13:04:32,687  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-21 13:04:33,805  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-21 13:04:34,620  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-21 13:04:34,621  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-21 13:04:34,737  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:04:34] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-21 13:04:34,799  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:04:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:04:34,839  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:04:34] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 13:25:32,728  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:25:32] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-21 13:25:32,732  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:25:32] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-21 13:25:32,784  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:25:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:26:33,084  [-]  INFO     edgar.xbrl.standardization.reverse_index  ReverseIndex initialized: 2923 mappings, 206 ambiguous, 0 deprecated, 272 excluded
+2026-05-21 13:26:34,203  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:26:34] "GET /t/GCTK HTTP/1.1" 200 -
+2026-05-21 13:26:34,238  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:26:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:35:10,466  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:35:10] "GET /t/GCTK HTTP/1.1" 200 -
+2026-05-21 13:35:10,541  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:35:10] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:57:16,961  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:16] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-21 13:57:17,015  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:17] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:57:21,243  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:21] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-21 13:57:21,280  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:21] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:57:37,558  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:37] "GET /t/SCNI HTTP/1.1" 200 -
+2026-05-21 13:57:37,599  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 13:57:55,767  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:55] "GET /t/SCNI HTTP/1.1" 200 -
+2026-05-21 13:57:55,794  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 13:57:55] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 16:08:13,430  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 16:08:13] "GET / HTTP/1.1" 200 -
+2026-05-21 16:08:13,535  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 16:08:13] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 16:08:13,683  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 16:08:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:08:18,644  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 16:08:18] "GET /t/PPBT HTTP/1.1" 200 -
+2026-05-21 16:08:18,695  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 16:08:18] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 23:05:13,937  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 23:05:13] "GET /t/PPBT HTTP/1.1" 200 -
+2026-05-21 23:05:13,977  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 23:05:13] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-21 23:05:14,117  [-]  INFO     werkzeug  127.0.0.1 - - [21/May/2026 23:05:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-22 00:03:25,267  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-22 00:03:25,267  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-22 00:03:34,692  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 00:03:34] "GET / HTTP/1.1" 200 -
+2026-05-22 00:03:34,747  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 00:03:34] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-22 00:03:34,901  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 00:03:34] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-22 00:03:37,382  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-22 00:03:40,349  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-22 00:03:41,414  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-22 00:03:41,415  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-22 00:03:41,492  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 00:03:41] "GET /t/SCNI HTTP/1.1" 200 -
+2026-05-22 00:03:41,564  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 00:03:41] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-22 10:23:01,209  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 10:23:01] "GET / HTTP/1.1" 200 -
+2026-05-22 10:23:01,256  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 10:23:01] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-22 10:23:06,120  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 10:23:06] "GET /t/PHUN HTTP/1.1" 200 -
+2026-05-22 10:23:06,172  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 10:23:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-22 11:49:33,600  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 11:49:33] "GET /t/PHUN HTTP/1.1" 200 -
+2026-05-22 11:49:33,634  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 11:49:33] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-22 19:01:45,825  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:01:45] "GET / HTTP/1.1" 200 -
+2026-05-22 19:01:45,895  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:01:45] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-22 19:01:50,337  [-]  INFO     edgar.xbrl.standardization.reverse_index  ReverseIndex initialized: 2923 mappings, 206 ambiguous, 0 deprecated, 272 excluded
+2026-05-22 19:01:52,280  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:01:52] "GET /t/BDMD HTTP/1.1" 200 -
+2026-05-22 19:01:52,783  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:01:52] "GET /t/BDMD HTTP/1.1" 200 -
+2026-05-22 19:01:52,830  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:01:52] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-22 19:01:52,895  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:01:52] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-22 19:22:34,812  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:22:34] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-22 19:22:36,264  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:22:36] "GET / HTTP/1.1" 200 -
+2026-05-22 19:22:36,323  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:22:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-22 19:22:41,133  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:22:41] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-22 19:22:41,226  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 19:22:41] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-22 23:55:24,871  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 23:55:24] "[33mGET /t/NGEN HTTP/1.1[0m" 404 -
+2026-05-22 23:58:39,115  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 23:58:39] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-22 23:58:39,157  [-]  INFO     werkzeug  127.0.0.1 - - [22/May/2026 23:58:39] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-23 00:11:42,743  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:11:42] "[33mGET /t/PHUN HTTP/1.1[0m" 404 -
+2026-05-23 00:11:43,745  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:11:43] "[33mGET /t/PHUN HTTP/1.1[0m" 404 -
+2026-05-23 00:11:44,473  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:11:44] "GET / HTTP/1.1" 200 -
+2026-05-23 00:11:48,448  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:11:48] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-23 00:11:48,506  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:11:48] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-23 00:11:51,510  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:11:51] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-23 00:11:51,540  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:11:51] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-23 00:14:53,074  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:14:53] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-23 00:14:53,201  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:14:53] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-23 00:14:53,597  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:14:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-23 00:14:54,251  [-]  WARNING  dilution.finviz_client  finviz GET export.ashx failed: HTTPSConnectionPool(host='elite.finviz.com', port=443): Read timed out. (read timeout=10)
+2026-05-23 00:14:54,262  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:14:54] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-23 00:29:33,912  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:29:33] "GET / HTTP/1.1" 200 -
+2026-05-23 00:29:34,000  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:29:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-23 00:29:36,471  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:29:36] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-23 00:29:36,541  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:29:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-23 00:30:38,389  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:30:38] "[33mGET /t/GME HTTP/1.1[0m" 404 -
+2026-05-23 00:30:42,125  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:30:42] "GET /t/NGEN HTTP/1.1" 200 -
+2026-05-23 00:30:42,192  [-]  INFO     werkzeug  127.0.0.1 - - [23/May/2026 00:30:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:30:30,296  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:30:30] "GET / HTTP/1.1" 200 -
+2026-05-24 01:30:30,373  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:30:30] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:30:34,737  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:30:34] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 01:30:34,783  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:30:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:32:16,154  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:32:16] "GET /t/CGEN HTTP/1.1" 200 -
+2026-05-24 01:32:16,195  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:32:16] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:33:37,888  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:33:37] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-24 01:33:37,936  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:33:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:34:54,030  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:34:54] "GET /t/GCTK HTTP/1.1" 200 -
+2026-05-24 01:34:54,083  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:34:54] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:36:02,559  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:36:02] "GET /t/IQST HTTP/1.1" 200 -
+2026-05-24 01:36:02,601  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:36:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:36:45,280  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:36:45] "GET /t/SCNI HTTP/1.1" 200 -
+2026-05-24 01:36:45,332  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:36:45] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:37:31,021  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:37:31] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-24 01:37:31,074  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:37:31] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:38:17,942  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:38:17] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-24 01:38:18,000  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:38:18] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 01:42:13,037  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:42:13] "GET /t/XTLB HTTP/1.1" 200 -
+2026-05-24 01:42:13,079  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 01:42:13] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:44:30,062  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:44:30] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 11:44:30,102  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:44:30] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:45:41,558  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:41] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 11:45:41,603  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:41] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:45:47,231  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:47] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 11:45:47,878  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:47] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 11:45:47,917  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:47] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-24 11:45:48,021  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-24 11:45:50,010  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:50] "GET /pending-s1 HTTP/1.1" 200 -
+2026-05-24 11:45:50,055  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:50] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:45:52,928  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:52] "GET /t/GCTK HTTP/1.1" 200 -
+2026-05-24 11:45:52,984  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:52] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:45:59,380  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:59] "GET / HTTP/1.1" 200 -
+2026-05-24 11:45:59,420  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:45:59] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:54:45,295  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:54:45] "GET / HTTP/1.1" 200 -
+2026-05-24 11:54:45,349  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:54:45] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-24 11:54:48,461  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:54:48] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 11:54:48,542  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:54:48] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:55:09,453  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-24 11:55:09,453  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-24 11:55:15,398  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-24 11:55:17,637  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-24 11:55:18,083  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-24 11:55:18,084  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-24 11:55:18,203  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:55:18] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 11:55:18,261  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:55:18] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-24 11:56:12,428  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:56:12] "GET /t/AACG HTTP/1.1" 200 -
+2026-05-24 11:56:12,477  [-]  INFO     werkzeug  127.0.0.1 - - [24/May/2026 11:56:12] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 09:43:21,483  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:43:21] "GET / HTTP/1.1" 200 -
+2026-05-25 09:43:21,543  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:43:21] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 09:43:24,275  [-]  INFO     edgar.xbrl.standardization.reverse_index  ReverseIndex initialized: 2923 mappings, 206 ambiguous, 0 deprecated, 272 excluded
+2026-05-25 09:43:25,461  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:43:25] "GET /t/ACTU HTTP/1.1" 200 -
+2026-05-25 09:43:25,507  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:43:25] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 09:52:18,623  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:52:18] "GET /t/IPW HTTP/1.1" 200 -
+2026-05-25 09:52:18,668  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:52:18] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 09:52:38,176  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:52:38] "GET /t/IPW HTTP/1.1" 200 -
+2026-05-25 09:52:38,225  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 09:52:38] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 10:00:43,347  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 10:00:43] "GET / HTTP/1.1" 200 -
+2026-05-25 10:00:43,396  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 10:00:43] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 10:00:47,376  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 10:00:47] "GET /pending-s1 HTTP/1.1" 200 -
+2026-05-25 10:00:47,437  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 10:00:47] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 10:18:32,722  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 10:18:32] "GET /t/POAS HTTP/1.1" 200 -
+2026-05-25 10:18:32,769  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 10:18:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 13:39:34,376  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:34] "GET / HTTP/1.1" 200 -
+2026-05-25 13:39:34,436  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 13:39:34,570  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:34] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-25 13:39:37,622  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:37] "GET /pending-s1 HTTP/1.1" 200 -
+2026-05-25 13:39:37,684  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 13:39:42,392  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:42] "GET /t/SBMT HTTP/1.1" 200 -
+2026-05-25 13:39:42,444  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 13:39:51,739  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:51] "GET /t/BTOG HTTP/1.1" 200 -
+2026-05-25 13:39:51,805  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:39:51] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 13:40:35,932  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:40:35] "GET /t/BTOG HTTP/1.1" 200 -
+2026-05-25 13:40:35,972  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:40:35] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 13:42:05,752  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:42:05] "GET /t/POAS HTTP/1.1" 200 -
+2026-05-25 13:42:05,829  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:42:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-25 13:42:05,859  [-]  INFO     werkzeug  127.0.0.1 - - [25/May/2026 13:42:05] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-26 10:43:57,922  [-]  INFO     werkzeug  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-05-26 10:43:57,922  [-]  INFO     werkzeug  [33mPress CTRL+C to quit[0m
+2026-05-26 10:43:59,784  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-26 10:44:01,324  [-]  INFO     edgar.core  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+2026-05-26 10:44:01,900  [-]  INFO     edgar.entity.mappings_loader  Loaded canonical structures for 106 statement types
+2026-05-26 10:44:01,901  [-]  INFO     edgar.entity.mappings_loader  Loaded 114 learned concept mappings (version: 1.0.0)
+2026-05-26 10:44:02,120  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 10:44:02] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-26 10:44:02,190  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 10:44:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 10:44:02,276  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 10:44:02] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-26 13:17:15,255  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:17:15] "GET / HTTP/1.1" 200 -
+2026-05-26 13:17:15,310  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:17:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 13:17:22,308  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:17:22] "GET /t/BIYA HTTP/1.1" 200 -
+2026-05-26 13:17:22,647  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:17:22] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 13:21:49,935  [-]  INFO     edgar.xbrl.standardization.reverse_index  ReverseIndex initialized: 2923 mappings, 206 ambiguous, 0 deprecated, 272 excluded
+2026-05-26 13:21:51,059  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:21:51] "GET /t/OZ HTTP/1.1" 200 -
+2026-05-26 13:21:51,114  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:21:51] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 13:22:12,730  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:22:12] "GET /t/VTAK HTTP/1.1" 200 -
+2026-05-26 13:22:12,762  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:22:12] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 13:25:35,062  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:25:35] "GET /t/GCO HTTP/1.1" 200 -
+2026-05-26 13:25:35,123  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:25:35] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 13:25:35,199  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:25:35] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-26 13:25:38,914  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:25:38] "GET /t/BNKK HTTP/1.1" 200 -
+2026-05-26 13:25:38,974  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:25:38] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 13:28:14,010  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:28:14] "GET /t/IINN HTTP/1.1" 200 -
+2026-05-26 13:28:14,059  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 13:28:14] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-26 14:04:24,457  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 14:04:24] "GET /t/XTIA HTTP/1.1" 200 -
+2026-05-26 14:04:24,506  [-]  INFO     werkzeug  127.0.0.1 - - [26/May/2026 14:04:24] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-28 00:09:19,987  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 00:09:19] "GET / HTTP/1.1" 200 -
+2026-05-28 00:09:20,032  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 00:09:20] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-28 00:09:20,178  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 00:09:20] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-28 00:09:27,401  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 00:09:27] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-28 00:09:27,502  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 00:09:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-28 11:22:41,446  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 11:22:41] "GET / HTTP/1.1" 200 -
+2026-05-28 11:22:41,512  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 11:22:41] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-28 11:22:41,649  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 11:22:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-28 11:22:49,051  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 11:22:49] "GET /t/ASTC HTTP/1.1" 200 -
+2026-05-28 11:22:49,090  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 11:22:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-28 17:08:46,343  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 17:08:46] "GET / HTTP/1.1" 200 -
+2026-05-28 17:08:53,540  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 17:08:53] "GET /t/ATPC HTTP/1.1" 200 -
+2026-05-28 17:08:53,590  [-]  INFO     werkzeug  127.0.0.1 - - [28/May/2026 17:08:53] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-29 10:29:07,505  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 10:29:07] "GET / HTTP/1.1" 200 -
+2026-05-29 10:29:07,573  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 10:29:07] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-29 10:29:16,603  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 10:29:16] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-29 10:29:16,675  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 10:29:16] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-29 11:20:54,987  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 11:20:54] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-29 11:20:55,047  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 11:20:55] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-29 11:20:55,333  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 11:20:55] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-29 11:26:27,687  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 11:26:27] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-29 11:26:27,730  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 11:26:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-29 18:40:34,496  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:40:34] "GET / HTTP/1.1" 200 -
+2026-05-29 18:40:34,514  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:40:34] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-29 18:40:35,580  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:40:35] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-29 18:42:06,802  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:42:06] "GET /t/VRM HTTP/1.1" 200 -
+2026-05-29 18:42:06,823  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:42:06] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-29 18:42:06,855  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:42:06] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-29 18:42:32,203  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:42:32] "GET /t/VRM HTTP/1.1" 200 -
+2026-05-29 18:42:32,214  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:42:32] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-29 18:42:32,242  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:42:32] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-29 18:47:03,884  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:47:03] "GET /t/FCEL HTTP/1.1" 200 -
+2026-05-29 18:47:03,916  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:47:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-05-29 18:57:30,580  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:57:30] "GET /t/VRM HTTP/1.1" 200 -
+2026-05-29 18:57:30,596  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:57:30] "GET /static/style.css HTTP/1.1" 200 -
+2026-05-29 18:57:30,623  [-]  INFO     werkzeug  127.0.0.1 - - [29/May/2026 18:57:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -

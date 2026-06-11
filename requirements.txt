@@ -7,3 +7,4 @@ openpyxl
 pydantic>=2
 flask
 langfuse>=4.5,<5
+yfinance>=0.2

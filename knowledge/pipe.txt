@@ -1,0 +1,257 @@
+Skip to main content
+DilutionTracker Knowledge Base
+English
+Search for articles...
+
+    All Collections
+
+Blog
+
+    What is a Private Placement (PIPE)?
+
+What is a Private Placement (PIPE)?
+
+Learn how private placements can affect micro cap stock prices
+Written by Shawn Stevenson
+August 30, 2023
+
+TLDR:
+
+    PIPEs are issuances of restricted securities, can't be sold until registered later.
+
+    A PIPE can be done even without a shelf.
+
+    Good PIPE - Strategic investors buys at a premium, no warrants. Signals investor's long term belief in the company.
+
+    Mediocre PIPE - Investors buy near market price but has warrant coverage. Signals investors are wary of the risks of the investment.
+
+    Bad PIPE - Priced after a big run-up on a nano cap at a big discount with warrant coverage. Similar to offering, just temporarily restricted.
+
+    Negative price pressure after S-1 or S-3 filed to register PIPE in the bad PIPE scenario.
+
+     
+
+What is a Private Placement (PIPE)?
+
+PIPE stands for Private Investment in Public Entity, which is the issuance of private (restricted) securities in a publicly traded company. Since the shares are initially restricted, it can be issued even without a registered shelf on form S-3. The shares will no longer be restricted after the company subsequently receives EFFECT on a specific S-1 or S-3 to register the PIPE securities. 
+
+ 
+
+A company may do a PIPE instead of a traditional underwritten offering of public securities if they plan to issue a large block of shares to a few investors that have already indicated interest in investing in the company. The most important factors to consider for whether it is good or bad for the stock is:
+
+    The investors - whether they are informed or uninformed, long term or short term
+
+    The pricing discount- the different between the PIPE price and the market price
+
+    Warrant coverage - how many warrants were given per share
+
+     
+
+Good PIPE
+
+When a company receives investment from reputable investors that specialize in a particular industry and have long time-horizons, then it is more likely to be the case that the company is fundamentally worth more than what they purchased at. Of course they may still be wrong in the long run but the stock may react positively to this PIPE in the short run if other market participants also view it as a positive signal. If the PIPE was priced at a premium to the market price and has no warrant coverage, then it is another indication that the investors are willing to pay up to receive a stake in the company. Lastly, the PIPE investors may also not be able to sell until the securities are registered later (usually within a few months), so there is no immediate supply shock.
+
+ 
+
+Listed below are some well known reputable investors that are active in the small cap PIPE space, which would be considered positive signals. The disclosure of investors is only sometimes included in the financing PR or SEC filings.
+
+Investor
+	
+
+Type
+
+Accelmed
+	
+
+PE - Healthcare
+
+New Enterprise Associates
+	
+
+VC
+
+Baker Bros
+	
+
+Hedgefund - Biotech
+
+Perceptive Advisors
+	
+
+Hedgefund - Biotech
+
+OrbiMed
+	
+
+Hedgefund - Biotech
+
+RA Capital
+	
+
+Hedgefund - Biotech
+
+Frazier Healthcare Partners
+	
+
+PE - Healthcare
+
+TCG
+	
+
+VC - Biotech
+
+Venrock Associates
+	
+
+VC
+
+BVF
+	
+
+Hedgefund - Biotech
+
+RTW
+	
+
+Hedgefund - Biotech
+
+Samsara
+	
+
+VC - Biotech
+
+Acorn Bioventures
+	
+
+Hedgefund - Biotech
+
+Deeptrack
+	
+
+Hedgefund - Biotech
+
+Cormorant
+	
+
+Hedgefund - Biotech
+
+Abingworth
+	
+
+Hedgefund - Biotech
+
+Opaleye
+	
+
+Hedgefund - Biotech
+
+Avoro
+	
+
+Hedgefund - Biotech
+
+Nantahala Capital
+	
+
+Hedgefund
+
+Adage
+	
+
+Hedgefund - Biotech
+
+Redmile
+	
+
+Hedgefund - Biotech
+
+Rosalind Advisors
+	
+
+Hedgefund - Biotech
+
+Pontifax
+	
+
+VC - Biotech
+
+Invus
+	
+
+PE
+
+Tang Capital
+	
+
+Hedgefund - Biotech
+
+Pfizer, GSK, JNJ, etc
+	
+
+Any strategic investor
+
+CEO, Board, major shareholder
+	
+
+Any major insider
+
+Recent examples of such types of PIPEs priced at a premium with no warrants include:
+
+    KALA - Baker Bros
+
+    ORIC - Pfizer
+
+    UTRS - Accelmed, New Enterprise Associates
+
+    KALV - Frazier Healthcare Partners, TCG, Venrock Associates
+
+    NLSP - BVF
+
+    SMMT - Insider
+
+    TERN - Fairmount, Venrock
+
+    IMUX (failed data after runup) - BVF, RA Capital, Adage, RTW, Point72, Deeptrack
+
+The most extreme moves will come from situations where the company is trading at a substantial discount due to either being distressed or previously perceived weak pipeline. A big investor coming in with a good PIPE causes a 180 degree turn in sentiment and can be a big inflection point, such as the case of KALA. It also reduces the need for near term financing, which may have been an overhang on the stock in the past.
+
+ 
+
+Mediocre PIPE
+
+Sometimes PIPE investors may want a sweeter deal with warrants if they perceive the investment as riskier. In these cases the market may perceive the deal as neutral and no significant movement in the stock will occur, even if the investors are considered reputable. Recent examples: AMRS, WEJO, PLUR, KPTI, LILM, CUE, ACHV
+
+ 
+
+Bad PIPE
+
+This type of PIPE occurs most frequently in nano caps and is usually priced at or below market price with 50-200% warrant coverage. The warrants may also contain toxic price protection features outlined in our other article on price protection. The two most common scenarios for this type of PIPE are before a run-up and after a run-up.
+
+ 
+
+    Before run-up - A nano-cap in need of cash does a PIPE with high warrant coverage to a few short-term oriented funds. Stock usually consolidates and slowly trades down after registration of the PIPE. Any future spike above near or above PIPE price would be met with additional supply from PIPE buyers selling their shares if they still haven't sold yet.
+
+    After run-up - A nano-cap is trading up due to recent positive news or sector move but has no shelf or pending S-1 ready. Their only way to raise is through a PIPE. No real long term investor wants to buy because they know the stock is overvalued, so will only do a deal if it's at a significant discount with warrants so they can maximize their chances of selling for a profit once the shares are registered in a few months.
+
+In the second scenario, the stock may initially tank on the announcement, but often will actually bounce near the PIPE price as the new shares technically cannot enter the float yet. Day trading shorts are also likely looking at that level to cover. A bounce may not occur if no significant shorts are on it, has mostly one day long chasers, or not microfloat. The stock will fade the hardest only after the subsequent S-1 or S-3 to register the shares receive EFFECT and the PIPE investors can start selling especially if the amount registered is significant relative to the float. Some recent examples: 
+
+ 
+
+HOTH - No shelf room so could only do PIPE, traded up to $10 but bounced near $5 PIPE price. 2m shares can't be sold until after registration.
+
+ 
+
+TBLT - Traded up on short squeeze play but had no shelf to take advantage of. Did a PIPE but bounced near PIPE price before fading after EFFECT.
+
+ 
+
+Conclusion
+
+Depending on the context, a PIPE may be positive or negative. It is important to consider the quality of investors, pricing discount, warrant coverage, and timing of registration to make a sound judgement on the impact to the stock price.
+Did this answer your question?
+DilutionTracker Knowledge Base
+
+    HomeApp
+
+We run on Intercom
+

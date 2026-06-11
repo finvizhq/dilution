@@ -13,13 +13,15 @@ already well-tuned for periodic-filing notes-section extraction.
 
 from __future__ import annotations
 
+import dataclasses
 import logging
 from dataclasses import dataclass
+from datetime import date
 
 from db import get_conn
 
 from .anchor import _synthesize_create
-from .mutations import CreateInstrument, safe_date
+from .mutations import Mutation, safe_date
 from .store import apply_mutations
 
 log = logging.getLogger(__name__)
@@ -27,6 +29,49 @@ log = logging.getLogger(__name__)
 
 _PERIODIC_FORMS = ("10-K", "10-K/A", "10-Q", "10-Q/A",
                    "20-F", "20-F/A", "40-F", "40-F/A")
+
+
+def _summarize_row(r: dict) -> str:
+    """One-line summary of an overhang row for seed-stage logging.
+    Surfaces category + the highest-signal identifier so we can spot
+    when extraction misses an expected instrument (eg the JMP June 2018
+    warrant in CGEN that should land in this list).
+
+    Row shape comes from _overhang_extract._clean_*_row — flat dict
+    keyed by `category`, with per-category identity fields (sales_agent
+    for atm, file_number for shelf, series_letter for preferred, etc.)
+    and shared sizing fields (outstanding_count, principal_amount,
+    strike_or_conversion_price)."""
+    cat = r.get("category") or "?"
+    bits: list[str] = [cat]
+    if r.get("instrument_name"):
+        bits.append(f"name={r['instrument_name']!r}")
+    # Category-specific identity keys.
+    for key in ("series_letter", "sales_agent", "investor",
+                "file_number", "form"):
+        v = r.get(key)
+        if v not in (None, ""):
+            bits.append(f"{key}={v}")
+    # Date fields — issue_date is universal; ATM / equity_line also
+    # carry agreement_date (primary identity for those categories), and
+    # shelf carries effect_date.
+    for key in ("issue_date", "agreement_date", "effect_date",
+                "maturity_or_expiry"):
+        v = r.get(key)
+        if v not in (None, ""):
+            bits.append(f"{key}={v}")
+    # Sizing — first non-null wins for each economic axis.
+    for key in ("outstanding_count", "common_shares_issuable",
+                "strike_or_conversion_price", "principal_amount",
+                "total_capacity_usd", "remaining_capacity_usd"):
+        v = r.get(key)
+        if v not in (None, ""):
+            bits.append(f"{key}={v}")
+    if r.get("is_pre_funded"):
+        bits.append("pre_funded=1")
+    if r.get("is_terminated"):
+        bits.append("terminated=1")
+    return " ".join(str(b) for b in bits)
 
 
 @dataclass
@@ -93,6 +138,21 @@ async def seed_ledger(
         cik=cik, client=client, unit_ctx=unit_ctx,
     )
 
+    # Per-category rollup so we can spot extractor blind spots (eg a
+    # 20-F whose Item 5 mentions a shelf that the shelf specialist
+    # missed). `category` is the canonical field set by the
+    # _clean_*_row helpers in _overhang_extract.
+    by_type: dict[str, int] = {}
+    for r in rows:
+        t = r.get("category") or "?"
+        by_type[t] = by_type.get(t, 0) + 1
+    if rows:
+        log.info("seed: %s extracted %d rows (%s)",
+                 accession, len(rows),
+                 ", ".join(f"{t}={n}" for t, n in sorted(by_type.items())))
+        for r in rows:
+            log.info("seed:   row → %s", _summarize_row(r))
+
     if not rows:
         log.info("seed: %s extracted empty overhang — case C", accession)
         return SeedSummary(
@@ -100,24 +160,20 @@ async def seed_ledger(
             instruments_created=0, case="C_empty_extract",
         )
 
-    # Convert each cleaned overhang row → CreateInstrument mutation.
-    mutations: list[CreateInstrument] = []
+    # Convert each cleaned overhang row → typed Create* mutation.
+    mutations: list[Mutation] = []
     for r in rows:
         m = _synthesize_create(
             r, accession=accession, filing_date=filing["filing_date"],
         )
         # Override event_date for seed provenance (issue_date if the
         # overhang row carries one, else the filing's period end).
-        m = CreateInstrument(
-            kind="create_instrument",
-            type=m.type,
-            proposed_id=None,
-            counterparty=m.counterparty,
-            counterparty_canonical=m.counterparty_canonical,
-            terms=m.terms,
-            outstanding=m.outstanding,
-            event_date=safe_date(r.get("issue_date")) or as_of,
-        )
+        seed_event = safe_date(r.get("issue_date")) or as_of
+        try:
+            event_dt = date.fromisoformat(seed_event[:10])
+        except (ValueError, TypeError):
+            event_dt = m.event_date
+        m = dataclasses.replace(m, event_date=event_dt)
         mutations.append(m)
 
     result = apply_mutations(
@@ -127,6 +183,22 @@ async def seed_ledger(
     )
     log.info("seed: case A — created %d instruments (rejected %d)",
              result.accepted, result.rejected)
+    # Surface why rejections happened — they accumulate in
+    # dilution_walk_errors during apply, so we read them back. Helps
+    # diagnose "extractor saw the warrant but validator threw it out"
+    # vs "extractor never saw it" gaps.
+    if result.rejected:
+        with get_conn() as conn:
+            errs = conn.execute(
+                """SELECT error_kind, message
+                     FROM dilution_walk_errors
+                    WHERE cik=? AND accession_number=?
+                    ORDER BY id DESC LIMIT ?""",
+                (cik, accession, result.rejected),
+            ).fetchall()
+        for e in errs:
+            log.info("seed:   rejected: [%s] %s",
+                     e["error_kind"], e["message"])
     return SeedSummary(
         accession=accession, form=form, as_of_date=as_of,
         instruments_created=result.accepted, case="A_periodic",

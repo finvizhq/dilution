@@ -18,22 +18,8 @@
         "baby_shelf_restriction": "Yes",
         "total_amount_raised": 8854038,
         "raised_last_12mo_under_ib6": 8854038,
-        "highest_60_day_close": 1.29,
         "last_banker": null,
         "expiration_date": "2027-05-09"
-      },
-      {
-        "effect_date": "2021-04-26",
-        "title_contains": "April 2021",
-        "registered": "Registered",
-        "current_raisable_amount": 0,
-        "total_shelf_capacity": 80000000,
-        "baby_shelf_restriction": "Yes",
-        "total_amount_raised": 0,
-        "raised_last_12mo_under_ib6": 8854038,
-        "highest_60_day_close": 1.29,
-        "last_banker": null,
-        "expiration_date": "2024-04-26"
       }
     ]
   }

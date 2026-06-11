@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}inspect{% endblock %}
+{% block subtitle %}inspect · pick a ticker{% endblock %}
+
+{% block content %}
+<style>
+  .insp-idx table { border-collapse: collapse; width: 100%; font-size: 11px; }
+  .insp-idx th, .insp-idx td { border: 1px solid #dcdcdc; padding: 3px 7px; text-align: left; }
+  .insp-idx th { background: #eef1f6; }
+  .insp-idx .jump { margin: 8px 0 14px; }
+  .insp-idx .jump input { padding: 4px 7px; width: 220px; font-size: 12px; }
+  .insp-idx .err { color: #7a1f1f; font-weight: bold; }
+</style>
+<div class="insp-idx">
+  <form class="jump" onsubmit="location.href='/inspect/'+encodeURIComponent(this.t.value.trim());return false;">
+    <input name="t" placeholder="ticker or CIK…" autofocus>
+    <button type="submit">inspect →</button>
+  </form>
+  <table>
+    <tr><th>ticker</th><th>name</th><th>cik</th><th>ledger rows</th><th>active</th><th>walk errors</th><th>walked at</th></tr>
+    {% for t in tickers %}
+    <tr>
+      <td><a href="/inspect/{{ t.ticker }}">{{ t.ticker }}</a></td>
+      <td>{{ t.name }}</td>
+      <td>{{ t.cik }}</td>
+      <td>{{ t.ledger_rows }}</td>
+      <td>{{ t.active_rows }}</td>
+      <td {% if t.errors %}class="err"{% endif %}>{{ t.errors }}</td>
+      <td>{{ t.walked_at or '—' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

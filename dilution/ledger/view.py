@@ -6,19 +6,29 @@ and `record_event` against existing ids rather than duplicating with
 fresh `create_instrument` calls. The view is the contract between
 the ledger (state) and the LLM (which produces mutations).
 
+Layout: each instrument type renders as its own markdown table
+under an H3 header (`### Warrants`, `### Preferred stock`, …) in
+INSTRUMENT_TYPES order. Per-section columns are chosen from a
+per-type priority list, and any column that is null on every row in
+the section is dropped — that keeps warrants tables free of an
+always-empty counterparty column (NULLING RULE: most warrants are
+issued to anonymous "institutional investors") without breaking the
+case where one warrant does name a counterparty.
+
+The previous fixed-width renderer silently truncated `terms` at 34
+chars and `outstanding` at 28 chars, which lost long field values
+(rendered truncated mid-word) and similar. The new layout has no
+per-field cap; column widths size to content.
+
 Constraints:
-  - Always show every active instrument (those are the ones the LLM
-    might mutate).
-  - Show recently-closed instruments (default 180d) at full detail —
-    a closed warrant from 6 months ago might still be referenced by
-    name in the new filing.
-  - Show older closed as one-line summaries so the LLM has the
-    historical context without burning tokens.
-  - Hard cap on total chars; if exceeded, collapse same-strike same-
-    counterparty warrant tranches into a `[summary]` row with id range.
-  - NEVER truncate active rows. If active alone exceeds the cap, log
-    ERROR and truncate oldest-first; this only trips for the worst
-    serial diluters.
+  - Always show every active instrument.
+  - Show recently-closed instruments (default 365d) at full detail.
+  - Show older closed as one-line summaries.
+  - Hard cap on total chars; if exceeded, collapse same-strike
+    same-counterparty warrant tranches into a `[summary]` row.
+  - NEVER truncate a field value mid-render; only drop whole rows
+    (oldest-first) as a last resort when the active bucket alone
+    exceeds cap.
 
 The Grok-4-fast 2M-token context easily holds 60K of view + 1.5M of
 filing text + system, so the cap is a prompt-tidiness floor, not a
@@ -32,19 +42,89 @@ import logging
 from datetime import date as _d
 from typing import Iterable
 
+from ..schema import INSTRUMENT_TYPES
+
 log = logging.getLogger(__name__)
 
-
-# Width budget for one rendered row. Keeping rows under ~200 chars
-# means a ledger of 100 instruments fits in ~20K, well under the cap.
-ROW_BUDGET = 200
 
 DEFAULT_MAX_CHARS = 60_000
 
 # Recently-closed window for detailed inclusion. Older closed rows
 # appear as one-line summaries; closed > ~3y ago drop entirely.
-RECENT_CLOSED_DAYS = 180
+RECENT_CLOSED_DAYS = 365
 ARCHIVE_CLOSED_DAYS = 365 * 3
+
+
+# H3 label per instrument type. Plural to match 10-Q footnote idiom
+# ("Note 13 — Warrants"), the closest training distribution for the
+# model.
+_TYPE_LABELS = {
+    "warrant": "Warrants",
+    "convertible": "Convertibles",
+    "preferred": "Preferred stock",
+    "atm": "ATMs",
+    "equity_line": "Equity lines",
+    "shelf": "Shelves",
+    "s1_offering": "S-1 offerings",
+    "equity": "Equity placements",
+}
+
+# Columns per instrument type, in display order. Anchor columns
+# (id, created) are always rendered first; status is appended only
+# when the section is the "Recently closed" bucket. A column whose
+# value is None on every row in the section is dropped.
+_TYPE_COLUMNS = {
+    "warrant":     ["strike", "count",
+                    "counterparty", "placement_agent", "flags"],
+    "convertible": ["conv_price", "rate", "maturity",
+                    "principal_remaining",
+                    "counterparty", "flags"],
+    "preferred":   ["conv_price", "series_letter",
+                    "count", "principal_remaining", "counterparty",
+                    "flags"],
+    "atm":         ["agreement_date", "capacity_usd", "drawn_usd",
+                    "remaining_capacity_usd", "placement_agent"],
+    "equity_line": ["agreement_date", "capacity_usd", "drawn_usd",
+                    "remaining_capacity_usd", "counterparty"],
+    "shelf":       ["form", "capacity_usd", "drawn_usd",
+                    "remaining_capacity_usd"],
+    "s1_offering": ["anticipated_deal_size", "warrant_strike",
+                    "warrant_coverage_pct", "sold_to_date",
+                    "placement_agent"],
+    "equity":      ["counterparty", "sold_to_date"],
+}
+
+# Fallback if a new type ships before this table is updated. Render
+# the row anyway with minimal columns so it isn't silently dropped.
+_DEFAULT_COLUMNS = ["counterparty"]
+
+# Display header per column key. Keep narrow to keep table width
+# down for human reviewers (the LLM tolerates either).
+_COLUMN_HEADERS = {
+    "id": "id",
+    "created": "created",
+    "strike": "strike",
+    "conv_price": "conv_price",
+    "principal_remaining": "principal_rem",
+    "remaining_capacity_usd": "remaining_usd",
+    "anticipated_deal_size": "deal_size",
+    "warrant_coverage_pct": "wt_coverage",
+    "warrant_strike": "wt_strike",
+    "series_letter": "series",
+    "placement_agent": "placement_agent",
+    "counterparty": "counterparty",
+    "flags": "flags",
+    "form": "form",
+    "rate": "rate",
+    "maturity": "maturity",
+    "agreement_date": "agreement",
+    "capacity_usd": "capacity_usd",
+    "drawn_usd": "drawn_usd",
+    "sold_to_date": "sold_to_date",
+    "exercised_to_date": "exercised",
+    "count": "count",
+    "status": "status",
+}
 
 
 def render_ledger_view(
@@ -57,17 +137,29 @@ def render_ledger_view(
     """Render rows (dicts as returned by store.get_open_instruments) into
     the prompt text block.
 
-    Layout:
+    Layout (one section per instrument type, in INSTRUMENT_TYPES order):
         ## Open ledger
-        type        id       created     counterparty  terms                                           outstanding                          status
-        warrant     W-001    2024-03-15  Aegis         strike=2.50 term=5y units=common               count=2,000,000                      active
-        shelf       SH-002   2024-04-25  —             capacity_usd=80,000,000 form=F-3                drawn_usd=8,854,039                  active
-            takedowns: 2025-11-17 $8,854,039 (11,067,547 sh) [Maxim]; 2024-08-02 $2,500,000
-        ...
-        ## Recently closed
-        warrant     W-002    2024-08-02  Maxim         strike=1.10 term=5y                            count=0 exercised_to_date=1,200,000  exercised(2025-02-10)
+
+        ### Warrants
+        | id    | created    | strike | count      | flags      |
+        |-------|------------|--------|------------|------------|
+        | W-005 | 2020-11-30 |   1.25 |  8,000,000 |            |
+        | W-006 | 2020-11-30 |  0.001 |  3,000,000 | pre-funded |
+
+        ### Shelves
+        | id     | created    | form | capacity_usd | drawn_usd | remaining_usd |
+        |--------|------------|------|--------------|-----------|---------------|
+        | SH-002 | 2024-04-25 | F-3  |   80,000,000 | 8,854,039 |    71,145,961 |
+
+          ↳ SH-002 takedowns: 2025-11-17 $8,854,039 (11,067,547 sh) [Maxim]; …
+
+        ## Recently closed (last 365 days)
+        ### Warrants
+        | id    | created    | strike | count | status              |
+        | W-002 | 2024-08-02 |   1.10 |     0 | exercised(2025-02-10) |
+
         ## Older closed (summary)
-        - W-005..W-008: 4 warrants, all expired between 2022-06 and 2023-04
+        - W-005 warrant — exercised 2022-06-15
     """
     today = today or _d.today()
     rows = list(rows or [])
@@ -138,7 +230,7 @@ def _bucket(rows, today):
         # else: too old — drop entirely
     actives.sort(key=lambda r: (r.get("type") or "",
                                 r.get("created_at") or "",
-                                r.get("instrument_id")))
+                                r.get("instrument_id") or ""))
     recent_closed.sort(key=lambda r: (r.get("status_at") or ""), reverse=True)
     archived.sort(key=lambda r: (r.get("status_at") or ""), reverse=True)
     return actives, recent_closed, archived
@@ -146,25 +238,31 @@ def _bucket(rows, today):
 
 def _render_buckets(actives, recent_closed, archived, drawdowns=None) -> str:
     drawdowns = drawdowns or {}
-    parts = []
+    parts: list[str] = []
     if actives:
-        parts.append("## Open ledger\n")
-        parts.append(_header())
-        for r in actives:
-            parts.append(_render_row(r))
-            tline = _render_takedowns(r, drawdowns)
-            if tline:
-                parts.append(tline)
+        parts.append("## Open ledger\n\n")
+        for type_ in INSTRUMENT_TYPES:
+            section_rows = [r for r in actives
+                            if (r.get("type") or "") == type_]
+            section = _render_section(
+                type_, section_rows,
+                include_status=False, drawdowns=drawdowns,
+            )
+            if section:
+                parts.append(section)
     else:
         parts.append("## Open ledger\n(no active instruments)\n")
     if recent_closed:
-        parts.append("\n## Recently closed (last 180 days)\n")
-        parts.append(_header())
-        for r in recent_closed:
-            parts.append(_render_row(r))
-            tline = _render_takedowns(r, drawdowns)
-            if tline:
-                parts.append(tline)
+        parts.append("\n## Recently closed (last 365 days)\n\n")
+        for type_ in INSTRUMENT_TYPES:
+            section_rows = [r for r in recent_closed
+                            if (r.get("type") or "") == type_]
+            section = _render_section(
+                type_, section_rows,
+                include_status=True, drawdowns=drawdowns,
+            )
+            if section:
+                parts.append(section)
     if archived:
         parts.append("\n## Older closed (summary)\n")
         for r in archived:
@@ -172,45 +270,130 @@ def _render_buckets(actives, recent_closed, archived, drawdowns=None) -> str:
     return "".join(parts)
 
 
-def _header() -> str:
-    return ("type        id                     created     "
-            "counterparty   terms                              "
-            "outstanding                  status\n")
+def _render_section(type_: str, rows: list[dict], *,
+                    include_status: bool,
+                    drawdowns: dict) -> str:
+    """Render one type's rows as a markdown table. Empty rows list
+    returns ''. Columns null across every row are dropped before
+    rendering, so the table width tracks actually-populated columns.
+
+    The takedowns continuation line for shelf/atm/equity_line rows
+    is emitted below the table, id-prefixed so the per-row
+    association survives the table sitting between them. The
+    `takedowns:` marker word from the legacy format is preserved so
+    the walker_prompt reference at walker_prompt.py:926 still holds."""
+    if not rows:
+        return ""
+    type_cols = list(_TYPE_COLUMNS.get(type_) or _DEFAULT_COLUMNS)
+    if include_status:
+        type_cols.append("status")
+    column_keys = ["id", "created"] + type_cols
+
+    # Compute every cell up front. We re-use these to (a) drop empty
+    # columns and (b) render the final table without recomputing.
+    cell_rows = [[_format_cell(r, k) for k in column_keys] for r in rows]
+
+    # Drop columns where every non-anchor cell is empty. id/created
+    # are always kept (anchor columns at indices 0 and 1).
+    keep_idx: list[int] = [0, 1]
+    for i in range(2, len(column_keys)):
+        if any(row[i] not in ("", "—") for row in cell_rows):
+            keep_idx.append(i)
+    kept_keys = [column_keys[i] for i in keep_idx]
+    kept_cells = [[row[i] for i in keep_idx] for row in cell_rows]
+
+    headers = [_COLUMN_HEADERS.get(k, k) for k in kept_keys]
+    widths = [
+        max(len(h), max((len(row[i]) for row in kept_cells), default=0))
+        for i, h in enumerate(headers)
+    ]
+
+    parts: list[str] = []
+    label = _TYPE_LABELS.get(type_, type_.replace("_", " ").title())
+    parts.append(f"### {label}\n")
+    parts.append(
+        "| " + " | ".join(h.ljust(w) for h, w in zip(headers, widths)) + " |\n"
+    )
+    parts.append(
+        "|" + "|".join("-" * (w + 2) for w in widths) + "|\n"
+    )
+    for row_cells in kept_cells:
+        parts.append(
+            "| " + " | ".join(c.ljust(w) for c, w in zip(row_cells, widths))
+            + " |\n"
+        )
+
+    # Takedowns continuation lives only on the three drawdown-bearing
+    # types. id-prefixed so the per-row association is unambiguous.
+    if type_ in ("shelf", "atm", "equity_line"):
+        for r in rows:
+            tline = _takedown_line(r, drawdowns)
+            if tline:
+                parts.append(tline)
+
+    parts.append("\n")
+    return "".join(parts)
 
 
-def _render_row(r: dict) -> str:
-    """One detail row.
+def _format_cell(row: dict, key: str) -> str:
+    if key == "id":
+        return row.get("instrument_id") or "?"
+    if key == "created":
+        return (row.get("created_at") or "")[:10]
+    if key == "status":
+        return _format_status(row)
+    if key == "flags":
+        return _row_flags(row) or ""
+    v = _get_field(row, key)
+    if v is None:
+        return "—"
+    return _fmt_val(v)
 
-    Format keeps to one line, ~200 chars, so 100 instruments fit in
-    ~20K. The terms / outstanding fields are flattened key=value to
-    keep the LLM's parsing trivial.
-    """
-    type_ = (r.get("type") or "")[:11].ljust(11)
-    iid = (r.get("instrument_id") or "")[:22].ljust(22)
-    created = (r.get("created_at") or "")[:10].ljust(10)
-    cp = _short_counterparty(r) or "—"
-    cp_disp = cp[:13].ljust(13)
-    terms = _flatten_kv(_to_dict(r, "terms"))[:34].ljust(34)
-    outstanding = _flatten_kv(_to_dict(r, "outstanding"))[:28].ljust(28)
-    status_disp = _format_status(r)
-    return (f"{type_} {iid} {created} {cp_disp} {terms} {outstanding} "
-            f"{status_disp}\n")
+
+def _get_field(row: dict, key: str):
+    """Resolve a column key to its value. Top-level for synthesized
+    columns (counterparty, placement_agent), then terms, then
+    outstanding. Returns None for absent or null."""
+    if key == "counterparty":
+        return row.get("counterparty_canonical") or None
+    if key == "placement_agent":
+        return row.get("placement_agent_canonical") or None
+    terms = _to_dict(row, "terms")
+    if key in terms and terms[key] is not None:
+        return terms[key]
+    out = _to_dict(row, "outstanding")
+    if key in out and out[key] is not None:
+        return out[key]
+    return None
+
+
+def _row_flags(row: dict) -> str | None:
+    """Synthesize a compact flags column from per-row signals that
+    don't merit their own column."""
+    terms = _to_dict(row, "terms")
+    out = _to_dict(row, "outstanding")
+    flags: list[str] = []
+    if terms.get("is_pre_funded"):
+        flags.append("pre-funded")
+    n_splits = len(terms.get("applied_splits") or [])
+    if n_splits:
+        flags.append(f"splits×{n_splits}")
+    tranche_count = out.get("tranche_count")
+    if tranche_count:
+        flags.append(f"×{int(tranche_count)} tranches")
+    return ", ".join(flags) if flags else None
 
 
 # Per-instrument cap for inline takedowns. Older entries are summarized.
 _TAKEDOWN_HEAD = 7
 
 
-def _render_takedowns(r: dict, drawdowns: dict) -> str:
-    """Continuation line of recorded takedowns, newest-first.
-
-    Only emitted for instruments that can have drawdowns (shelf, ATM,
-    equity_line). The walker uses these to dedup re-disclosures of the
-    same takedown across multiple filings (signing 6-K, closing 6-K,
-    quarterly recap).
-    """
-    if (r.get("type") or "") not in ("shelf", "atm", "equity_line"):
-        return ""
+def _takedown_line(r: dict, drawdowns: dict) -> str:
+    """Continuation line of recorded takedowns for shelf/ATM/equity-line,
+    newest-first. Emitted below the parent section's markdown table,
+    id-prefixed so the walker (and prompt) can still tie a
+    `takedowns:` listing back to its specific row even with the
+    table sitting between them."""
     iid = r.get("instrument_id")
     items = drawdowns.get(iid) if iid else None
     if not items:
@@ -220,11 +403,11 @@ def _render_takedowns(r: dict, drawdowns: dict) -> str:
     rendered = "; ".join(_fmt_takedown(t) for t in head)
     if tail_n > 0:
         rendered += f"; +{tail_n} earlier"
-    return f"    takedowns: {rendered}\n"
+    return f"  ↳ {iid} takedowns: {rendered}\n"
 
 
 def _fmt_takedown(t: dict) -> str:
-    """Compact `YYYY-MM-DD $amount (Nsh @price) [counterparty]`."""
+    """Compact `YYYY-MM-DD $amount (Nsh @price) [party]`."""
     parts = [t.get("event_date") or "?"]
     amt = t.get("amount_usd")
     if amt:
@@ -238,7 +421,7 @@ def _fmt_takedown(t: dict) -> str:
         sh_px.append(f"@${_fmt_val(float(px))}")
     if sh_px:
         parts.append(f"({' '.join(sh_px)})")
-    cp = t.get("counterparty_canonical") or t.get("counterparty")
+    cp = t.get("drawdown_party_canonical")
     if cp:
         cp = cp.strip()
         if len(cp) > 24:
@@ -265,53 +448,10 @@ def _format_status(r: dict) -> str:
 
 
 def _short_counterparty(r: dict) -> str | None:
-    """Prefer the canonical short label; fall back to the raw name."""
-    cp = r.get("counterparty_canonical") or r.get("counterparty")
+    cp = r.get("counterparty_canonical")
     if not cp:
         return None
-    cp = cp.strip()
-    return cp
-
-
-_TERMS_KEY_ORDER = (
-    "strike", "warrant_strike", "conv_price", "conversion_price",
-    "term_years", "maturity",
-    "principal", "rate", "coupon", "oid_pct",
-    "capacity_usd", "capacity_shares",
-    "stated_value", "liquidation_preference", "dividend_rate",
-    "anti_dilution_type", "is_pre_funded",
-    "units",
-)
-_OUTSTANDING_KEY_ORDER = (
-    "count", "principal_remaining", "remaining_capacity_usd",
-    "drawn_usd", "sold_to_date",
-    "exercised_to_date", "principal_converted_to_date",
-)
-
-
-def _flatten_kv(d: dict) -> str:
-    """Render a small dict as `k=v k=v` in stable order. Numbers are
-    formatted compactly; strings are passed through; lists/dicts
-    stringified to JSON. Keys are emitted in a curated order so the
-    most-relevant fields show first regardless of dict order."""
-    if not d:
-        return "—"
-    seen: set[str] = set()
-    parts: list[str] = []
-    for k in _TERMS_KEY_ORDER + _OUTSTANDING_KEY_ORDER:
-        if k in d and d[k] is not None:
-            parts.append(f"{k}={_fmt_val(d[k])}")
-            seen.add(k)
-    # Spill remaining keys (non-canonical) so the LLM still sees them.
-    for k, v in d.items():
-        if k in seen or v is None:
-            continue
-        if k == "applied_splits":
-            # Compress the splits list to a count to keep the row tidy.
-            parts.append(f"applied_splits={len(v)}")
-            continue
-        parts.append(f"{k}={_fmt_val(v)}")
-    return " ".join(parts) if parts else "—"
+    return cp.strip()
 
 
 def _fmt_val(v) -> str:
@@ -324,7 +464,6 @@ def _fmt_val(v) -> str:
         if ax >= 1_000_000:
             return f"{v:,.0f}"
         if ax >= 1:
-            # 4 sig figs for prices, full int for counts ≥ 1000
             if ax >= 1000:
                 return f"{v:,.0f}"
             return f"{v:.4g}"

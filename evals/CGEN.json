@@ -1,0 +1,62 @@
+{
+  "ticker": "CGEN",
+  "source": "DilutionTracker screenshots, manually transcribed 2026-05-21. Covers F-3 filed 2026-05-18 (accession 0001178913-26-002774) plus all prior CGEN cap-table history visible in DT.",
+  "notes": [
+    "Regression target for the EMBEDDED ATM + SUPERSESSION CHAIN rules in walker_prompt.py (S-3 / F-3 hints). Walker should emit: (1) `create_instrument(atm)` for the May 2026 Leerink tranche with agreement_date=2026-05-18 (case C: contract is >90 days old, banker rebrand SVB→Leerink, capacity increase), AND (2) `close_instrument(reason='superseded', replaced_by=<new>)` against the Jan 2023 SVB ATM via the proposed_id forward-ref. Run `python run_dilution.py CGEN && python run_eval.py CGEN` to verify end-to-end.",
+    "The expiration_date on the Pending Effect shelf is filing_date + 3y (Rule 415(a)(5) upper bound), which is what `_shelf_expiration` in cards.py returns when no EFFECT notice has arrived. DT shows it as null; the pipeline emits the conservative cap. Fixture matches pipeline behavior.",
+    "CORRECTION 2026-05-28: DT's $32,237,921 remaining on the Jan 2023 SVB ATM (drawn $17,762,079) is WRONG — DT valued all 7,767,626 shares sold at one recent ~$2.287 price instead of summing actual gross proceeds. The FY2025 20-F (0001178913-26-000663) discloses cumulative ATM gross proceeds of $3.6M (2023) + $0.6M (2024) + $10.9M (2025) = $15.1M on 7,767,626 shares (net $14,152K + $943K expenses), with NO sales Jan-Feb 2026; the May 2026 F-3 confirms '7,767,626 shares for ~$15.1 million'. So drawn=$15.1M → remaining=$34.9M, and shelf total_amount_raised=$15.1M → current_raisable=$334.9M. Fixture corrected to match the filings, not the DT screenshot."
+  ],
+  "cards": {
+    "warrant": [],
+    "convertible": [],
+    "convertible_preferred": [],
+    "atm": [
+      {
+        "agreement_start_date": "2026-05-18",
+        "title_contains": "May 2026 Leerink",
+        "registered": "Registered",
+        "remaining_capacity": 100000000,
+        "total_capacity": 100000000,
+        "limited_by_baby_shelf": "No",
+        "remaining_without_baby_shelf": 100000000,
+        "placement_agent": "Leerink"
+      },
+      {
+        "agreement_start_date": "2023-01-31",
+        "title_contains": "January 2023 SVB",
+        "registered": "Replaced",
+        "remaining_capacity": 34900000,
+        "total_capacity": 50000000,
+        "limited_by_baby_shelf": "No",
+        "remaining_without_baby_shelf": 34900000,
+        "placement_agent": "SVB"
+      }
+    ],
+    "equity_line": [],
+    "s1_offering": [],
+    "shelf": [
+      {
+        "effect_date": "2023-06-28",
+        "title_contains": "March 2023",
+        "registered": "Registered",
+        "current_raisable_amount": 334900000,
+        "total_shelf_capacity": 350000000,
+        "baby_shelf_restriction": "No",
+        "total_amount_raised": 15100000,
+        "last_banker": "SVB",
+        "expiration_date": "2026-06-28"
+      },
+      {
+        "effect_date": null,
+        "title_contains": "May 2026",
+        "registered": "Pending Effect",
+        "current_raisable_amount": 400000000,
+        "total_shelf_capacity": 400000000,
+        "baby_shelf_restriction": "No",
+        "total_amount_raised": 0,
+        "last_banker": null,
+        "expiration_date": "2029-05-18"
+      }
+    ]
+  }
+}

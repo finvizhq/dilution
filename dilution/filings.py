@@ -18,6 +18,8 @@ RELEVANT_PREFIXES = (
     "8-K",
     "6-K",  # foreign private issuer analog of 8-K (XTLB, BNTX, NVS, etc.)
     "424B",
+    # Canadian MJDS prospectus supplement — analog of 424B5 for F-10 shelves
+    "SUPPL",
     "S-1", "S-3", "S-3ASR", "S-4", "F-1", "F-3",
     "POS AM",
     # Form 425 — written communications related to a merger / business
@@ -70,7 +72,7 @@ def pull_filing_index(cik: int, since_date: str) -> int:
     df = filings.to_pandas()
     bulk: dict[str, dict] = {}
     if not df.empty:
-        for col in ("reportDate", "items", "primaryDocument"):
+        for col in ("reportDate", "items", "primaryDocument", "fileNumber"):
             if col not in df.columns:
                 df[col] = None
         for _, r in df.iterrows():
@@ -78,6 +80,7 @@ def pull_filing_index(cik: int, since_date: str) -> int:
                 "report_date": _norm_date(r.get("reportDate")),
                 "items": _norm_str(r.get("items")),
                 "primary_doc": _norm_str(r.get("primaryDocument")),
+                "file_number": _norm_str(r.get("fileNumber")),
             }
 
     n = 0
@@ -95,6 +98,7 @@ def pull_filing_index(cik: int, since_date: str) -> int:
             report_date = b.get("report_date")
             items = b.get("items")
             primary_doc_name = b.get("primary_doc")
+            file_number = b.get("file_number")
 
             homepage = f.homepage_url
             # filing_url and document_url both trigger SGML fetches.
@@ -104,8 +108,9 @@ def pull_filing_index(cik: int, since_date: str) -> int:
             conn.execute(
                 """INSERT INTO dilution_filings
                      (accession_number, cik, form, filing_date, report_date,
-                      primary_doc, primary_doc_url, homepage_url, items, fetched_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                      primary_doc, primary_doc_url, homepage_url, items,
+                      file_number, fetched_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                    ON CONFLICT(accession_number) DO UPDATE SET
                      form = excluded.form,
                      filing_date = excluded.filing_date,
@@ -113,10 +118,12 @@ def pull_filing_index(cik: int, since_date: str) -> int:
                      primary_doc = excluded.primary_doc,
                      primary_doc_url = excluded.primary_doc_url,
                      homepage_url = excluded.homepage_url,
-                     items = excluded.items""",
+                     items = excluded.items,
+                     file_number = excluded.file_number""",
                 (
                     accession, cik, form, filing_date, report_date,
-                    primary_doc_name, primary_doc_url, homepage, items, now_iso(),
+                    primary_doc_name, primary_doc_url, homepage, items,
+                    file_number, now_iso(),
                 ),
             )
             n += 1
