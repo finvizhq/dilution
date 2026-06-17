@@ -1,0 +1,774 @@
+00:18:38  [VRM]  langfuse: LANGFUSE_PUBLIC_KEY/SECRET_KEY not set — tracing disabled
+00:18:38  [VRM]  Dilution tracker — ticker=VRM since=2020-06-17 llm_provider=gemini llm_model=gemini-3.5-flash llm_model_periodic=gemini-3.5-flash
+00:18:38  [VRM]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:18:38  [VRM]  resolved VRM → CIK 1580864 VRM (Vroom, Inc.)
+00:18:38  [VRM]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:18:39  [VRM]    139 relevant filings since 2020-06-17
+00:18:39  [VRM]    unit already detected — is_fpi=0 ads_ratio=None
+00:18:39  [VRM]    unit ctx — is_fpi=0 ads_ratio=None reporting_unit=common
+00:18:39  [VRM]    splits — finviz=0 yfinance=0 merged=0
+00:18:39  [VRM]    splits — 0 events persisted
+00:18:39  [VRM]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:18:39  [VRM]    fetch concurrency=3 over 1 filings
+00:18:44  [VRM]  All detection strategies failed, no sections found
+00:18:44  [VRM]    8-K 0001193125-26-269693 section-select fallback: no sections parsed
+00:18:44  [VRM]    fetched 1/1 filings, 1 docs total (err=0)
+00:18:44  [VRM]    fetch done — 1/1 filings, 1 docs, 0 errors
+00:18:44  [VRM]  walker --force: dropping ledger for cik=1580864
+00:18:44  [VRM]  walker: 135 events (filings=135 splits=0 cik=1580864); 0 filing(s) already walked
+00:18:44  [VRM]  seed: extracting overhang from 10-Q 0001564590-20-039778 (2020-06-30)
+00:18:59  [VRM]  overhang-combined 0001564590-20-039778 — w=0 c=0 p=0 s=0 a=0 e=0
+00:18:59  [VRM]  seed: 0001564590-20-039778 extracted empty overhang — case C
+00:18:59  [VRM]  seed case=C_empty_extract — 0001564590-20-039778
+00:18:59  [VRM]    0001564590-20-039708 — pruned 1 create tool(s): create_atm
+00:18:59  [VRM]  walker 0001564590-20-039708 — form=8-K (20 tools)
+00:19:05  [VRM]  walker 0001564590-20-039708 — finish='REASON_TOOL_CALLS' calls=1
+00:19:05  [VRM]  walker 0001564590-20-039708 — note_no_event reasons: ['second quarter 2020 earnings release with no new dilutive instruments']
+00:19:05  [VRM]    [2020-08-12] 8-K 0001564590-20-039708 — 0 mutations
+00:19:05  [VRM]  walker 0001193125-20-241003 — form=S-1 (9 tools)
+00:19:26  [VRM]  walker 0001193125-20-241003 — finish='REASON_TOOL_CALLS' calls=1
+00:19:26  [VRM]  walker 0001193125-20-241003 — call create_instrument:s1_offering date=2020-09-08 anticipated_deal_size=604336500.0
+00:19:26  [VRM]    [2020-09-08] S-1 0001193125-20-241003 — 1 mutations
+00:19:26  [VRM]  walker 0001193125-20-240998 — dedup block: 1 candidates within ±180d
+00:19:26  [VRM]    0001193125-20-240998 — pruned 4 create tool(s): create_atm,create_convertible,create_preferred,create_warrant
+00:19:26  [VRM]  walker 0001193125-20-240998 — form=8-K (17 tools)
+00:19:28  [VRM]  walker 0001193125-20-240998 — finish='REASON_TOOL_CALLS' calls=1
+00:19:28  [VRM]  walker 0001193125-20-240998 — note_no_event reasons: ["The filing is a Regulation FD disclosure updating the company's Q3 2020 financial guidance and contains no dilutive instruments or events."]
+00:19:28  [VRM]    [2020-09-08] 8-K 0001193125-20-240998 — 0 mutations
+00:19:28  [VRM]  walker 0001193125-20-243325 — dedup block: 1 candidates within ±30d
+00:19:28  [VRM]  walker 0001193125-20-243325 — form=S-1MEF (2 tools)
+00:19:33  [VRM]  walker 0001193125-20-243325 — finish='REASON_TOOL_CALLS' calls=1
+00:19:33  [VRM]  walker 0001193125-20-243325 — call amend_instrument:s1_offering S1-219 date=2020-09-10 anticipated_deal_size=725203800.0
+00:19:33  [VRM]    [2020-09-10] S-1MEF 0001193125-20-243325 — 1 mutations
+00:19:33  [VRM]  walker 0001193125-20-244144 — dedup block: 1 candidates within ±180d
+00:19:33  [VRM]  walker 0001193125-20-244144 — form=424B4 (7 tools)
+00:19:47  [VRM]  walker 0001193125-20-244144 — finish='REASON_TOOL_CALLS' calls=2
+00:19:47  [VRM]  walker 0001193125-20-244144 — call amend_instrument:s1_offering S1-219 date=2020-09-11 final_deal_size=588600000.0 final_pricing=54.5 final_shares_offered=10800000.0
+00:19:47  [VRM]  walker 0001193125-20-244144 — call record_event S1-219 date=2020-09-11 drawdown_amount_usd=588600000.0 drawdown_shares=10800000.0 avg_price=54.5
+00:19:47  [VRM]    [2020-09-11] 424B4 0001193125-20-244144 — 2 mutations
+00:19:47  [VRM]  walker 0001564590-20-045856 — dedup block: 1 candidates within ±180d
+00:19:47  [VRM]    0001564590-20-045856 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:19:47  [VRM]  walker 0001564590-20-045856 — form=8-K (18 tools)
+00:19:51  [VRM]  walker 0001564590-20-045856 — finish='REASON_TOOL_CALLS' calls=1
+00:19:51  [VRM]  walker 0001564590-20-045856 — note_no_event reasons: ['amendment to floorplan facility']
+00:19:51  [VRM]    [2020-10-06] 8-K 0001564590-20-045856 — 0 mutations
+00:19:51  [VRM]  walker 0001564590-20-053205 — dedup block: 1 candidates (all active, periodic form)
+00:19:51  [VRM]  walker 0001564590-20-053205 — form=10-Q (17 tools)
+00:20:06  [VRM]  walker 0001564590-20-053205 — finish='REASON_TOOL_CALLS' calls=1
+00:20:06  [VRM]  walker 0001564590-20-053205 — note_no_event reasons: ['The follow-on public offering of 10,800,000 shares is already recorded on the ledger under S1-219, and there are no other new dilutive instruments or events disclosed in this filing.']
+00:20:06  [VRM]    [2020-11-12] 10-Q 0001564590-20-053205 — 0 mutations
+00:20:06  [VRM]    anchor 0001564590-20-053205 as_of=2020-09-30
+00:20:19  [VRM]  overhang-combined 0001564590-20-053205 — w=0 c=0 p=0 s=0 a=0 e=0
+00:20:19  [VRM]  walker 0001564590-20-053197 — dedup block: 1 candidates within ±180d
+00:20:19  [VRM]    0001564590-20-053197 — pruned 1 create tool(s): create_atm
+00:20:19  [VRM]  walker 0001564590-20-053197 — form=8-K (20 tools)
+00:20:24  [VRM]  walker 0001564590-20-053197 — finish='REASON_TOOL_CALLS' calls=1
+00:20:24  [VRM]  walker 0001564590-20-053197 — note_no_event reasons: ['earnings release for the third quarter ended september 30, 2020 with no new dilutive events']
+00:20:24  [VRM]    [2020-11-12] 8-K 0001564590-20-053197 — 0 mutations
+00:20:24  [VRM]  walker 0001564590-20-057044 — dedup block: 1 candidates within ±180d
+00:20:24  [VRM]    0001564590-20-057044 — pruned 4 create tool(s): create_atm,create_convertible,create_preferred,create_warrant
+00:20:24  [VRM]  walker 0001564590-20-057044 — form=8-K (17 tools)
+00:20:29  [VRM]  walker 0001564590-20-057044 — finish='REASON_TOOL_CALLS' calls=1
+00:20:29  [VRM]  walker 0001564590-20-057044 — note_no_event reasons: ['acquisition of CarStory announced, pending closing with undetermined share count and price per share']
+00:20:29  [VRM]    [2020-12-15] 8-K 0001564590-20-057044 — 0 mutations
+00:20:29  [VRM]  walker 0001564590-21-010584 — dedup block: 1 candidates (all active, periodic form)
+00:20:29  [VRM]  walker 0001564590-21-010584 — form=10-K (17 tools)
+00:20:52  [VRM]  walker 0001564590-21-010584 — finish='REASON_TOOL_CALLS' calls=1
+00:20:52  [VRM]  walker 0001564590-21-010584 — note_no_event reasons: ['The filing contains no new active dilutive instruments or events; historical preferred stock and warrants were fully converted or exercised in 2020, and the subsequent CarStory acquisition common stock issuance cannot be recorded with the available tools.']
+00:20:52  [VRM]    [2021-03-03] 10-K 0001564590-21-010584 — 0 mutations
+00:20:52  [VRM]    anchor 0001564590-21-010584 as_of=2020-12-31
+00:21:06  [VRM]  overhang-combined 0001564590-21-010584 — w=0 c=0 p=0 s=0 a=0 e=0
+00:21:06  [VRM]  walker 0001564590-21-010579 — dedup block: 1 candidates within ±180d
+00:21:06  [VRM]    0001564590-21-010579 — pruned 1 create tool(s): create_atm
+00:21:06  [VRM]  walker 0001564590-21-010579 — form=8-K (20 tools)
+00:21:11  [VRM]  walker 0001564590-21-010579 — finish='REASON_TOOL_CALLS' calls=1
+00:21:11  [VRM]  walker 0001564590-21-010579 — note_no_event reasons: ['earnings release']
+00:21:11  [VRM]    [2021-03-03] 8-K 0001564590-21-010579 — 0 mutations
+00:21:11  [VRM]  walker 0001564590-21-021962 — form=DEF 14A (3 tools)
+00:21:22  [VRM]  walker 0001564590-21-021962 — finish='REASON_TOOL_CALLS' calls=1
+00:21:22  [VRM]  walker 0001564590-21-021962 — note_no_event reasons: ['Proxy materials only, covering the election of directors, ratification of auditors, and advisory vote on executive compensation, with no new dilutive instruments or events.']
+00:21:22  [VRM]    [2021-04-29] DEF 14A 0001564590-21-021962 — 0 mutations
+00:21:22  [VRM]  walker 0001564590-21-021989 — form=DEFA14A (3 tools)
+00:21:23  [VRM]  walker 0001564590-21-021989 — finish='REASON_TOOL_CALLS' calls=1
+00:21:23  [VRM]  walker 0001564590-21-021989 — note_no_event reasons: ['proxy materials only (annual meeting notice and voting instructions)']
+00:21:23  [VRM]    [2021-04-29] DEFA14A 0001564590-21-021989 — 0 mutations
+00:21:23  [VRM]    0001564590-21-022523 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:21:23  [VRM]  walker 0001564590-21-022523 — form=8-K (18 tools)
+00:21:26  [VRM]  walker 0001564590-21-022523 — finish='REASON_TOOL_CALLS' calls=1
+00:21:26  [VRM]  walker 0001564590-21-022523 — note_no_event reasons: ['appointment of new directors Paula B. Pretlow and Frederick O. Terrell to the Board of Directors']
+00:21:26  [VRM]    [2021-04-30] 8-K 0001564590-21-022523 — 0 mutations
+00:21:26  [VRM]  walker 0001564590-21-027054 — dedup block: 1 candidates (all active, periodic form)
+00:21:26  [VRM]  walker 0001564590-21-027054 — form=10-Q (17 tools)
+00:21:41  [VRM]  walker 0001564590-21-027054 — finish='REASON_TOOL_CALLS' calls=1
+00:21:41  [VRM]  walker 0001564590-21-027054 — note_no_event reasons: ['The filing is a 10-Q for Q1 2021 disclosing the CarStory acquisition (paid in cash and common stock) and employee equity awards, with no new dilutive financing instruments such as warrants, convertibles, or preferred stock.']
+00:21:41  [VRM]    [2021-05-12] 10-Q 0001564590-21-027054 — 0 mutations
+00:21:41  [VRM]    anchor 0001564590-21-027054 as_of=2021-03-31
+00:21:52  [VRM]  overhang-combined 0001564590-21-027054 — w=0 c=0 p=0 s=0 a=0 e=0
+00:21:52  [VRM]    0001564590-21-027013 — pruned 1 create tool(s): create_atm
+00:21:52  [VRM]  walker 0001564590-21-027013 — form=8-K (20 tools)
+00:21:56  [VRM]  walker 0001564590-21-027013 — finish='REASON_TOOL_CALLS' calls=1
+00:21:56  [VRM]  walker 0001564590-21-027013 — note_no_event reasons: ['earnings release']
+00:21:56  [VRM]    [2021-05-12] 8-K 0001564590-21-027013 — 0 mutations
+00:21:56  [VRM]    0001193125-21-192218 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:21:56  [VRM]  walker 0001193125-21-192218 — form=8-K (18 tools)
+00:22:03  [VRM]  walker 0001193125-21-192218 — finish='REASON_TOOL_CALLS' calls=1
+00:22:03  [VRM]  walker 0001193125-21-192218 — call create_instrument:convertible date=2021-06-16 principal=550000000.0 rate=0.0075 conv_price=56.01 convertible_date=2021-06-16 maturity=2026-07-01 principal_remaining=550000000.0
+00:22:03  [VRM]    [2021-06-16] 8-K 0001193125-21-192218 — 1 mutations
+00:22:03  [VRM]  walker 0001193125-21-195245 — dedup block: 1 candidates within ±180d
+00:22:03  [VRM]    0001193125-21-195245 — pruned 1 create tool(s): create_atm
+00:22:03  [VRM]  walker 0001193125-21-195245 — form=8-K (20 tools)
+00:22:15  [VRM]  walker 0001193125-21-195245 — finish='REASON_TOOL_CALLS' calls=2
+00:22:16  [VRM]  walker 0001193125-21-195245 — call record_event C-1109 date=2021-06-18
+00:22:16  [VRM]  walker 0001193125-21-195245 — call amend_instrument:convertible C-1109 date=2021-06-18 principal_remaining=625000000.0
+00:22:16  [VRM]    [2021-06-21] 8-K 0001193125-21-195245 — 2 mutations
+00:22:16  [VRM]    [2021-06-28] 8-K 0001564590-21-034831 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:22:16  [VRM]  walker 0001564590-21-043465 — dedup block: 2 candidates (all active, periodic form)
+00:22:16  [VRM]  walker 0001564590-21-043465 — form=10-Q (17 tools)
+00:22:33  [VRM]  walker 0001564590-21-043465 — finish='REASON_TOOL_CALLS' calls=1
+00:22:33  [VRM]  walker 0001564590-21-043465 — note_no_event reasons: ['The filing is a 10-Q periodic report that re-discloses the June 2021 convertible senior notes (C-1109) and other historical equity transactions without any new dilutive events or changes in terms.']
+00:22:33  [VRM]    [2021-08-11] 10-Q 0001564590-21-043465 — 0 mutations
+00:22:33  [VRM]    anchor 0001564590-21-043465 as_of=2021-06-30
+00:22:49  [VRM]  overhang-combined 0001564590-21-043465 — w=0 c=1 p=0 s=0 a=0 e=0
+00:22:49  [VRM]  walker 0001564590-21-043449 — dedup block: 1 candidates within ±180d
+00:22:49  [VRM]    0001564590-21-043449 — pruned 1 create tool(s): create_atm
+00:22:49  [VRM]  walker 0001564590-21-043449 — form=8-K (20 tools)
+00:22:54  [VRM]  walker 0001564590-21-043449 — finish='REASON_TOOL_CALLS' calls=1
+00:22:54  [VRM]  walker 0001564590-21-043449 — note_no_event reasons: ['earnings release']
+00:22:54  [VRM]    [2021-08-11] 8-K 0001564590-21-043449 — 0 mutations
+00:22:54  [VRM]  walker 0001193125-21-270936 — dedup block: 1 candidates within ±180d
+00:22:54  [VRM]  walker 0001193125-21-270936 — form=8-K (21 tools)
+00:22:59  [VRM]  walker 0001193125-21-270936 — finish='REASON_TOOL_CALLS' calls=1
+00:22:59  [VRM]  walker 0001193125-21-270936 — note_no_event reasons: ['Appointment of Robert R. Krakowiak as Chief Financial Officer and separation of David K. Jones, including compensatory RSU and PSU grants.']
+00:22:59  [VRM]    [2021-09-13] 8-K 0001193125-21-270936 — 0 mutations
+00:22:59  [VRM]  walker 0000950170-21-002077 — dedup block: 1 candidates within ±180d
+00:22:59  [VRM]    0000950170-21-002077 — pruned 1 create tool(s): create_atm
+00:22:59  [VRM]  walker 0000950170-21-002077 — form=8-K (20 tools)
+00:23:05  [VRM]  walker 0000950170-21-002077 — finish='REASON_TOOL_CALLS' calls=1
+00:23:05  [VRM]  walker 0000950170-21-002077 — note_no_event reasons: ['The filing discloses a cash acquisition of Unitas Holdings Corp. for $300 million with no issuance of dilutive securities by the issuer.']
+00:23:05  [VRM]    [2021-10-12] 8-K 0000950170-21-002077 — 0 mutations
+00:23:05  [VRM]  walker 0000950170-21-003792 — dedup block: 2 candidates (all active, periodic form)
+00:23:05  [VRM]  walker 0000950170-21-003792 — form=10-Q (17 tools)
+00:23:17  [VRM]  walker 0000950170-21-003792 — finish='REASON_TOOL_CALLS' calls=1
+00:23:17  [VRM]  walker 0000950170-21-003792 — note_no_event reasons: ['periodic report with no new dilutive instruments or events; C-1109 is already on the ledger and has no outstanding balance changes or conversions during the period']
+00:23:17  [VRM]    [2021-11-09] 10-Q 0000950170-21-003792 — 0 mutations
+00:23:17  [VRM]    anchor 0000950170-21-003792 as_of=2021-09-30
+00:23:36  [VRM]  overhang-combined 0000950170-21-003792 — w=0 c=1 p=0 s=0 a=0 e=0
+00:23:36  [VRM]  walker 0000950170-21-003765 — dedup block: 1 candidates within ±180d
+00:23:36  [VRM]    0000950170-21-003765 — pruned 1 create tool(s): create_atm
+00:23:36  [VRM]  walker 0000950170-21-003765 — form=8-K (20 tools)
+00:23:42  [VRM]  walker 0000950170-21-003765 — finish='REASON_TOOL_CALLS' calls=1
+00:23:42  [VRM]  walker 0000950170-21-003765 — note_no_event reasons: ['earnings release for the third quarter ended September 30, 2021 with no new dilutive instruments or events']
+00:23:42  [VRM]    [2021-11-09] 8-K 0000950170-21-003765 — 0 mutations
+00:23:42  [VRM]  walker 0001193125-21-359499 — form=8-K (21 tools)
+00:23:46  [VRM]  walker 0001193125-21-359499 — finish='REASON_TOOL_CALLS' calls=1
+00:23:46  [VRM]  walker 0001193125-21-359499 — note_no_event reasons: ['appointment of Chief Operating Officer and related employment agreement with RSU grant']
+00:23:46  [VRM]    [2021-12-17] 8-K 0001193125-21-359499 — 0 mutations
+00:23:46  [VRM]  walker 0000950170-21-005287 — form=8-K (21 tools)
+00:23:50  [VRM]  walker 0000950170-21-005287 — finish='REASON_TOOL_CALLS' calls=1
+00:23:50  [VRM]  walker 0000950170-21-005287 — must_record net fired (items=2.03); re-asking
+00:23:54  [VRM]  walker 0000950170-21-005287 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:23:54  [VRM]  walker 0000950170-21-005287 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:23:54  [VRM]  walker 0000950170-21-005287 — note_no_event reasons: ['The filing discloses an amendment to an inventory financing agreement (floorplan facility) with Ally Bank, which is straight debt with no conversion mechanism or equity component.']
+00:23:54  [VRM]    [2021-12-20] 8-K 0000950170-21-005287 — 0 mutations
+00:23:54  [VRM]    0000950170-22-000641 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:23:54  [VRM]  walker 0000950170-22-000641 — form=8-K (18 tools)
+00:23:57  [VRM]  walker 0000950170-22-000641 — finish='REASON_TOOL_CALLS' calls=1
+00:23:57  [VRM]  walker 0000950170-22-000641 — note_no_event reasons: ['acquisition of United Auto Credit Corporation completed and financed with cash on hand']
+00:23:57  [VRM]    [2022-02-01] 8-K 0000950170-22-000641 — 0 mutations
+00:23:57  [VRM]    0000950170-22-001034 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:23:57  [VRM]  walker 0000950170-22-001034 — form=8-K (18 tools)
+00:24:02  [VRM]  walker 0000950170-22-001034 — finish='REASON_TOOL_CALLS' calls=1
+00:24:02  [VRM]  walker 0000950170-22-001034 — note_no_event reasons: ['pricing of subsidiary auto loan securitization with no conversion features']
+00:24:02  [VRM]    [2022-02-10] 8-K 0000950170-22-001034 — 0 mutations
+00:24:02  [VRM]    0000950170-22-002313 — pruned 1 create tool(s): create_atm
+00:24:02  [VRM]  walker 0000950170-22-002313 — form=8-K (20 tools)
+00:24:06  [VRM]  walker 0000950170-22-002313 — finish='REASON_TOOL_CALLS' calls=1
+00:24:06  [VRM]  walker 0000950170-22-002313 — note_no_event reasons: ['earnings release']
+00:24:06  [VRM]    [2022-02-28] 8-K 0000950170-22-002313 — 0 mutations
+00:24:06  [VRM]  walker 0000950170-22-002352 — dedup block: 2 candidates (all active, periodic form)
+00:24:06  [VRM]  walker 0000950170-22-002352 — form=10-K (17 tools)
+00:24:19  [VRM]  walker 0000950170-22-002352 — finish='REASON_TOOL_CALLS' calls=1
+00:24:19  [VRM]  walker 0000950170-22-002352 — note_no_event reasons: ['The filing is a 10-K for the fiscal year ended December 31, 2021, which re-discloses the June 2021 convertible senior notes (C-1109) and the September 2020 follow-on offering (S1-219) without any new dilutive instruments or events.']
+00:24:19  [VRM]    [2022-03-01] 10-K 0000950170-22-002352 — 0 mutations
+00:24:19  [VRM]    anchor 0000950170-22-002352 as_of=2021-12-31
+00:24:37  [VRM]  overhang-combined 0000950170-22-002352 — w=0 c=1 p=0 s=0 a=0 e=0
+00:24:37  [VRM]    0000950170-22-005525 — pruned 1 create tool(s): create_atm
+00:24:37  [VRM]  walker 0000950170-22-005525 — form=8-K/A (20 tools)
+00:24:46  [VRM]  walker 0000950170-22-005525 — finish='REASON_TOOL_CALLS' calls=1
+00:24:46  [VRM]  walker 0000950170-22-005525 — note_no_event reasons: ['Historical financial statements of United PanAm Financial Corp. and pro forma financial information for its cash acquisition by Vroom, Inc., with no new dilutive instruments issued.']
+00:24:46  [VRM]    [2022-04-08] 8-K/A 0000950170-22-005525 — 0 mutations
+00:24:46  [VRM]  walker 0000950170-22-006725 — form=DEF 14A (3 tools)
+00:24:58  [VRM]  walker 0000950170-22-006725 — finish='REASON_TOOL_CALLS' calls=1
+00:24:58  [VRM]  walker 0000950170-22-006725 — note_no_event reasons: ['Definitive proxy statement for the 2022 annual meeting of stockholders covering director elections, executive compensation, and auditor ratification with no new dilutive instruments or events.']
+00:24:58  [VRM]    [2022-04-29] DEF 14A 0000950170-22-006725 — 0 mutations
+00:24:58  [VRM]  walker 0000950170-22-006744 — form=DEFA14A (3 tools)
+00:25:01  [VRM]  walker 0000950170-22-006744 — finish='REASON_TOOL_CALLS' calls=1
+00:25:01  [VRM]  walker 0000950170-22-006744 — note_no_event reasons: ['proxy materials only (annual meeting voting items)']
+00:25:01  [VRM]    [2022-04-29] DEFA14A 0000950170-22-006744 — 0 mutations
+00:25:01  [VRM]  walker 0000950170-22-008544 — dedup block: 2 candidates (all active, periodic form)
+00:25:01  [VRM]  walker 0000950170-22-008544 — form=10-Q (17 tools)
+00:25:11  [VRM]  walker 0000950170-22-008544 — finish='REASON_TOOL_CALLS' calls=1
+00:25:11  [VRM]  walker 0000950170-22-008544 — note_no_event reasons: ['The filing is a 10-Q for the period ended March 31, 2022, which discusses the cash acquisition of UACC, the suspension of the Rocket Auto agreement, and contains no new dilutive financing instruments or events.']
+00:25:11  [VRM]    [2022-05-09] 10-Q 0000950170-22-008544 — 0 mutations
+00:25:11  [VRM]    anchor 0000950170-22-008544 as_of=2022-03-31
+00:25:29  [VRM]  overhang-combined 0000950170-22-008544 — w=0 c=1 p=0 s=0 a=0 e=0
+00:25:29  [VRM]    anchor 0000950170-22-008544 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:25:29  [VRM]      diff extra_in_ledger S1-219 [s1_offering] ledger=terms.anticipated_deal_size=725203800.0, terms.final_deal_size=588600000.0, terms.final_pricing=54.5, terms.final_shares_offered=10800000.0, out.drawn_usd=588600000.0, out.sold_to_date=10800000.0, last_seen_date=2020-09-11
+00:25:29  [VRM]      anchor proposal close_instrument S1-219 date=2022-03-31 reason=terminated
+00:25:29  [VRM]    anchor corrections applied=1 rejected=0
+00:25:29  [VRM]  walker 0000950170-22-008529 — form=8-K (21 tools)
+00:25:34  [VRM]  walker 0000950170-22-008529 — finish='REASON_TOOL_CALLS' calls=1
+00:25:34  [VRM]  walker 0000950170-22-008529 — note_no_event reasons: ["The filing discloses an employment agreement with Thomas Shortt as CEO, including compensatory grants of RSUs and stock options under the company's incentive plan, which do not constitute dilutive financing events."]
+00:25:34  [VRM]    [2022-05-09] 8-K 0000950170-22-008529 — 0 mutations
+00:25:34  [VRM]    0000950170-22-008532 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:25:34  [VRM]  walker 0000950170-22-008532 — form=8-K (18 tools)
+00:25:39  [VRM]  walker 0000950170-22-008532 — finish='REASON_TOOL_CALLS' calls=1
+00:25:39  [VRM]  walker 0000950170-22-008532 — note_no_event reasons: ['earnings release and business realignment plan announcement with no dilutive events']
+00:25:39  [VRM]    [2022-05-09] 8-K 0000950170-22-008532 — 0 mutations
+00:25:39  [VRM]  walker 0000950170-22-010236 — form=DEFA14A (3 tools)
+00:25:42  [VRM]  walker 0000950170-22-010236 — finish='REASON_TOOL_CALLS' calls=1
+00:25:42  [VRM]  walker 0000950170-22-010236 — note_no_event reasons: ['proxy supplement regarding director nominations and board changes with no dilutive instruments or events']
+00:25:42  [VRM]    [2022-05-18] DEFA14A 0000950170-22-010236 — 0 mutations
+00:25:42  [VRM]    0000950170-22-010706 — pruned 1 create tool(s): create_atm
+00:25:42  [VRM]  walker 0000950170-22-010706 — form=8-K (20 tools)
+00:25:47  [VRM]  walker 0000950170-22-010706 — finish='REASON_TOOL_CALLS' calls=1
+00:25:47  [VRM]  walker 0000950170-22-010706 — note_no_event reasons: ['analyst and investor event presentation with no dilutive instruments or events']
+00:25:47  [VRM]    [2022-05-26] 8-K 0000950170-22-010706 — 0 mutations
+00:25:47  [VRM]  walker 0000950170-22-010761 — form=8-K (21 tools)
+00:25:51  [VRM]  walker 0000950170-22-010761 — finish='REASON_TOOL_CALLS' calls=1
+00:25:51  [VRM]  walker 0000950170-22-010761 — note_no_event reasons: ['Amended executive severance plan and amended offer letter for CFO containing employee equity compensation (RSUs and options) which are not dilutive financing instruments.']
+00:25:51  [VRM]    [2022-05-26] 8-K 0000950170-22-010761 — 0 mutations
+00:25:51  [VRM]    [2022-06-22] 8-K 0000950170-22-011962 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:25:51  [VRM]  walker 0000950170-22-012432 — form=8-K (21 tools)
+00:25:56  [VRM]  walker 0000950170-22-012432 — finish='REASON_TOOL_CALLS' calls=1
+00:25:56  [VRM]  walker 0000950170-22-012432 — note_no_event reasons: ['Executive separation agreement discussing employee stock options and RSUs, with no dilutive financing events.']
+00:25:56  [VRM]    [2022-07-01] 8-K 0000950170-22-012432 — 0 mutations
+00:25:56  [VRM]    0000950170-22-012710 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:25:56  [VRM]  walker 0000950170-22-012710 — form=8-K (18 tools)
+00:26:04  [VRM]  walker 0000950170-22-012710 — finish='REASON_TOOL_CALLS' calls=1
+00:26:04  [VRM]  walker 0000950170-22-012710 — note_no_event reasons: ['auto loan securitization pricing']
+00:26:04  [VRM]    [2022-07-15] 8-K 0000950170-22-012710 — 0 mutations
+00:26:04  [VRM]    [2022-07-27] 8-K 0000950170-22-013218 — skipped (no dilutive item + no substantive exhibit (items=5.02,9.01))
+00:26:04  [VRM]  walker 0000950170-22-015563 — dedup block: 1 candidates (all active, periodic form)
+00:26:04  [VRM]  walker 0000950170-22-015563 — form=10-Q (17 tools)
+00:26:17  [VRM]  walker 0000950170-22-015563 — finish='REASON_TOOL_CALLS' calls=1
+00:26:17  [VRM]  walker 0000950170-22-015563 — note_no_event reasons: ['The filing is a quarterly report (10-Q) that discusses employee stock option and RSU grants, but contains no new dilutive financing instruments or events.']
+00:26:17  [VRM]    [2022-08-08] 10-Q 0000950170-22-015563 — 0 mutations
+00:26:17  [VRM]    anchor 0000950170-22-015563 as_of=2022-06-30
+00:26:34  [VRM]  overhang-combined 0000950170-22-015563 — w=0 c=1 p=0 s=0 a=0 e=0
+00:26:34  [VRM]    0000950170-22-015535 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:26:34  [VRM]  walker 0000950170-22-015535 — form=8-K (18 tools)
+00:26:40  [VRM]  walker 0000950170-22-015535 — finish='REASON_TOOL_CALLS' calls=1
+00:26:40  [VRM]  walker 0000950170-22-015535 — note_no_event reasons: ['earnings release']
+00:26:40  [VRM]    [2022-08-08] 8-K 0000950170-22-015535 — 0 mutations
+00:26:40  [VRM]  walker 0001193125-22-242051 — form=S-3 (16 tools)
+00:26:47  [VRM]  walker 0001193125-22-242051 — finish='REASON_TOOL_CALLS' calls=1
+00:26:47  [VRM]  walker 0001193125-22-242051 — call create_instrument:shelf date=2022-09-09 capacity_usd=300000000.0 form=S-3
+00:26:47  [VRM]    [2022-09-09] S-3 0001193125-22-242051 — 1 mutations
+00:26:47  [VRM]  walker 0000950170-22-018294 — dedup block: 1 candidates within ±180d
+00:26:47  [VRM]    0000950170-22-018294 — pruned 1 create tool(s): create_atm
+00:26:47  [VRM]  walker 0000950170-22-018294 — form=8-K/A (20 tools)
+00:26:53  [VRM]  walker 0000950170-22-018294 — finish='REASON_TOOL_CALLS' calls=1
+00:26:53  [VRM]  walker 0000950170-22-018294 — note_no_event reasons: ['The filing contains only historical and pro forma financial statements related to the acquisition of United PanAm Financial Corp., which was funded entirely in cash with no dilutive securities issued.']
+00:26:53  [VRM]    [2022-09-09] 8-K/A 0000950170-22-018294 — 0 mutations
+00:26:53  [VRM]  walker 0000950170-22-018736 — dedup block: 1 candidates within ±180d
+00:26:53  [VRM]    0000950170-22-018736 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:26:53  [VRM]  walker 0000950170-22-018736 — form=8-K (18 tools)
+00:26:55  [VRM]  walker 0000950170-22-018736 — finish='REASON_TOOL_CALLS' calls=1
+00:26:55  [VRM]  walker 0000950170-22-018736 — note_no_event reasons: ['termination of customer experience management agreement']
+00:26:55  [VRM]    [2022-09-21] 8-K 0000950170-22-018736 — 0 mutations
+00:26:55  [VRM]  walker 0000950170-22-020461 — dedup block: 1 candidates within ±180d
+00:26:55  [VRM]    0000950170-22-020461 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:26:55  [VRM]  walker 0000950170-22-020461 — form=8-K (18 tools)
+00:26:57  [VRM]  walker 0000950170-22-020461 — finish='REASON_TOOL_CALLS' calls=1
+00:26:57  [VRM]  walker 0000950170-22-020461 — note_no_event reasons: ['board of directors changes']
+00:26:57  [VRM]    [2022-10-28] 8-K 0000950170-22-020461 — 0 mutations
+00:26:57  [VRM]  walker 0000950170-22-022672 — dedup block: 2 candidates (all active, periodic form)
+00:26:57  [VRM]  walker 0000950170-22-022672 — form=10-Q (17 tools)
+00:27:11  [VRM]  walker 0000950170-22-022672 — finish='REASON_TOOL_CALLS' calls=1
+00:27:11  [VRM]  walker 0000950170-22-022672 — call record_event C-1109 date=2022-09-30 principal_redeemed=56400000.0 cash_paid=18458000.0
+00:27:11  [VRM]    [2022-11-07] 10-Q 0000950170-22-022672 — 1 mutations
+00:27:11  [VRM]    anchor 0000950170-22-022672 as_of=2022-09-30
+00:27:30  [VRM]  overhang-combined 0000950170-22-022672 — w=0 c=1 p=0 s=0 a=0 e=0
+00:27:30  [VRM]    anchor 0000950170-22-022672 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:27:30  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:27:30  [VRM]  walker 0000950170-22-022666 — dedup block: 1 candidates within ±180d
+00:27:30  [VRM]    0000950170-22-022666 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:27:30  [VRM]  walker 0000950170-22-022666 — form=8-K (18 tools)
+00:27:50  [VRM]  walker 0000950170-22-022666 — finish='REASON_TOOL_CALLS' calls=1
+00:27:50  [VRM]  walker 0000950170-22-022666 — call record_event C-1109 date=2022-09-30 principal_redeemed=56000000.0 cash_paid=18458000.0
+00:27:50  [VRM]    [2022-11-07] 8-K 0000950170-22-022666 — 1 mutations
+00:27:50  [VRM]  walker 0000950170-22-025350 — dedup block: 1 candidates within ±180d
+00:27:50  [VRM]    0000950170-22-025350 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:27:50  [VRM]  walker 0000950170-22-025350 — form=8-K (18 tools)
+00:27:55  [VRM]  walker 0000950170-22-025350 — finish='REASON_TOOL_CALLS' calls=1
+00:27:55  [VRM]  walker 0000950170-22-025350 — call record_event C-1109 date=2022-11-16 principal_redeemed=197900000.0 cash_paid=71700000.0
+00:27:55  [VRM]    [2022-11-17] 8-K 0000950170-22-025350 — 1 mutations
+00:27:55  [VRM]  walker 0000950170-23-000869 — dedup block: 1 candidates within ±180d
+00:27:55  [VRM]    0000950170-23-000869 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:27:55  [VRM]  walker 0000950170-23-000869 — form=8-K (18 tools)
+00:27:57  [VRM]  walker 0000950170-23-000869 — finish='REASON_TOOL_CALLS' calls=1
+00:27:57  [VRM]  walker 0000950170-23-000869 — note_no_event reasons: ['reduction in force headcount reduction']
+00:27:57  [VRM]    [2023-01-18] 8-K 0000950170-23-000869 — 0 mutations
+00:27:57  [VRM]  walker 0000950170-23-005083 — dedup block: 1 candidates within ±180d
+00:27:57  [VRM]    0000950170-23-005083 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:27:57  [VRM]  walker 0000950170-23-005083 — form=8-K (18 tools)
+00:28:00  [VRM]  walker 0000950170-23-005083 — finish='REASON_TOOL_CALLS' calls=1
+00:28:00  [VRM]  walker 0000950170-23-005083 — note_no_event reasons: ['earnings release and conference call presentation for the quarter and year ended December 31, 2022']
+00:28:00  [VRM]    [2023-02-28] 8-K 0000950170-23-005083 — 0 mutations
+00:28:00  [VRM]  walker 0000950170-23-005820 — dedup block: 2 candidates (all active, periodic form)
+00:28:00  [VRM]  walker 0000950170-23-005820 — form=10-K (17 tools)
+00:28:28  [VRM]  walker 0000950170-23-005820 — finish='REASON_TOOL_CALLS' calls=1
+00:28:28  [VRM]  walker 0000950170-23-005820 — call amend_instrument:convertible C-1109 date=2022-12-31 principal_remaining=365800000.0
+00:28:28  [VRM]    [2023-03-02] 10-K 0000950170-23-005820 — 1 mutations
+00:28:28  [VRM]    anchor 0000950170-23-005820 as_of=2022-12-31
+00:28:56  [VRM]  overhang-combined 0000950170-23-005820 — w=0 c=1 p=0 s=0 a=0 e=0
+00:28:56  [VRM]    anchor 0000950170-23-005820 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:28:56  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:28:56  [VRM]    [2023-04-14] 8-K 0000950170-23-012924 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+00:28:56  [VRM]    0000950170-23-014888 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:28:56  [VRM]  walker 0000950170-23-014888 — form=8-K (18 tools)
+00:28:57  [VRM]  walker 0000950170-23-014888 — finish='REASON_TOOL_CALLS' calls=1
+00:28:57  [VRM]  walker 0000950170-23-014888 — note_no_event reasons: ['organizational restructuring and reduction in force']
+00:28:57  [VRM]    [2023-04-26] 8-K 0000950170-23-014888 — 0 mutations
+00:28:57  [VRM]  walker 0000950170-23-015764 — form=DEF 14A (3 tools)
+00:29:05  [VRM]  walker 0000950170-23-015764 — finish='REASON_TOOL_CALLS' calls=1
+00:29:05  [VRM]  walker 0000950170-23-015764 — note_no_event reasons: ['annual proxy statement containing director election and executive compensation details with no dilutive events or instruments']
+00:29:05  [VRM]    [2023-04-28] DEF 14A 0000950170-23-015764 — 0 mutations
+00:29:05  [VRM]  walker 0000950170-23-015780 — form=DEFA14A (3 tools)
+00:29:08  [VRM]  walker 0000950170-23-015780 — finish='REASON_TOOL_CALLS' calls=1
+00:29:08  [VRM]  walker 0000950170-23-015780 — note_no_event reasons: ['proxy materials only (election of directors, auditor ratification, and say-on-pay frequency vote)']
+00:29:08  [VRM]    [2023-04-28] DEFA14A 0000950170-23-015780 — 0 mutations
+00:29:08  [VRM]  walker 0000950170-23-019675 — dedup block: 2 candidates (all active, periodic form)
+00:29:08  [VRM]  walker 0000950170-23-019675 — form=10-Q (17 tools)
+00:29:37  [VRM]  walker 0000950170-23-019675 — finish='REASON_TOOL_CALLS' calls=1
+00:29:37  [VRM]  walker 0000950170-23-019675 — call record_event C-1109 date=2023-03-31 principal_redeemed=14600000.0 cash_paid=5883000.0
+00:29:37  [VRM]    [2023-05-09] 10-Q 0000950170-23-019675 — 1 mutations
+00:29:37  [VRM]    anchor 0000950170-23-019675 as_of=2023-03-31
+00:30:04  [VRM]  overhang-combined 0000950170-23-019675 — w=0 c=1 p=0 s=0 a=0 e=0
+00:30:04  [VRM]    anchor 0000950170-23-019675 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:30:04  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:30:04  [VRM]    0000950170-23-019644 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:30:04  [VRM]  walker 0000950170-23-019644 — form=8-K (18 tools)
+00:30:07  [VRM]  walker 0000950170-23-019644 — finish='REASON_TOOL_CALLS' calls=1
+00:30:07  [VRM]  walker 0000950170-23-019644 — note_no_event reasons: ['earnings release']
+00:30:07  [VRM]    [2023-05-09] 8-K 0000950170-23-019644 — 0 mutations
+00:30:07  [VRM]    [2023-06-20] 8-K 0000950170-23-028915 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:30:07  [VRM]    0000950170-23-029600 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:30:07  [VRM]  walker 0000950170-23-029600 — form=8-K (18 tools)
+00:30:08  [VRM]  walker 0000950170-23-029600 — finish='REASON_TOOL_CALLS' calls=1
+00:30:08  [VRM]  walker 0000950170-23-029600 — note_no_event reasons: ['regained compliance with Nasdaq minimum bid price requirement']
+00:30:08  [VRM]    [2023-06-23] 8-K 0000950170-23-029600 — 0 mutations
+00:30:08  [VRM]  walker 0000950170-23-039852 — dedup block: 2 candidates (all active, periodic form)
+00:30:08  [VRM]  walker 0000950170-23-039852 — form=10-Q (17 tools)
+00:30:41  [VRM]  walker 0000950170-23-039852 — finish='REASON_TOOL_CALLS' calls=1
+00:30:41  [VRM]  walker 0000950170-23-039852 — call amend_instrument:convertible C-1109 date=2023-06-30 principal_remaining=332511435.0
+00:30:41  [VRM]    [2023-08-08] 10-Q 0000950170-23-039852 — 1 mutations
+00:30:41  [VRM]    anchor 0000950170-23-039852 as_of=2023-06-30
+00:31:05  [VRM]  overhang-combined 0000950170-23-039852 — w=0 c=1 p=0 s=0 a=0 e=0
+00:31:05  [VRM]    anchor 0000950170-23-039852 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:31:05  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:31:05  [VRM]    0000950170-23-039842 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:31:05  [VRM]  walker 0000950170-23-039842 — form=8-K (18 tools)
+00:31:27  [VRM]  walker 0000950170-23-039842 — finish='REASON_TOOL_CALLS' calls=1
+00:31:27  [VRM]  walker 0000950170-23-039842 — note_no_event reasons: ['earnings release']
+00:31:27  [VRM]    [2023-08-08] 8-K 0000950170-23-039842 — 0 mutations
+00:31:27  [VRM]  walker 0000950170-23-060258 — dedup block: 2 candidates (all active, periodic form)
+00:31:27  [VRM]  walker 0000950170-23-060258 — form=10-Q (17 tools)
+00:31:46  [VRM]  walker 0000950170-23-060258 — finish='REASON_TOOL_CALLS' calls=1
+00:31:46  [VRM]  walker 0000950170-23-060258 — note_no_event reasons: ['10-Q periodic report contains no new dilutive instruments or events; the outstanding balance of the convertible senior notes is already reconciled in the ledger.']
+00:31:46  [VRM]    [2023-11-07] 10-Q 0000950170-23-060258 — 0 mutations
+00:31:46  [VRM]    anchor 0000950170-23-060258 as_of=2023-09-30
+00:32:10  [VRM]  overhang-combined 0000950170-23-060258 — w=0 c=1 p=0 s=0 a=0 e=0
+00:32:10  [VRM]    anchor 0000950170-23-060258 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:32:10  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:32:10  [VRM]    0000950170-23-060242 — pruned 3 create tool(s): create_atm,create_preferred,create_warrant
+00:32:10  [VRM]  walker 0000950170-23-060242 — form=8-K (18 tools)
+00:32:19  [VRM]  walker 0000950170-23-060242 — finish='REASON_TOOL_CALLS' calls=1
+00:32:19  [VRM]  walker 0000950170-23-060242 — note_no_event reasons: ['earnings release for the quarter ended September 30, 2023 with no new dilutive instruments or discrete dilutive events']
+00:32:19  [VRM]    [2023-11-07] 8-K 0000950170-23-060242 — 0 mutations
+00:32:19  [VRM]  walker 0001193125-23-287540 — form=424B5 (13 tools)
+00:32:31  [VRM]  walker 0001193125-23-287540 — finish='REASON_TOOL_CALLS' calls=1
+00:32:31  [VRM]  walker 0001193125-23-287540 — call create_instrument:atm date=2023-12-01 capacity_usd=50000000.0 agreement_date=2023-12-01
+00:32:31  [VRM]    [2023-12-01] 424B5 0001193125-23-287540 — 1 mutations
+00:32:31  [VRM]  walker 0001193125-23-287564 — dedup block: 1 candidates within ±180d
+00:32:31  [VRM]  walker 0001193125-23-287564 — form=8-K (21 tools)
+00:32:37  [VRM]  walker 0001193125-23-287564 — finish='REASON_TOOL_CALLS' calls=1
+00:32:37  [VRM]  walker 0001193125-23-287564 — note_no_event reasons: ['The Equity Distribution Agreement with Virtu Americas LLC for up to $50.0 million is already recorded in the ledger as ATM-2680.']
+00:32:37  [VRM]    [2023-12-01] 8-K 0001193125-23-287564 — 0 mutations
+00:32:37  [VRM]  walker 0001140361-23-059151 — dedup block: 1 candidates within ±30d
+00:32:37  [VRM]  walker 0001140361-23-059151 — form=PRE 14A (3 tools)
+00:32:45  [VRM]  walker 0001140361-23-059151 — finish='REASON_TOOL_CALLS' calls=1
+00:32:45  [VRM]  walker 0001140361-23-059151 — note_no_event reasons: ['Preliminary proxy statement seeking stockholder approval for a potential reverse stock split and adjournment of the special meeting.']
+00:32:45  [VRM]    [2023-12-22] PRE 14A 0001140361-23-059151 — 0 mutations
+00:32:45  [VRM]  walker 0000950170-23-072647 — dedup block: 1 candidates within ±180d
+00:32:45  [VRM]    0000950170-23-072647 — pruned 2 create tool(s): create_preferred,create_warrant
+00:32:45  [VRM]  walker 0000950170-23-072647 — form=8-K (19 tools)
+00:32:47  [VRM]  walker 0000950170-23-072647 — finish='REASON_TOOL_CALLS' calls=1
+00:32:47  [VRM]  walker 0000950170-23-072647 — note_no_event reasons: ['preliminary proxy statement for proposed reverse stock split']
+00:32:47  [VRM]    [2023-12-22] 8-K 0000950170-23-072647 — 0 mutations
+00:32:47  [VRM]  walker 0001140361-24-000004 — form=DEF 14A (3 tools)
+00:32:57  [VRM]  walker 0001140361-24-000004 — finish='REASON_TOOL_CALLS' calls=1
+00:32:57  [VRM]  walker 0001140361-24-000004 — note_no_event reasons: ['Proxy statement seeking stockholder approval for a discretionary reverse stock split and adjournment of the special meeting.']
+00:32:57  [VRM]    [2024-01-02] DEF 14A 0001140361-24-000004 — 0 mutations
+00:32:57  [VRM]  walker 0001193125-24-012173 — dedup block: 1 candidates within ±180d
+00:32:57  [VRM]    0001193125-24-012173 — pruned 2 create tool(s): create_preferred,create_warrant
+00:32:57  [VRM]  walker 0001193125-24-012173 — form=8-K (19 tools)
+00:33:00  [VRM]  walker 0001193125-24-012173 — finish='REASON_TOOL_CALLS' calls=1
+00:33:00  [VRM]  walker 0001193125-24-012173 — note_no_event reasons: ['inventory financing amendment and wind-down announcement']
+00:33:00  [VRM]    [2024-01-22] 8-K 0001193125-24-012173 — 0 mutations
+00:33:00  [VRM]  walker 0000950170-24-012193 — dedup block: 1 candidates within ±180d
+00:33:00  [VRM]    0000950170-24-012193 — pruned 2 create tool(s): create_preferred,create_warrant
+00:33:00  [VRM]  walker 0000950170-24-012193 — form=8-K (19 tools)
+00:33:03  [VRM]  walker 0000950170-24-012193 — finish='REASON_TOOL_CALLS' calls=1
+00:33:03  [VRM]  walker 0000950170-24-012193 — call apply_split date=2024-02-13 post=1 pre=80 direction=reverse units=common
+00:33:03  [VRM]    [2024-02-07] 8-K 0000950170-24-012193 — 1 mutations
+00:33:03  [VRM]  walker 0000950170-24-014928 — dedup block: 1 candidates within ±180d
+00:33:03  [VRM]    0000950170-24-014928 — pruned 1 create tool(s): create_warrant
+00:33:03  [VRM]  walker 0000950170-24-014928 — form=8-K (20 tools)
+00:33:06  [VRM]  walker 0000950170-24-014928 — finish='REASON_TOOL_CALLS' calls=1
+00:33:06  [VRM]  walker 0000950170-24-014928 — call apply_split date=2024-02-13 post=1 pre=80 direction=reverse units=common
+00:33:06  [VRM]    [2024-02-14] 8-K 0000950170-24-014928 — 1 mutations
+00:33:06  [VRM]  walker 0000950170-24-030760 — dedup block: 3 candidates (all active, periodic form)
+00:33:06  [VRM]  walker 0000950170-24-030760 — form=10-K (17 tools)
+00:33:50  [VRM]  walker 0000950170-24-030760 — finish='REASON_TOOL_CALLS' calls=1
+00:33:50  [VRM]  walker 0000950170-24-030760 — retrying 1 call(s) (kinds=['drawdown_missing_price'])
+00:34:10  [VRM]  walker 0000950170-24-030760 — retry finish='REASON_TOOL_CALLS' calls=1
+00:34:10  [VRM]  walker 0000950170-24-030760 — call record_event ATM-2680 date=2023-12-31 drawdown_amount_usd=2500000.0 drawdown_shares=43483.0 avg_price=57.493733183083044
+00:34:10  [VRM]    [2024-03-13] 10-K 0000950170-24-030760 — 1 mutations
+00:34:10  [VRM]    anchor 0000950170-24-030760 as_of=2023-12-31
+00:34:45  [VRM]  overhang-combined 0000950170-24-030760 — w=0 c=1 p=0 s=0 a=1 e=0
+00:34:45  [VRM]    anchor 0000950170-24-030760 — 2 diffs (missing=0 field=0 count=1 extra=1)
+00:34:45  [VRM]      diff count_mismatch C-1109 [convertible] ledger=out.principal_remaining=332511435.0 filing=out.principal_remaining=290500000.0
+00:34:45  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:34:45  [VRM]      anchor proposal amend_instrument:convertible C-1109 date=2023-12-31 principal_remaining=290500000.0
+00:34:45  [VRM]    anchor corrections applied=1 rejected=0
+00:34:45  [VRM]  walker 0000950170-24-030755 — dedup block: 1 candidates within ±180d
+00:34:45  [VRM]    0000950170-24-030755 — pruned 2 create tool(s): create_preferred,create_warrant
+00:34:45  [VRM]  walker 0000950170-24-030755 — form=8-K (19 tools)
+00:35:08  [VRM]  walker 0000950170-24-030755 — finish='REASON_TOOL_CALLS' calls=1
+00:35:08  [VRM]  walker 0000950170-24-030755 — call record_event C-1109 date=2023-12-31 principal_redeemed=74200000.0 cash_paid=36536000.0
+00:35:08  [VRM]    [2024-03-13] 8-K 0000950170-24-030755 — 1 mutations
+00:35:08  [VRM]    [2024-03-13] 8-K/A 0000950170-24-030786 — skipped (no dilutive item + no substantive exhibit (items=2.05))
+00:35:08  [VRM]  walker 0000950170-24-041799 — dedup block: 1 candidates within ±180d
+00:35:08  [VRM]    0000950170-24-041799 — pruned 2 create tool(s): create_preferred,create_warrant
+00:35:08  [VRM]  walker 0000950170-24-041799 — form=8-K (19 tools)
+00:35:13  [VRM]  walker 0000950170-24-041799 — finish='REASON_TOOL_CALLS' calls=1
+00:35:13  [VRM]  walker 0000950170-24-041799 — note_no_event reasons: ['pro forma financial information for ecommerce wind-down']
+00:35:13  [VRM]    [2024-04-04] 8-K 0000950170-24-041799 — 0 mutations
+00:35:13  [VRM]  walker 0000950170-24-049913 — form=DEF 14A (3 tools)
+00:35:26  [VRM]  walker 0000950170-24-049913 — finish='REASON_TOOL_CALLS' calls=1
+00:35:26  [VRM]  walker 0000950170-24-049913 — note_no_event reasons: ['proxy statement covering annual meeting proposals including election of directors, auditor ratification, executive compensation, and amendment to the 2020 Incentive Award Plan']
+00:35:26  [VRM]    [2024-04-29] DEF 14A 0000950170-24-049913 — 0 mutations
+00:35:26  [VRM]  walker 0000950170-24-049919 — form=DEFA14A (3 tools)
+00:35:28  [VRM]  walker 0000950170-24-049919 — finish='REASON_TOOL_CALLS' calls=1
+00:35:28  [VRM]  walker 0000950170-24-049919 — note_no_event reasons: ['definitive additional proxy materials cover page only with no transaction details']
+00:35:28  [VRM]    [2024-04-29] DEFA14A 0000950170-24-049919 — 0 mutations
+00:35:28  [VRM]    [2024-04-29] 8-K 0000950170-24-049839 — skipped (no dilutive item + no substantive exhibit (items=4.01,9.01))
+00:35:28  [VRM]  walker 0000950170-24-053606 — dedup block: 1 candidates within ±180d
+00:35:28  [VRM]    0000950170-24-053606 — pruned 1 create tool(s): create_preferred
+00:35:28  [VRM]  walker 0000950170-24-053606 — form=8-K (20 tools)
+00:35:32  [VRM]  walker 0000950170-24-053606 — finish='REASON_TOOL_CALLS' calls=1
+00:35:32  [VRM]  walker 0000950170-24-053606 — must_record net fired (items=2.03); re-asking
+00:35:36  [VRM]  walker 0000950170-24-053606 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:35:36  [VRM]  walker 0000950170-24-053606 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:35:36  [VRM]  walker 0000950170-24-053606 — note_no_event reasons: ["The filing discloses an asset-backed securitization (ABS) transaction involving the issuance of non-convertible asset-backed notes by a subsidiary trust, which does not contain any dilutive instruments or conversion features into the issuer's common stock."]
+00:35:36  [VRM]    [2024-05-06] 8-K 0000950170-24-053606 — 0 mutations
+00:35:36  [VRM]  walker 0000950170-24-054493 — form=DEFA14A (3 tools)
+00:35:40  [VRM]  walker 0000950170-24-054493 — finish='REASON_TOOL_CALLS' calls=1
+00:35:40  [VRM]  walker 0000950170-24-054493 — note_no_event reasons: ['proxy supplement regarding board nominee and executive transition']
+00:35:40  [VRM]    [2024-05-07] DEFA14A 0000950170-24-054493 — 0 mutations
+00:35:40  [VRM]    [2024-05-07] 8-K 0000950170-24-054477 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+00:35:40  [VRM]  walker 0000950170-24-057968 — dedup block: 3 candidates (all active, periodic form)
+00:35:40  [VRM]  walker 0000950170-24-057968 — form=10-Q (17 tools)
+00:36:24  [VRM]  walker 0000950170-24-057968 — finish='REASON_TOOL_CALLS' calls=1
+00:36:24  [VRM]  walker 0000950170-24-057968 — call amend_instrument:convertible C-1109 date=2024-03-31 principal_remaining=287200000.0
+00:36:24  [VRM]    [2024-05-10] 10-Q 0000950170-24-057968 — 1 mutations
+00:36:24  [VRM]    anchor 0000950170-24-057968 as_of=2024-03-31
+00:36:56  [VRM]  overhang-combined 0000950170-24-057968 — w=0 c=1 p=0 s=0 a=1 e=0
+00:36:56  [VRM]    anchor 0000950170-24-057968 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:36:56  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:36:56  [VRM]  walker 0000950170-24-058050 — dedup block: 1 candidates within ±180d
+00:36:56  [VRM]    0000950170-24-058050 — pruned 1 create tool(s): create_preferred
+00:36:56  [VRM]  walker 0000950170-24-058050 — form=8-K (20 tools)
+00:37:03  [VRM]  walker 0000950170-24-058050 — finish='REASON_TOOL_CALLS' calls=1
+00:37:03  [VRM]  walker 0000950170-24-058050 — note_no_event reasons: ['earnings release']
+00:37:03  [VRM]    [2024-05-13] 8-K 0000950170-24-058050 — 0 mutations
+00:37:03  [VRM]  walker 0000950170-24-073703 — form=8-K (21 tools)
+00:37:07  [VRM]  walker 0000950170-24-073703 — finish='REASON_TOOL_CALLS' calls=1
+00:37:07  [VRM]  walker 0000950170-24-073703 — note_no_event reasons: ['amendment and restatement of the 2020 Incentive Award Plan (employee equity incentive plan)']
+00:37:07  [VRM]    [2024-06-14] 8-K 0000950170-24-073703 — 0 mutations
+00:37:07  [VRM]    [2024-07-24] 8-K 0000950170-24-085765 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+00:37:07  [VRM]  walker 0000950170-24-094039 — dedup block: 3 candidates (all active, periodic form)
+00:37:07  [VRM]  walker 0000950170-24-094039 — form=10-Q (17 tools)
+00:37:25  [VRM]  walker 0000950170-24-094039 — finish='REASON_TOOL_CALLS' calls=1
+00:37:25  [VRM]  walker 0000950170-24-094039 — note_no_event reasons: ['The filing is a quarterly report (Form 10-Q) that contains no new dilutive financing instruments or events; it re-discloses the existing convertible senior notes and ATM program, and discusses executive transitions and compensation plans.']
+00:37:25  [VRM]    [2024-08-08] 10-Q 0000950170-24-094039 — 0 mutations
+00:37:25  [VRM]    anchor 0000950170-24-094039 as_of=2024-06-30
+00:37:53  [VRM]  overhang-combined 0000950170-24-094039 — w=0 c=1 p=0 s=0 a=1 e=0
+00:37:53  [VRM]    anchor 0000950170-24-094039 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:37:53  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:37:53  [VRM]    0000950170-24-094020 — pruned 1 create tool(s): create_preferred
+00:37:53  [VRM]  walker 0000950170-24-094020 — form=8-K (20 tools)
+00:38:00  [VRM]  walker 0000950170-24-094020 — finish='REASON_TOOL_CALLS' calls=1
+00:38:00  [VRM]  walker 0000950170-24-094020 — note_no_event reasons: ['earnings release and quarterly financial results with no dilutive financing events or instrument disclosures']
+00:38:00  [VRM]    [2024-08-08] 8-K 0000950170-24-094020 — 0 mutations
+00:38:00  [VRM]    0000950170-24-108635 — pruned 2 create tool(s): create_preferred,create_warrant
+00:38:00  [VRM]  walker 0000950170-24-108635 — form=8-K (19 tools)
+00:38:06  [VRM]  walker 0000950170-24-108635 — finish='REASON_TOOL_CALLS' calls=1
+00:38:06  [VRM]  walker 0000950170-24-108635 — note_no_event reasons: ['investor presentation detailing strategic plan and containing no new dilutive instruments or events']
+00:38:06  [VRM]    [2024-09-23] 8-K 0000950170-24-108635 — 0 mutations
+00:38:06  [VRM]  walker 0000950170-24-125412 — dedup block: 3 candidates (all active, periodic form)
+00:38:06  [VRM]  walker 0000950170-24-125412 — form=10-Q (17 tools)
+00:38:39  [VRM]  walker 0000950170-24-125412 — finish='REASON_TOOL_CALLS' calls=1
+00:38:39  [VRM]  walker 0000950170-24-125412 — call amend_instrument:convertible C-1109 date=2024-09-30 conv_price=4480.29 principal_remaining=290488001.0
+00:38:39  [VRM]    [2024-11-12] 10-Q 0000950170-24-125412 — 1 mutations
+00:38:39  [VRM]    anchor 0000950170-24-125412 as_of=2024-09-30
+00:39:19  [VRM]  overhang-combined 0000950170-24-125412 — w=0 c=1 p=0 s=0 a=1 e=0
+00:39:19  [VRM]    anchor 0000950170-24-125412 — 1 diffs (missing=0 field=0 count=0 extra=1)
+00:39:19  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:39:19  [VRM]  walker 0000950170-24-125397 — form=8-K (21 tools)
+00:39:29  [VRM]  walker 0000950170-24-125397 — finish='REASON_TOOL_CALLS' calls=1
+00:39:29  [VRM]  walker 0000950170-24-125397 — note_no_event reasons: ['Earnings release for Q3 2024 and announcement of an agreement to restructure unsecured convertible notes through a prepackaged Chapter 11 case, with no completed dilutive events or transactions during the period.']
+00:39:29  [VRM]    [2024-11-12] 8-K 0000950170-24-125397 — 0 mutations
+00:39:29  [VRM]  walker 0001193125-24-256669 — form=8-K (21 tools)
+00:39:51  [VRM]  walker 0001193125-24-256669 — finish='REASON_TOOL_CALLS' calls=1
+00:39:51  [VRM]  walker 0001193125-24-256669 — note_no_event reasons: ['The filing announces a Restructuring Support Agreement and a proposed prepackaged Chapter 11 Plan of Reorganization. The contemplated equitization of the Unsecured Notes and the issuance of New Common Stock and New Warrants are subject to bankruptcy court confirmation and will only occur on the future Effective Date of the Plan.']
+00:39:51  [VRM]    [2024-11-13] 8-K 0001193125-24-256669 — 0 mutations
+00:39:51  [VRM]    [2024-11-26] 8-K 0001193125-24-266124 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+00:39:51  [VRM]    0001193125-25-000195 — pruned 1 create tool(s): create_preferred
+00:39:51  [VRM]  walker 0001193125-25-000195 — form=8-K (20 tools)
+00:39:56  [VRM]  walker 0001193125-25-000195 — finish='REASON_TOOL_CALLS' calls=1
+00:39:56  [VRM]  walker 0001193125-25-000195 — note_no_event reasons: ['The proposed 1-for-5 reverse stock split and the issuance of new warrants are future events subject to bankruptcy court approval and have not yet been consummated.']
+00:39:56  [VRM]    [2025-01-02] 8-K 0001193125-25-000195 — 0 mutations
+00:39:56  [VRM]  walker 0000950170-25-005647 — form=8-K (21 tools)
+00:40:24  [VRM]  walker 0000950170-25-005647 — finish='REASON_TOOL_CALLS' calls=3
+00:40:24  [VRM]  walker 0000950170-25-005647 — call apply_split date=2025-01-14 post=1 pre=5 direction=reverse units=common
+00:40:24  [VRM]  walker 0000950170-25-005647 — call close_instrument C-1109 date=2025-01-14 reason=converted
+00:40:24  [VRM]  walker 0000950170-25-005647 — call create_instrument:warrant date=2025-01-15 strike=60.95 exercisable_date=2026-01-15 expiration=2030-01-15 count=364516.0 initial_count=364516.0
+00:40:24  [VRM]    [2025-01-15] 8-K 0000950170-25-005647 — 3 mutations
+00:40:24  [VRM]      reject close_instrument C-1109 date=2025-01-14 reason=converted — close_with_outstanding: close_instrument(reason='converted') blocked: principal_remaining=290488001.0 on convertible C-1109; full conversion requires 0. Use record_event(conversion) for partial conversions.
+00:40:24  [VRM]  walker 0000950170-25-023626 — dedup block: 1 candidates within ±180d
+00:40:24  [VRM]    0000950170-25-023626 — pruned 1 create tool(s): create_preferred
+00:40:24  [VRM]  walker 0000950170-25-023626 — form=8-K (20 tools)
+00:40:28  [VRM]  walker 0000950170-25-023626 — finish='REASON_TOOL_CALLS' calls=1
+00:40:28  [VRM]  walker 0000950170-25-023626 — note_no_event reasons: ['The filing is an update on the relisting of common stock and preliminary Q4 2024 liquidity, with no new dilutive instruments or events disclosed.']
+00:40:28  [VRM]    [2025-02-20] 8-K 0000950170-25-023626 — 0 mutations
+00:40:28  [VRM]  walker 0000950170-25-037265 — dedup block: 4 candidates (all active, periodic form)
+00:40:28  [VRM]  walker 0000950170-25-037265 — form=10-K (17 tools)
+00:41:01  [VRM]  walker 0000950170-25-037265 — finish='REASON_TOOL_CALLS' calls=2
+00:41:01  [VRM]  walker 0000950170-25-037265 — call record_event C-1109 date=2025-01-14 shares_issued=4798593.0 principal_converted=290488001.0
+00:41:01  [VRM]  walker 0000950170-25-037265 — call close_instrument C-1109 date=2025-01-14 reason=converted
+00:41:01  [VRM]    [2025-03-11] 10-K 0000950170-25-037265 — 2 mutations
+00:41:01  [VRM]    anchor 0000950170-25-037265 as_of=2024-12-31
+00:41:37  [VRM]  overhang-combined 0000950170-25-037265 — w=1 c=1 p=0 s=0 a=0 e=0
+00:41:37  [VRM]    anchor 0000950170-25-037265 — 3 diffs (missing=1 field=0 count=0 extra=2)
+00:41:37  [VRM]      diff missing_in_ledger (new) [convertible] filing=strike_or_conversion_price=4480.0, principal_amount=290500000.0, issue_date=2021-06-18, maturity_or_expiry=2026-07-01
+00:41:37  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:41:37  [VRM]      diff extra_in_ledger ATM-2680 [atm] ledger=terms.capacity_usd=50000000.0, terms.agreement_date=2023-12-01, out.drawn_usd=2500000.0, out.sold_to_date=43483.0
+00:41:37  [VRM]      anchor proposal create_instrument:convertible date=2021-06-18 principal=290500000.0 conv_price=4480.0 maturity=2026-07-01 principal_remaining=290500000.0
+00:41:37  [VRM]    anchor corrections applied=1 rejected=0
+00:41:37  [VRM]  walker 0000950170-25-037169 — dedup block: 1 candidates within ±180d
+00:41:37  [VRM]    0000950170-25-037169 — pruned 1 create tool(s): create_preferred
+00:41:37  [VRM]  walker 0000950170-25-037169 — form=8-K (20 tools)
+00:41:52  [VRM]  walker 0000950170-25-037169 — finish='REASON_TOOL_CALLS' calls=1
+00:41:52  [VRM]  walker 0000950170-25-037169 — note_no_event reasons: ['The filing is a Q4 and Full Year 2024 earnings release and contains no new dilutive instruments or events. The recapitalization of the convertible senior notes was completed on January 14, 2025, and the newly secured line of credit and securitization notes are non-dilutive debt.']
+00:41:52  [VRM]    [2025-03-11] 8-K 0000950170-25-037169 — 0 mutations
+00:41:52  [VRM]  walker 0000950170-25-039035 — dedup block: 1 candidates within ±180d
+00:41:52  [VRM]    0000950170-25-039035 — pruned 1 create tool(s): create_preferred
+00:41:52  [VRM]  walker 0000950170-25-039035 — form=8-K (20 tools)
+00:41:56  [VRM]  walker 0000950170-25-039035 — finish='REASON_TOOL_CALLS' calls=1
+00:41:56  [VRM]  walker 0000950170-25-039035 — must_record net fired (items=2.03); re-asking
+00:42:00  [VRM]  walker 0000950170-25-039035 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:42:00  [VRM]  walker 0000950170-25-039035 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:42:00  [VRM]  walker 0000950170-25-039035 — note_no_event reasons: ['The filing describes a non-dilutive asset-backed securitization transaction involving the issuance of asset-backed notes by a subsidiary trust, with no conversion features or equity components.']
+00:42:00  [VRM]    [2025-03-14] 8-K 0000950170-25-039035 — 0 mutations
+00:42:00  [VRM]    [2025-03-21] S-1 0001013762-25-001109 — skipped (fee-table=resale; 457(c)/(g) only)
+00:42:00  [VRM]    [2025-03-26] S-1/A 0001013762-25-002784 — skipped (resale-family: parent registration under same file_number is fee-table resale)
+00:42:00  [VRM]  walker 0000950170-25-045264 — dedup block: 1 candidates within ±180d
+00:42:00  [VRM]    0000950170-25-045264 — pruned 1 create tool(s): create_preferred
+00:42:00  [VRM]  walker 0000950170-25-045264 — form=8-K (20 tools)
+00:42:24  [VRM]  walker 0000950170-25-045264 — finish='REASON_TOOL_CALLS' calls=2
+00:42:24  [VRM]  walker 0000950170-25-045264 — call record_event C-1127 date=2025-01-14 shares_issued=4798593.0 principal_converted=290500000.0
+00:42:24  [VRM]  walker 0000950170-25-045264 — call close_instrument C-1127 date=2025-01-14 reason=converted
+00:42:24  [VRM]    [2025-03-26] 8-K 0000950170-25-045264 — 2 mutations
+00:42:24  [VRM]  walker 0000950170-25-049821 — dedup block: 1 candidates within ±180d
+00:42:24  [VRM]    0000950170-25-049821 — pruned 1 create tool(s): create_preferred
+00:42:24  [VRM]  walker 0000950170-25-049821 — form=8-K (20 tools)
+00:42:26  [VRM]  walker 0000950170-25-049821 — finish='REASON_TOOL_CALLS' calls=1
+00:42:26  [VRM]  walker 0000950170-25-049821 — must_record net fired (items=2.03); re-asking
+00:42:30  [VRM]  walker 0000950170-25-049821 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:42:30  [VRM]  walker 0000950170-25-049821 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:42:30  [VRM]  walker 0000950170-25-049821 — note_no_event reasons: ['Warehouse credit facility amendment with no conversion mechanism or dilutive features.']
+00:42:30  [VRM]    [2025-04-03] 8-K 0000950170-25-049821 — 0 mutations
+00:42:30  [VRM]  walker 0000950170-25-060332 — form=DEF 14A (3 tools)
+00:43:05  [VRM]  walker 0000950170-25-060332 — finish='REASON_TOOL_CALLS' calls=1
+00:43:05  [VRM]  walker 0000950170-25-060332 — call amend_instrument:warrant W-5391 date=2025-04-29 known_owners=['Robert J. Mylod, Jr.', 'Annox Capit...
+00:43:05  [VRM]    [2025-04-29] DEF 14A 0000950170-25-060332 — 1 mutations
+00:43:05  [VRM]    [2025-04-29] 8-K 0000950170-25-059766 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+00:43:05  [VRM]  walker 0000950170-25-060469 — form=DEFA14A (3 tools)
+00:43:07  [VRM]  walker 0000950170-25-060469 — finish='REASON_TOOL_CALLS' calls=1
+00:43:07  [VRM]  walker 0000950170-25-060469 — note_no_event reasons: ['definitive additional proxy materials cover page only']
+00:43:07  [VRM]    [2025-04-30] DEFA14A 0000950170-25-060469 — 0 mutations
+00:43:07  [VRM]  walker 0000950170-25-071481 — dedup block: 3 candidates (all active, periodic form)
+00:43:07  [VRM]  walker 0000950170-25-071481 — form=10-Q (17 tools)
+00:43:45  [VRM]  walker 0000950170-25-071481 — finish='REASON_TOOL_CALLS' calls=1
+00:43:45  [VRM]  walker 0000950170-25-071481 — note_no_event reasons: ['The filing discusses the emergence from Chapter 11 bankruptcy, the settlement of pre-petition convertible notes (already recorded as converted in the ledger), the issuance of warrants (already recorded as W-5391 in the ledger), and non-convertible debt facilities, with no new dilutive instruments or events during the period.']
+00:43:45  [VRM]    [2025-05-14] 10-Q 0000950170-25-071481 — 0 mutations
+00:43:45  [VRM]    anchor 0000950170-25-071481 as_of=2025-03-31
+00:44:00  [VRM]  overhang-combined 0000950170-25-071481 — w=1 c=0 p=0 s=0 a=0 e=0
+00:44:00  [VRM]    anchor 0000950170-25-071481 — 2 diffs (missing=0 field=0 count=0 extra=2)
+00:44:00  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:44:00  [VRM]      diff extra_in_ledger ATM-2680 [atm] ledger=terms.capacity_usd=50000000.0, terms.agreement_date=2023-12-01, out.drawn_usd=2500000.0, out.sold_to_date=43483.0
+00:44:00  [VRM]  walker 0000950170-25-071397 — dedup block: 1 candidates within ±180d
+00:44:00  [VRM]    0000950170-25-071397 — pruned 1 create tool(s): create_preferred
+00:44:00  [VRM]  walker 0000950170-25-071397 — form=8-K (20 tools)
+00:44:08  [VRM]  walker 0000950170-25-071397 — finish='REASON_TOOL_CALLS' calls=1
+00:44:08  [VRM]  walker 0000950170-25-071397 — note_no_event reasons: ['earnings release for the quarter ended March 31, 2025 with no new dilutive instruments or events']
+00:44:08  [VRM]    [2025-05-14] 8-K 0000950170-25-071397 — 0 mutations
+00:44:08  [VRM]    [2025-06-13] 8-K 0000950170-25-086062 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:44:08  [VRM]  walker 0000950170-25-094153 — dedup block: 1 candidates within ±180d
+00:44:08  [VRM]    0000950170-25-094153 — pruned 1 create tool(s): create_preferred
+00:44:08  [VRM]  walker 0000950170-25-094153 — form=8-K (20 tools)
+00:44:10  [VRM]  walker 0000950170-25-094153 — finish='REASON_TOOL_CALLS' calls=1
+00:44:10  [VRM]  walker 0000950170-25-094153 — note_no_event reasons: ["The filing is a Regulation FD disclosure announcing that the company's warrants will commence trading on the OTCQX Best Market under the symbol 'VRMMW'. It does not disclose any new dilutive instruments, issuances, or transactions."]
+00:44:10  [VRM]    [2025-07-07] 8-K 0000950170-25-094153 — 0 mutations
+00:44:10  [VRM]    0000950170-25-096845 — pruned 1 create tool(s): create_preferred
+00:44:10  [VRM]  walker 0000950170-25-096845 — form=8-K/A (20 tools)
+00:44:12  [VRM]  walker 0000950170-25-096845 — finish='REASON_TOOL_CALLS' calls=1
+00:44:12  [VRM]  walker 0000950170-25-096845 — note_no_event reasons: ["The filing only announces that the Company's warrants will trade on the OTCQX Best Market under the symbol 'VRMWW' and does not disclose any new dilutive instruments or events."]
+00:44:12  [VRM]    [2025-07-18] 8-K/A 0000950170-25-096845 — 0 mutations
+00:44:12  [VRM]  walker 0000950170-25-105110 — dedup block: 3 candidates (all active, periodic form)
+00:44:12  [VRM]  walker 0000950170-25-105110 — form=10-Q (17 tools)
+00:44:39  [VRM]  walker 0000950170-25-105110 — finish='REASON_TOOL_CALLS' calls=1
+00:44:39  [VRM]  walker 0000950170-25-105110 — note_no_event reasons: ['The 10-Q filing for the period ended June 30, 2025 discloses no new dilutive instruments or events. It re-discloses the 1-for-5 reverse stock split, the issuance of 364,516 warrants (W-5391), and the conversion of the 2026 convertible senior notes (C-1109 and C-1127) on the Chapter 11 Effective Date of January 14, 2025, all of which occurred in a prior period and are already reflected in the ledger. No ATM draws, shelf takedowns, or other dilutive events occurred during the period.']
+00:44:39  [VRM]    [2025-08-07] 10-Q 0000950170-25-105110 — 0 mutations
+00:44:39  [VRM]    anchor 0000950170-25-105110 as_of=2025-06-30
+00:44:57  [VRM]  overhang-combined 0000950170-25-105110 — w=1 c=0 p=0 s=0 a=0 e=0
+00:44:57  [VRM]    anchor 0000950170-25-105110 — 2 diffs (missing=0 field=0 count=0 extra=2)
+00:44:57  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:44:57  [VRM]      diff extra_in_ledger ATM-2680 [atm] ledger=terms.capacity_usd=50000000.0, terms.agreement_date=2023-12-01, out.drawn_usd=2500000.0, out.sold_to_date=43483.0
+00:44:57  [VRM]    0000950170-25-105094 — pruned 1 create tool(s): create_preferred
+00:44:57  [VRM]  walker 0000950170-25-105094 — form=8-K (20 tools)
+00:45:06  [VRM]  walker 0000950170-25-105094 — finish='REASON_TOOL_CALLS' calls=1
+00:45:06  [VRM]  walker 0000950170-25-105094 — note_no_event reasons: ['Earnings release and presentation for the quarter ended June 30, 2025, with no new dilutive instruments or events disclosed.']
+00:45:06  [VRM]    [2025-08-07] 8-K 0000950170-25-105094 — 0 mutations
+00:45:06  [VRM]    0000950170-25-112243 — pruned 1 create tool(s): create_preferred
+00:45:06  [VRM]  walker 0000950170-25-112243 — form=8-K (20 tools)
+00:45:09  [VRM]  walker 0000950170-25-112243 — finish='REASON_TOOL_CALLS' calls=1
+00:45:09  [VRM]  walker 0000950170-25-112243 — must_record net fired (items=2.03); re-asking
+00:45:12  [VRM]  walker 0000950170-25-112243 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:45:12  [VRM]  walker 0000950170-25-112243 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:45:12  [VRM]  walker 0000950170-25-112243 — note_no_event reasons: ['Warehouse Credit Facility amendment with no conversion features']
+00:45:12  [VRM]    [2025-08-29] 8-K 0000950170-25-112243 — 0 mutations
+00:45:12  [VRM]  walker 0000950170-25-112245 — form=8-K (21 tools)
+00:45:20  [VRM]  walker 0000950170-25-112245 — finish='REASON_TOOL_CALLS' calls=1
+00:45:20  [VRM]  walker 0000950170-25-112245 — call create_instrument:convertible date=2025-08-29 principal=10000000.0 rate=0.05 conv_price=35.0 convertible_date=2025-08-29 maturity=2030-08-29 known_owners=['Annox Capital', 'Robert J. Mylod Jr.'] principal_remaining=10000000.0
+00:45:20  [VRM]    [2025-08-29] 8-K 0000950170-25-112245 — 1 mutations
+00:45:20  [VRM]  walker 0001193125-25-237183 — dedup block: 1 candidates within ±180d
+00:45:20  [VRM]  walker 0001193125-25-237183 — form=8-K (21 tools)
+00:45:24  [VRM]  walker 0001193125-25-237183 — finish='REASON_TOOL_CALLS' calls=1
+00:45:24  [VRM]  walker 0001193125-25-237183 — must_record net fired (items=2.03); re-asking
+00:45:28  [VRM]  walker 0001193125-25-237183 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:45:28  [VRM]  walker 0001193125-25-237183 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:45:28  [VRM]  walker 0001193125-25-237183 — note_no_event reasons: ['Credit agreement amendment increasing the maximum facility amount from $25,000,000 to $35,000,000 with no conversion features or equity components.']
+00:45:28  [VRM]    [2025-10-10] 8-K 0001193125-25-237183 — 0 mutations
+00:45:28  [VRM]  walker 0001193125-25-274273 — dedup block: 4 candidates (all active, periodic form)
+00:45:28  [VRM]  walker 0001193125-25-274273 — form=10-Q (17 tools)
+00:45:58  [VRM]  walker 0001193125-25-274273 — finish='REASON_TOOL_CALLS' calls=1
+00:45:58  [VRM]  walker 0001193125-25-274273 — call amend_instrument:convertible C-1130 date=2025-09-30 maturity=2030-10-01
+00:45:58  [VRM]    [2025-11-10] 10-Q 0001193125-25-274273 — 1 mutations
+00:45:58  [VRM]    anchor 0001193125-25-274273 as_of=2025-09-30
+00:46:17  [VRM]  overhang-combined 0001193125-25-274273 — w=1 c=1 p=0 s=0 a=0 e=0
+00:46:17  [VRM]    anchor 0001193125-25-274273 — 2 diffs (missing=0 field=0 count=0 extra=2)
+00:46:17  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:46:17  [VRM]      diff extra_in_ledger ATM-2680 [atm] ledger=terms.capacity_usd=50000000.0, terms.agreement_date=2023-12-01, out.drawn_usd=2500000.0, out.sold_to_date=43483.0
+00:46:17  [VRM]      anchor proposal close_instrument SH-2612 date=2025-09-30 reason=expired
+00:46:17  [VRM]    anchor corrections applied=1 rejected=0
+00:46:17  [VRM]  walker 0001193125-25-274256 — dedup block: 1 candidates within ±180d
+00:46:17  [VRM]    0001193125-25-274256 — pruned 1 create tool(s): create_preferred
+00:46:17  [VRM]  walker 0001193125-25-274256 — form=8-K (20 tools)
+00:46:25  [VRM]  walker 0001193125-25-274256 — finish='REASON_TOOL_CALLS' calls=1
+00:46:25  [VRM]  walker 0001193125-25-274256 — note_no_event reasons: ['earnings release and quarterly results presentation with no dilutive events']
+00:46:25  [VRM]    [2025-11-10] 8-K 0001193125-25-274256 — 0 mutations
+00:46:25  [VRM]  walker 0001213900-25-115505 — dedup block: 1 candidates within ±180d
+00:46:25  [VRM]    0001213900-25-115505 — pruned 1 create tool(s): create_preferred
+00:46:25  [VRM]  walker 0001213900-25-115505 — form=8-K (20 tools)
+00:46:30  [VRM]  walker 0001213900-25-115505 — finish='REASON_TOOL_CALLS' calls=1
+00:46:30  [VRM]  walker 0001213900-25-115505 — must_record net fired (items=2.03); re-asking
+00:46:34  [VRM]  walker 0001213900-25-115505 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:46:34  [VRM]  walker 0001213900-25-115505 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:46:34  [VRM]  walker 0001213900-25-115505 — note_no_event reasons: ['The Senior Secured Delayed Draw Notes are non-convertible straight debt and thus not dilutive.']
+00:46:34  [VRM]    [2025-11-26] 8-K 0001213900-25-115505 — 0 mutations
+00:46:34  [VRM]  walker 0001193125-26-017221 — dedup block: 1 candidates within ±180d
+00:46:34  [VRM]  walker 0001193125-26-017221 — form=8-K (21 tools)
+00:46:47  [VRM]  walker 0001193125-26-017221 — finish='REASON_TOOL_CALLS' calls=1
+00:46:47  [VRM]  walker 0001193125-26-017221 — note_no_event reasons: ['The filing discloses the issuance of Series A and Series B preferred units by Vroom Automotive LLC, a subsidiary of Vroom, Inc. These preferred units are convertible only into common units of the subsidiary (Vroom Automotive LLC) and not into the common stock of the listed parent company, Vroom, Inc. Therefore, there are no new dilutive instruments or events for the listed issuer.']
+00:46:47  [VRM]    [2026-01-21] 8-K 0001193125-26-017221 — 0 mutations
+00:46:47  [VRM]  walker 0001193125-26-040495 — dedup block: 1 candidates within ±180d
+00:46:47  [VRM]    0001193125-26-040495 — pruned 1 create tool(s): create_preferred
+00:46:47  [VRM]  walker 0001193125-26-040495 — form=8-K (20 tools)
+00:46:51  [VRM]  walker 0001193125-26-040495 — finish='REASON_TOOL_CALLS' calls=1
+00:46:51  [VRM]  walker 0001193125-26-040495 — must_record net fired (items=2.03); re-asking
+00:46:55  [VRM]  walker 0001193125-26-040495 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:46:55  [VRM]  walker 0001193125-26-040495 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+00:46:55  [VRM]  walker 0001193125-26-040495 — note_no_event reasons: ['The filing discloses a non-dilutive asset-backed securitization (ABS) transaction involving the issuance of asset-backed notes by a subsidiary trust, with no conversion features or equity components.']
+00:46:55  [VRM]    [2026-02-06] 8-K 0001193125-26-040495 — 0 mutations
+00:46:55  [VRM]  walker 0001193125-26-126253 — dedup block: 3 candidates (all active, periodic form)
+00:46:55  [VRM]  walker 0001193125-26-126253 — form=10-K (17 tools)
+00:47:41  [VRM]  walker 0001193125-26-126253 — finish='REASON_TOOL_CALLS' calls=1
+00:47:41  [VRM]  walker 0001193125-26-126253 — note_no_event reasons: ["The filing contains no new dilutive instruments or events for the issuer's ledger. The 2030 Notes (C-1130) and Warrants (W-5391) are already recorded, and the newly disclosed preferred units are at the subsidiary level (Vroom Automotive, LLC) and convertible only into subsidiary units."]
+00:47:41  [VRM]    [2026-03-26] 10-K 0001193125-26-126253 — 0 mutations
+00:47:41  [VRM]    anchor 0001193125-26-126253 as_of=2025-12-31
+00:48:04  [VRM]  overhang-combined 0001193125-26-126253 — w=1 c=1 p=0 s=0 a=0 e=0
+00:48:05  [VRM]    anchor 0001193125-26-126253 — 2 diffs (missing=0 field=0 count=0 extra=2)
+00:48:05  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:48:05  [VRM]      diff extra_in_ledger ATM-2680 [atm] ledger=terms.capacity_usd=50000000.0, terms.agreement_date=2023-12-01, out.drawn_usd=2500000.0, out.sold_to_date=43483.0
+00:48:05  [VRM]      anchor proposal close_instrument SH-2612 date=2025-12-31 reason=expired
+00:48:05  [VRM]    anchor corrections applied=0 rejected=1
+00:48:05  [VRM]  walker 0001193125-26-126236 — form=8-K (21 tools)
+00:48:14  [VRM]  walker 0001193125-26-126236 — finish='REASON_TOOL_CALLS' calls=1
+00:48:14  [VRM]  walker 0001193125-26-126236 — note_no_event reasons: ['earnings release and presentation with no dilutive events']
+00:48:14  [VRM]    [2026-03-26] 8-K 0001193125-26-126236 — 0 mutations
+00:48:14  [VRM]  walker 0001193125-26-187619 — form=DEF 14A (3 tools)
+00:48:45  [VRM]  walker 0001193125-26-187619 — finish='REASON_TOOL_CALLS' calls=1
+00:48:45  [VRM]  walker 0001193125-26-187619 — call amend_instrument:warrant W-5391 date=2026-04-28 known_owners=['Robert J. Mylod, Jr.', 'Annox Capit...
+00:48:45  [VRM]    [2026-04-28] DEF 14A 0001193125-26-187619 — 1 mutations
+00:48:45  [VRM]  walker 0001193125-26-190151 — form=DEFA14A (3 tools)
+00:48:47  [VRM]  walker 0001193125-26-190151 — finish='REASON_TOOL_CALLS' calls=1
+00:48:47  [VRM]  walker 0001193125-26-190151 — note_no_event reasons: ['definitive additional proxy materials cover page only']
+00:48:47  [VRM]    [2026-04-29] DEFA14A 0001193125-26-190151 — 0 mutations
+00:48:47  [VRM]  walker 0001193125-26-224748 — dedup block: 3 candidates (all active, periodic form)
+00:48:47  [VRM]  walker 0001193125-26-224748 — form=10-Q (17 tools)
+00:49:17  [VRM]  walker 0001193125-26-224748 — finish='REASON_TOOL_CALLS' calls=2
+00:49:17  [VRM]  walker 0001193125-26-224748 — call close_instrument C-1130 date=2026-05-14 reason=superseded replaced_by=c-2026-exchange-notes
+00:49:17  [VRM]  walker 0001193125-26-224748 — call create_instrument:convertible c-2026-exchange-notes date=2026-05-14 principal=28500000.0 rate=0.05 maturity=2032-06-30 known_owners=['Annox Capital', 'Robert J. Mylod, J... principal_remaining=28500000.0
+00:49:17  [VRM]    [2026-05-15] 10-Q 0001193125-26-224748 — 2 mutations
+00:49:17  [VRM]      reject create_instrument:convertible c-2026-exchange-notes date=2026-05-14 principal=28500000.0 rate=0.05 maturity=2032-06-30 known_owners=['Annox Capital', 'Robert J. Mylod, J... principal_remaining=28500000.0 — periodic_create_missing_terms: create_instrument(convertible) from periodic form '10-Q' requires terms.conv_price AND terms.maturity. Got conv_price=None maturity='2032-06-30'. Periodic narrative summary tables rarely carry per-note terms — emit amend_instrument against an existing ledger row, or skip (the anchor specialist captures summary-only convertibles).
+00:49:17  [VRM]    close_instrument C-1130 superseded by nonexistent c-2026-exchange-notes — dropping the close; row stays active
+00:49:17  [VRM]    anchor 0001193125-26-224748 as_of=2026-03-31
+00:49:42  [VRM]  overhang-combined 0001193125-26-224748 — w=1 c=1 p=0 s=0 a=0 e=0
+00:49:42  [VRM]    anchor 0001193125-26-224748 — 2 diffs (missing=0 field=0 count=0 extra=2)
+00:49:42  [VRM]      diff extra_in_ledger SH-2612 [shelf] ledger=terms.capacity_usd=300000000.0, terms.form=S-3
+00:49:42  [VRM]      diff extra_in_ledger ATM-2680 [atm] ledger=terms.capacity_usd=50000000.0, terms.agreement_date=2023-12-01, out.drawn_usd=2500000.0, out.sold_to_date=43483.0
+00:49:42  [VRM]      anchor proposal close_instrument SH-2612 date=2026-03-31 reason=expired
+00:49:42  [VRM]    anchor corrections applied=0 rejected=1
+00:49:42  [VRM]  walker 0001213900-26-057696 — form=S-3 (16 tools)
+00:50:07  [VRM]  walker 0001213900-26-057696 — finish='REASON_TOOL_CALLS' calls=2
+00:50:07  [VRM]  walker 0001213900-26-057696 — call create_instrument:shelf date=2026-05-15 capacity_usd=6000000.0 form=S-3
+00:50:07  [VRM]  walker 0001213900-26-057696 — call create_instrument:atm date=2026-05-15 capacity_usd=6000000.0 agreement_date=2026-05-15
+00:50:07  [VRM]    [2026-05-15] S-3 0001213900-26-057696 — 2 mutations
+00:50:07  [VRM]    auto-supersede: ATM ATM-2680 → superseded by new ATM-2685 (new ATM registered on S-3 while prior active)
+00:50:07  [VRM]  walker 0001193125-26-224729 — dedup block: 2 candidates within ±180d
+00:50:07  [VRM]  walker 0001193125-26-224729 — form=8-K (21 tools)
+00:50:16  [VRM]  walker 0001193125-26-224729 — finish='REASON_TOOL_CALLS' calls=1
+00:50:16  [VRM]  walker 0001193125-26-224729 — note_no_event reasons: ['First quarter 2026 earnings release with no new dilutive instruments or events.']
+00:50:16  [VRM]    [2026-05-15] 8-K 0001193125-26-224729 — 0 mutations
+00:50:16  [VRM]  walker 0001193125-26-255682 — dedup block: 2 candidates within ±180d
+00:50:16  [VRM]    0001193125-26-255682 — pruned 1 create tool(s): create_preferred
+00:50:16  [VRM]  walker 0001193125-26-255682 — form=8-K (20 tools)
+00:50:21  [VRM]  walker 0001193125-26-255682 — finish='REASON_TOOL_CALLS' calls=1
+00:50:21  [VRM]  walker 0001193125-26-255682 — note_no_event reasons: ['amendments to warehouse credit facilities']
+00:50:21  [VRM]    [2026-06-03] 8-K 0001193125-26-255682 — 0 mutations
+00:50:21  [VRM]    [2026-06-12] 8-K 0001193125-26-269693 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:50:21  [VRM]    walk done — seed=C_empty_extract walked=41 skipped=93 (resale=2 empty8k=13) applied=37 rejected=4 created=9 drawdowns=2 anchor_diffs=24 errors=0

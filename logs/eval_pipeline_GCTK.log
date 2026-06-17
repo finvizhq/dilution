@@ -1,0 +1,1131 @@
+23:54:16  [GCTK]  langfuse: LANGFUSE_PUBLIC_KEY/SECRET_KEY not set — tracing disabled
+23:54:16  [GCTK]  Dilution tracker — ticker=GCTK since=2020-06-16 llm_provider=gemini llm_model=gemini-3.5-flash llm_model_periodic=gemini-3.5-flash
+23:54:16  [GCTK]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+23:54:16  [GCTK]  resolved GCTK → CIK 1506983 GCTK (Glucotrack, Inc.)
+23:54:16  [GCTK]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+23:54:17  [GCTK]    166 relevant filings since 2020-06-16
+23:54:17  [GCTK]    unit already detected — is_fpi=0 ads_ratio=None
+23:54:17  [GCTK]    unit ctx — is_fpi=0 ads_ratio=None reporting_unit=common
+23:54:17  [GCTK]    splits — finviz=4 yfinance=4 merged=4
+23:54:17  [GCTK]    splits — 4 events persisted
+23:54:17  [GCTK]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+23:54:17  [GCTK]    fetch done — 0/0 filings, 0 docs, 0 errors
+23:54:17  [GCTK]  walker --force: dropping ledger for cik=1506983
+23:54:17  [GCTK]  walker: 165 events (filings=161 splits=4 cik=1506983); 0 filing(s) already walked
+23:54:18  [GCTK]  seed: extracting overhang from 10-Q 0001493152-20-015906 (2020-06-30)
+23:54:48  [GCTK]  overhang-combined 0001493152-20-015906 — w=5 c=0 p=0 s=0 a=0 e=0
+23:54:48  [GCTK]  seed: 0001493152-20-015906 extracted 5 rows (warrant=5)
+23:54:48  [GCTK]  seed:   row → warrant name='Series D-1 Warrants' issue_date=2019-06-14 maturity_or_expiry=2024-06-14 outstanding_count=801160.0 common_shares_issuable=801160.0 strike_or_conversion_price=1.8
+23:54:48  [GCTK]  seed:   row → warrant name='Series D-2 Warrants' issue_date=2019-06-14 maturity_or_expiry=2024-06-14 outstanding_count=801160.0 common_shares_issuable=801160.0 strike_or_conversion_price=3.6
+23:54:48  [GCTK]  seed:   row → warrant name='Series D-3 Warrants' issue_date=2019-06-14 maturity_or_expiry=2024-06-14 outstanding_count=801160.0 common_shares_issuable=801160.0 strike_or_conversion_price=5.4
+23:54:48  [GCTK]  seed:   row → warrant name='Placement Agent Warrants (2019)' issue_date=2019-06-14 maturity_or_expiry=2024-06-14 outstanding_count=2213881.0 common_shares_issuable=2213881.0
+23:54:48  [GCTK]  seed:   row → warrant name='Placement Agent Warrants (2020)' issue_date=2020-02-14 maturity_or_expiry=2025-02-14 outstanding_count=3750000.0 common_shares_issuable=3750000.0 strike_or_conversion_price=0.4
+23:54:48  [GCTK]    redisclosure: 0001493152-20-015906 create (type=warrant) collapsed onto W-5329
+23:54:48  [GCTK]    redisclosure: 0001493152-20-015906 create (type=warrant) collapsed onto W-5329
+23:54:48  [GCTK]  seed: case A — created 5 instruments (rejected 0)
+23:54:48  [GCTK]  seed case=A_periodic — 0001493152-20-015906
+23:54:48  [GCTK]    [2020-10-08] 8-K 0001493152-20-019164 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:54:48  [GCTK]  walker 0001493152-20-021122 — dedup block: 3 candidates (all active, periodic form)
+23:54:48  [GCTK]  walker 0001493152-20-021122 — form=10-Q (17 tools)
+23:55:04  [GCTK]  walker 0001493152-20-021122 — finish='REASON_TOOL_CALLS' calls=1
+23:55:04  [GCTK]  walker 0001493152-20-021122 — note_no_event reasons: ['The filing contains no new dilutive instruments or events; the disclosed private placements and warrants from June 2019 and February 2020 are already recorded in the ledger.']
+23:55:04  [GCTK]    [2020-11-12] 10-Q 0001493152-20-021122 — 0 mutations
+23:55:04  [GCTK]    anchor 0001493152-20-021122 as_of=2020-09-30
+23:55:29  [GCTK]  overhang-combined 0001493152-20-021122 — w=5 c=0 p=0 s=0 a=0 e=0
+23:55:29  [GCTK]    anchor 0001493152-20-021122 — 4 diffs (missing=3 field=0 count=0 extra=1)
+23:55:29  [GCTK]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=3.6, outstanding_count=801160.0, issue_date=2019-06-14, maturity_or_expiry=2024-06-14
+23:55:29  [GCTK]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=5.4, outstanding_count=801160.0, issue_date=2019-06-14, maturity_or_expiry=2024-06-14
+23:55:29  [GCTK]      diff missing_in_ledger (new) [warrant] filing=outstanding_count=2213881.0, issue_date=2019, maturity_or_expiry=2024
+23:55:29  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, out.count=2213881.0, out.initial_count=2213881.0
+23:55:29  [GCTK]      anchor proposal create_instrument:warrant date=2019-06-14 strike=3.6 expiration=2024-06-14 count=801160.0 initial_count=801160.0
+23:55:29  [GCTK]      anchor proposal create_instrument:warrant date=2019-06-14 strike=5.4 expiration=2024-06-14 count=801160.0 initial_count=801160.0
+23:55:29  [GCTK]      anchor proposal create_instrument:warrant date=2020-11-12 strike=0.0 is_pre_funded=True count=2213881.0 initial_count=2213881.0
+23:55:29  [GCTK]    redisclosure: 0001493152-20-021122 create (type=warrant) collapsed onto W-5329
+23:55:29  [GCTK]    redisclosure: 0001493152-20-021122 create (type=warrant) collapsed onto W-5329
+23:55:29  [GCTK]    anchor corrections applied=2 rejected=1
+23:55:29  [GCTK]  walker 0001493152-20-021716 — form=8-K (21 tools)
+23:55:33  [GCTK]  walker 0001493152-20-021716 — finish='REASON_TOOL_CALLS' calls=1
+23:55:33  [GCTK]  walker 0001493152-20-021716 — note_no_event reasons: ['employment agreement only']
+23:55:33  [GCTK]    [2020-11-16] 8-K 0001493152-20-021716 — 0 mutations
+23:55:33  [GCTK]    [2020-12-22] 8-K 0001493152-20-024129 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:55:33  [GCTK]    [2021-02-08] 8-K 0001493152-21-002928 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:55:33  [GCTK]  walker 0001493152-21-008654 — dedup block: 3 candidates (all active, periodic form)
+23:55:33  [GCTK]  walker 0001493152-21-008654 — form=10-K (17 tools)
+23:55:48  [GCTK]  walker 0001493152-21-008654 — finish='REASON_TOOL_CALLS' calls=1
+23:55:48  [GCTK]  walker 0001493152-21-008654 — note_no_event reasons: ['The provided filing text contains no new dilutive instruments or events, and lacks the financial statement notes or tables to reconcile existing warrants.']
+23:55:48  [GCTK]    [2021-04-13] 10-K 0001493152-21-008654 — 0 mutations
+23:55:48  [GCTK]    anchor 0001493152-21-008654 as_of=2020-12-31
+23:55:58  [GCTK]  overhang-combined 0001493152-21-008654 — w=0 c=0 p=0 s=0 a=0 e=0
+23:55:58  [GCTK]  walker 0001493152-21-010161 — dedup block: 3 candidates (all active, periodic form)
+23:55:58  [GCTK]  walker 0001493152-21-010161 — form=10-K/A (14 tools)
+23:56:11  [GCTK]  walker 0001493152-21-010161 — finish='REASON_TOOL_CALLS' calls=1
+23:56:11  [GCTK]  walker 0001493152-21-010161 — call amend_instrument:warrant W-5331 date=2020-12-31 known_owners=['Andrew Garrett, Inc.']
+23:56:11  [GCTK]    [2021-04-30] 10-K/A 0001493152-21-010161 — 1 mutations
+23:56:11  [GCTK]    anchor 0001493152-21-010161 as_of=2020-12-31
+23:56:21  [GCTK]  overhang-combined 0001493152-21-010161 — w=0 c=0 p=0 s=0 a=0 e=0
+23:56:21  [GCTK]  walker 0001493152-21-012443 — dedup block: 3 candidates (all active, periodic form)
+23:56:21  [GCTK]  walker 0001493152-21-012443 — form=10-Q (17 tools)
+23:56:55  [GCTK]  walker 0001493152-21-012443 — finish='REASON_TOOL_CALLS' calls=1
+23:56:55  [GCTK]  walker 0001493152-21-012443 — note_no_event reasons: ['Periodic report on Form 10-Q for the period ended March 31, 2021, containing no new dilutive instruments, transactions, or events during the period or as subsequent events. All discussed transactions occurred in 2020 or earlier.']
+23:56:55  [GCTK]    [2021-05-21] 10-Q 0001493152-21-012443 — 0 mutations
+23:56:55  [GCTK]    anchor 0001493152-21-012443 as_of=2021-03-31
+23:57:14  [GCTK]  overhang-combined 0001493152-21-012443 — w=1 c=0 p=0 s=0 a=0 e=0
+23:57:14  [GCTK]    anchor 0001493152-21-012443 — 2 diffs (missing=0 field=0 count=0 extra=2)
+23:57:14  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=1.8, terms.expiration=2024-06-14, out.count=801160.0, out.initial_count=801160.0
+23:57:14  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, out.count=2213881.0, out.initial_count=2213881.0
+23:57:14  [GCTK]    [2021-06-29] 8-K 0001493152-21-015482 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:57:14  [GCTK]    [2021-08-13] split 1-for-13 reverse (finviz+yfinance) units=common
+23:57:14  [GCTK]  walker 0001493152-21-020191 — dedup block: 3 candidates (all active, periodic form)
+23:57:14  [GCTK]  walker 0001493152-21-020191 — form=10-Q (17 tools)
+23:57:36  [GCTK]  walker 0001493152-21-020191 — finish='REASON_TOOL_CALLS' calls=1
+23:57:36  [GCTK]  walker 0001493152-21-020191 — note_no_event reasons: ['No new dilutive instruments or financing events were disclosed in the filing for the period ended June 30, 2021.']
+23:57:36  [GCTK]    [2021-08-16] 10-Q 0001493152-21-020191 — 0 mutations
+23:57:36  [GCTK]    anchor 0001493152-21-020191 as_of=2021-06-30
+23:57:50  [GCTK]  overhang-combined 0001493152-21-020191 — w=1 c=0 p=0 s=0 a=0 e=0
+23:57:50  [GCTK]    anchor 0001493152-21-020191 — 4 diffs (missing=1 field=0 count=0 extra=3)
+23:57:50  [GCTK]      diff missing_in_ledger (new) [warrant] filing=outstanding_count=288462.0, issue_date=2020
+23:57:50  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+23:57:50  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+23:57:50  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+23:57:50  [GCTK]      anchor proposal create_instrument:warrant date=2021-08-16 strike=0.0 is_pre_funded=True count=288462.0 initial_count=288462.0
+23:57:50  [GCTK]    anchor corrections applied=0 rejected=1
+23:57:50  [GCTK]  walker 0001493152-21-023153 — form=S-3 (16 tools)
+23:58:03  [GCTK]  walker 0001493152-21-023153 — finish='REASON_TOOL_CALLS' calls=1
+23:58:03  [GCTK]  walker 0001493152-21-023153 — call create_instrument:shelf date=2021-09-20 capacity_usd=100000000.0 form=S-3
+23:58:03  [GCTK]    [2021-09-20] S-3 0001493152-21-023153 — 1 mutations
+23:58:03  [GCTK]  walker 0001493152-21-026238 — dedup block: 1 candidates within ±180d
+23:58:03  [GCTK]  walker 0001493152-21-026238 — form=8-K (21 tools)
+23:58:06  [GCTK]  walker 0001493152-21-026238 — finish='REASON_TOOL_CALLS' calls=1
+23:58:06  [GCTK]  walker 0001493152-21-026238 — note_no_event reasons: ['Employment agreement with Paul V. Good only, no dilutive financing events disclosed.']
+23:58:06  [GCTK]    [2021-10-25] 8-K 0001493152-21-026238 — 0 mutations
+23:58:06  [GCTK]  walker 0001493152-21-028480 — dedup block: 4 candidates (all active, periodic form)
+23:58:06  [GCTK]  walker 0001493152-21-028480 — form=10-Q (17 tools)
+23:58:21  [GCTK]  walker 0001493152-21-028480 — finish='REASON_TOOL_CALLS' calls=1
+23:58:21  [GCTK]  walker 0001493152-21-028480 — note_no_event reasons: ["The filing discloses a 1-for-13 reverse stock split on August 13, 2021, which is already retroactively reflected in the ledger's split-adjusted figures. It also discloses compensatory option grants to an officer, which are not dilutive financing warrants, and shares issued to board members as compensation. No other new dilutive instruments or events are disclosed."]
+23:58:21  [GCTK]    [2021-11-15] 10-Q 0001493152-21-028480 — 0 mutations
+23:58:21  [GCTK]    anchor 0001493152-21-028480 as_of=2021-09-30
+23:58:39  [GCTK]  overhang-combined 0001493152-21-028480 — w=1 c=0 p=0 s=1 a=0 e=0
+23:58:39  [GCTK]    anchor 0001493152-21-028480 — 4 diffs (missing=1 field=0 count=0 extra=3)
+23:58:39  [GCTK]      diff missing_in_ledger (new) [warrant] filing=outstanding_count=288462.0, issue_date=2020
+23:58:39  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+23:58:39  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+23:58:39  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+23:58:39  [GCTK]      anchor proposal create_instrument:warrant date=2021-11-15 strike=0.0 is_pre_funded=True count=288462.0 initial_count=288462.0
+23:58:39  [GCTK]    anchor corrections applied=0 rejected=1
+23:58:39  [GCTK]    0001493152-22-007897 — pruned 2 create tool(s): create_atm,create_convertible
+23:58:39  [GCTK]  walker 0001493152-22-007897 — form=8-K (19 tools)
+23:58:42  [GCTK]  walker 0001493152-22-007897 — finish='REASON_TOOL_CALLS' calls=1
+23:58:42  [GCTK]  walker 0001493152-22-007897 — must_record net fired (items=5.03); re-asking
+23:58:44  [GCTK]  walker 0001493152-22-007897 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:58:44  [GCTK]  walker 0001493152-22-007897 — must_record (items=5.03): recorded nothing after second look — possible missed instrument
+23:58:44  [GCTK]  walker 0001493152-22-007897 — note_no_event reasons: ['The filing discloses only a name change amendment to the Certificate of Incorporation and contains no dilutive instruments or events.']
+23:58:44  [GCTK]    [2022-03-28] 8-K 0001493152-22-007897 — 0 mutations
+23:58:44  [GCTK]  walker 0001493152-22-008417 — dedup block: 4 candidates (all active, periodic form)
+23:58:44  [GCTK]  walker 0001493152-22-008417 — form=10-K (17 tools)
+23:58:49  [GCTK]  walker 0001493152-22-008417 — finish='REASON_TOOL_CALLS' calls=1
+23:58:49  [GCTK]  walker 0001493152-22-008417 — note_no_event reasons: ['The annual report contains no disclosures of new dilutive instruments or events in the provided text.']
+23:58:49  [GCTK]    [2022-03-31] 10-K 0001493152-22-008417 — 0 mutations
+23:58:49  [GCTK]    anchor 0001493152-22-008417 as_of=2021-12-31
+23:58:54  [GCTK]  overhang-combined 0001493152-22-008417 — w=0 c=0 p=0 s=0 a=0 e=0
+23:58:54  [GCTK]  walker 0001493152-22-011572 — dedup block: 4 candidates (all active, periodic form)
+23:58:54  [GCTK]  walker 0001493152-22-011572 — form=10-K/A (14 tools)
+23:59:08  [GCTK]  walker 0001493152-22-011572 — finish='REASON_TOOL_CALLS' calls=1
+23:59:08  [GCTK]  walker 0001493152-22-011572 — note_no_event reasons: ['10-K/A filing contains executive compensation, beneficial ownership, and related party disclosures with no new dilutive instruments or events.']
+23:59:08  [GCTK]    [2022-04-29] 10-K/A 0001493152-22-011572 — 0 mutations
+23:59:08  [GCTK]    anchor 0001493152-22-011572 as_of=2021-12-31
+23:59:24  [GCTK]  overhang-combined 0001493152-22-011572 — w=0 c=0 p=0 s=0 a=0 e=0
+23:59:24  [GCTK]  walker 0001493152-22-013811 — dedup block: 4 candidates (all active, periodic form)
+23:59:24  [GCTK]  walker 0001493152-22-013811 — form=10-Q (17 tools)
+23:59:33  [GCTK]  walker 0001493152-22-013811 — finish='REASON_TOOL_CALLS' calls=1
+23:59:33  [GCTK]  walker 0001493152-22-013811 — note_no_event reasons: ['periodic report with no new dilutive financing events or transactions; option grants to officers are compensatory and excluded']
+23:59:33  [GCTK]    [2022-05-16] 10-Q 0001493152-22-013811 — 0 mutations
+23:59:33  [GCTK]    anchor 0001493152-22-013811 as_of=2022-03-31
+23:59:46  [GCTK]  overhang-combined 0001493152-22-013811 — w=0 c=0 p=0 s=2 a=0 e=0
+23:59:46  [GCTK]    anchor 0001493152-22-013811 — 4 diffs (missing=1 field=0 count=0 extra=3)
+23:59:46  [GCTK]      diff missing_in_ledger (new) [shelf] filing=-
+23:59:46  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+23:59:46  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+23:59:46  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+23:59:46  [GCTK]      anchor proposal create_instrument:shelf date=2022-05-16 capacity_usd=0.0
+23:59:46  [GCTK]    anchor corrections applied=0 rejected=1
+23:59:46  [GCTK]  walker 0001493152-22-022643 — dedup block: 4 candidates (all active, periodic form)
+23:59:46  [GCTK]  walker 0001493152-22-022643 — form=10-Q (17 tools)
+23:59:53  [GCTK]  walker 0001493152-22-022643 — finish='REASON_TOOL_CALLS' calls=1
+23:59:53  [GCTK]  walker 0001493152-22-022643 — note_no_event reasons: ['No dilutive events or new instruments disclosed in the 10-Q; equity changes are limited to stock-based compensation and director restricted shares.']
+23:59:53  [GCTK]    [2022-08-15] 10-Q 0001493152-22-022643 — 0 mutations
+23:59:53  [GCTK]    anchor 0001493152-22-022643 as_of=2022-06-30
+00:00:06  [GCTK]  overhang-combined 0001493152-22-022643 — w=0 c=0 p=0 s=1 a=0 e=0
+00:00:06  [GCTK]    anchor 0001493152-22-022643 — 3 diffs (missing=0 field=0 count=0 extra=3)
+00:00:06  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+00:00:06  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:00:06  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:00:06  [GCTK]  walker 0001493152-22-031787 — dedup block: 4 candidates (all active, periodic form)
+00:00:06  [GCTK]  walker 0001493152-22-031787 — form=10-Q (17 tools)
+00:00:15  [GCTK]  walker 0001493152-22-031787 — finish='REASON_TOOL_CALLS' calls=1
+00:00:15  [GCTK]  walker 0001493152-22-031787 — note_no_event reasons: ['The 10-Q filing discloses no new dilutive financing instruments, warrant exercises, or shelf drawdowns during the period, with share activity limited to compensatory director stock grants.']
+00:00:15  [GCTK]    [2022-11-14] 10-Q 0001493152-22-031787 — 0 mutations
+00:00:15  [GCTK]    anchor 0001493152-22-031787 as_of=2022-09-30
+00:00:27  [GCTK]  overhang-combined 0001493152-22-031787 — w=0 c=0 p=0 s=1 a=0 e=0
+00:00:27  [GCTK]    anchor 0001493152-22-031787 — 3 diffs (missing=0 field=0 count=0 extra=3)
+00:00:27  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+00:00:27  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:00:27  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:00:27  [GCTK]    [2022-11-25] 8-K 0001493152-22-033750 — skipped (no dilutive item + no substantive exhibit (items=3.01,9.01))
+00:00:27  [GCTK]    [2023-01-10] 8-K 0001493152-23-001085 — skipped (no dilutive item + no substantive exhibit (items=3.01,9.01))
+00:00:27  [GCTK]    [2023-02-13] 8-K 0001493152-23-004521 — skipped (no dilutive item + no substantive exhibit (items=3.01,9.01))
+00:00:27  [GCTK]  walker 0001493152-23-006604 — form=DEF 14A (3 tools)
+00:00:41  [GCTK]  walker 0001493152-23-006604 — finish='REASON_TOOL_CALLS' calls=1
+00:00:41  [GCTK]  walker 0001493152-23-006604 — note_no_event reasons: ['annual proxy statement covering routine proposals and beneficial ownership disclosures with no new dilutive instruments']
+00:00:41  [GCTK]    [2023-03-02] DEF 14A 0001493152-23-006604 — 0 mutations
+00:00:41  [GCTK]  walker 0001493152-23-010356 — dedup block: 4 candidates (all active, periodic form)
+00:00:41  [GCTK]  walker 0001493152-23-010356 — form=10-K (17 tools)
+00:00:47  [GCTK]  walker 0001493152-23-010356 — finish='REASON_TOOL_CALLS' calls=1
+00:00:47  [GCTK]  walker 0001493152-23-010356 — note_no_event reasons: ['The 10-K filing contains no disclosures of new dilutive instruments, amendments, or transactions.']
+00:00:47  [GCTK]    [2023-03-31] 10-K 0001493152-23-010356 — 0 mutations
+00:00:47  [GCTK]    anchor 0001493152-23-010356 as_of=2022-12-31
+00:00:56  [GCTK]  overhang-combined 0001493152-23-010356 — w=0 c=0 p=0 s=1 a=0 e=0
+00:00:56  [GCTK]    anchor 0001493152-23-010356 — 3 diffs (missing=0 field=0 count=0 extra=3)
+00:00:56  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+00:00:56  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:00:56  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:00:56  [GCTK]    [2023-04-06] 8-K 0001493152-23-011261 — skipped (no dilutive item + no substantive exhibit (items=5.07,9.01))
+00:00:56  [GCTK]  walker 0001493152-23-012050 — form=424B5 (13 tools)
+00:01:02  [GCTK]  walker 0001493152-23-012050 — finish='REASON_TOOL_CALLS' calls=1
+00:01:02  [GCTK]  walker 0001493152-23-012050 — note_no_event reasons: ['Preliminary unpriced prospectus supplement with bracketed placeholders ([●]) for share counts, warrant counts, and pricing terms.']
+00:01:02  [GCTK]    [2023-04-13] 424B5 0001493152-23-012050 — 0 mutations
+00:01:02  [GCTK]  walker 0001493152-23-012421 — form=424B5 (13 tools)
+00:01:24  [GCTK]  walker 0001493152-23-012421 — finish='REASON_TOOL_CALLS' calls=2
+00:01:24  [GCTK]  walker 0001493152-23-012421 — retrying 1 call(s) (kinds=['drawdown_missing_price'])
+00:01:40  [GCTK]  walker 0001493152-23-012421 — retry finish='REASON_TOOL_CALLS' calls=2
+00:01:40  [GCTK]  walker 0001493152-23-012421 — call create_instrument:warrant date=2023-04-17 strike=0.001 exercisable_date=2023-04-17 is_pre_funded=True count=1976470.0 initial_count=1976470.0
+00:01:40  [GCTK]  walker 0001493152-23-012421 — call record_event SH-2609 date=2023-04-17 drawdown_amount_usd=7312001.920000001 drawdown_shares=5376472.0 avg_price=1.36
+00:01:40  [GCTK]  walker 0001493152-23-012421 — call record_event SH-2609 date=2023-04-17 drawdown_amount_usd=2686022.73 drawdown_shares=1976470.0 avg_price=1.359
+00:01:40  [GCTK]    [2023-04-17] 424B5 0001493152-23-012421 — 3 mutations
+00:01:40  [GCTK]  walker 0001493152-23-012431 — dedup block: 1 candidates within ±180d
+00:01:40  [GCTK]  walker 0001493152-23-012431 — form=8-K (21 tools)
+00:01:57  [GCTK]  walker 0001493152-23-012431 — finish='REASON_TOOL_CALLS' calls=1
+00:01:57  [GCTK]  walker 0001493152-23-012431 — call record_event W-5340 date=2023-04-17
+00:01:57  [GCTK]    [2023-04-17] 8-K 0001493152-23-012431 — 1 mutations
+00:01:57  [GCTK]  walker 0001493152-23-016706 — dedup block: 5 candidates (all active, periodic form)
+00:01:57  [GCTK]  walker 0001493152-23-016706 — form=10-Q (17 tools)
+00:02:14  [GCTK]  walker 0001493152-23-016706 — finish='REASON_TOOL_CALLS' calls=1
+00:02:14  [GCTK]  walker 0001493152-23-016706 — note_no_event reasons: ['The subsequent public offering on April 17, 2023 is already recorded on the ledger.']
+00:02:14  [GCTK]    [2023-05-12] 10-Q 0001493152-23-016706 — 0 mutations
+00:02:14  [GCTK]    anchor 0001493152-23-016706 as_of=2023-03-31
+00:02:29  [GCTK]  overhang-combined 0001493152-23-016706 — w=0 c=0 p=0 s=1 a=0 e=0
+00:02:29  [GCTK]    anchor 0001493152-23-016706 — 4 diffs (missing=0 field=0 count=0 extra=4)
+00:02:29  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+00:02:29  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:02:29  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:02:29  [GCTK]      diff extra_in_ledger W-5340 [warrant] ledger=terms.strike=0.001, terms.exercisable_date=2023-04-17, terms.is_pre_funded=True, terms.issue_date=2023-04-17, out.count=1976470.0, out.initial_count=1976470.0
+00:02:29  [GCTK]    [2023-05-19] 8-K 0001493152-23-018381 — skipped (no dilutive item + no substantive exhibit (items=3.01,9.01))
+00:02:29  [GCTK]    [2023-06-02] 8-K 0001493152-23-020020 — skipped (no dilutive item + no substantive exhibit (items=3.01,9.01))
+00:02:29  [GCTK]  walker 0001493152-23-028576 — dedup block: 5 candidates (all active, periodic form)
+00:02:29  [GCTK]  walker 0001493152-23-028576 — form=10-Q (17 tools)
+00:02:49  [GCTK]  walker 0001493152-23-028576 — finish='REASON_TOOL_CALLS' calls=1
+00:02:49  [GCTK]  walker 0001493152-23-028576 — note_no_event reasons: ['The April 2023 public offering is already recorded in the ledger, and the milestone-based restricted stock commitment to the CEO is compensatory.']
+00:02:49  [GCTK]    [2023-08-14] 10-Q 0001493152-23-028576 — 0 mutations
+00:02:49  [GCTK]    anchor 0001493152-23-028576 as_of=2023-06-30
+00:03:08  [GCTK]  overhang-combined 0001493152-23-028576 — w=2 c=0 p=0 s=0 a=0 e=0
+00:03:08  [GCTK]    anchor 0001493152-23-028576 — 5 diffs (missing=1 field=0 count=0 extra=4)
+00:03:08  [GCTK]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=1.36
+00:03:08  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=23.4, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+00:03:08  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:03:08  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:03:08  [GCTK]      diff extra_in_ledger SH-2609 [shelf] ledger=terms.capacity_usd=100000000.0, terms.form=S-3, out.drawn_usd=9998024.65, out.sold_to_date=7352942.0
+00:03:08  [GCTK]      anchor proposal create_instrument:warrant date=2023-08-14 strike=1.36 count=0.0 initial_count=0.0
+00:03:08  [GCTK]    anchor corrections applied=0 rejected=1
+00:03:08  [GCTK]    [2023-08-31] 8-K 0001493152-23-031074 — skipped (no dilutive item + no substantive exhibit (items=5.02,9.01))
+00:03:08  [GCTK]  walker 0001493152-23-037074 — dedup block: 1 candidates within ±180d
+00:03:08  [GCTK]  walker 0001493152-23-037074 — form=8-K (21 tools)
+00:03:13  [GCTK]  walker 0001493152-23-037074 — finish='REASON_TOOL_CALLS' calls=1
+00:03:13  [GCTK]  walker 0001493152-23-037074 — note_no_event reasons: ['CFO consulting agreement with cash compensation and no dilutive instruments']
+00:03:13  [GCTK]    [2023-10-12] 8-K 0001493152-23-037074 — 0 mutations
+00:03:13  [GCTK]  walker 0001493152-23-037106 — dedup block: 1 candidates within ±180d
+00:03:13  [GCTK]    0001493152-23-037106 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:03:13  [GCTK]  walker 0001493152-23-037106 — form=8-K (18 tools)
+00:03:16  [GCTK]  walker 0001493152-23-037106 — finish='REASON_TOOL_CALLS' calls=1
+00:03:16  [GCTK]  walker 0001493152-23-037106 — note_no_event reasons: ['The filing is a press release announcing preclinical testing results for an implantable continuous glucose monitor and contains no dilutive events or instruments.']
+00:03:16  [GCTK]    [2023-10-13] 8-K 0001493152-23-037106 — 0 mutations
+00:03:16  [GCTK]  walker 0001493152-23-040961 — dedup block: 5 candidates (all active, periodic form)
+00:03:16  [GCTK]  walker 0001493152-23-040961 — form=10-Q (17 tools)
+00:03:45  [GCTK]  walker 0001493152-23-040961 — finish='REASON_TOOL_CALLS' calls=2
+00:03:45  [GCTK]  walker 0001493152-23-040961 — call amend_instrument:warrant W-5329 date=2023-04-17 strike=1.36
+00:03:45  [GCTK]  walker 0001493152-23-040961 — call amend_instrument:warrant W-5331 date=2023-04-17 strike=1.36
+00:03:45  [GCTK]    [2023-11-14] 10-Q 0001493152-23-040961 — 2 mutations
+00:03:45  [GCTK]    anchor 0001493152-23-040961 as_of=2023-09-30
+00:04:07  [GCTK]  overhang-combined 0001493152-23-040961 — w=2 c=0 p=0 s=0 a=0 e=0
+00:04:07  [GCTK]    anchor 0001493152-23-040961 — 3 diffs (missing=0 field=0 count=0 extra=3)
+00:04:07  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:04:07  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=1.36, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:04:07  [GCTK]      diff extra_in_ledger SH-2609 [shelf] ledger=terms.capacity_usd=100000000.0, terms.form=S-3, out.drawn_usd=9998024.65, out.sold_to_date=7352942.0
+00:04:08  [GCTK]    0001493152-23-043264 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:04:08  [GCTK]  walker 0001493152-23-043264 — form=8-K (18 tools)
+00:04:20  [GCTK]  walker 0001493152-23-043264 — finish='REASON_TOOL_CALLS' calls=1
+00:04:20  [GCTK]  walker 0001493152-23-043264 — note_no_event reasons: ['Nasdaq minimum bid price compliance extension notification']
+00:04:20  [GCTK]    [2023-11-30] 8-K 0001493152-23-043264 — 0 mutations
+00:04:20  [GCTK]    0001493152-24-000071 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:04:20  [GCTK]  walker 0001493152-24-000071 — form=8-K (18 tools)
+00:04:22  [GCTK]  walker 0001493152-24-000071 — finish='REASON_TOOL_CALLS' calls=1
+00:04:22  [GCTK]  walker 0001493152-24-000071 — note_no_event reasons: ['Press release regarding preclinical study data for implantable continuous glucose monitor.']
+00:04:22  [GCTK]    [2024-01-02] 8-K 0001493152-24-000071 — 0 mutations
+00:04:22  [GCTK]    0001493152-24-002097 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:04:22  [GCTK]  walker 0001493152-24-002097 — form=8-K (18 tools)
+00:04:27  [GCTK]  walker 0001493152-24-002097 — finish='REASON_TOOL_CALLS' calls=1
+00:04:27  [GCTK]  walker 0001493152-24-002097 — note_no_event reasons: ['investor deck disclosure']
+00:04:27  [GCTK]    [2024-01-11] 8-K 0001493152-24-002097 — 0 mutations
+00:04:27  [GCTK]  walker 0001493152-24-007006 — form=8-K (21 tools)
+00:04:37  [GCTK]  walker 0001493152-24-007006 — finish='REASON_TOOL_CALLS' calls=1
+00:04:37  [GCTK]  walker 0001493152-24-007006 — must_record net fired (items=3.02); re-asking
+00:05:11  [GCTK]  walker 0001493152-24-007006 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:05:11  [GCTK]  walker 0001493152-24-007006 — must_record (items=3.02): recorded nothing after second look — possible missed instrument
+00:05:11  [GCTK]  walker 0001493152-24-007006 — note_no_event reasons: ['The filing describes an exchange of warrants for common stock but does not disclose the number of shares, the number of warrants, or the specific warrant tranches being exchanged in the provided text.']
+00:05:11  [GCTK]    [2024-02-16] 8-K 0001493152-24-007006 — 0 mutations
+00:05:11  [GCTK]  walker 0001493152-24-011011 — form=PRE 14A (3 tools)
+00:05:22  [GCTK]  walker 0001493152-24-011011 — finish='REASON_TOOL_CALLS' calls=1
+00:05:22  [GCTK]  walker 0001493152-24-011011 — note_no_event reasons: ['Preliminary proxy statement proposing a reverse stock split and adoption of the 2024 Equity Incentive Plan, with no actual dilutive events or transactions executed.']
+00:05:22  [GCTK]    [2024-03-22] PRE 14A 0001493152-24-011011 — 0 mutations
+00:05:22  [GCTK]  walker 0001493152-24-011765 — dedup block: 5 candidates (all active, periodic form)
+00:05:22  [GCTK]  walker 0001493152-24-011765 — form=10-K (17 tools)
+00:05:44  [GCTK]  walker 0001493152-24-011765 — finish='REASON_TOOL_CALLS' calls=1
+00:05:44  [GCTK]  walker 0001493152-24-011765 — note_no_event reasons: ['The filing discloses a warrant exchange agreement on February 13, 2024, to replace 4,381,953 warrants for 3,593,203 shares of common stock, but these warrants are not in the ledger and there is no tool to record the common stock issuance. Other disclosures are re-disclosures of the April 2023 offering or relate to non-dilutive employee stock options.']
+00:05:44  [GCTK]    [2024-03-28] 10-K 0001493152-24-011765 — 0 mutations
+00:05:44  [GCTK]    anchor 0001493152-24-011765 as_of=2023-12-31
+00:06:05  [GCTK]  overhang-combined 0001493152-24-011765 — w=2 c=0 p=0 s=1 a=0 e=0
+00:06:05  [GCTK]    anchor 0001493152-24-011765 — 4 diffs (missing=1 field=0 count=0 extra=3)
+00:06:05  [GCTK]      diff missing_in_ledger (new) [warrant] filing=outstanding_count=4381953.0
+00:06:05  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=1.36, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+00:06:05  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:06:05  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=1.36, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:06:05  [GCTK]      anchor proposal create_instrument:warrant date=2024-03-28 strike=0.0 is_pre_funded=True count=4381953.0 initial_count=4381953.0
+00:06:05  [GCTK]    anchor corrections applied=0 rejected=1
+00:06:05  [GCTK]  walker 0001493152-24-012324 — form=DEF 14A (3 tools)
+00:06:17  [GCTK]  walker 0001493152-24-012324 — finish='REASON_TOOL_CALLS' calls=1
+00:06:17  [GCTK]  walker 0001493152-24-012324 — note_no_event reasons: ['Proxy statement seeking stockholder approval for the 2024 Equity Incentive Plan and a potential future reverse stock split.']
+00:06:17  [GCTK]    [2024-04-01] DEF 14A 0001493152-24-012324 — 0 mutations
+00:06:17  [GCTK]    [2024-05-02] 8-K 0001493152-24-017582 — skipped (no dilutive item + no substantive exhibit (items=5.07,9.01))
+00:06:17  [GCTK]  walker 0001493152-24-019999 — dedup block: 5 candidates (all active, periodic form)
+00:06:17  [GCTK]  walker 0001493152-24-019999 — form=10-Q (17 tools)
+00:08:30  [GCTK]  walker 0001493152-24-019999 — finish='REASON_TOOL_CALLS' calls=2
+00:08:30  [GCTK]  walker 0001493152-24-019999 — call record_event W-5340 date=2024-01-03 shares=1976470.0 price=0.001
+00:08:30  [GCTK]  walker 0001493152-24-019999 — call close_instrument W-5340 date=2024-01-03 reason=exercised
+00:08:30  [GCTK]    [2024-05-15] 10-Q 0001493152-24-019999 — 2 mutations
+00:08:30  [GCTK]    anchor 0001493152-24-019999 as_of=2024-03-31
+00:08:48  [GCTK]  overhang-combined 0001493152-24-019999 — w=0 c=0 p=0 s=1 a=0 e=0
+00:08:48  [GCTK]    anchor 0001493152-24-019999 — 3 diffs (missing=0 field=0 count=0 extra=3)
+00:08:48  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=1.36, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=61628, out.initial_count=61628
+00:08:48  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=170299, out.initial_count=170299
+00:08:48  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=1.36, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}], out.count=288462, out.initial_count=288462
+00:08:48  [GCTK]    0001493152-24-020017 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:08:48  [GCTK]  walker 0001493152-24-020017 — form=8-K (18 tools)
+00:08:50  [GCTK]  walker 0001493152-24-020017 — finish='REASON_TOOL_CALLS' calls=1
+00:08:50  [GCTK]  walker 0001493152-24-020017 — call apply_split date=2024-05-20 post=1 pre=5 direction=reverse units=common
+00:08:50  [GCTK]    [2024-05-15] 8-K 0001493152-24-020017 — 1 mutations
+00:08:50  [GCTK]    0001493152-24-020136 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:08:50  [GCTK]  walker 0001493152-24-020136 — form=8-K (18 tools)
+00:08:56  [GCTK]  walker 0001493152-24-020136 — finish='REASON_TOOL_CALLS' calls=1
+00:08:56  [GCTK]  walker 0001493152-24-020136 — note_no_event reasons: ['press release regarding preclinical study results']
+00:08:56  [GCTK]    [2024-05-16] 8-K 0001493152-24-020136 — 0 mutations
+00:08:56  [GCTK]    [2024-05-20] split 1-for-5 reverse (finviz+yfinance) units=common
+00:08:56  [GCTK]    0001493152-24-020548 — pruned 2 create tool(s): create_atm,create_convertible
+00:08:56  [GCTK]  walker 0001493152-24-020548 — form=8-K (19 tools)
+00:09:00  [GCTK]  walker 0001493152-24-020548 — finish='REASON_TOOL_CALLS' calls=1
+00:09:00  [GCTK]  walker 0001493152-24-020548 — call apply_split date=2024-05-17 post=1 pre=5 direction=reverse units=common
+00:09:00  [GCTK]    [2024-05-20] 8-K 0001493152-24-020548 — 1 mutations
+00:09:00  [GCTK]    [2024-05-24] 8-K 0001493152-24-021371 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+00:09:00  [GCTK]    0001493152-24-023643 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:09:00  [GCTK]  walker 0001493152-24-023643 — form=8-K (18 tools)
+00:09:05  [GCTK]  walker 0001493152-24-023643 — finish='REASON_TOOL_CALLS' calls=1
+00:09:05  [GCTK]  walker 0001493152-24-023643 — note_no_event reasons: ['The filing is a press release announcing the successful completion of a preclinical study with no dilutive events or financing transactions.']
+00:09:05  [GCTK]    [2024-06-13] 8-K 0001493152-24-023643 — 0 mutations
+00:09:05  [GCTK]    0001493152-24-024427 — pruned 2 create tool(s): create_atm,create_convertible
+00:09:05  [GCTK]  walker 0001493152-24-024427 — form=8-K (19 tools)
+00:09:08  [GCTK]  walker 0001493152-24-024427 — finish='REASON_TOOL_CALLS' calls=1
+00:09:08  [GCTK]  walker 0001493152-24-024427 — must_record net fired (items=5.03; exhibits=EX-3.1); re-asking
+00:09:12  [GCTK]  walker 0001493152-24-024427 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:09:12  [GCTK]  walker 0001493152-24-024427 — must_record (items=5.03; exhibits=EX-3.1): recorded nothing after second look — possible missed instrument
+00:09:12  [GCTK]  walker 0001493152-24-024427 — note_no_event reasons: ['bylaw amendment and board appointment']
+00:09:12  [GCTK]    [2024-06-20] 8-K 0001493152-24-024427 — 0 mutations
+00:09:12  [GCTK]  walker 0001493152-24-025858 — form=8-K (21 tools)
+00:09:20  [GCTK]  walker 0001493152-24-025858 — finish='REASON_TOOL_CALLS' calls=1
+00:09:20  [GCTK]  walker 0001493152-24-025858 — must_record net fired (content:convertible); re-asking
+00:09:26  [GCTK]  walker 0001493152-24-025858 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:09:26  [GCTK]  walker 0001493152-24-025858 — content-expectation second look (content:convertible): no gap calls returned (re-disclosure or model declined)
+00:09:26  [GCTK]  walker 0001493152-24-025858 — call create_instrument:warrant date=2024-07-01 strike=4.95 exercisable_date=2024-07-01 expiration=2029-07-01 known_owners=['Hybrid Capital 12'] count=300000.0 initial_count=300000.0
+00:09:26  [GCTK]    [2024-07-01] 8-K 0001493152-24-025858 — 1 mutations
+00:09:26  [GCTK]  walker 0001493152-24-026478 — dedup block: 1 candidates within ±180d
+00:09:26  [GCTK]    0001493152-24-026478 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+00:09:26  [GCTK]  walker 0001493152-24-026478 — form=8-K (18 tools)
+00:09:31  [GCTK]  walker 0001493152-24-026478 — finish='REASON_TOOL_CALLS' calls=1
+00:09:31  [GCTK]  walker 0001493152-24-026478 — note_no_event reasons: ['shareholder update presentation']
+00:09:31  [GCTK]    [2024-07-08] 8-K 0001493152-24-026478 — 0 mutations
+00:09:31  [GCTK]  walker 0001493152-24-028635 — dedup block: 1 candidates within ±180d
+00:09:31  [GCTK]  walker 0001493152-24-028635 — form=8-K (21 tools)
+00:09:38  [GCTK]  walker 0001493152-24-028635 — finish='REASON_TOOL_CALLS' calls=1
+00:09:38  [GCTK]  walker 0001493152-24-028635 — call create_instrument:convertible date=2024-07-18 principal=350000.0 rate=0.08 conv_price=1.56 maturity=2025-07-18 principal_remaining=350000.0
+00:09:38  [GCTK]    [2024-07-22] 8-K 0001493152-24-028635 — 1 mutations
+00:09:38  [GCTK]  walker 0001493152-24-029775 — dedup block: 2 candidates within ±180d
+00:09:38  [GCTK]  walker 0001493152-24-029775 — form=8-K (21 tools)
+00:09:56  [GCTK]  walker 0001493152-24-029775 — finish='REASON_TOOL_CALLS' calls=4
+00:09:56  [GCTK]  walker 0001493152-24-029775 — call create_instrument:convertible date=2024-07-30 principal=4000000.0 rate=0.08 maturity=2025-07-30 known_owners=['John Ballantyne'] principal_remaining=4000000.0
+00:09:56  [GCTK]  walker 0001493152-24-029775 — call create_instrument:warrant date=2024-07-30 strike=1.875 exercisable_date=2025-07-30 expiration=2034-07-30 series_letter=First known_owners=['John Ballantyne'] count=2133334.0 initial_count=2133334.0
+00:09:56  [GCTK]  walker 0001493152-24-029775 — call create_instrument:warrant date=2024-07-30 strike=2.625 exercisable_date=2025-07-30 expiration=2034-07-30 series_letter=Second known_owners=['John Ballantyne'] count=1523810.0 initial_count=1523810.0
+00:09:56  [GCTK]  walker 0001493152-24-029775 — call create_instrument:warrant date=2024-07-30 strike=3.375 exercisable_date=2025-07-30 expiration=2034-07-30 series_letter=Third known_owners=['John Ballantyne'] count=1185186.0 initial_count=1185186.0
+00:09:56  [GCTK]    [2024-07-31] 8-K 0001493152-24-029775 — 4 mutations
+00:09:56  [GCTK]  walker 0001493152-24-030196 — dedup block: 5 candidates within ±180d
+00:09:56  [GCTK]    0001493152-24-030196 — pruned 2 create tool(s): create_atm,create_preferred
+00:09:56  [GCTK]  walker 0001493152-24-030196 — form=8-K (19 tools)
+00:09:58  [GCTK]  walker 0001493152-24-030196 — finish='REASON_TOOL_CALLS' calls=1
+00:09:58  [GCTK]  walker 0001493152-24-030196 — note_no_event reasons: ['poster presentation announcement']
+00:09:58  [GCTK]    [2024-08-05] 8-K 0001493152-24-030196 — 0 mutations
+00:09:58  [GCTK]  walker 0001493152-24-031009 — dedup block: 4 candidates within ±30d
+00:09:58  [GCTK]  walker 0001493152-24-031009 — form=PRE 14A (3 tools)
+00:10:17  [GCTK]  walker 0001493152-24-031009 — finish='REASON_TOOL_CALLS' calls=1
+00:10:17  [GCTK]  walker 0001493152-24-031009 — note_no_event reasons: ['Preliminary proxy statement seeking stockholder approval for previously disclosed convertible note and warrants.']
+00:10:17  [GCTK]    [2024-08-09] PRE 14A 0001493152-24-031009 — 0 mutations
+00:10:17  [GCTK]  walker 0001493152-24-031610 — dedup block: 9 candidates (all active, periodic form)
+00:10:17  [GCTK]  walker 0001493152-24-031610 — form=10-Q (17 tools)
+00:10:49  [GCTK]  walker 0001493152-24-031610 — finish='REASON_TOOL_CALLS' calls=1
+00:10:49  [GCTK]  walker 0001493152-24-031610 — call amend_instrument:convertible C-1097 date=2024-08-13 principal_remaining=360000.0
+00:10:49  [GCTK]    [2024-08-13] 10-Q 0001493152-24-031610 — 1 mutations
+00:10:49  [GCTK]    anchor 0001493152-24-031610 as_of=2024-06-30
+00:11:13  [GCTK]  overhang-combined 0001493152-24-031610 — w=1 c=0 p=0 s=0 a=0 e=0
+00:11:13  [GCTK]    anchor 0001493152-24-031610 — 9 diffs (missing=0 field=0 count=0 extra=9)
+00:11:13  [GCTK]      diff extra_in_ledger W-5329 [warrant] ledger=terms.strike=6.8, terms.expiration=2024-06-14, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}, {'date': '2024-05-20', 'ratio': 0.2, 'direction': 'reverse'}], out.count=12326, out.initial_count=12326
+00:11:13  [GCTK]      diff extra_in_ledger W-5330 [warrant] ledger=terms.strike=0.0, terms.expiration=2024-06-14, terms.is_pre_funded=True, terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}, {'date': '2024-05-20', 'ratio': 0.2, 'direction': 'reverse'}], out.count=34060, out.initial_count=34060
+00:11:13  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=6.8, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}, {'date': '2024-05-20', 'ratio': 0.2, 'direction': 'reverse'}], out.count=57692, out.initial_count=57692
+00:11:13  [GCTK]      diff extra_in_ledger W-5344 [warrant] ledger=terms.strike=1.875, terms.exercisable_date=2025-07-30, terms.expiration=2034-07-30, terms.series_letter=First, terms.known_owners=['John Ballantyne'], out.count=2133334.0, out.initial_count=2133334.0, counterparty=John Ballantyne
+00:11:13  [GCTK]      diff extra_in_ledger W-5345 [warrant] ledger=terms.strike=2.625, terms.exercisable_date=2025-07-30, terms.expiration=2034-07-30, terms.series_letter=Second, terms.known_owners=['John Ballantyne'], out.count=1523810.0, out.initial_count=1523810.0, counterparty=John Ballantyne
+00:11:13  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=3.375, terms.exercisable_date=2025-07-30, terms.expiration=2034-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], out.count=1185186.0, out.initial_count=1185186.0, counterparty=John Ballantyne
+00:11:13  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=1.56, terms.maturity=2025-07-18, out.principal_remaining=360000.0, out.principal_remaining_asof=2024-08-13
+00:11:13  [GCTK]      diff extra_in_ledger C-1098 [convertible] ledger=terms.principal=4000000.0, terms.rate=0.08, terms.maturity=2025-07-30, terms.known_owners=['John Ballantyne'], out.principal_remaining=4000000.0, out.principal_remaining_asof=2024-07-30, counterparty=John Ballantyne
+00:11:13  [GCTK]      diff extra_in_ledger SH-2609 [shelf] ledger=terms.capacity_usd=100000000.0, terms.form=S-3, out.drawn_usd=9998024.65, out.sold_to_date=7352942.0
+00:11:13  [GCTK]      anchor proposal amend_instrument:warrant W-5329 date=2024-06-30 count=0
+00:11:13  [GCTK]      anchor proposal close_instrument W-5329 date=2024-06-30 reason=expired
+00:11:13  [GCTK]      anchor proposal amend_instrument:warrant W-5330 date=2024-06-30 count=0
+00:11:13  [GCTK]      anchor proposal close_instrument W-5330 date=2024-06-30 reason=expired
+00:11:13  [GCTK]    anchor corrections applied=4 rejected=0
+00:11:13  [GCTK]  walker 0001493152-24-032518 — dedup block: 5 candidates within ±180d
+00:11:13  [GCTK]    0001493152-24-032518 — pruned 2 create tool(s): create_atm,create_preferred
+00:11:13  [GCTK]  walker 0001493152-24-032518 — form=8-K (19 tools)
+00:11:15  [GCTK]  walker 0001493152-24-032518 — finish='REASON_TOOL_CALLS' calls=1
+00:11:15  [GCTK]  walker 0001493152-24-032518 — note_no_event reasons: ['market research survey press release']
+00:11:15  [GCTK]    [2024-08-15] 8-K 0001493152-24-032518 — 0 mutations
+00:11:15  [GCTK]  walker 0001493152-24-033157 — dedup block: 3 candidates within ±30d
+00:11:15  [GCTK]  walker 0001493152-24-033157 — form=DEF 14A (3 tools)
+00:11:32  [GCTK]  walker 0001493152-24-033157 — finish='REASON_TOOL_CALLS' calls=3
+00:11:32  [GCTK]  walker 0001493152-24-033157 — call amend_instrument:warrant W-5344 date=2024-08-19 exercisable_date=2034-07-30 expiration=2044-07-30
+00:11:32  [GCTK]  walker 0001493152-24-033157 — call amend_instrument:warrant W-5345 date=2024-08-19 exercisable_date=2034-07-30 expiration=2044-07-30
+00:11:32  [GCTK]  walker 0001493152-24-033157 — call amend_instrument:warrant W-5346 date=2024-08-19 exercisable_date=2034-07-30 expiration=2044-07-30
+00:11:32  [GCTK]    [2024-08-19] DEF 14A 0001493152-24-033157 — 3 mutations
+00:11:32  [GCTK]  walker 0001493152-24-033948 — dedup block: 5 candidates within ±180d
+00:11:32  [GCTK]    0001493152-24-033948 — pruned 2 create tool(s): create_atm,create_preferred
+00:11:32  [GCTK]  walker 0001493152-24-033948 — form=8-K (19 tools)
+00:11:34  [GCTK]  walker 0001493152-24-033948 — finish='REASON_TOOL_CALLS' calls=1
+00:11:34  [GCTK]  walker 0001493152-24-033948 — note_no_event reasons: ['announcement of new Vice President of Clinical Operations']
+00:11:34  [GCTK]    [2024-08-27] 8-K 0001493152-24-033948 — 0 mutations
+00:11:34  [GCTK]  walker 0001493152-24-034737 — dedup block: 5 candidates within ±180d
+00:11:34  [GCTK]    0001493152-24-034737 — pruned 2 create tool(s): create_atm,create_preferred
+00:11:34  [GCTK]  walker 0001493152-24-034737 — form=8-K (19 tools)
+00:11:37  [GCTK]  walker 0001493152-24-034737 — finish='REASON_TOOL_CALLS' calls=1
+00:11:37  [GCTK]  walker 0001493152-24-034737 — note_no_event reasons: ['appointment of John Ballantyne to the Board of Directors']
+00:11:37  [GCTK]    [2024-09-03] 8-K 0001493152-24-034737 — 0 mutations
+00:11:37  [GCTK]  walker 0001493152-24-035631 — dedup block: 5 candidates within ±180d
+00:11:37  [GCTK]    0001493152-24-035631 — pruned 2 create tool(s): create_atm,create_preferred
+00:11:37  [GCTK]  walker 0001493152-24-035631 — form=8-K (19 tools)
+00:12:01  [GCTK]  walker 0001493152-24-035631 — finish='REASON_TOOL_CALLS' calls=4
+00:12:01  [GCTK]  walker 0001493152-24-035631 — call create_instrument:equity date=2024-09-05 price_per_share=1.02 closing_date=2024-09-05 count=254216.0
+00:12:01  [GCTK]  walker 0001493152-24-035631 — call create_instrument:warrant date=2024-09-05 strike=1.875 exercisable_date=2025-08-16 expiration=2034-09-05 count=138299.0 initial_count=138299.0
+00:12:01  [GCTK]  walker 0001493152-24-035631 — call create_instrument:warrant date=2024-09-05 strike=2.625 exercisable_date=2025-08-16 expiration=2034-09-05 count=98785.0 initial_count=98785.0
+00:12:01  [GCTK]  walker 0001493152-24-035631 — call create_instrument:warrant date=2024-09-05 strike=3.375 exercisable_date=2025-08-16 expiration=2034-09-05 count=76833.0 initial_count=76833.0
+00:12:01  [GCTK]    [2024-09-10] 8-K 0001493152-24-035631 — 4 mutations
+00:12:01  [GCTK]  walker 0001493152-24-036440 — dedup block: 8 candidates within ±180d
+00:12:01  [GCTK]  walker 0001493152-24-036440 — form=S-1 (9 tools)
+00:12:43  [GCTK]  walker 0001493152-24-036440 — finish='REASON_TOOL_CALLS' calls=4
+00:12:43  [GCTK]  walker 0001493152-24-036440 — call create_instrument:s1_offering date=2024-09-16 anticipated_deal_size=1000000.0
+00:12:43  [GCTK]  walker 0001493152-24-036440 — call create_instrument:warrant date=2024-08-23 strike=1.875 exercisable_date=2025-08-16 expiration=2034-08-23 count=21414.0 initial_count=21414.0
+00:12:43  [GCTK]  walker 0001493152-24-036440 — call create_instrument:warrant date=2024-08-23 strike=2.625 exercisable_date=2025-08-16 expiration=2034-08-23 count=15296.0 initial_count=15296.0
+00:12:43  [GCTK]  walker 0001493152-24-036440 — call create_instrument:warrant date=2024-08-23 strike=3.375 exercisable_date=2025-08-16 expiration=2034-08-23 count=11896.0 initial_count=11896.0
+00:12:43  [GCTK]  walker 0001493152-24-036440 — guard dropped duplicate create warrant (matches existing W-5351 strike=1.875 created=2024-09-05)
+00:12:43  [GCTK]  walker 0001493152-24-036440 — guard dropped duplicate create warrant (matches existing W-5352 strike=2.625 created=2024-09-05)
+00:12:43  [GCTK]  walker 0001493152-24-036440 — guard dropped duplicate create warrant (matches existing W-5353 strike=3.375 created=2024-09-05)
+00:12:43  [GCTK]  walker 0001493152-24-036440 — guards dropped 3 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:12:43  [GCTK]    [2024-09-16] S-1 0001493152-24-036440 — 1 mutations
+00:12:43  [GCTK]  walker 0001493152-24-037849 — dedup block: 4 candidates within ±30d
+00:12:43  [GCTK]  walker 0001493152-24-037849 — form=S-3 (16 tools)
+00:13:04  [GCTK]  walker 0001493152-24-037849 — finish='REASON_TOOL_CALLS' calls=2
+00:13:04  [GCTK]  walker 0001493152-24-037849 — call close_instrument SH-2609 date=2024-09-23 reason=superseded replaced_by=shelf-2024-s3
+00:13:04  [GCTK]  walker 0001493152-24-037849 — call create_instrument:shelf shelf-2024-s3 date=2024-09-23 capacity_usd=30000000.0 form=S-3
+00:13:04  [GCTK]    [2024-09-23] S-3 0001493152-24-037849 — 2 mutations
+00:13:04  [GCTK]    [2024-09-26] 8-K 0001493152-24-038358 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:13:04  [GCTK]  walker 0001493152-24-038793 — dedup block: 5 candidates within ±30d
+00:13:04  [GCTK]  walker 0001493152-24-038793 — form=S-3/A (11 tools)
+00:13:12  [GCTK]  walker 0001493152-24-038793 — finish='REASON_TOOL_CALLS' calls=1
+00:13:12  [GCTK]  walker 0001493152-24-038793 — note_no_event reasons: ['pre-effective amendment to S-3 shelf registration statement with no capacity changes or new instruments']
+00:13:12  [GCTK]    [2024-09-30] S-3/A 0001493152-24-038793 — 0 mutations
+00:13:12  [GCTK]  walker 0001493152-24-038952 — dedup block: 10 candidates within ±180d
+00:13:12  [GCTK]    0001493152-24-038952 — pruned 2 create tool(s): create_atm,create_preferred
+00:13:12  [GCTK]  walker 0001493152-24-038952 — form=8-K (19 tools)
+00:13:14  [GCTK]  walker 0001493152-24-038952 — finish='REASON_TOOL_CALLS' calls=1
+00:13:14  [GCTK]  walker 0001493152-24-038952 — note_no_event reasons: ['press release regarding scientific presentations']
+00:13:14  [GCTK]    [2024-10-01] 8-K 0001493152-24-038952 — 0 mutations
+00:13:14  [GCTK]  walker 0001493152-24-041901 — dedup block: 10 candidates within ±180d
+00:13:14  [GCTK]    0001493152-24-041901 — pruned 2 create tool(s): create_atm,create_preferred
+00:13:14  [GCTK]  walker 0001493152-24-041901 — form=8-K (19 tools)
+00:13:16  [GCTK]  walker 0001493152-24-041901 — finish='REASON_TOOL_CALLS' calls=1
+00:13:16  [GCTK]  walker 0001493152-24-041901 — note_no_event reasons: ['press release regarding conference presentation']
+00:13:16  [GCTK]    [2024-10-22] 8-K 0001493152-24-041901 — 0 mutations
+00:13:16  [GCTK]  walker 0001493152-24-042366 — dedup block: 10 candidates within ±180d
+00:13:16  [GCTK]  walker 0001493152-24-042366 — form=S-1/A (5 tools)
+00:13:56  [GCTK]  walker 0001493152-24-042366 — finish='REASON_TOOL_CALLS' calls=3
+00:13:56  [GCTK]  walker 0001493152-24-042366 — call create_instrument:warrant date=2024-08-23 strike=1.875 exercisable_date=2025-08-16 expiration=2034-08-23 count=21414.0 initial_count=21414.0
+00:13:56  [GCTK]  walker 0001493152-24-042366 — call create_instrument:warrant date=2024-08-23 strike=2.625 exercisable_date=2025-08-16 expiration=2034-08-23 count=15296.0 initial_count=15296.0
+00:13:56  [GCTK]  walker 0001493152-24-042366 — call create_instrument:warrant date=2024-08-23 strike=3.375 exercisable_date=2025-08-16 expiration=2034-08-23 count=11896.0 initial_count=11896.0
+00:13:56  [GCTK]  walker 0001493152-24-042366 — guard dropped duplicate create warrant (matches existing W-5351 strike=1.875 created=2024-09-05)
+00:13:56  [GCTK]  walker 0001493152-24-042366 — guard dropped duplicate create warrant (matches existing W-5352 strike=2.625 created=2024-09-05)
+00:13:56  [GCTK]  walker 0001493152-24-042366 — guard dropped duplicate create warrant (matches existing W-5353 strike=3.375 created=2024-09-05)
+00:13:56  [GCTK]  walker 0001493152-24-042366 — guards dropped 3 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:13:56  [GCTK]    [2024-10-24] S-1/A 0001493152-24-042366 — 0 mutations
+00:13:56  [GCTK]  walker 0001493152-24-043401 — dedup block: 10 candidates within ±180d
+00:13:56  [GCTK]  walker 0001493152-24-043401 — form=S-1/A (5 tools)
+00:14:42  [GCTK]  walker 0001493152-24-043401 — finish='REASON_TOOL_CALLS' calls=4
+00:14:42  [GCTK]  walker 0001493152-24-043401 — call amend_instrument:s1_offering S1-217 date=2024-11-04 anticipated_deal_size=8000000.0
+00:14:42  [GCTK]  walker 0001493152-24-043401 — call create_instrument:warrant date=2024-08-23 strike=1.875 exercisable_date=2025-08-16 expiration=2034-08-23 count=21414.0 initial_count=21414.0
+00:14:42  [GCTK]  walker 0001493152-24-043401 — call create_instrument:warrant date=2024-08-23 strike=2.625 exercisable_date=2025-08-16 expiration=2034-08-23 count=15296.0 initial_count=15296.0
+00:14:42  [GCTK]  walker 0001493152-24-043401 — call create_instrument:warrant date=2024-08-23 strike=3.375 exercisable_date=2025-08-16 expiration=2034-08-23 count=11896.0 initial_count=11896.0
+00:14:42  [GCTK]  walker 0001493152-24-043401 — guard dropped duplicate create warrant (matches existing W-5351 strike=1.875 created=2024-09-05)
+00:14:42  [GCTK]  walker 0001493152-24-043401 — guard dropped duplicate create warrant (matches existing W-5352 strike=2.625 created=2024-09-05)
+00:14:42  [GCTK]  walker 0001493152-24-043401 — guard dropped duplicate create warrant (matches existing W-5353 strike=3.375 created=2024-09-05)
+00:14:42  [GCTK]  walker 0001493152-24-043401 — guards dropped 3 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:14:42  [GCTK]    [2024-11-04] S-1/A 0001493152-24-043401 — 1 mutations
+00:14:42  [GCTK]  walker 0001493152-24-044183 — dedup block: 10 candidates within ±180d
+00:14:42  [GCTK]  walker 0001493152-24-044183 — form=S-1/A (5 tools)
+00:15:30  [GCTK]  walker 0001493152-24-044183 — finish='REASON_TOOL_CALLS' calls=4
+00:15:30  [GCTK]  walker 0001493152-24-044183 — call amend_instrument:s1_offering S1-217 date=2024-11-08 anticipated_deal_size=10000000.0
+00:15:30  [GCTK]  walker 0001493152-24-044183 — call create_instrument:warrant date=2024-08-23 strike=1.875 exercisable_date=2025-08-16 expiration=2034-08-23 count=21414.0 initial_count=21414.0
+00:15:30  [GCTK]  walker 0001493152-24-044183 — call create_instrument:warrant date=2024-08-23 strike=2.625 exercisable_date=2025-08-16 expiration=2034-08-23 count=15296.0 initial_count=15296.0
+00:15:30  [GCTK]  walker 0001493152-24-044183 — call create_instrument:warrant date=2024-08-23 strike=3.375 exercisable_date=2025-08-16 expiration=2034-08-23 count=11896.0 initial_count=11896.0
+00:15:30  [GCTK]  walker 0001493152-24-044183 — guard dropped duplicate create warrant (matches existing W-5351 strike=1.875 created=2024-09-05)
+00:15:30  [GCTK]  walker 0001493152-24-044183 — guard dropped duplicate create warrant (matches existing W-5352 strike=2.625 created=2024-09-05)
+00:15:30  [GCTK]  walker 0001493152-24-044183 — guard dropped duplicate create warrant (matches existing W-5353 strike=3.375 created=2024-09-05)
+00:15:30  [GCTK]  walker 0001493152-24-044183 — guards dropped 3 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:15:30  [GCTK]    [2024-11-08] S-1/A 0001493152-24-044183 — 1 mutations
+00:15:30  [GCTK]  walker 0001493152-24-044347 — dedup block: 10 candidates within ±180d
+00:15:30  [GCTK]  walker 0001493152-24-044347 — form=S-1/A (5 tools)
+00:16:11  [GCTK]  walker 0001493152-24-044347 — finish='REASON_TOOL_CALLS' calls=3
+00:16:11  [GCTK]  walker 0001493152-24-044347 — call create_instrument:warrant date=2024-08-23 strike=1.875 exercisable_date=2025-08-16 expiration=2034-08-23 count=21414.0 initial_count=21414.0
+00:16:11  [GCTK]  walker 0001493152-24-044347 — call create_instrument:warrant date=2024-08-23 strike=2.625 exercisable_date=2025-08-16 expiration=2034-08-23 count=15296.0 initial_count=15296.0
+00:16:11  [GCTK]  walker 0001493152-24-044347 — call create_instrument:warrant date=2024-08-23 strike=3.375 exercisable_date=2025-08-16 expiration=2034-08-23 count=11896.0 initial_count=11896.0
+00:16:11  [GCTK]  walker 0001493152-24-044347 — guard dropped duplicate create warrant (matches existing W-5351 strike=1.875 created=2024-09-05)
+00:16:11  [GCTK]  walker 0001493152-24-044347 — guard dropped duplicate create warrant (matches existing W-5352 strike=2.625 created=2024-09-05)
+00:16:11  [GCTK]  walker 0001493152-24-044347 — guard dropped duplicate create warrant (matches existing W-5353 strike=3.375 created=2024-09-05)
+00:16:11  [GCTK]  walker 0001493152-24-044347 — guards dropped 3 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:16:11  [GCTK]    [2024-11-08] S-1/A 0001493152-24-044347 — 0 mutations
+00:16:11  [GCTK]  walker 0001493152-24-044988 — dedup block: 10 candidates within ±180d
+00:16:11  [GCTK]    0001493152-24-044988 — pruned 2 create tool(s): create_atm,create_preferred
+00:16:11  [GCTK]  walker 0001493152-24-044988 — form=8-K (19 tools)
+00:16:50  [GCTK]  walker 0001493152-24-044988 — finish='REASON_TOOL_CALLS' calls=3
+00:16:50  [GCTK]  walker 0001493152-24-044988 — call create_instrument:warrant date=2024-11-13 strike=1.81 series_letter=A count=7195000.0 initial_count=7195000.0
+00:16:50  [GCTK]  walker 0001493152-24-044988 — call create_instrument:warrant date=2024-11-13 strike=1.81 series_letter=B count=7195000.0 initial_count=7195000.0
+00:16:50  [GCTK]  walker 0001493152-24-044988 — call record_event S1-217 date=2024-11-13 drawdown_amount_usd=10001050.0 drawdown_shares=7195000.0 avg_price=1.39
+00:16:50  [GCTK]    [2024-11-13] 8-K 0001493152-24-044988 — 3 mutations
+00:16:50  [GCTK]  walker 0001493152-24-045894 — dedup block: 13 candidates (all active, periodic form)
+00:16:50  [GCTK]  walker 0001493152-24-045894 — form=10-Q (17 tools)
+00:17:34  [GCTK]  walker 0001493152-24-045894 — finish='REASON_TOOL_CALLS' calls=3
+00:17:34  [GCTK]  walker 0001493152-24-045894 — call create_instrument:warrant date=2024-08-23 strike=1.875 exercisable_date=2025-08-16 expiration=2034-08-23 count=21414.0 initial_count=21414.0
+00:17:34  [GCTK]  walker 0001493152-24-045894 — call create_instrument:warrant date=2024-08-23 strike=2.625 exercisable_date=2025-08-16 expiration=2034-08-23 count=15296.0 initial_count=15296.0
+00:17:34  [GCTK]  walker 0001493152-24-045894 — call create_instrument:warrant date=2024-08-23 strike=3.375 exercisable_date=2025-08-16 expiration=2034-08-23 count=11896.0 initial_count=11896.0
+00:17:34  [GCTK]  walker 0001493152-24-045894 — guard dropped duplicate create warrant (matches existing W-5351 strike=1.875 created=2024-09-05)
+00:17:34  [GCTK]  walker 0001493152-24-045894 — guard dropped duplicate create warrant (matches existing W-5352 strike=2.625 created=2024-09-05)
+00:17:34  [GCTK]  walker 0001493152-24-045894 — guard dropped duplicate create warrant (matches existing W-5353 strike=3.375 created=2024-09-05)
+00:17:34  [GCTK]  walker 0001493152-24-045894 — guards dropped 3 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:17:34  [GCTK]    [2024-11-14] 10-Q 0001493152-24-045894 — 0 mutations
+00:17:34  [GCTK]    anchor 0001493152-24-045894 as_of=2024-09-30
+00:18:15  [GCTK]  [overhang-combined] 0001493152-24-045894 — output truncated at max_tokens
+00:18:15  [GCTK]  overhang-combined 0001493152-24-045894 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+00:18:15  [GCTK]  overhang-combined 0001493152-24-045894 — w=2 c=0 p=0 s=0 a=0 e=0
+00:18:15  [GCTK]    anchor 0001493152-24-045894 — 11 diffs (missing=0 field=0 count=0 extra=11)
+00:18:15  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=6.8, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}, {'date': '2024-05-20', 'ratio': 0.2, 'direction': 'reverse'}], out.count=57692, out.initial_count=57692
+00:18:15  [GCTK]      diff extra_in_ledger W-5345 [warrant] ledger=terms.strike=2.625, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Second, terms.known_owners=['John Ballantyne'], out.count=1523810.0, out.initial_count=1523810.0, counterparty=John Ballantyne
+00:18:15  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=3.375, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], out.count=1185186.0, out.initial_count=1185186.0, counterparty=John Ballantyne
+00:18:15  [GCTK]      diff extra_in_ledger W-5351 [warrant] ledger=terms.strike=1.875, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, out.count=138299.0, out.initial_count=138299.0
+00:18:15  [GCTK]      diff extra_in_ledger W-5352 [warrant] ledger=terms.strike=2.625, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, out.count=98785.0, out.initial_count=98785.0
+00:18:15  [GCTK]      diff extra_in_ledger W-5353 [warrant] ledger=terms.strike=3.375, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, out.count=76833.0, out.initial_count=76833.0
+00:18:15  [GCTK]      diff extra_in_ledger W-5359 [warrant] ledger=terms.strike=1.81, terms.series_letter=A, out.count=7195000.0, out.initial_count=7195000.0
+00:18:15  [GCTK]      diff extra_in_ledger W-5360 [warrant] ledger=terms.strike=1.81, terms.series_letter=B, out.count=7195000.0, out.initial_count=7195000.0
+00:18:15  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=1.56, terms.maturity=2025-07-18, out.principal_remaining=360000.0, out.principal_remaining_asof=2024-08-13
+00:18:15  [GCTK]      diff extra_in_ledger C-1098 [convertible] ledger=terms.principal=4000000.0, terms.rate=0.08, terms.maturity=2025-07-30, terms.known_owners=['John Ballantyne'], out.principal_remaining=4000000.0, out.principal_remaining_asof=2024-07-30, counterparty=John Ballantyne
+00:18:15  [GCTK]      diff extra_in_ledger shelf-2024-s3 [shelf] ledger=terms.capacity_usd=30000000.0, terms.form=S-3
+00:18:15  [GCTK]  walker 0001493152-24-045365 — dedup block: 12 candidates within ±180d
+00:18:15  [GCTK]  walker 0001493152-24-045365 — form=424B4 (7 tools)
+00:18:52  [GCTK]  walker 0001493152-24-045365 — finish='REASON_TOOL_CALLS' calls=7
+00:18:52  [GCTK]  walker 0001493152-24-045365 — call amend_instrument:s1_offering S1-217 date=2024-11-14 warrant_strike=1.81 final_deal_size=9995236.7 final_pricing=1.39 final_shares_offered=7194240.0 final_warrant_coverage_pct=2.0
+00:18:52  [GCTK]  walker 0001493152-24-045365 — call record_event S1-217 date=2024-11-14 drawdown_amount_usd=9999993.6 drawdown_shares=7194240.0 avg_price=1.39
+00:18:52  [GCTK]  walker 0001493152-24-045365 — call record_event W-5359 date=2024-11-14 count_actual=7194240.0
+00:18:52  [GCTK]  walker 0001493152-24-045365 — call record_event W-5360 date=2024-11-14 count_actual=7194240.0
+00:18:52  [GCTK]  walker 0001493152-24-045365 — call create_instrument:warrant date=2024-11-14 strike=0.001 exercisable_date=2024-11-14 is_pre_funded=True count=4756900.0 initial_count=4756900.0
+00:18:52  [GCTK]  walker 0001493152-24-045365 — call create_instrument:warrant date=2024-11-14 strike=1.81 expiration=2029-11-14 series_letter=A known_owners=['John Ballantyne'] count=2640717.0 initial_count=2640717.0
+00:18:52  [GCTK]  walker 0001493152-24-045365 — call create_instrument:warrant date=2024-11-14 strike=1.81 expiration=2027-05-14 series_letter=B known_owners=['John Ballantyne'] count=2640717.0 initial_count=2640717.0
+00:18:52  [GCTK]  walker 0001493152-24-045365 — propagated banker 'Dawson James' to 2 create_instrument(s)
+00:18:52  [GCTK]  walker 0001493152-24-045365 — dedup gap-fill warrant W-5359 via amend: expiration, known_owners (create deduped, info preserved)
+00:18:52  [GCTK]  walker 0001493152-24-045365 — dedup gap-fill warrant W-5360 via amend: expiration, known_owners (create deduped, info preserved)
+00:18:52  [GCTK]  walker 0001493152-24-045365 — guards dropped 2 dup-creates (2 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:18:52  [GCTK]    [2024-11-14] 424B4 0001493152-24-045365 — 7 mutations
+00:18:52  [GCTK]  drawdown re-disclosure suppressed: instrument=S1-217 date=2024-11-14 amount=9999993.6 accession=0001493152-24-045365
+00:18:52  [GCTK]  walker 0001493152-24-045979 — dedup block: 13 candidates within ±180d
+00:18:52  [GCTK]  walker 0001493152-24-045979 — form=8-K (21 tools)
+00:20:06  [GCTK]  walker 0001493152-24-045979 — finish='REASON_TOOL_CALLS' calls=7
+00:20:06  [GCTK]  walker 0001493152-24-045979 — call record_event W-5359 date=2024-11-14
+00:20:06  [GCTK]  walker 0001493152-24-045979 — call record_event W-5360 date=2024-11-14
+00:20:06  [GCTK]  walker 0001493152-24-045979 — call record_event W-5367 date=2024-11-14
+00:20:06  [GCTK]  walker 0001493152-24-045979 — call record_event C-1098 date=2024-11-14 shares_issued=2640717.0 principal_converted=4000000.0
+00:20:06  [GCTK]  walker 0001493152-24-045979 — call close_instrument C-1098 date=2024-11-14 reason=converted
+00:20:06  [GCTK]  walker 0001493152-24-045979 — call create_instrument:warrant date=2024-11-14 strike=1.81 expiration=2029-11-14 series_letter=A known_owners=['John Ballantyne'] count=2640717.0 initial_count=2640717.0
+00:20:06  [GCTK]  walker 0001493152-24-045979 — call create_instrument:warrant date=2024-11-14 strike=1.81 expiration=2027-05-14 series_letter=B known_owners=['John Ballantyne'] count=2640717.0 initial_count=2640717.0
+00:20:06  [GCTK]  walker 0001493152-24-045979 — guard dropped duplicate create warrant (matches existing W-5359 strike=1.81 created=2024-11-13)
+00:20:06  [GCTK]  walker 0001493152-24-045979 — guard dropped duplicate create warrant (matches existing W-5360 strike=1.81 created=2024-11-13)
+00:20:06  [GCTK]  walker 0001493152-24-045979 — guards dropped 2 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+00:20:06  [GCTK]    [2024-11-14] 8-K 0001493152-24-045979 — 5 mutations
+00:20:06  [GCTK]  walker 0001493152-24-046564 — dedup block: 13 candidates within ±180d
+00:20:06  [GCTK]  walker 0001493152-24-046564 — form=8-K (21 tools)
+00:20:45  [GCTK]  walker 0001493152-24-046564 — finish='REASON_TOOL_CALLS' calls=1
+00:20:45  [GCTK]  walker 0001493152-24-046564 — call record_event W-5359 date=2024-11-14
+00:20:45  [GCTK]    [2024-11-18] 8-K 0001493152-24-046564 — 1 mutations
+00:20:45  [GCTK]  walker 0001493152-24-047464 — dedup block: 3 candidates within ±30d
+00:20:45  [GCTK]  walker 0001493152-24-047464 — form=PRE 14A (3 tools)
+00:21:11  [GCTK]  walker 0001493152-24-047464 — finish='REASON_TOOL_CALLS' calls=1
+00:21:11  [GCTK]  walker 0001493152-24-047464 — note_no_event reasons: ['preliminary proxy statement seeking stockholder approval for warrant issuance, reverse split, and authorized share increase']
+00:21:11  [GCTK]    [2024-11-22] PRE 14A 0001493152-24-047464 — 0 mutations
+00:21:11  [GCTK]  walker 0001493152-24-048442 — dedup block: 13 candidates within ±180d
+00:21:11  [GCTK]    0001493152-24-048442 — pruned 2 create tool(s): create_atm,create_preferred
+00:21:11  [GCTK]  walker 0001493152-24-048442 — form=8-K (19 tools)
+00:21:13  [GCTK]  walker 0001493152-24-048442 — finish='REASON_TOOL_CALLS' calls=1
+00:21:13  [GCTK]  walker 0001493152-24-048442 — note_no_event reasons: ['clinical study enrollment announcement']
+00:21:13  [GCTK]    [2024-12-03] 8-K 0001493152-24-048442 — 0 mutations
+00:21:13  [GCTK]  walker 0001493152-24-049114 — dedup block: 3 candidates within ±30d
+00:21:13  [GCTK]  walker 0001493152-24-049114 — form=DEF 14A (3 tools)
+00:21:50  [GCTK]  walker 0001493152-24-049114 — finish='REASON_TOOL_CALLS' calls=1
+00:21:50  [GCTK]  walker 0001493152-24-049114 — call amend_instrument:warrant W-5359 date=2024-12-06 count=10030145.0
+00:21:50  [GCTK]    [2024-12-06] DEF 14A 0001493152-24-049114 — 1 mutations
+00:21:50  [GCTK]  walker 0001493152-24-050469 — dedup block: 13 candidates within ±180d
+00:21:50  [GCTK]  walker 0001493152-24-050469 — form=424B5 (13 tools)
+00:22:04  [GCTK]  walker 0001493152-24-050469 — finish='REASON_TOOL_CALLS' calls=1
+00:22:04  [GCTK]  walker 0001493152-24-050469 — call create_instrument:atm date=2024-12-17 capacity_usd=8230000.0 agreement_date=2024-12-17
+00:22:04  [GCTK]    [2024-12-17] 424B5 0001493152-24-050469 — 1 mutations
+00:22:04  [GCTK]  walker 0001493152-24-050462 — dedup block: 14 candidates within ±180d
+00:22:04  [GCTK]  walker 0001493152-24-050462 — form=8-K (21 tools)
+00:22:11  [GCTK]  walker 0001493152-24-050462 — finish='REASON_TOOL_CALLS' calls=1
+00:22:11  [GCTK]  walker 0001493152-24-050462 — note_no_event reasons: ['re-disclosure of the Dawson James ATM sales agreement already recorded as ATM-2679']
+00:22:11  [GCTK]    [2024-12-17] 8-K 0001493152-24-050462 — 0 mutations
+00:22:11  [GCTK]    [2024-12-31] 8-K 0001493152-24-052736 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+00:22:11  [GCTK]  walker 0001493152-25-001222 — dedup block: 13 candidates within ±180d
+00:22:11  [GCTK]  walker 0001493152-25-001222 — form=8-K (21 tools)
+00:22:20  [GCTK]  walker 0001493152-25-001222 — finish='REASON_TOOL_CALLS' calls=1
+00:22:20  [GCTK]  walker 0001493152-25-001222 — must_record net fired (items=5.03; exhibits=EX-3.1); re-asking
+00:22:26  [GCTK]  walker 0001493152-25-001222 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:22:26  [GCTK]  walker 0001493152-25-001222 — must_record (items=5.03; exhibits=EX-3.1): recorded nothing after second look — possible missed instrument
+00:22:26  [GCTK]  walker 0001493152-25-001222 — note_no_event reasons: ['Stockholder approval of authorized share increase, potential reverse split, and Nasdaq warrant exercise approval; no actual split or issuance occurred.']
+00:22:26  [GCTK]    [2025-01-07] 8-K 0001493152-25-001222 — 0 mutations
+00:22:26  [GCTK]  walker 0001493152-25-001270 — dedup block: 13 candidates within ±180d
+00:22:26  [GCTK]    0001493152-25-001270 — pruned 1 create tool(s): create_preferred
+00:22:26  [GCTK]  walker 0001493152-25-001270 — form=8-K (20 tools)
+00:22:28  [GCTK]  walker 0001493152-25-001270 — finish='REASON_TOOL_CALLS' calls=1
+00:22:28  [GCTK]  walker 0001493152-25-001270 — note_no_event reasons: ["The filing is a Form 8-K announcing the Company's presentation at the TechBio Showcase 2025, containing no dilutive instruments or events."]
+00:22:28  [GCTK]    [2025-01-08] 8-K 0001493152-25-001270 — 0 mutations
+00:22:28  [GCTK]  walker 0001493152-25-001982 — dedup block: 13 candidates within ±180d
+00:22:28  [GCTK]    0001493152-25-001982 — pruned 1 create tool(s): create_preferred
+00:22:28  [GCTK]  walker 0001493152-25-001982 — form=8-K (20 tools)
+00:22:34  [GCTK]  walker 0001493152-25-001982 — finish='REASON_TOOL_CALLS' calls=1
+00:22:34  [GCTK]  walker 0001493152-25-001982 — call record_event W-5359 date=2025-01-13 shares=134785015.0 price=0.0 warrants_exercised=6950240.0
+00:22:34  [GCTK]    [2025-01-13] 8-K 0001493152-25-001982 — 1 mutations
+00:22:34  [GCTK]  walker 0001493152-25-002027 — dedup block: 13 candidates within ±180d
+00:22:34  [GCTK]    0001493152-25-002027 — pruned 1 create tool(s): create_preferred
+00:22:34  [GCTK]  walker 0001493152-25-002027 — form=8-K/A (20 tools)
+00:22:52  [GCTK]  walker 0001493152-25-002027 — finish='REASON_TOOL_CALLS' calls=2
+00:22:52  [GCTK]  walker 0001493152-25-002027 — call record_event W-5360 date=2025-01-14 shares=134785015.0 price=0.0 warrants_exercised=6950240.0
+00:22:52  [GCTK]  walker 0001493152-25-002027 — call close_instrument W-5360 date=2025-01-14 reason=exercised
+00:22:52  [GCTK]    [2025-01-14] 8-K/A 0001493152-25-002027 — 2 mutations
+00:22:52  [GCTK]      reject close_instrument W-5360 date=2025-01-14 reason=exercised — close_with_outstanding: close_instrument(reason='exercised') blocked: count=244000.0 on warrant W-5360; full exercise requires 0. Use record_event(exercise) for partial exercises.
+00:22:52  [GCTK]  walker 0001493152-25-002950 — dedup block: 12 candidates within ±180d
+00:22:52  [GCTK]    0001493152-25-002950 — pruned 1 create tool(s): create_preferred
+00:22:52  [GCTK]  walker 0001493152-25-002950 — form=8-K (20 tools)
+00:22:54  [GCTK]  walker 0001493152-25-002950 — finish='REASON_TOOL_CALLS' calls=1
+00:22:54  [GCTK]  walker 0001493152-25-002950 — note_no_event reasons: ['The filing is a press release announcing that the Company received ISO 13485:2016 certification from the British Standards Institute, with no dilutive instruments or financing events disclosed.']
+00:22:54  [GCTK]    [2025-01-21] 8-K 0001493152-25-002950 — 0 mutations
+00:22:54  [GCTK]  walker 0001493152-25-004104 — dedup block: 9 candidates within ±180d
+00:22:54  [GCTK]  walker 0001493152-25-004104 — form=8-K (21 tools)
+00:22:59  [GCTK]  walker 0001493152-25-004104 — finish='REASON_TOOL_CALLS' calls=1
+00:22:59  [GCTK]  walker 0001493152-25-004104 — note_no_event reasons: ['Executive employment agreement appointing Peter Wulff as CFO, which includes employee stock option grants under the 2024 Equity Incentive Plan that are excluded from dilutive financing.']
+00:22:59  [GCTK]    [2025-01-29] 8-K 0001493152-25-004104 — 0 mutations
+00:22:59  [GCTK]  walker 0001493152-25-004216 — dedup block: 9 candidates within ±180d
+00:22:59  [GCTK]    0001493152-25-004216 — pruned 1 create tool(s): create_preferred
+00:22:59  [GCTK]  walker 0001493152-25-004216 — form=8-K (20 tools)
+00:23:02  [GCTK]  walker 0001493152-25-004216 — finish='REASON_TOOL_CALLS' calls=1
+00:23:02  [GCTK]  walker 0001493152-25-004216 — call apply_split date=2025-02-04 post=1 pre=20 direction=reverse units=common
+00:23:02  [GCTK]    [2025-01-30] 8-K 0001493152-25-004216 — 1 mutations
+00:23:02  [GCTK]    [2025-02-04] split 1-for-20 reverse (finviz+yfinance) units=common
+00:23:02  [GCTK]  walker 0001493152-25-004793 — dedup block: 9 candidates within ±180d
+00:23:02  [GCTK]  walker 0001493152-25-004793 — form=8-K (21 tools)
+00:23:05  [GCTK]  walker 0001493152-25-004793 — finish='REASON_TOOL_CALLS' calls=1
+00:23:05  [GCTK]  walker 0001493152-25-004793 — call apply_split date=2025-02-03 post=1 pre=20 direction=reverse units=common
+00:23:05  [GCTK]    [2025-02-04] 8-K 0001493152-25-004793 — 1 mutations
+00:23:05  [GCTK]  walker 0001493152-25-004955 — dedup block: 9 candidates within ±180d
+00:23:05  [GCTK]  walker 0001493152-25-004955 — form=424B5 (13 tools)
+00:23:20  [GCTK]  walker 0001493152-25-004955 — finish='REASON_TOOL_CALLS' calls=1
+00:23:20  [GCTK]  walker 0001493152-25-004955 — call record_event shelf-2024-s3 date=2025-02-05 drawdown_amount_usd=3033748.3 drawdown_shares=2638042.0 avg_price=1.15 placement_agent_canonical=Dawson James
+00:23:20  [GCTK]    [2025-02-05] 424B5 0001493152-25-004955 — 1 mutations
+00:23:20  [GCTK]  walker 0001493152-25-004953 — dedup block: 9 candidates within ±180d
+00:23:20  [GCTK]  walker 0001493152-25-004953 — form=8-K (21 tools)
+00:23:33  [GCTK]  walker 0001493152-25-004953 — finish='REASON_TOOL_CALLS' calls=1
+00:23:33  [GCTK]  walker 0001493152-25-004953 — note_no_event reasons: ['The registered direct offering of 2,638,042 shares at $1.15 per share under the S-3 shelf (shelf-2024-s3) is already recorded in the ledger as a drawdown on 2025-02-05.']
+00:23:33  [GCTK]    [2025-02-05] 8-K 0001493152-25-004953 — 0 mutations
+00:23:33  [GCTK]  walker 0001493152-25-006856 — dedup block: 9 candidates within ±180d
+00:23:33  [GCTK]    0001493152-25-006856 — pruned 1 create tool(s): create_preferred
+00:23:33  [GCTK]  walker 0001493152-25-006856 — form=8-K (20 tools)
+00:23:35  [GCTK]  walker 0001493152-25-006856 — finish='REASON_TOOL_CALLS' calls=1
+00:23:35  [GCTK]  walker 0001493152-25-006856 — note_no_event reasons: ['shareholder update presentation']
+00:23:35  [GCTK]    [2025-02-14] 8-K 0001493152-25-006856 — 0 mutations
+00:23:35  [GCTK]  walker 0001493152-25-008275 — dedup block: 9 candidates within ±180d
+00:23:35  [GCTK]    0001493152-25-008275 — pruned 1 create tool(s): create_preferred
+00:23:35  [GCTK]  walker 0001493152-25-008275 — form=8-K (20 tools)
+00:23:36  [GCTK]  walker 0001493152-25-008275 — finish='REASON_TOOL_CALLS' calls=1
+00:23:36  [GCTK]  walker 0001493152-25-008275 — note_no_event reasons: ['appointment of medical advisory board member']
+00:23:36  [GCTK]    [2025-02-26] 8-K 0001493152-25-008275 — 0 mutations
+00:23:37  [GCTK]  walker 0001493152-25-010189 — dedup block: 6 candidates within ±180d
+00:23:37  [GCTK]    0001493152-25-010189 — pruned 1 create tool(s): create_preferred
+00:23:37  [GCTK]  walker 0001493152-25-010189 — form=8-K (20 tools)
+00:24:14  [GCTK]  walker 0001493152-25-010189 — finish='REASON_TOOL_CALLS' calls=3
+00:24:14  [GCTK]  walker 0001493152-25-010189 — call record_event C-1097 date=2024-11-14 shares_issued=9760.0 principal_converted=304494.0
+00:24:14  [GCTK]  walker 0001493152-25-010189 — call close_instrument C-1097 date=2024-11-14 reason=converted
+00:24:14  [GCTK]  walker 0001493152-25-010189 — call create_instrument:equity date=2025-03-11 price_per_share=0.0 closing_date=2025-03-11 count=2749817.0
+00:24:14  [GCTK]    [2025-03-13] 8-K 0001493152-25-010189 — 3 mutations
+00:24:14  [GCTK]      reject close_instrument C-1097 date=2024-11-14 reason=converted — close_with_outstanding: close_instrument(reason='converted') blocked: principal_remaining=55506.0 on convertible C-1097; full conversion requires 0. Use record_event(conversion) for partial conversions.
+00:24:14  [GCTK]  walker 0001493152-25-010873 — dedup block: 5 candidates within ±180d
+00:24:14  [GCTK]    0001493152-25-010873 — pruned 1 create tool(s): create_preferred
+00:24:14  [GCTK]  walker 0001493152-25-010873 — form=8-K (20 tools)
+00:24:16  [GCTK]  walker 0001493152-25-010873 — finish='REASON_TOOL_CALLS' calls=1
+00:24:16  [GCTK]  walker 0001493152-25-010873 — note_no_event reasons: ['press release regarding clinical trial data presentation']
+00:24:16  [GCTK]    [2025-03-19] 8-K 0001493152-25-010873 — 0 mutations
+00:24:16  [GCTK]  walker 0001641172-25-001861 — dedup block: 15 candidates (all active, periodic form)
+00:24:16  [GCTK]  walker 0001641172-25-001861 — form=10-K (17 tools)
+00:24:53  [GCTK]  walker 0001641172-25-001861 — finish='REASON_TOOL_CALLS' calls=1
+00:24:53  [GCTK]  walker 0001641172-25-001861 — call record_event ATM-2679 date=2025-03-21 drawdown_amount_usd=3762901.968 drawdown_shares=12377967.0 avg_price=0.304
+00:24:53  [GCTK]    [2025-03-31] 10-K 0001641172-25-001861 — 1 mutations
+00:24:53  [GCTK]    anchor 0001641172-25-001861 as_of=2024-12-31
+00:25:34  [GCTK]  [overhang-combined] 0001641172-25-001861 — output truncated at max_tokens
+00:25:34  [GCTK]  overhang-combined 0001641172-25-001861 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+00:25:34  [GCTK]  overhang-combined 0001641172-25-001861 — w=2 c=0 p=0 s=0 a=0 e=0
+00:25:34  [GCTK]    anchor 0001641172-25-001861 — 12 diffs (missing=0 field=0 count=0 extra=12)
+00:25:34  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=136.0, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}, {'date': '2024-05-20', 'ratio': 0.2, 'direction': 'reverse'}, {'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=2885, out.initial_count=2885
+00:25:34  [GCTK]      diff extra_in_ledger W-5345 [warrant] ledger=terms.strike=52.5, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Second, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=76190, out.initial_count=76190, counterparty=John Ballantyne
+00:25:34  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=67.5, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=59259, out.initial_count=59259, counterparty=John Ballantyne
+00:25:34  [GCTK]      diff extra_in_ledger W-5351 [warrant] ledger=terms.strike=37.5, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=6915, out.initial_count=6915
+00:25:34  [GCTK]      diff extra_in_ledger W-5352 [warrant] ledger=terms.strike=52.5, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=4939, out.initial_count=4939
+00:25:34  [GCTK]      diff extra_in_ledger W-5353 [warrant] ledger=terms.strike=67.5, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=3842, out.initial_count=3842
+00:25:34  [GCTK]      diff extra_in_ledger W-5359 [warrant] ledger=terms.strike=36.2, terms.series_letter=A, terms.expiration=2029-11-15, terms.known_owners=['John Ballantyne'], terms.issue_date=2024-11-14, terms.exercisable_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=153995, out.initial_count=501507, out.exercised_to_date=6739251
+00:25:34  [GCTK]      diff extra_in_ledger W-5360 [warrant] ledger=terms.strike=36.2, terms.series_letter=B, terms.expiration=2027-05-15, terms.known_owners=['John Ballantyne'], terms.issue_date=2024-11-14, terms.exercisable_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=12200, out.initial_count=359750, out.exercised_to_date=6739251
+00:25:34  [GCTK]      diff extra_in_ledger W-5367 [warrant] ledger=terms.strike=0.02, terms.exercisable_date=2024-11-14, terms.is_pre_funded=True, terms.issue_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=237845, out.initial_count=237845
+00:25:34  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=31.2, terms.maturity=2025-07-18, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.principal_remaining=55506.0, out.principal_remaining_asof=2024-11-14, out.principal_converted_to_date=304494.0
+00:25:34  [GCTK]      diff extra_in_ledger shelf-2024-s3 [shelf] ledger=terms.capacity_usd=30000000.0, terms.form=S-3, out.drawn_usd=3033748.3, out.sold_to_date=2638042.0
+00:25:34  [GCTK]      diff extra_in_ledger ATM-2679 [atm] ledger=terms.capacity_usd=8230000.0, terms.agreement_date=2024-12-17, out.drawn_usd=3762901.968, out.sold_to_date=12377967.0
+00:25:34  [GCTK]  walker 0001641172-25-001831 — dedup block: 4 candidates within ±180d
+00:25:34  [GCTK]    0001641172-25-001831 — pruned 1 create tool(s): create_preferred
+00:25:34  [GCTK]  walker 0001641172-25-001831 — form=8-K (20 tools)
+00:25:42  [GCTK]  walker 0001641172-25-001831 — finish='REASON_TOOL_CALLS' calls=1
+00:25:42  [GCTK]  walker 0001641172-25-001831 — note_no_event reasons: ['earnings release and corporate update with no specific transaction details']
+00:25:42  [GCTK]    [2025-03-31] 8-K 0001641172-25-001831 — 0 mutations
+00:25:42  [GCTK]  walker 0001641172-25-002525 — dedup block: 4 candidates within ±180d
+00:25:42  [GCTK]    0001641172-25-002525 — pruned 1 create tool(s): create_preferred
+00:25:42  [GCTK]  walker 0001641172-25-002525 — form=8-K (20 tools)
+00:25:44  [GCTK]  walker 0001641172-25-002525 — finish='REASON_TOOL_CALLS' calls=1
+00:25:44  [GCTK]  walker 0001641172-25-002525 — note_no_event reasons: ['The filing is a Form 8-K announcing a strategic collaboration agreement with OneTwo Analytics AB for clinical study analysis, with no dilutive instruments or financing events disclosed.']
+00:25:44  [GCTK]    [2025-04-03] 8-K 0001641172-25-002525 — 0 mutations
+00:25:44  [GCTK]    [2025-04-04] 8-K 0001641172-25-002802 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+00:25:44  [GCTK]  walker 0001641172-25-004977 — dedup block: 4 candidates within ±180d
+00:25:44  [GCTK]    0001641172-25-004977 — pruned 1 create tool(s): create_preferred
+00:25:44  [GCTK]  walker 0001641172-25-004977 — form=8-K (20 tools)
+00:25:46  [GCTK]  walker 0001641172-25-004977 — finish='REASON_TOOL_CALLS' calls=1
+00:25:46  [GCTK]  walker 0001641172-25-004977 — note_no_event reasons: ["The filing is a press release announcing the Company's participation in the FORGETDIABETES bionic pancreas research initiative, with no dilutive instruments or financing events disclosed."]
+00:25:46  [GCTK]    [2025-04-16] 8-K 0001641172-25-004977 — 0 mutations
+00:25:46  [GCTK]  walker 0001641172-25-005437 — form=PRE 14A (3 tools)
+00:26:21  [GCTK]  walker 0001641172-25-005437 — finish='REASON_TOOL_CALLS' calls=1
+00:26:21  [GCTK]  walker 0001641172-25-005437 — note_no_event reasons: ['preliminary proxy statement proposing a reverse stock split and plan amendment, with no currently effective dilutive events or new instruments']
+00:26:21  [GCTK]    [2025-04-18] PRE 14A 0001641172-25-005437 — 0 mutations
+00:26:21  [GCTK]  walker 0001641172-25-006348 — form=DEF 14A (3 tools)
+00:26:59  [GCTK]  walker 0001641172-25-006348 — finish='REASON_TOOL_CALLS' calls=1
+00:26:59  [GCTK]  walker 0001641172-25-006348 — note_no_event reasons: ['The filing is a proxy statement (DEF 14A) for the annual meeting, which includes proposals for director elections, auditor ratification, a reverse stock split authorization (not yet effective), and an equity plan amendment, but contains no new dilutive instruments or events that can be recorded with the available tools.']
+00:26:59  [GCTK]    [2025-04-28] DEF 14A 0001641172-25-006348 — 0 mutations
+00:26:59  [GCTK]  walker 0001641172-25-006651 — dedup block: 4 candidates within ±180d
+00:26:59  [GCTK]    0001641172-25-006651 — pruned 1 create tool(s): create_preferred
+00:26:59  [GCTK]  walker 0001641172-25-006651 — form=8-K (20 tools)
+00:27:01  [GCTK]  walker 0001641172-25-006651 — finish='REASON_TOOL_CALLS' calls=1
+00:27:01  [GCTK]  walker 0001641172-25-006651 — note_no_event reasons: ['investor presentation only']
+00:27:01  [GCTK]    [2025-04-29] 8-K 0001641172-25-006651 — 0 mutations
+00:27:01  [GCTK]  walker 0001641172-25-009849 — dedup block: 2 candidates within ±180d
+00:27:01  [GCTK]    0001641172-25-009849 — pruned 1 create tool(s): create_preferred
+00:27:01  [GCTK]  walker 0001641172-25-009849 — form=8-K (20 tools)
+00:27:03  [GCTK]  walker 0001641172-25-009849 — finish='REASON_TOOL_CALLS' calls=1
+00:27:03  [GCTK]  walker 0001641172-25-009849 — note_no_event reasons: ["The filing is a clinical study update announcing ethical approval for a long-term clinical study of the Company's continuous blood glucose monitor, with no dilutive instruments or financing events disclosed."]
+00:27:03  [GCTK]    [2025-05-13] 8-K 0001641172-25-009849 — 0 mutations
+00:27:03  [GCTK]  walker 0001641172-25-010384 — dedup block: 15 candidates (all active, periodic form)
+00:27:03  [GCTK]  walker 0001641172-25-010384 — form=10-Q (17 tools)
+00:27:41  [GCTK]  walker 0001641172-25-010384 — finish='REASON_TOOL_CALLS' calls=2
+00:27:41  [GCTK]  walker 0001641172-25-010384 — call amend_instrument:warrant W-5359 date=2025-01-03 count=3241886.0
+00:27:41  [GCTK]  walker 0001641172-25-010384 — call amend_instrument:warrant W-5360 date=2025-01-03 count=3241886.0
+00:27:41  [GCTK]    [2025-05-14] 10-Q 0001641172-25-010384 — 2 mutations
+00:27:41  [GCTK]    anchor 0001641172-25-010384 as_of=2025-03-31
+00:28:08  [GCTK]  overhang-combined 0001641172-25-010384 — w=2 c=1 p=0 s=1 a=1 e=0
+00:28:08  [GCTK]  anchor count_mismatch suppressed for W-5359: filing=3241886 + exercised=6739251.0 + terminated=0 > initial=501507.0 — filing restates issued, not outstanding
+00:28:08  [GCTK]  anchor count_mismatch suppressed for W-5360: filing=646 + exercised=6739251.0 + terminated=0 > initial=359750.0 — filing restates issued, not outstanding
+00:28:08  [GCTK]    anchor 0001641172-25-010384 — 11 diffs (missing=1 field=0 count=0 extra=10)
+00:28:08  [GCTK]      diff missing_in_ledger (new) [convertible] filing=principal_amount=9000.0
+00:28:08  [GCTK]      diff extra_in_ledger W-5331 [warrant] ledger=terms.strike=136.0, terms.expiration=2025-02-14, terms.known_owners=['Andrew Garrett, Inc.'], terms.applied_splits=[{'date': '2021-08-13', 'ratio': 0.07692307692307693, 'direction': 'reverse'}, {'date': '2024-05-20', 'ratio': 0.2, 'direction': 'reverse'}, {'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=2885, out.initial_count=2885
+00:28:08  [GCTK]      diff extra_in_ledger W-5343 [warrant] ledger=terms.strike=99.0, terms.exercisable_date=2024-07-01, terms.expiration=2029-07-01, terms.known_owners=['Hybrid Capital 12'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=15000, out.initial_count=15000, counterparty=Hybrid Capital 12
+00:28:08  [GCTK]      diff extra_in_ledger W-5344 [warrant] ledger=terms.strike=37.5, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=First, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=106667, out.initial_count=106667, counterparty=John Ballantyne
+00:28:08  [GCTK]      diff extra_in_ledger W-5345 [warrant] ledger=terms.strike=52.5, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Second, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=76190, out.initial_count=76190, counterparty=John Ballantyne
+00:28:08  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=67.5, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=59259, out.initial_count=59259, counterparty=John Ballantyne
+00:28:08  [GCTK]      diff extra_in_ledger W-5351 [warrant] ledger=terms.strike=37.5, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=6915, out.initial_count=6915
+00:28:08  [GCTK]      diff extra_in_ledger W-5352 [warrant] ledger=terms.strike=52.5, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=4939, out.initial_count=4939
+00:28:08  [GCTK]      diff extra_in_ledger W-5353 [warrant] ledger=terms.strike=67.5, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=3842, out.initial_count=3842
+00:28:08  [GCTK]      diff extra_in_ledger W-5367 [warrant] ledger=terms.strike=0.02, terms.exercisable_date=2024-11-14, terms.is_pre_funded=True, terms.issue_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.count=237845, out.initial_count=237845
+00:28:08  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=31.2, terms.maturity=2025-07-18, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}], out.principal_remaining=55506.0, out.principal_remaining_asof=2024-11-14, out.principal_converted_to_date=304494.0
+00:28:08  [GCTK]      anchor proposal create_instrument:convertible date=2025-05-14 principal=9000.0 principal_remaining=9000.0
+00:28:08  [GCTK]      anchor proposal amend_instrument:warrant W-5331 date=2025-03-31 count=0
+00:28:08  [GCTK]      anchor proposal close_instrument W-5331 date=2025-03-31 reason=expired
+00:28:08  [GCTK]    anchor corrections applied=2 rejected=1
+00:28:08  [GCTK]  walker 0001641172-25-010377 — dedup block: 1 candidates within ±180d
+00:28:08  [GCTK]    0001641172-25-010377 — pruned 1 create tool(s): create_preferred
+00:28:08  [GCTK]  walker 0001641172-25-010377 — form=8-K (20 tools)
+00:28:15  [GCTK]  walker 0001641172-25-010377 — finish='REASON_TOOL_CALLS' calls=1
+00:28:15  [GCTK]  walker 0001641172-25-010377 — note_no_event reasons: ['earnings release']
+00:28:15  [GCTK]    [2025-05-14] 8-K 0001641172-25-010377 — 0 mutations
+00:28:15  [GCTK]  walker 0001641172-25-011610 — dedup block: 1 candidates within ±180d
+00:28:15  [GCTK]    0001641172-25-011610 — pruned 1 create tool(s): create_preferred
+00:28:15  [GCTK]  walker 0001641172-25-011610 — form=8-K (20 tools)
+00:28:16  [GCTK]  walker 0001641172-25-011610 — finish='REASON_TOOL_CALLS' calls=1
+00:28:16  [GCTK]  walker 0001641172-25-011610 — note_no_event reasons: ['Patient Advisory Board formation announcement']
+00:28:16  [GCTK]    [2025-05-20] 8-K 0001641172-25-011610 — 0 mutations
+00:28:16  [GCTK]  walker 0001641172-25-012287 — dedup block: 1 candidates within ±180d
+00:28:16  [GCTK]    0001641172-25-012287 — pruned 1 create tool(s): create_preferred
+00:28:16  [GCTK]  walker 0001641172-25-012287 — form=8-K (20 tools)
+00:28:19  [GCTK]  walker 0001641172-25-012287 — finish='REASON_TOOL_CALLS' calls=1
+00:28:19  [GCTK]  walker 0001641172-25-012287 — note_no_event reasons: ['Amendment to the Glucotrack, Inc. 2024 Equity Incentive Plan to increase the maximum aggregate number of shares that may be issued under the Plan to 7,500,000.']
+00:28:19  [GCTK]    [2025-05-23] 8-K 0001641172-25-012287 — 0 mutations
+00:28:19  [GCTK]  walker 0001641172-25-013543 — dedup block: 1 candidates within ±180d
+00:28:19  [GCTK]    0001641172-25-013543 — pruned 1 create tool(s): create_preferred
+00:28:19  [GCTK]  walker 0001641172-25-013543 — form=8-K (20 tools)
+00:28:21  [GCTK]  walker 0001641172-25-013543 — finish='REASON_TOOL_CALLS' calls=1
+00:28:21  [GCTK]  walker 0001641172-25-013543 — note_no_event reasons: ['press release regarding clinical trial data presentation']
+00:28:21  [GCTK]    [2025-06-04] 8-K 0001641172-25-013543 — 0 mutations
+00:28:21  [GCTK]  walker 0001641172-25-014803 — dedup block: 1 candidates within ±180d
+00:28:21  [GCTK]    0001641172-25-014803 — pruned 1 create tool(s): create_preferred
+00:28:21  [GCTK]  walker 0001641172-25-014803 — form=8-K (20 tools)
+00:28:23  [GCTK]  walker 0001641172-25-014803 — finish='REASON_TOOL_CALLS' calls=1
+00:28:23  [GCTK]  walker 0001641172-25-014803 — call apply_split date=2025-06-16 post=1 pre=60 direction=reverse units=common
+00:28:23  [GCTK]    [2025-06-12] 8-K 0001641172-25-014803 — 1 mutations
+00:28:23  [GCTK]    [2025-06-16] split 1-for-60 reverse (finviz+yfinance) units=common
+00:28:23  [GCTK]  walker 0001641172-25-015194 — form=8-K (21 tools)
+00:28:26  [GCTK]  walker 0001641172-25-015194 — finish='REASON_TOOL_CALLS' calls=1
+00:28:26  [GCTK]  walker 0001641172-25-015194 — call apply_split date=2025-06-13 post=1 pre=60 direction=reverse units=common
+00:28:26  [GCTK]    [2025-06-16] 8-K 0001641172-25-015194 — 1 mutations
+00:28:26  [GCTK]    0001641172-25-016387 — pruned 1 create tool(s): create_preferred
+00:28:26  [GCTK]  walker 0001641172-25-016387 — form=8-K (20 tools)
+00:28:29  [GCTK]  walker 0001641172-25-016387 — finish='REASON_TOOL_CALLS' calls=1
+00:28:29  [GCTK]  walker 0001641172-25-016387 — note_no_event reasons: ['clinical trial results press release']
+00:28:29  [GCTK]    [2025-06-25] 8-K 0001641172-25-016387 — 0 mutations
+00:28:29  [GCTK]    0001641172-25-018104 — pruned 1 create tool(s): create_preferred
+00:28:29  [GCTK]  walker 0001641172-25-018104 — form=8-K (20 tools)
+00:28:51  [GCTK]  walker 0001641172-25-018104 — finish='REASON_TOOL_CALLS' calls=1
+00:28:51  [GCTK]  walker 0001641172-25-018104 — note_no_event reasons: ['The filing discloses a repurchase of Series A warrants, which is anti-dilutive, and references a past extinguishment of Series B warrants already reported in a prior 10-Q, with no new dilutive instruments or events.']
+00:28:51  [GCTK]    [2025-07-08] 8-K 0001641172-25-018104 — 0 mutations
+00:28:51  [GCTK]    [2025-07-24] 8-K 0001493152-25-011386 — skipped (no dilutive item + no substantive exhibit (items=4.01))
+00:28:51  [GCTK]    [2025-07-25] 8-K/A 0001493152-25-011423 — skipped (no dilutive item + no substantive exhibit (items=4.01,9.01))
+00:28:51  [GCTK]    0001493152-25-011509 — pruned 1 create tool(s): create_preferred
+00:28:51  [GCTK]  walker 0001493152-25-011509 — form=8-K (20 tools)
+00:28:53  [GCTK]  walker 0001493152-25-011509 — finish='REASON_TOOL_CALLS' calls=1
+00:28:53  [GCTK]  walker 0001493152-25-011509 — note_no_event reasons: ['press release regarding conference attendance']
+00:28:53  [GCTK]    [2025-07-31] 8-K 0001493152-25-011509 — 0 mutations
+00:28:53  [GCTK]    0001493152-25-011630 — pruned 1 create tool(s): create_preferred
+00:28:53  [GCTK]  walker 0001493152-25-011630 — form=8-K (20 tools)
+00:28:55  [GCTK]  walker 0001493152-25-011630 — finish='REASON_TOOL_CALLS' calls=1
+00:28:55  [GCTK]  walker 0001493152-25-011630 — note_no_event reasons: ['appointment of David S. Hirsh, MD as Medical Director, Cardiology']
+00:28:55  [GCTK]    [2025-08-06] 8-K 0001493152-25-011630 — 0 mutations
+00:28:55  [GCTK]  walker 0001493152-25-011981 — dedup block: 14 candidates (all active, periodic form)
+00:28:55  [GCTK]  walker 0001493152-25-011981 — form=10-Q (17 tools)
+00:29:35  [GCTK]  walker 0001493152-25-011981 — finish='REASON_TOOL_CALLS' calls=4
+00:29:35  [GCTK]  walker 0001493152-25-011981 — call record_event ATM-2679 date=2025-06-30 drawdown_amount_usd=4454790.9 drawdown_shares=414785.0 avg_price=10.74
+00:29:35  [GCTK]  walker 0001493152-25-011981 — call record_event W-5360 date=2025-03-15 shares=162063.0 price=0.0 warrants_exercised=54021.0
+00:29:35  [GCTK]  walker 0001493152-25-011981 — call amend_instrument:warrant W-5360 date=2025-06-30 count=11.0
+00:29:35  [GCTK]  walker 0001493152-25-011981 — call amend_instrument:warrant W-5359 date=2025-06-30 count=4368.0
+00:29:35  [GCTK]    [2025-08-14] 10-Q 0001493152-25-011981 — 4 mutations
+00:29:36  [GCTK]    anchor 0001493152-25-011981 as_of=2025-06-30
+00:30:07  [GCTK]  overhang-combined 0001493152-25-011981 — w=3 c=0 p=0 s=1 a=1 e=0
+00:30:07  [GCTK]  anchor count_mismatch suppressed for W-5360: filing=11 + exercised=274384.0 + terminated=0 > initial=5996.0 — filing restates issued, not outstanding
+00:30:07  [GCTK]  anchor 0001493152-25-011981 — overhang is_terminated=true on ATM-2679 contradicted by recent drawdown activity (post_asof=$0, last_dd=2025-06-30); skipping auto-close
+00:30:07  [GCTK]    anchor 0001493152-25-011981 — 9 diffs (missing=0 field=1 count=0 extra=8)
+00:30:07  [GCTK]      diff field_mismatch W-5343 [warrant] ledger=terms.strike=5940.0, out.count=250.0 filing=terms.strike=297.0, out.count=5000
+00:30:07  [GCTK]      diff extra_in_ledger W-5344 [warrant] ledger=terms.strike=2250.0, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=First, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=1778, out.initial_count=1778, counterparty=John Ballantyne
+00:30:07  [GCTK]      diff extra_in_ledger W-5345 [warrant] ledger=terms.strike=3150.0, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Second, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=1270, out.initial_count=1270, counterparty=John Ballantyne
+00:30:07  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=988, out.initial_count=988, counterparty=John Ballantyne
+00:30:07  [GCTK]      diff extra_in_ledger W-5351 [warrant] ledger=terms.strike=2250.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=115, out.initial_count=115
+00:30:07  [GCTK]      diff extra_in_ledger W-5352 [warrant] ledger=terms.strike=3150.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=82, out.initial_count=82
+00:30:07  [GCTK]      diff extra_in_ledger W-5353 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=64, out.initial_count=64
+00:30:07  [GCTK]      diff extra_in_ledger W-5367 [warrant] ledger=terms.strike=1.2, terms.exercisable_date=2024-11-14, terms.is_pre_funded=True, terms.issue_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=3964, out.initial_count=3964
+00:30:07  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=1872.0, terms.maturity=2025-07-18, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.principal_remaining=55506.0, out.principal_remaining_asof=2024-11-14, out.principal_converted_to_date=304494.0
+00:30:07  [GCTK]      anchor proposal amend_instrument:warrant W-5343 date=2025-06-30 strike=297.0 count=5000
+00:30:07  [GCTK]    anchor corrections applied=1 rejected=0
+00:30:07  [GCTK]    0001493152-25-011975 — pruned 1 create tool(s): create_preferred
+00:30:07  [GCTK]  walker 0001493152-25-011975 — form=8-K (20 tools)
+00:30:16  [GCTK]  walker 0001493152-25-011975 — finish='REASON_TOOL_CALLS' calls=1
+00:30:16  [GCTK]  walker 0001493152-25-011975 — note_no_event reasons: ['earnings release and Q2 2025 financial results']
+00:30:16  [GCTK]    [2025-08-14] 8-K 0001493152-25-011975 — 0 mutations
+00:30:16  [GCTK]  walker 0001493152-25-013094 — form=8-K (21 tools)
+00:30:23  [GCTK]  walker 0001493152-25-013094 — finish='REASON_TOOL_CALLS' calls=1
+00:30:23  [GCTK]  walker 0001493152-25-013094 — call create_instrument:equity_line date=2025-09-11 capacity_usd=20000000.0 agreement_date=2025-09-11 agreement_end_date=2027-09-11
+00:30:23  [GCTK]    [2025-09-11] 8-K 0001493152-25-013094 — 1 mutations
+00:30:24  [GCTK]  walker 0001493152-25-013290 — dedup block: 1 candidates within ±180d
+00:30:24  [GCTK]  walker 0001493152-25-013290 — form=8-K (21 tools)
+00:30:33  [GCTK]  walker 0001493152-25-013290 — finish='REASON_TOOL_CALLS' calls=1
+00:30:33  [GCTK]  walker 0001493152-25-013290 — call create_instrument:convertible date=2025-09-12 principal=3600000.0 rate=0.0 conv_price=4.87 maturity=2026-09-12 oid_pct=0.1667 principal_remaining=3600000.0
+00:30:33  [GCTK]    [2025-09-12] 8-K 0001493152-25-013290 — 1 mutations
+00:30:33  [GCTK]  walker 0001493152-25-014671 — dedup block: 2 candidates within ±30d
+00:30:33  [GCTK]  walker 0001493152-25-014671 — form=PRE 14A (3 tools)
+00:30:45  [GCTK]  walker 0001493152-25-014671 — finish='REASON_TOOL_CALLS' calls=1
+00:30:45  [GCTK]  walker 0001493152-25-014671 — note_no_event reasons: ['preliminary proxy statement seeking stockholder approval for share issuance under the existing Sixth Borough equity line (EL-208); no new dilutive instruments or events disclosed.']
+00:30:45  [GCTK]    [2025-09-23] PRE 14A 0001493152-25-014671 — 0 mutations
+00:30:45  [GCTK]    [2025-09-29] S-1 0001493152-25-016051 — skipped (fee-table=resale; 457(c)/(g) only)
+00:30:45  [GCTK]  walker 0001493152-25-016777 — dedup block: 2 candidates within ±30d
+00:30:45  [GCTK]  walker 0001493152-25-016777 — form=DEF 14A (3 tools)
+00:30:56  [GCTK]  walker 0001493152-25-016777 — finish='REASON_TOOL_CALLS' calls=1
+00:30:56  [GCTK]  walker 0001493152-25-016777 — note_no_event reasons: ['proxy statement seeking stockholder approval for Sixth Borough transaction']
+00:30:56  [GCTK]    [2025-10-03] DEF 14A 0001493152-25-016777 — 0 mutations
+00:30:56  [GCTK]    [2025-10-08] S-1/A 0001493152-25-017452 — skipped (resale-family: parent registration under same file_number is fee-table resale)
+00:30:56  [GCTK]  walker 0001493152-25-018143 — form=DEFA14A (3 tools)
+00:30:58  [GCTK]  walker 0001493152-25-018143 — finish='REASON_TOOL_CALLS' calls=1
+00:30:58  [GCTK]  walker 0001493152-25-018143 — note_no_event reasons: ['proxy reminder materials only']
+00:30:58  [GCTK]    [2025-10-15] DEFA14A 0001493152-25-018143 — 0 mutations
+00:30:58  [GCTK]  walker 0001493152-25-019835 — form=DEFA14A (3 tools)
+00:31:00  [GCTK]  walker 0001493152-25-019835 — finish='REASON_TOOL_CALLS' calls=1
+00:31:00  [GCTK]  walker 0001493152-25-019835 — note_no_event reasons: ['Definitive additional proxy materials reminding shareholders to vote at the Special Meeting regarding the Equity Purchase Agreement with Sixth Borough Capital Fund. No new dilutive instruments or events are disclosed.']
+00:31:00  [GCTK]    [2025-10-28] DEFA14A 0001493152-25-019835 — 0 mutations
+00:31:00  [GCTK]  walker 0001493152-25-019834 — dedup block: 2 candidates within ±180d
+00:31:00  [GCTK]    0001493152-25-019834 — pruned 1 create tool(s): create_preferred
+00:31:00  [GCTK]  walker 0001493152-25-019834 — form=8-K (20 tools)
+00:31:03  [GCTK]  walker 0001493152-25-019834 — finish='REASON_TOOL_CALLS' calls=1
+00:31:03  [GCTK]  walker 0001493152-25-019834 — note_no_event reasons: ['shareholder vote reminder for equity purchase agreement with Sixth Borough']
+00:31:03  [GCTK]    [2025-10-28] 8-K 0001493152-25-019834 — 0 mutations
+00:31:03  [GCTK]  walker 0001493152-25-020072 — dedup block: 2 candidates within ±180d
+00:31:03  [GCTK]    0001493152-25-020072 — pruned 1 create tool(s): create_preferred
+00:31:03  [GCTK]  walker 0001493152-25-020072 — form=8-K (20 tools)
+00:31:04  [GCTK]  walker 0001493152-25-020072 — finish='REASON_TOOL_CALLS' calls=1
+00:31:04  [GCTK]  walker 0001493152-25-020072 — note_no_event reasons: ["The filing is a Form 8-K announcing the appointment of Usman Latif, MD, MBA, to the Company's clinical advisory team, with no dilutive instruments or events disclosed."]
+00:31:04  [GCTK]    [2025-10-29] 8-K 0001493152-25-020072 — 0 mutations
+00:31:04  [GCTK]    [2025-10-30] 424B3 0001493152-25-020253 — skipped (resale, file_number outside primary set)
+00:31:04  [GCTK]  walker 0001493152-25-020376 — form=DEFA14A (3 tools)
+00:31:07  [GCTK]  walker 0001493152-25-020376 — finish='REASON_TOOL_CALLS' calls=1
+00:31:07  [GCTK]  walker 0001493152-25-020376 — note_no_event reasons: ['adjournment of special meeting of stockholders']
+00:31:07  [GCTK]    [2025-10-31] DEFA14A 0001493152-25-020376 — 0 mutations
+00:31:07  [GCTK]  walker 0001493152-25-020608 — form=DEFA14A (3 tools)
+00:31:10  [GCTK]  walker 0001493152-25-020608 — finish='REASON_TOOL_CALLS' calls=1
+00:31:10  [GCTK]  walker 0001493152-25-020608 — note_no_event reasons: ['proxy solicitation materials encouraging shareholders to vote on the Sixth Borough equity line proposal']
+00:31:10  [GCTK]    [2025-11-03] DEFA14A 0001493152-25-020608 — 0 mutations
+00:31:10  [GCTK]  walker 0001493152-25-020607 — dedup block: 2 candidates within ±180d
+00:31:10  [GCTK]    0001493152-25-020607 — pruned 1 create tool(s): create_preferred
+00:31:10  [GCTK]  walker 0001493152-25-020607 — form=8-K (20 tools)
+00:31:12  [GCTK]  walker 0001493152-25-020607 — finish='REASON_TOOL_CALLS' calls=1
+00:31:12  [GCTK]  walker 0001493152-25-020607 — note_no_event reasons: ['shareholder vote solicitation for Sixth Borough ELOC']
+00:31:12  [GCTK]    [2025-11-03] 8-K 0001493152-25-020607 — 0 mutations
+00:31:12  [GCTK]    [2025-11-06] 8-K 0001493152-25-020992 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:31:12  [GCTK]  walker 0001493152-25-021321 — form=DEFA14A (3 tools)
+00:31:15  [GCTK]  walker 0001493152-25-021321 — finish='REASON_TOOL_CALLS' calls=1
+00:31:15  [GCTK]  walker 0001493152-25-021321 — note_no_event reasons: ['Special meeting of stockholders permanently adjourned and cancelled due to lack of quorum; no business conducted.']
+00:31:15  [GCTK]    [2025-11-07] DEFA14A 0001493152-25-021321 — 0 mutations
+00:31:15  [GCTK]    [2025-11-07] 8-K 0001493152-25-021320 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+00:31:15  [GCTK]  walker 0001493152-25-022299 — dedup block: 16 candidates (all active, periodic form)
+00:31:15  [GCTK]  walker 0001493152-25-022299 — form=10-Q (17 tools)
+00:31:59  [GCTK]  walker 0001493152-25-022299 — finish='REASON_TOOL_CALLS' calls=5
+00:31:59  [GCTK]  walker 0001493152-25-022299 — call close_instrument C-1118 date=2025-09-12 reason=terminated
+00:31:59  [GCTK]  walker 0001493152-25-022299 — call close_instrument C-1097 date=2025-09-30 reason=redeemed
+00:31:59  [GCTK]  walker 0001493152-25-022299 — call amend_instrument:warrant W-5359 date=2025-09-30 count=2507.0
+00:31:59  [GCTK]  walker 0001493152-25-022299 — call amend_instrument:warrant W-5360 date=2025-09-30 count=11.0
+00:31:59  [GCTK]  walker 0001493152-25-022299 — call amend_instrument:atm ATM-2679 date=2025-09-30 remaining_capacity_usd=0.0
+00:31:59  [GCTK]    [2025-11-13] 10-Q 0001493152-25-022299 — 5 mutations
+00:31:59  [GCTK]      reject close_instrument C-1118 date=2025-09-12 reason=terminated — close_with_outstanding: close_instrument(reason='terminated') blocked: principal_remaining=3600000.0 on convertible C-1118; termination requires 0 outstanding.
+00:31:59  [GCTK]      reject close_instrument C-1097 date=2025-09-30 reason=redeemed — close_with_outstanding: close_instrument(reason='redeemed') blocked: principal_remaining=55506.0 on convertible C-1097; full redemption requires 0. Use record_event(partial_redemption) for partial repayments.
+00:31:59  [GCTK]    anchor 0001493152-25-022299 as_of=2025-09-30
+00:32:38  [GCTK]  [overhang-combined] 0001493152-25-022299 — output truncated at max_tokens
+00:32:38  [GCTK]  overhang-combined 0001493152-25-022299 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+00:32:38  [GCTK]  overhang-combined 0001493152-25-022299 — w=3 c=0 p=0 s=0 a=0 e=0
+00:32:38  [GCTK]    anchor 0001493152-25-022299 — 12 diffs (missing=0 field=0 count=0 extra=12)
+00:32:38  [GCTK]      diff extra_in_ledger W-5344 [warrant] ledger=terms.strike=2250.0, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=First, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=1778, out.initial_count=1778, counterparty=John Ballantyne
+00:32:38  [GCTK]      diff extra_in_ledger W-5345 [warrant] ledger=terms.strike=3150.0, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Second, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=1270, out.initial_count=1270, counterparty=John Ballantyne
+00:32:38  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2034-07-30, terms.expiration=2044-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=988, out.initial_count=988, counterparty=John Ballantyne
+00:32:38  [GCTK]      diff extra_in_ledger W-5351 [warrant] ledger=terms.strike=2250.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=115, out.initial_count=115
+00:32:38  [GCTK]      diff extra_in_ledger W-5352 [warrant] ledger=terms.strike=3150.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=82, out.initial_count=82
+00:32:38  [GCTK]      diff extra_in_ledger W-5353 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=64, out.initial_count=64
+00:32:38  [GCTK]      diff extra_in_ledger W-5367 [warrant] ledger=terms.strike=1.2, terms.exercisable_date=2024-11-14, terms.is_pre_funded=True, terms.issue_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=3964, out.initial_count=3964
+00:32:38  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=1872.0, terms.maturity=2025-07-18, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.principal_remaining=55506.0, out.principal_remaining_asof=2024-11-14, out.principal_converted_to_date=304494.0
+00:32:38  [GCTK]      diff extra_in_ledger C-1118 [convertible] ledger=terms.principal=3600000.0, terms.rate=0.0, terms.conv_price=4.87, terms.maturity=2026-09-12, terms.oid_pct=0.1667, out.principal_remaining=3600000.0, out.principal_remaining_asof=2025-09-12
+00:32:38  [GCTK]      diff extra_in_ledger shelf-2024-s3 [shelf] ledger=terms.capacity_usd=30000000.0, terms.form=S-3, out.drawn_usd=3033748.3, out.sold_to_date=2638042.0
+00:32:38  [GCTK]      diff extra_in_ledger ATM-2679 [atm] ledger=terms.capacity_usd=8230000.0, terms.agreement_date=2024-12-17, out.drawn_usd=8217692.868000001, out.sold_to_date=12792752.0, out.remaining_capacity_usd=0.0
+00:32:38  [GCTK]      diff extra_in_ledger EL-208 [equity_line] ledger=terms.capacity_usd=20000000.0, terms.agreement_date=2025-09-11, terms.agreement_end_date=2027-09-11, counterparty=Sixth Borough
+00:32:38  [GCTK]      anchor proposal amend_instrument:convertible C-1097 date=2025-09-30 principal_remaining=0
+00:32:38  [GCTK]      anchor proposal close_instrument C-1097 date=2025-09-30 reason=redeemed
+00:32:38  [GCTK]    anchor corrections applied=2 rejected=0
+00:32:38  [GCTK]  walker 0001493152-25-022305 — dedup block: 2 candidates within ±180d
+00:32:38  [GCTK]    0001493152-25-022305 — pruned 1 create tool(s): create_preferred
+00:32:38  [GCTK]  walker 0001493152-25-022305 — form=8-K (20 tools)
+00:32:49  [GCTK]  walker 0001493152-25-022305 — finish='REASON_TOOL_CALLS' calls=1
+00:32:49  [GCTK]  walker 0001493152-25-022305 — note_no_event reasons: ['Q3 2025 earnings release summarizing previously disclosed convertible note (C-1118) and ELOC (EL-208) with no new dilutive instruments or events']
+00:32:49  [GCTK]    [2025-11-13] 8-K 0001493152-25-022305 — 0 mutations
+00:32:49  [GCTK]  walker 0001493152-25-029216 — dedup block: 2 candidates within ±180d
+00:32:49  [GCTK]    0001493152-25-029216 — pruned 1 create tool(s): create_preferred
+00:32:49  [GCTK]  walker 0001493152-25-029216 — form=8-K (20 tools)
+00:32:51  [GCTK]  walker 0001493152-25-029216 — finish='REASON_TOOL_CALLS' calls=1
+00:32:51  [GCTK]  walker 0001493152-25-029216 — note_no_event reasons: ['investor presentation']
+00:32:51  [GCTK]    [2025-12-29] 8-K 0001493152-25-029216 — 0 mutations
+00:32:51  [GCTK]  walker 0001493152-25-029791 — dedup block: 2 candidates within ±180d
+00:32:51  [GCTK]  walker 0001493152-25-029791 — form=8-K (21 tools)
+00:33:02  [GCTK]  walker 0001493152-25-029791 — finish='REASON_TOOL_CALLS' calls=3
+00:33:02  [GCTK]  walker 0001493152-25-029791 — call create_instrument:warrant date=2025-12-31 strike=0.001 exercisable_date=2025-12-31 is_pre_funded=True count=1033591.0 initial_count=1033591.0
+00:33:02  [GCTK]  walker 0001493152-25-029791 — call create_instrument:warrant date=2025-12-31 strike=3.87 expiration=2030-12-31 is_pre_funded=False count=2067182.0 initial_count=2067182.0
+00:33:02  [GCTK]  walker 0001493152-25-029791 — call create_instrument:warrant date=2025-12-31 strike=4.26 exercisable_date=2026-06-30 expiration=2030-12-31 is_pre_funded=False count=124030.0 initial_count=124030.0
+00:33:02  [GCTK]    [2025-12-31] 8-K 0001493152-25-029791 — 3 mutations
+00:33:02  [GCTK]    [2026-01-13] S-3 0001493152-26-002032 — skipped (fee-table=resale; 457(c)/(g) only)
+00:33:02  [GCTK]    [2026-01-27] 424B3 0001493152-26-003822 — skipped (resale, file_number outside primary set)
+00:33:02  [GCTK]  walker 0001493152-26-004249 — dedup block: 3 candidates within ±30d
+00:33:02  [GCTK]  walker 0001493152-26-004249 — form=PRE 14A (3 tools)
+00:33:18  [GCTK]  walker 0001493152-26-004249 — finish='REASON_TOOL_CALLS' calls=2
+00:33:18  [GCTK]  walker 0001493152-26-004249 — call amend_instrument:warrant W-5378 date=2026-01-29 known_owners=['Armistice']
+00:33:18  [GCTK]  walker 0001493152-26-004249 — call amend_instrument:warrant W-5379 date=2026-01-29 known_owners=['Armistice']
+00:33:18  [GCTK]    [2026-01-29] PRE 14A 0001493152-26-004249 — 2 mutations
+00:33:18  [GCTK]  walker 0001493152-26-004158 — dedup block: 5 candidates within ±180d
+00:33:18  [GCTK]    0001493152-26-004158 — pruned 1 create tool(s): create_preferred
+00:33:18  [GCTK]  walker 0001493152-26-004158 — form=8-K (20 tools)
+00:33:20  [GCTK]  walker 0001493152-26-004158 — finish='REASON_TOOL_CALLS' calls=1
+00:33:20  [GCTK]  walker 0001493152-26-004158 — note_no_event reasons: ["The filing is a press release announcing USPTO patent approvals for the Company's CBGM platform and contains no dilutive financing events or instrument disclosures."]
+00:33:20  [GCTK]    [2026-01-29] 8-K 0001493152-26-004158 — 0 mutations
+00:33:20  [GCTK]  walker 0001493152-26-005772 — form=DEF 14A (3 tools)
+00:34:16  [GCTK]  walker 0001493152-26-005772 — finish='REASON_TOOL_CALLS' calls=2
+00:34:16  [GCTK]  walker 0001493152-26-005772 — call amend_instrument:warrant W-5378 date=2026-02-09 known_owners=['Armistice']
+00:34:16  [GCTK]  walker 0001493152-26-005772 — call amend_instrument:warrant W-5379 date=2026-02-09 known_owners=['Armistice']
+00:34:16  [GCTK]    [2026-02-09] DEF 14A 0001493152-26-005772 — 2 mutations
+00:34:16  [GCTK]    [2026-03-13] 8-K 0001493152-26-010049 — skipped (no dilutive item + no substantive exhibit (items=5.07,9.01))
+00:34:16  [GCTK]  walker 0001493152-26-013095 — dedup block: 3 candidates within ±180d
+00:34:16  [GCTK]    0001493152-26-013095 — pruned 1 create tool(s): create_preferred
+00:34:16  [GCTK]  walker 0001493152-26-013095 — form=8-K (20 tools)
+00:34:19  [GCTK]  walker 0001493152-26-013095 — finish='REASON_TOOL_CALLS' calls=1
+00:34:19  [GCTK]  walker 0001493152-26-013095 — note_no_event reasons: ['Press release regarding FDA IDE submission plans and clinical trial updates with no dilutive events.']
+00:34:19  [GCTK]    [2026-03-27] 8-K 0001493152-26-013095 — 0 mutations
+00:34:19  [GCTK]  walker 0001493152-26-013656 — dedup block: 18 candidates (all active, periodic form)
+00:34:19  [GCTK]  walker 0001493152-26-013656 — form=10-K (17 tools)
+00:35:01  [GCTK]  [ledger-walker] 0001493152-26-013656 — output truncated at max_tokens
+00:35:01  [GCTK]  walker 0001493152-26-013656 — finish='REASON_MAX_LEN' calls=7
+00:35:01  [GCTK]  walker 0001493152-26-013656 — call record_event shelf-2024-s3 date=2025-02-04 drawdown_amount_usd=3033792.0 drawdown_shares=43968.0 avg_price=69.0
+00:35:01  [GCTK]  walker 0001493152-26-013656 — call close_instrument ATM-2679 date=2025-09-30 reason=terminated
+00:35:01  [GCTK]  walker 0001493152-26-013656 — call amend_instrument:warrant W-5359 date=2025-01-03 strike=297.0 expiration=2030-01-03
+00:35:01  [GCTK]  walker 0001493152-26-013656 — call amend_instrument:warrant W-5360 date=2025-01-03 strike=270.0 expiration=2027-07-03
+00:35:01  [GCTK]  walker 0001493152-26-013656 — call amend_instrument:warrant W-5344 date=2025-12-31 expiration=2034-07-30
+00:35:01  [GCTK]  walker 0001493152-26-013656 — call amend_instrument:warrant W-5345 date=2025-12-31 expiration=2034-07-30
+00:35:01  [GCTK]  walker 0001493152-26-013656 — call amend_instrument:warrant W-5346 date=2025-12-31 expiration=2034-07-30
+00:35:01  [GCTK]    [2026-03-30] 10-K 0001493152-26-013656 — 7 mutations
+00:35:01  [GCTK]  drawdown re-disclosure suppressed: instrument=shelf-2024-s3 date=2025-02-04 amount=3033792.0 accession=0001493152-26-013656
+00:35:01  [GCTK]    anchor 0001493152-26-013656 as_of=2025-12-31
+00:35:45  [GCTK]  [overhang-combined] 0001493152-26-013656 — output truncated at max_tokens
+00:35:45  [GCTK]  overhang-combined 0001493152-26-013656 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+00:35:45  [GCTK]  overhang-combined 0001493152-26-013656 — w=3 c=0 p=0 s=0 a=0 e=0
+00:35:45  [GCTK]    anchor 0001493152-26-013656 — 16 diffs (missing=0 field=1 count=0 extra=15)
+00:35:45  [GCTK]      diff field_mismatch W-5343 [warrant] ledger=terms.strike=5940.0 filing=terms.strike=5490.0
+00:35:45  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2034-07-30, terms.expiration=2034-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=988, out.initial_count=988, counterparty=John Ballantyne
+00:35:45  [GCTK]      diff extra_in_ledger W-5351 [warrant] ledger=terms.strike=2250.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=115, out.initial_count=115
+00:35:45  [GCTK]      diff extra_in_ledger W-5352 [warrant] ledger=terms.strike=3150.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=82, out.initial_count=82
+00:35:45  [GCTK]      diff extra_in_ledger W-5353 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=64, out.initial_count=64
+00:35:45  [GCTK]      diff extra_in_ledger W-5359 [warrant] ledger=terms.strike=297.0, terms.series_letter=A, terms.expiration=2030-01-03, terms.known_owners=['John Ballantyne'], terms.issue_date=2024-11-14, terms.exercisable_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=2507.0, out.initial_count=8358, out.exercised_to_date=112321
+00:35:45  [GCTK]      diff extra_in_ledger W-5360 [warrant] ledger=terms.strike=270.0, terms.series_letter=B, terms.expiration=2027-07-03, terms.known_owners=['John Ballantyne'], terms.issue_date=2024-11-14, terms.exercisable_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=11.0, out.initial_count=5996, out.exercised_to_date=274384.0
+00:35:45  [GCTK]      diff extra_in_ledger W-5367 [warrant] ledger=terms.strike=1.2, terms.exercisable_date=2024-11-14, terms.is_pre_funded=True, terms.issue_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=3964, out.initial_count=3964
+00:35:45  [GCTK]      diff extra_in_ledger W-5378 [warrant] ledger=terms.strike=0.001, terms.exercisable_date=2025-12-31, terms.is_pre_funded=True, terms.known_owners=['Armistice'], out.count=1033591.0, out.initial_count=1033591.0
+00:35:45  [GCTK]      diff extra_in_ledger W-5379 [warrant] ledger=terms.strike=3.87, terms.expiration=2030-12-31, terms.is_pre_funded=False, terms.known_owners=['Armistice'], out.count=2067182.0, out.initial_count=2067182.0
+00:35:45  [GCTK]      diff extra_in_ledger W-5380 [warrant] ledger=terms.strike=4.26, terms.exercisable_date=2026-06-30, terms.expiration=2030-12-31, terms.is_pre_funded=False, out.count=124030.0, out.initial_count=124030.0
+00:35:45  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=1872.0, terms.maturity=2025-07-18, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.principal_remaining=0, out.principal_remaining_asof=2025-09-30, out.principal_converted_to_date=304494.0
+00:35:45  [GCTK]      diff extra_in_ledger C-1118 [convertible] ledger=terms.principal=3600000.0, terms.rate=0.0, terms.conv_price=4.87, terms.maturity=2026-09-12, terms.oid_pct=0.1667, out.principal_remaining=3600000.0, out.principal_remaining_asof=2025-09-12
+00:35:45  [GCTK]      diff extra_in_ledger shelf-2024-s3 [shelf] ledger=terms.capacity_usd=30000000.0, terms.form=S-3, out.drawn_usd=3033748.3, out.sold_to_date=2638042.0
+00:35:45  [GCTK]      diff extra_in_ledger ATM-2679 [atm] ledger=terms.capacity_usd=8230000.0, terms.agreement_date=2024-12-17, out.drawn_usd=8217692.868000001, out.sold_to_date=12792752.0, out.remaining_capacity_usd=0.0
+00:35:45  [GCTK]      diff extra_in_ledger EL-208 [equity_line] ledger=terms.capacity_usd=20000000.0, terms.agreement_date=2025-09-11, terms.agreement_end_date=2027-09-11, counterparty=Sixth Borough
+00:35:45  [GCTK]      anchor proposal amend_instrument:warrant W-5343 date=2025-12-31 strike=5490.0
+00:35:45  [GCTK]      anchor proposal close_instrument C-1097 date=2025-12-31 reason=redeemed
+00:35:45  [GCTK]    anchor corrections applied=1 rejected=1
+00:35:45  [GCTK]  walker 0001493152-26-013654 — dedup block: 3 candidates within ±180d
+00:35:45  [GCTK]    0001493152-26-013654 — pruned 1 create tool(s): create_preferred
+00:35:45  [GCTK]  walker 0001493152-26-013654 — form=8-K (20 tools)
+00:35:52  [GCTK]  walker 0001493152-26-013654 — finish='REASON_TOOL_CALLS' calls=1
+00:35:52  [GCTK]  walker 0001493152-26-013654 — must_record net fired (content:warrant); re-asking
+00:35:58  [GCTK]  walker 0001493152-26-013654 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+00:35:58  [GCTK]  walker 0001493152-26-013654 — must_record (content:warrant): recorded nothing after second look — possible missed instrument
+00:35:58  [GCTK]  walker 0001493152-26-013654 — note_no_event reasons: ['fourth quarter and full year 2025 earnings release with no new dilutive events']
+00:35:58  [GCTK]    [2026-03-30] 8-K 0001493152-26-013654 — 0 mutations
+00:35:58  [GCTK]  walker 0001493152-26-016507 — dedup block: 3 candidates within ±180d
+00:35:58  [GCTK]  walker 0001493152-26-016507 — form=8-K (21 tools)
+00:36:07  [GCTK]  walker 0001493152-26-016507 — finish='REASON_TOOL_CALLS' calls=1
+00:36:07  [GCTK]  walker 0001493152-26-016507 — call record_event C-1118 date=2026-04-13 shares_issued=895000.0 principal_converted=600000.0
+00:36:07  [GCTK]    [2026-04-14] 8-K 0001493152-26-016507 — 1 mutations
+00:36:07  [GCTK]    [2026-04-29] POS AM 0001493152-26-019677 — skipped (resale-family: parent registration under same file_number is fee-table resale)
+00:36:07  [GCTK]  walker 0001493152-26-019788 — dedup block: 3 candidates within ±180d
+00:36:07  [GCTK]    0001493152-26-019788 — pruned 1 create tool(s): create_preferred
+00:36:07  [GCTK]  walker 0001493152-26-019788 — form=8-K (20 tools)
+00:36:09  [GCTK]  walker 0001493152-26-019788 — finish='REASON_TOOL_CALLS' calls=1
+00:36:09  [GCTK]  walker 0001493152-26-019788 — note_no_event reasons: ['press release announcing publication of peer-reviewed study on CBGM technology']
+00:36:09  [GCTK]    [2026-04-30] 8-K 0001493152-26-019788 — 0 mutations
+00:36:09  [GCTK]  walker 0001493152-26-020747 — dedup block: 3 candidates within ±180d
+00:36:09  [GCTK]  walker 0001493152-26-020747 — form=8-K (21 tools)
+00:36:20  [GCTK]  walker 0001493152-26-020747 — finish='REASON_TOOL_CALLS' calls=1
+00:36:20  [GCTK]  walker 0001493152-26-020747 — call record_event C-1118 date=2026-04-29 shares_issued=1300000.0 principal_converted=988000.0
+00:36:20  [GCTK]    [2026-04-30] 8-K 0001493152-26-020747 — 1 mutations
+00:36:20  [GCTK]  walker 0001493152-26-021706 — dedup block: 3 candidates within ±180d
+00:36:20  [GCTK]    0001493152-26-021706 — pruned 1 create tool(s): create_preferred
+00:36:20  [GCTK]  walker 0001493152-26-021706 — form=8-K (20 tools)
+00:36:22  [GCTK]  walker 0001493152-26-021706 — finish='REASON_TOOL_CALLS' calls=1
+00:36:22  [GCTK]  walker 0001493152-26-021706 — note_no_event reasons: ['The filing is a press release announcing the submission of an Investigational Device Exemption (IDE) application to the FDA, with no dilutive instruments or events disclosed.']
+00:36:22  [GCTK]    [2026-05-07] 8-K 0001493152-26-021706 — 0 mutations
+00:36:22  [GCTK]  walker 0001493152-26-023205 — dedup block: 17 candidates (all active, periodic form)
+00:36:22  [GCTK]  walker 0001493152-26-023205 — form=10-Q (17 tools)
+00:37:03  [GCTK]  walker 0001493152-26-023205 — finish='REASON_TOOL_CALLS' calls=4
+00:37:03  [GCTK]  walker 0001493152-26-023205 — call record_event EL-208 date=2026-03-27 drawdown_amount_usd=597400.0 drawdown_shares=580000.0 avg_price=1.03
+00:37:03  [GCTK]  walker 0001493152-26-023205 — call record_event W-5378 date=2026-03-31 shares=1033591.0 price=0.001 gross_proceeds=1.0
+00:37:03  [GCTK]  walker 0001493152-26-023205 — call close_instrument W-5378 date=2026-03-31 reason=exercised
+00:37:03  [GCTK]  walker 0001493152-26-023205 — call close_instrument C-1118 date=2025-09-12 reason=terminated
+00:37:03  [GCTK]    [2026-05-14] 10-Q 0001493152-26-023205 — 4 mutations
+00:37:03  [GCTK]      reject close_instrument C-1118 date=2025-09-12 reason=terminated — close_with_outstanding: close_instrument(reason='terminated') blocked: principal_remaining=2012000.0 on convertible C-1118; termination requires 0 outstanding.
+00:37:03  [GCTK]    anchor 0001493152-26-023205 as_of=2026-03-31
+00:37:43  [GCTK]  [overhang-combined] 0001493152-26-023205 — output truncated at max_tokens
+00:37:43  [GCTK]  overhang-combined 0001493152-26-023205 — w=4 c=0 p=0 s=0 a=1 e=1
+00:37:43  [GCTK]  anchor count_mismatch suppressed for W-5378: filing=2067182 + exercised=1033591.0 + terminated=0 > initial=1033591.0 — filing restates issued, not outstanding
+00:37:43  [GCTK]  anchor count_mismatch suppressed for W-5359: filing=54032 + exercised=112321.0 + terminated=0 > initial=8358.0 — filing restates issued, not outstanding
+00:37:43  [GCTK]    anchor 0001493152-26-023205 — 16 diffs (missing=1 field=2 count=0 extra=13)
+00:37:43  [GCTK]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=0.001, outstanding_count=60000.0, issue_date=2025-09-11
+00:37:43  [GCTK]      diff field_mismatch W-5359 [warrant] ledger=terms.strike=297.0 filing=terms.strike=2172.0
+00:37:43  [GCTK]      diff field_mismatch W-5360 [warrant] ledger=terms.strike=270.0 filing=terms.strike=36.2
+00:37:43  [GCTK]      diff extra_in_ledger W-5343 [warrant] ledger=terms.strike=5490.0, terms.exercisable_date=2024-07-01, terms.expiration=2029-07-01, terms.known_owners=['Hybrid Capital 12'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=250, out.initial_count=250, counterparty=Hybrid Capital 12
+00:37:43  [GCTK]      diff extra_in_ledger W-5344 [warrant] ledger=terms.strike=2250.0, terms.exercisable_date=2034-07-30, terms.expiration=2034-07-30, terms.series_letter=First, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=1778, out.initial_count=1778, counterparty=John Ballantyne
+00:37:43  [GCTK]      diff extra_in_ledger W-5345 [warrant] ledger=terms.strike=3150.0, terms.exercisable_date=2034-07-30, terms.expiration=2034-07-30, terms.series_letter=Second, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=1270, out.initial_count=1270, counterparty=John Ballantyne
+00:37:43  [GCTK]      diff extra_in_ledger W-5346 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2034-07-30, terms.expiration=2034-07-30, terms.series_letter=Third, terms.known_owners=['John Ballantyne'], terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=988, out.initial_count=988, counterparty=John Ballantyne
+00:37:43  [GCTK]      diff extra_in_ledger W-5351 [warrant] ledger=terms.strike=2250.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=115, out.initial_count=115
+00:37:43  [GCTK]      diff extra_in_ledger W-5352 [warrant] ledger=terms.strike=3150.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=82, out.initial_count=82
+00:37:43  [GCTK]      diff extra_in_ledger W-5353 [warrant] ledger=terms.strike=4050.0, terms.exercisable_date=2025-08-16, terms.expiration=2034-09-05, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=64, out.initial_count=64
+00:37:43  [GCTK]      diff extra_in_ledger W-5367 [warrant] ledger=terms.strike=1.2, terms.exercisable_date=2024-11-14, terms.is_pre_funded=True, terms.issue_date=2024-11-14, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.count=3964, out.initial_count=3964
+00:37:43  [GCTK]      diff extra_in_ledger W-5379 [warrant] ledger=terms.strike=3.87, terms.expiration=2030-12-31, terms.is_pre_funded=False, terms.known_owners=['Armistice'], out.count=2067182.0, out.initial_count=2067182.0
+00:37:43  [GCTK]      diff extra_in_ledger W-5380 [warrant] ledger=terms.strike=4.26, terms.exercisable_date=2026-06-30, terms.expiration=2030-12-31, terms.is_pre_funded=False, out.count=124030.0, out.initial_count=124030.0
+00:37:43  [GCTK]      diff extra_in_ledger C-1097 [convertible] ledger=terms.principal=350000.0, terms.rate=0.08, terms.conv_price=1872.0, terms.maturity=2025-07-18, terms.applied_splits=[{'date': '2025-02-04', 'ratio': 0.05, 'direction': 'reverse'}, {'date': '2025-06-16', 'ratio': 0.016666666666666666, 'direction': 'reverse'}], out.principal_remaining=0, out.principal_remaining_asof=2025-09-30, out.principal_converted_to_date=304494.0
+00:37:43  [GCTK]      diff extra_in_ledger C-1118 [convertible] ledger=terms.principal=3600000.0, terms.rate=0.0, terms.conv_price=4.87, terms.maturity=2026-09-12, terms.oid_pct=0.1667, out.principal_remaining=2012000.0, out.principal_remaining_asof=2026-04-29, out.principal_converted_to_date=1588000.0
+00:37:43  [GCTK]      diff extra_in_ledger shelf-2024-s3 [shelf] ledger=terms.capacity_usd=30000000.0, terms.form=S-3, out.drawn_usd=3033748.3, out.sold_to_date=2638042.0
+00:37:43  [GCTK]      anchor proposal amend_instrument:warrant W-5359 date=2026-03-31 strike=2172.0
+00:37:43  [GCTK]      anchor proposal amend_instrument:warrant W-5360 date=2026-03-31 strike=36.2
+00:37:43  [GCTK]      anchor proposal close_instrument C-1097 date=2026-03-31 reason=redeemed
+00:37:43  [GCTK]    anchor corrections applied=2 rejected=1
+00:37:43  [GCTK]  walker 0001493152-26-023202 — dedup block: 2 candidates within ±180d
+00:37:43  [GCTK]    0001493152-26-023202 — pruned 1 create tool(s): create_preferred
+00:37:43  [GCTK]  walker 0001493152-26-023202 — form=8-K (20 tools)
+00:37:57  [GCTK]  walker 0001493152-26-023202 — finish='REASON_TOOL_CALLS' calls=1
+00:37:57  [GCTK]  walker 0001493152-26-023202 — note_no_event reasons: ['Q1 2026 earnings release with insufficient details (missing share counts and exact dates) to record the mentioned promissory note reduction or the subsequent equity line drawdown.']
+00:37:57  [GCTK]    [2026-05-14] 8-K 0001493152-26-023202 — 0 mutations
+00:37:57  [GCTK]    [2026-05-15] 8-K 0001493152-26-023889 — skipped (no dilutive item + no substantive exhibit (items=3.01,9.01))
+00:37:57  [GCTK]    walk done — seed=A_periodic walked=64 skipped=100 (resale=6 empty8k=22) applied=107 rejected=14 created=29 drawdowns=8 anchor_diffs=142 errors=0

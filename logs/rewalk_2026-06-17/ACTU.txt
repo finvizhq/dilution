@@ -1,0 +1,16 @@
+=== Eval: ACTU (cik 1652935) ===
+  cards exact     : 4/4
+  cards found     : 4/4
+  fields exact    : 22/22  (100%)
+  unexpected extra: 3
+
+PASS
+  [warrant] June 2025: ✓ all 5 fields exact
+  [atm] November 2025: ✓ all 6 fields exact
+  [equity_line] March 2025 Riley: ✓ all 5 fields exact
+  [shelf] September 2025: ✓ all 6 fields exact
+
+EXTRA (in actual, not in fixture)
+  [warrant] September 2018 Warrants (2018-09-07): unexpected actual card
+  [warrant] June 2023 Warrants (2023-06-30): unexpected actual card
+  [warrant] August 2024 Warrants (2024-08-14): unexpected actual card

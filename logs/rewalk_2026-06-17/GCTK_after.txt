@@ -1,0 +1,33 @@
+=== Eval: GCTK (cik 1506983) ===
+  cards exact     : 10/17
+  cards found     : 15/17
+  fields exact    : 93/98  (95%)
+  unexpected extra: 0
+
+PASS
+  [warrant] December 2025: ✓ all 8 fields exact
+  [warrant] November 2024 Series A: ✓ all 6 fields exact
+  [warrant] November 2024 Series B: ✓ all 6 fields exact
+  [warrant] September 2024: ✓ all 6 fields exact
+  [warrant] September 2024: ✓ all 6 fields exact
+  [warrant] September 2024: ✓ all 6 fields exact
+  [convertible] September 2025: ✓ all 8 fields exact
+  [atm] December 2024: ✓ all 7 fields exact
+  [equity_line] September 2025: ✓ all 5 fields exact
+  [shelf] September 2024: ✓ all 6 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [s1_offering] September 2024: 9/10 fields exact
+      ✗ warrant_coverage_pct: expected 200, got None
+  [warrant] July 2024: 5/6 fields exact
+      ✗ exercisable_date: expected ~'2025-07-30', got '2034-07-30'
+  [warrant] July 2024: 5/6 fields exact
+      ✗ exercisable_date: expected ~'2025-07-30', got '2034-07-30'
+  [warrant] July 2024: 5/6 fields exact
+      ✗ exercisable_date: expected ~'2025-07-30', got '2034-07-30'
+  [warrant] July 2024: 5/6 fields exact
+      ✗ exercise_price: expected 5940.0, got 5490.0
+
+MISSING (in fixture, not in actual)
+  [warrant] November 2024 Series A: NO MATCH
+  [warrant] November 2024 Series B: NO MATCH

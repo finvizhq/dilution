@@ -1,0 +1,558 @@
+00:37:58  [XTLB]  langfuse: LANGFUSE_PUBLIC_KEY/SECRET_KEY not set — tracing disabled
+00:37:58  [XTLB]  Dilution tracker — ticker=XTLB since=2020-06-17 llm_provider=gemini llm_model=gemini-3.5-flash llm_model_periodic=gemini-3.5-flash
+00:37:58  [XTLB]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:37:58  [XTLB]  resolved XTLB → CIK 1023549 XTLB (XTL BIOPHARMACEUTICALS LTD)
+00:37:58  [XTLB]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:37:59  [XTLB]    79 relevant filings since 2020-06-17
+00:37:59  [XTLB]    unit already detected — is_fpi=1 ads_ratio=0.01
+00:37:59  [XTLB]    unit ctx — is_fpi=1 ads_ratio=0.01 reporting_unit=ads
+00:38:00  [XTLB]    splits — finviz=3 yfinance=3 merged=3
+00:38:00  [XTLB]    splits — 3 events persisted
+00:38:00  [XTLB]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:38:00  [XTLB]    fetch done — 0/0 filings, 0 docs, 0 errors
+00:38:00  [XTLB]  walker --force: dropping ledger for cik=1023549
+00:38:00  [XTLB]  walker: 79 events (filings=78 splits=1 cik=1023549); 0 filing(s) already walked
+00:38:00  [XTLB]  seed: extracting overhang from 20-F 0001213900-21-015290 (2020-12-31)
+00:38:20  [XTLB]  overhang-combined 0001213900-21-015290 — w=2 c=0 p=0 s=0 a=0 e=0
+00:38:20  [XTLB]  seed: 0001213900-21-015290 extracted 2 rows (warrant=2)
+00:38:20  [XTLB]  seed:   row → warrant name='Warrants to purchase ADSs (February 17, 2017)' issue_date=2017-02-17 maturity_or_expiry=2022-08-16 outstanding_count=1050000.0 common_shares_issuable=1050000.0 strike_or_conversion_price=4.1
+00:38:20  [XTLB]  seed:   row → warrant name='Warrants to purchase ADSs (March 7, 2017)' issue_date=2017-03-07 maturity_or_expiry=2022-09-06 outstanding_count=1400000.0 common_shares_issuable=1400000.0 strike_or_conversion_price=2.3
+00:38:20  [XTLB]  seed: case A — created 2 instruments (rejected 0)
+00:38:20  [XTLB]  seed case=A_periodic — 0001213900-21-015290
+00:38:20  [XTLB]  walker 0001213900-20-016231 — dedup block: 2 candidates (all active, periodic form)
+00:38:20  [XTLB]  walker 0001213900-20-016231 — form=6-K (22 tools)
+00:38:22  [XTLB]  walker 0001213900-20-016231 — finish='REASON_TOOL_CALLS' calls=1
+00:38:22  [XTLB]  walker 0001213900-20-016231 — note_no_event reasons: ["postponement of extraordinary shareholders' meeting due to lack of quorum"]
+00:38:22  [XTLB]    [2020-06-30] 6-K 0001213900-20-016231 — 0 mutations
+00:38:22  [XTLB]    [2020-06-30] 6-K 0001213900-20-016231 — no interim-financials markers; anchor reconciliation skipped
+00:38:22  [XTLB]  walker 0001213900-20-016825 — dedup block: 2 candidates (all active, periodic form)
+00:38:22  [XTLB]  walker 0001213900-20-016825 — form=6-K (22 tools)
+00:38:25  [XTLB]  walker 0001213900-20-016825 — finish='REASON_TOOL_CALLS' calls=1
+00:38:25  [XTLB]  walker 0001213900-20-016825 — note_no_event reasons: ['shareholder meeting results regarding CEO employment terms']
+00:38:25  [XTLB]    [2020-07-07] 6-K 0001213900-20-016825 — 0 mutations
+00:38:25  [XTLB]    [2020-07-07] 6-K 0001213900-20-016825 — no interim-financials markers; anchor reconciliation skipped
+00:38:25  [XTLB]  walker 0001213900-20-023367 — dedup block: 2 candidates (all active, periodic form)
+00:38:25  [XTLB]  walker 0001213900-20-023367 — form=6-K (22 tools)
+00:38:28  [XTLB]  walker 0001213900-20-023367 — finish='REASON_TOOL_CALLS' calls=1
+00:38:28  [XTLB]  walker 0001213900-20-023367 — note_no_event reasons: ['financial results press release for the six months ended June 30, 2020 with no dilutive events or instrument disclosures']
+00:38:28  [XTLB]    [2020-08-24] 6-K 0001213900-20-023367 — 0 mutations
+00:38:28  [XTLB]    anchor 0001213900-20-023367 as_of=2020-08-24
+00:38:33  [XTLB]  overhang-combined 0001213900-20-023367 — w=0 c=0 p=0 s=0 a=0 e=0
+00:38:33  [XTLB]  walker 0001213900-20-036396 — dedup block: 2 candidates (all active, periodic form)
+00:38:33  [XTLB]  walker 0001213900-20-036396 — form=6-K (22 tools)
+00:38:36  [XTLB]  walker 0001213900-20-036396 — finish='REASON_TOOL_CALLS' calls=1
+00:38:36  [XTLB]  walker 0001213900-20-036396 — note_no_event reasons: ['earnings release and financial results for the nine months ended September 30, 2020 with no dilutive events or instrument disclosures']
+00:38:36  [XTLB]    [2020-11-12] 6-K 0001213900-20-036396 — 0 mutations
+00:38:36  [XTLB]    anchor 0001213900-20-036396 as_of=2020-11-12
+00:38:40  [XTLB]  overhang-combined 0001213900-20-036396 — w=0 c=0 p=0 s=0 a=0 e=0
+00:38:40  [XTLB]  walker 0001213900-20-039234 — dedup block: 2 candidates (all active, periodic form)
+00:38:40  [XTLB]  walker 0001213900-20-039234 — form=6-K (22 tools)
+00:38:45  [XTLB]  walker 0001213900-20-039234 — finish='REASON_TOOL_CALLS' calls=1
+00:38:45  [XTLB]  walker 0001213900-20-039234 — note_no_event reasons: ['annual general meeting notice and proxy statement']
+00:38:45  [XTLB]    [2020-11-25] 6-K 0001213900-20-039234 — 0 mutations
+00:38:45  [XTLB]    [2020-11-25] 6-K 0001213900-20-039234 — no interim-financials markers; anchor reconciliation skipped
+00:38:45  [XTLB]  walker 0001213900-20-045599 — dedup block: 2 candidates (all active, periodic form)
+00:38:45  [XTLB]  walker 0001213900-20-045599 — form=6-K (22 tools)
+00:38:47  [XTLB]  walker 0001213900-20-045599 — finish='REASON_TOOL_CALLS' calls=1
+00:38:47  [XTLB]  walker 0001213900-20-045599 — note_no_event reasons: ["postponement of annual shareholders' meeting due to lack of quorum"]
+00:38:47  [XTLB]    [2020-12-31] 6-K 0001213900-20-045599 — 0 mutations
+00:38:47  [XTLB]    [2020-12-31] 6-K 0001213900-20-045599 — no interim-financials markers; anchor reconciliation skipped
+00:38:47  [XTLB]  walker 0001213900-21-000814 — dedup block: 2 candidates (all active, periodic form)
+00:38:47  [XTLB]  walker 0001213900-21-000814 — form=6-K (22 tools)
+00:38:48  [XTLB]  walker 0001213900-21-000814 — finish='REASON_TOOL_CALLS' calls=1
+00:38:48  [XTLB]  walker 0001213900-21-000814 — note_no_event reasons: ['annual general meeting results']
+00:38:48  [XTLB]    [2021-01-07] 6-K 0001213900-21-000814 — 0 mutations
+00:38:48  [XTLB]    [2021-01-07] 6-K 0001213900-21-000814 — no interim-financials markers; anchor reconciliation skipped
+00:38:48  [XTLB]  walker 0001213900-21-010791 — dedup block: 2 candidates (all active, periodic form)
+00:38:48  [XTLB]  walker 0001213900-21-010791 — form=6-K (22 tools)
+00:38:51  [XTLB]  walker 0001213900-21-010791 — finish='REASON_TOOL_CALLS' calls=1
+00:38:51  [XTLB]  walker 0001213900-21-010791 — note_no_event reasons: ['proxy statement for director re-election']
+00:38:51  [XTLB]    [2021-02-22] 6-K 0001213900-21-010791 — 0 mutations
+00:38:51  [XTLB]    [2021-02-22] 6-K 0001213900-21-010791 — no interim-financials markers; anchor reconciliation skipped
+00:38:51  [XTLB]  walker 0001213900-21-018265 — dedup block: 2 candidates (all active, periodic form)
+00:38:51  [XTLB]  walker 0001213900-21-018265 — form=6-K (22 tools)
+00:38:53  [XTLB]  walker 0001213900-21-018265 — finish='REASON_TOOL_CALLS' calls=1
+00:38:53  [XTLB]  walker 0001213900-21-018265 — note_no_event reasons: ["postponement of extraordinary shareholders' meeting due to lack of quorum"]
+00:38:53  [XTLB]    [2021-03-29] 6-K 0001213900-21-018265 — 0 mutations
+00:38:53  [XTLB]    [2021-03-29] 6-K 0001213900-21-018265 — no interim-financials markers; anchor reconciliation skipped
+00:38:53  [XTLB]  walker 0001213900-21-020114 — dedup block: 2 candidates (all active, periodic form)
+00:38:53  [XTLB]  walker 0001213900-21-020114 — form=6-K (22 tools)
+00:38:55  [XTLB]  walker 0001213900-21-020114 — finish='REASON_TOOL_CALLS' calls=1
+00:38:55  [XTLB]  walker 0001213900-21-020114 — note_no_event reasons: ['The filing only reports the results of an Extraordinary General Meeting of shareholders regarding the re-election of an external director, with no dilutive instruments or financing events disclosed.']
+00:38:55  [XTLB]    [2021-04-05] 6-K 0001213900-21-020114 — 0 mutations
+00:38:55  [XTLB]    [2021-04-05] 6-K 0001213900-21-020114 — no interim-financials markers; anchor reconciliation skipped
+00:38:55  [XTLB]  walker 0001213900-21-027792 — dedup block: 2 candidates (all active, periodic form)
+00:38:55  [XTLB]  walker 0001213900-21-027792 — form=20-F/A (21 tools)
+00:39:30  [XTLB]  walker 0001213900-21-027792 — finish='REASON_TOOL_CALLS' calls=3
+00:39:30  [XTLB]  walker 0001213900-21-027792 — call record_event W-5387 date=2021-03-31 shares=129818.0 price=0.0
+00:39:30  [XTLB]  walker 0001213900-21-027792 — call record_event W-5388 date=2021-05-19 shares=9686.0 price=0.0
+00:39:30  [XTLB]  walker 0001213900-21-027792 — call amend_instrument:warrant W-5388 date=2021-05-19 known_owners=['Alexander Rabinovich', 'David Bassa']
+00:39:30  [XTLB]    [2021-05-19] 20-F/A 0001213900-21-027792 — 3 mutations
+00:39:30  [XTLB]    anchor 0001213900-21-027792 as_of=2020-12-31
+00:39:50  [XTLB]  overhang-combined 0001213900-21-027792 — w=2 c=0 p=0 s=0 a=0 e=0
+00:39:50  [XTLB]  anchor count_mismatch suppressed for W-5387: filing=1050000 + exercised=129818.0 + terminated=0 > initial=1050000.0 — filing restates issued, not outstanding
+00:39:50  [XTLB]  walker 0001213900-21-027790 — dedup block: 2 candidates (all active, periodic form)
+00:39:50  [XTLB]  walker 0001213900-21-027790 — form=6-K (22 tools)
+00:39:53  [XTLB]  walker 0001213900-21-027790 — finish='REASON_TOOL_CALLS' calls=1
+00:39:53  [XTLB]  walker 0001213900-21-027790 — note_no_event reasons: ['restatement of financial statements due to warrant classification']
+00:39:53  [XTLB]    [2021-05-19] 6-K 0001213900-21-027790 — 0 mutations
+00:39:53  [XTLB]    [2021-05-19] 6-K 0001213900-21-027790 — no interim-financials markers; anchor reconciliation skipped
+00:39:53  [XTLB]  walker 0001213900-21-027795 — dedup block: 2 candidates (all active, periodic form)
+00:39:53  [XTLB]  walker 0001213900-21-027795 — form=6-K (22 tools)
+00:39:59  [XTLB]  walker 0001213900-21-027795 — finish='REASON_TOOL_CALLS' calls=1
+00:39:59  [XTLB]  walker 0001213900-21-027795 — note_no_event reasons: ['The filing contains Q1 2021 financial results and an accounting restatement regarding the classification of existing warrants, with no new dilutive instruments, exercises, or contractual amendments.']
+00:39:59  [XTLB]    [2021-05-19] 6-K 0001213900-21-027795 — 0 mutations
+00:39:59  [XTLB]    anchor 0001213900-21-027795 as_of=2021-05-19
+00:40:07  [XTLB]  overhang-combined 0001213900-21-027795 — w=1 c=0 p=0 s=0 a=0 e=0
+00:40:07  [XTLB]    anchor 0001213900-21-027795 — 3 diffs (missing=1 field=0 count=0 extra=2)
+00:40:07  [XTLB]      diff missing_in_ledger (new) [warrant] filing=issue_date=2018-03
+00:40:07  [XTLB]      diff extra_in_ledger W-5387 [warrant] ledger=terms.strike=4.1, terms.expiration=2022-08-16, out.count=920182.0, out.initial_count=1050000.0, out.exercised_to_date=129818.0
+00:40:07  [XTLB]      diff extra_in_ledger W-5388 [warrant] ledger=terms.strike=2.3, terms.expiration=2022-09-06, terms.known_owners=['Alexander Rabinovich', 'David Bassa'], out.count=1390314.0, out.initial_count=1400000.0, out.exercised_to_date=9686.0
+00:40:07  [XTLB]      anchor proposal create_instrument:warrant date=2021-05-19 strike=0.0 is_pre_funded=True count=0.0 initial_count=0.0
+00:40:07  [XTLB]    anchor corrections applied=1 rejected=0
+00:40:07  [XTLB]  walker 0001213900-21-030443 — dedup block: 1 candidates within ±30d
+00:40:07  [XTLB]  walker 0001213900-21-030443 — form=POS AM (3 tools)
+00:40:24  [XTLB]  walker 0001213900-21-030443 — finish='REASON_TOOL_CALLS' calls=1
+00:40:24  [XTLB]  walker 0001213900-21-030443 — note_no_event reasons: ['resale registration of warrants']
+00:40:24  [XTLB]    [2021-06-02] POS AM 0001213900-21-030443 — 0 mutations
+00:40:24  [XTLB]  walker 0001213900-21-031584 — dedup block: 1 candidates within ±180d
+00:40:24  [XTLB]    0001213900-21-031584 — pruned 2 create tool(s): create_atm,create_convertible
+00:40:24  [XTLB]  walker 0001213900-21-031584 — form=424B3 (6 tools)
+00:41:42  [XTLB]  walker 0001213900-21-031584 — finish='REASON_TOOL_CALLS' calls=1
+00:41:42  [XTLB]  walker 0001213900-21-031584 — note_no_event reasons: ['resale registration']
+00:41:42  [XTLB]    [2021-06-09] 424B3 0001213900-21-031584 — 0 mutations
+00:41:42  [XTLB]  walker 0001213900-21-044544 — dedup block: 3 candidates (all active, periodic form)
+00:41:42  [XTLB]  walker 0001213900-21-044544 — form=6-K (22 tools)
+00:42:01  [XTLB]  walker 0001213900-21-044544 — finish='REASON_TOOL_CALLS' calls=3
+00:42:01  [XTLB]  walker 0001213900-21-044544 — call record_event W-5387 date=2021-03-31 shares=129818.0 price=0.0 warrants_exercised=270182.0
+00:42:01  [XTLB]  walker 0001213900-21-044544 — call record_event W-5388 date=2021-04-30 shares=9685.0 price=0.0 warrants_exercised=25314.0
+00:42:01  [XTLB]  walker 0001213900-21-044544 — call record_event W-5388 date=2021-07-31 shares=85000.0 price=2.3 gross_proceeds=195500.0
+00:42:01  [XTLB]    [2021-08-24] 6-K 0001213900-21-044544 — 3 mutations
+00:42:01  [XTLB]    anchor 0001213900-21-044544 as_of=2021-06-30
+00:42:09  [XTLB]  overhang-combined 0001213900-21-044544 — w=0 c=0 p=0 s=1 a=0 e=0
+00:42:09  [XTLB]    anchor 0001213900-21-044544 — 4 diffs (missing=1 field=0 count=0 extra=3)
+00:42:09  [XTLB]      diff missing_in_ledger (new) [shelf] filing=-
+00:42:09  [XTLB]      diff extra_in_ledger W-5387 [warrant] ledger=terms.strike=4.1, terms.expiration=2022-08-16, out.count=650000.0, out.initial_count=1050000.0, out.exercised_to_date=259636.0
+00:42:09  [XTLB]      diff extra_in_ledger W-5388 [warrant] ledger=terms.strike=2.3, terms.expiration=2022-09-06, terms.known_owners=['Alexander Rabinovich', 'David Bassa'], out.count=1280000.0, out.initial_count=1400000.0, out.exercised_to_date=104371.0
+00:42:09  [XTLB]      diff extra_in_ledger W-5390 [warrant] ledger=terms.strike=0.0, terms.is_pre_funded=True, out.count=0.0, out.initial_count=0.0
+00:42:09  [XTLB]      anchor proposal create_instrument:shelf date=2021-08-24 capacity_usd=0.0 form=F-3 file_number=333-208817
+00:42:09  [XTLB]      anchor proposal close_instrument W-5390 date=2021-06-30 reason=terminated
+00:42:09  [XTLB]    anchor corrections applied=1 rejected=1
+00:42:09  [XTLB]  walker 0001213900-21-061794 — dedup block: 2 candidates (all active, periodic form)
+00:42:09  [XTLB]  walker 0001213900-21-061794 — form=6-K (22 tools)
+00:42:26  [XTLB]  walker 0001213900-21-061794 — finish='REASON_TOOL_CALLS' calls=5
+00:42:26  [XTLB]  walker 0001213900-21-061794 — call record_event W-5387 date=2021-03-31 shares=129818.0 price=0.0
+00:42:26  [XTLB]  walker 0001213900-21-061794 — call record_event W-5388 date=2021-04-30 shares=9685.0 price=0.0
+00:42:26  [XTLB]  walker 0001213900-21-061794 — call record_event W-5388 date=2021-07-31 shares=85000.0 price=2.3 gross_proceeds=195500.0
+00:42:26  [XTLB]  walker 0001213900-21-061794 — call record_event W-5388 date=2021-08-31 shares=35000.0 price=2.3 gross_proceeds=80500.0
+00:42:26  [XTLB]  walker 0001213900-21-061794 — call record_event W-5388 date=2021-09-30 shares=12500.0 price=2.3 gross_proceeds=28750.0
+00:42:26  [XTLB]    [2021-11-24] 6-K 0001213900-21-061794 — 5 mutations
+00:42:26  [XTLB]    anchor 0001213900-21-061794 as_of=2021-11-24
+00:42:41  [XTLB]  overhang-combined 0001213900-21-061794 — w=0 c=0 p=0 s=0 a=0 e=0
+00:42:41  [XTLB]  walker 0001213900-21-065749 — dedup block: 2 candidates (all active, periodic form)
+00:42:41  [XTLB]  walker 0001213900-21-065749 — form=6-K (22 tools)
+00:42:44  [XTLB]  walker 0001213900-21-065749 — finish='REASON_TOOL_CALLS' calls=1
+00:42:44  [XTLB]  walker 0001213900-21-065749 — note_no_event reasons: ['annual general meeting proxy materials']
+00:42:44  [XTLB]    [2021-12-16] 6-K 0001213900-21-065749 — 0 mutations
+00:42:44  [XTLB]    [2021-12-16] 6-K 0001213900-21-065749 — no interim-financials markers; anchor reconciliation skipped
+00:42:44  [XTLB]  walker 0001213900-22-002551 — dedup block: 2 candidates (all active, periodic form)
+00:42:44  [XTLB]  walker 0001213900-22-002551 — form=6-K (22 tools)
+00:42:46  [XTLB]  walker 0001213900-22-002551 — finish='REASON_TOOL_CALLS' calls=1
+00:42:46  [XTLB]  walker 0001213900-22-002551 — note_no_event reasons: ["postponement of annual shareholders' meeting due to lack of quorum"]
+00:42:46  [XTLB]    [2022-01-19] 6-K 0001213900-22-002551 — 0 mutations
+00:42:46  [XTLB]    [2022-01-19] 6-K 0001213900-22-002551 — no interim-financials markers; anchor reconciliation skipped
+00:42:46  [XTLB]  walker 0001213900-22-003681 — dedup block: 2 candidates (all active, periodic form)
+00:42:46  [XTLB]  walker 0001213900-22-003681 — form=6-K (22 tools)
+00:42:48  [XTLB]  walker 0001213900-22-003681 — finish='REASON_TOOL_CALLS' calls=1
+00:42:48  [XTLB]  walker 0001213900-22-003681 — note_no_event reasons: ['annual general meeting results only']
+00:42:48  [XTLB]    [2022-01-26] 6-K 0001213900-22-003681 — 0 mutations
+00:42:48  [XTLB]    [2022-01-26] 6-K 0001213900-22-003681 — no interim-financials markers; anchor reconciliation skipped
+00:42:49  [XTLB]  walker 0001213900-22-016244 — dedup block: 2 candidates (all active, periodic form)
+00:42:49  [XTLB]  walker 0001213900-22-016244 — form=20-F (21 tools)
+00:43:20  [XTLB]  walker 0001213900-22-016244 — finish='REASON_TOOL_CALLS' calls=2
+00:43:20  [XTLB]  walker 0001213900-22-016244 — call amend_instrument:warrant W-5387 date=2021-12-31 count=650000.0
+00:43:20  [XTLB]  walker 0001213900-22-016244 — call amend_instrument:warrant W-5388 date=2021-12-31 known_owners=['Alexander Rabinovitch', 'David Bassa'] count=1197500.0
+00:43:20  [XTLB]    [2022-03-30] 20-F 0001213900-22-016244 — 2 mutations
+00:43:20  [XTLB]    anchor 0001213900-22-016244 as_of=2021-12-31
+00:43:40  [XTLB]  overhang-combined 0001213900-22-016244 — w=2 c=0 p=0 s=0 a=0 e=0
+00:43:40  [XTLB]  walker 0001213900-22-030698 — dedup block: 2 candidates (all active, periodic form)
+00:43:40  [XTLB]  walker 0001213900-22-030698 — form=6-K (22 tools)
+00:43:54  [XTLB]  walker 0001213900-22-030698 — finish='REASON_TOOL_CALLS' calls=1
+00:43:54  [XTLB]  walker 0001213900-22-030698 — call close_instrument W-5387 date=2022-02-16 reason=expired
+00:43:54  [XTLB]    [2022-06-01] 6-K 0001213900-22-030698 — 1 mutations
+00:43:54  [XTLB]    anchor 0001213900-22-030698 as_of=2022-06-01
+00:44:01  [XTLB]  overhang-combined 0001213900-22-030698 — w=0 c=0 p=0 s=0 a=0 e=0
+00:44:01  [XTLB]  walker 0001213900-22-050669 — dedup block: 1 candidates (all active, periodic form)
+00:44:01  [XTLB]  walker 0001213900-22-050669 — form=6-K (22 tools)
+00:44:26  [XTLB]  walker 0001213900-22-050669 — finish='REASON_TOOL_CALLS' calls=1
+00:44:26  [XTLB]  walker 0001213900-22-050669 — call create_instrument:warrant date=2017-02-23 strike=4.1 exercisable_date=2017-08-23 expiration=2022-08-23 units=ads count=600000.0 initial_count=600000.0
+00:44:26  [XTLB]    [2022-08-24] 6-K 0001213900-22-050669 — 1 mutations
+00:44:26  [XTLB]    resurrection-guard: 0001213900-22-050669 create (type=warrant) matched CLOSED row W-5387 — not re-creating as active
+00:44:26  [XTLB]    redisclosure: 0001213900-22-050669 create (type=warrant) collapsed onto W-5387
+00:44:26  [XTLB]    anchor 0001213900-22-050669 as_of=2022-06-30
+00:44:40  [XTLB]  overhang-combined 0001213900-22-050669 — w=1 c=0 p=0 s=0 a=0 e=0
+00:44:40  [XTLB]    anchor 0001213900-22-050669 — 1 diffs (missing=0 field=0 count=1 extra=0)
+00:44:40  [XTLB]      diff count_mismatch W-5388 [warrant] ledger=out.count=1197500.0 filing=out.count=600000
+00:44:40  [XTLB]      anchor proposal amend_instrument:warrant W-5388 date=2022-06-30 count=600000
+00:44:40  [XTLB]    anchor corrections applied=1 rejected=0
+00:44:40  [XTLB]    anchor reopened 1 close(s) contradicted by the filing's own overhang: ['W-5387']
+00:44:40  [XTLB]  walker 0001213900-22-075760 — dedup block: 2 candidates (all active, periodic form)
+00:44:40  [XTLB]  walker 0001213900-22-075760 — form=6-K (22 tools)
+00:44:51  [XTLB]  walker 0001213900-22-075760 — finish='REASON_TOOL_CALLS' calls=2
+00:44:51  [XTLB]  walker 0001213900-22-075760 — call close_instrument W-5387 date=2022-08-23 reason=expired
+00:44:51  [XTLB]  walker 0001213900-22-075760 — call close_instrument W-5388 date=2022-09-21 reason=expired
+00:44:51  [XTLB]    [2022-11-29] 6-K 0001213900-22-075760 — 2 mutations
+00:44:51  [XTLB]    anchor 0001213900-22-075760 as_of=2022-11-29
+00:44:58  [XTLB]  overhang-combined 0001213900-22-075760 — w=0 c=0 p=0 s=0 a=0 e=0
+00:44:58  [XTLB]  walker 0001213900-23-004144 — form=6-K (22 tools)
+00:45:03  [XTLB]  walker 0001213900-23-004144 — finish='REASON_TOOL_CALLS' calls=1
+00:45:03  [XTLB]  walker 0001213900-23-004144 — note_no_event reasons: ['proxy materials and director option grant compensation']
+00:45:03  [XTLB]    [2023-01-20] 6-K 0001213900-23-004144 — 0 mutations
+00:45:03  [XTLB]    [2023-01-20] 6-K 0001213900-23-004144 — no interim-financials markers; anchor reconciliation skipped
+00:45:03  [XTLB]  walker 0001213900-23-006569 — form=6-K/A (3 tools)
+00:45:21  [XTLB]  walker 0001213900-23-006569 — finish='REASON_TOOL_CALLS' calls=1
+00:45:21  [XTLB]  walker 0001213900-23-006569 — note_no_event reasons: ['The filing is an amendment to a proxy statement for an annual general meeting, primarily changing the meeting time, and contains no dilutive financing transactions or events.']
+00:45:21  [XTLB]    [2023-02-01] 6-K/A 0001213900-23-006569 — 0 mutations
+00:45:21  [XTLB]    [2023-02-01] 6-K 0001213900-23-006569 — no interim-financials markers; anchor reconciliation skipped
+00:45:21  [XTLB]  walker 0001213900-23-013945 — form=6-K (22 tools)
+00:45:23  [XTLB]  walker 0001213900-23-013945 — finish='REASON_TOOL_CALLS' calls=1
+00:45:23  [XTLB]  walker 0001213900-23-013945 — note_no_event reasons: ["postponement of annual shareholders' meeting due to lack of quorum"]
+00:45:23  [XTLB]    [2023-02-23] 6-K 0001213900-23-013945 — 0 mutations
+00:45:23  [XTLB]    [2023-02-23] 6-K 0001213900-23-013945 — no interim-financials markers; anchor reconciliation skipped
+00:45:23  [XTLB]  walker 0001213900-23-016675 — form=6-K (22 tools)
+00:45:27  [XTLB]  walker 0001213900-23-016675 — finish='REASON_TOOL_CALLS' calls=1
+00:45:27  [XTLB]  walker 0001213900-23-016675 — note_no_event reasons: ['annual general meeting results including routine director re-elections and a compensatory option grant to a director']
+00:45:27  [XTLB]    [2023-03-02] 6-K 0001213900-23-016675 — 0 mutations
+00:45:27  [XTLB]    [2023-03-02] 6-K 0001213900-23-016675 — no interim-financials markers; anchor reconciliation skipped
+00:45:27  [XTLB]  walker 0001213900-23-021869 — form=20-F (21 tools)
+00:45:41  [XTLB]  walker 0001213900-23-021869 — finish='REASON_TOOL_CALLS' calls=1
+00:45:41  [XTLB]  walker 0001213900-23-021869 — note_no_event reasons: ['Annual report on Form 20-F discloses no new dilutive financing instruments or events; all previously outstanding warrants expired during 2022 and are already closed in the ledger.']
+00:45:41  [XTLB]    [2023-03-22] 20-F 0001213900-23-021869 — 0 mutations
+00:45:41  [XTLB]    anchor 0001213900-23-021869 as_of=2022-12-31
+00:45:55  [XTLB]  overhang-combined 0001213900-23-021869 — w=0 c=0 p=0 s=0 a=0 e=0
+00:45:55  [XTLB]  walker 0001213900-23-040240 — form=6-K (22 tools)
+00:45:58  [XTLB]  walker 0001213900-23-040240 — finish='REASON_TOOL_CALLS' calls=1
+00:45:58  [XTLB]  walker 0001213900-23-040240 — note_no_event reasons: ['earnings release and director option grant']
+00:45:58  [XTLB]    [2023-05-16] 6-K 0001213900-23-040240 — 0 mutations
+00:45:58  [XTLB]    anchor 0001213900-23-040240 as_of=2023-05-16
+00:46:05  [XTLB]  overhang-combined 0001213900-23-040240 — w=0 c=0 p=0 s=0 a=0 e=0
+00:46:05  [XTLB]  walker 0001213900-23-065316 — form=6-K (22 tools)
+00:46:08  [XTLB]  walker 0001213900-23-065316 — finish='REASON_TOOL_CALLS' calls=1
+00:46:08  [XTLB]  walker 0001213900-23-065316 — note_no_event reasons: ['financial results for the six months ended June 30, 2023 (earnings release) with no new dilutive instruments or events disclosed']
+00:46:08  [XTLB]    [2023-08-10] 6-K 0001213900-23-065316 — 0 mutations
+00:46:08  [XTLB]    anchor 0001213900-23-065316 as_of=2023-08-10
+00:46:14  [XTLB]  overhang-combined 0001213900-23-065316 — w=0 c=0 p=0 s=0 a=0 e=0
+00:46:14  [XTLB]  walker 0001013762-23-005431 — form=6-K (22 tools)
+00:46:17  [XTLB]  walker 0001013762-23-005431 — finish='REASON_TOOL_CALLS' calls=1
+00:46:17  [XTLB]  walker 0001013762-23-005431 — note_no_event reasons: ['Nasdaq minimum bid price deficiency notice and business operations update in Israel.']
+00:46:17  [XTLB]    [2023-10-20] 6-K 0001013762-23-005431 — 0 mutations
+00:46:17  [XTLB]    [2023-10-20] 6-K 0001013762-23-005431 — no interim-financials markers; anchor reconciliation skipped
+00:46:17  [XTLB]  walker 0001213900-23-087344 — form=6-K (22 tools)
+00:46:20  [XTLB]  walker 0001213900-23-087344 — finish='REASON_TOOL_CALLS' calls=1
+00:46:20  [XTLB]  walker 0001213900-23-087344 — note_no_event reasons: ['earnings release and financial results for the nine months ended September 30, 2023 with no dilutive events or transactions']
+00:46:20  [XTLB]    [2023-11-15] 6-K 0001213900-23-087344 — 0 mutations
+00:46:20  [XTLB]    anchor 0001213900-23-087344 as_of=2023-11-15
+00:46:26  [XTLB]  overhang-combined 0001213900-23-087344 — w=0 c=0 p=0 s=0 a=0 e=0
+00:46:26  [XTLB]  walker 0001213900-24-024228 — form=6-K (22 tools)
+00:46:39  [XTLB]  walker 0001213900-24-024228 — finish='REASON_TOOL_CALLS' calls=1
+00:46:39  [XTLB]  walker 0001213900-24-024228 — note_no_event reasons: ['The filing discloses a binding term sheet for an acquisition and private placement, which is subject to the negotiation of definitive agreements and shareholder approval, and thus no definitive dilutive instruments have been issued or definitively agreed to yet.']
+00:46:39  [XTLB]    [2024-03-20] 6-K 0001213900-24-024228 — 0 mutations
+00:46:39  [XTLB]    [2024-03-20] 6-K 0001213900-24-024228 — no interim-financials markers; anchor reconciliation skipped
+00:46:39  [XTLB]  walker 0001213900-24-024787 — form=6-K (22 tools)
+00:46:53  [XTLB]  walker 0001213900-24-024787 — finish='REASON_TOOL_CALLS' calls=2
+00:46:53  [XTLB]  walker 0001213900-24-024787 — call create_instrument:equity date=2024-03-21 price_per_share=1.0 known_owners=['Alexander Rabinovitch'] count=1500000.0
+00:46:53  [XTLB]  walker 0001213900-24-024787 — call create_instrument:warrant date=2024-03-21 strike=1.2 exercisable_date=2024-03-21 expiration=2029-03-21 units=ads known_owners=['Alexander Rabinovitch'] count=1500000.0 initial_count=1500000.0
+00:46:53  [XTLB]    [2024-03-21] 6-K 0001213900-24-024787 — 2 mutations
+00:46:53  [XTLB]    [2024-03-21] 6-K 0001213900-24-024787 — no interim-financials markers; anchor reconciliation skipped
+00:46:53  [XTLB]  walker 0001213900-24-024838 — dedup block: 1 candidates (all active, periodic form)
+00:46:53  [XTLB]  walker 0001213900-24-024838 — form=6-K/A (3 tools)
+00:47:04  [XTLB]  walker 0001213900-24-024838 — finish='REASON_TOOL_CALLS' calls=1
+00:47:04  [XTLB]  walker 0001213900-24-024838 — note_no_event reasons: ['proxy statement seeking shareholder approval for previously-disclosed private placement and director option grants']
+00:47:04  [XTLB]    [2024-03-21] 6-K/A 0001213900-24-024838 — 0 mutations
+00:47:04  [XTLB]    [2024-03-21] 6-K 0001213900-24-024838 — no interim-financials markers; anchor reconciliation skipped
+00:47:04  [XTLB]  walker 0001213900-24-029320 — dedup block: 1 candidates (all active, periodic form)
+00:47:04  [XTLB]  walker 0001213900-24-029320 — form=6-K (22 tools)
+00:47:06  [XTLB]  walker 0001213900-24-029320 — finish='REASON_TOOL_CALLS' calls=1
+00:47:06  [XTLB]  walker 0001213900-24-029320 — note_no_event reasons: ['The filing is a Nasdaq compliance notice regarding the minimum bid price requirement and contains no dilutive instruments or events.']
+00:47:06  [XTLB]    [2024-04-02] 6-K 0001213900-24-029320 — 0 mutations
+00:47:06  [XTLB]    [2024-04-02] 6-K 0001213900-24-029320 — no interim-financials markers; anchor reconciliation skipped
+00:47:06  [XTLB]  walker 0001213900-24-037717 — dedup block: 1 candidates (all active, periodic form)
+00:47:06  [XTLB]  walker 0001213900-24-037717 — form=20-F (21 tools)
+00:47:18  [XTLB]  walker 0001213900-24-037717 — finish='REASON_TOOL_CALLS' calls=1
+00:47:18  [XTLB]  walker 0001213900-24-037717 — note_no_event reasons: ['The filing is a Form 20-F annual report for the fiscal year ended December 31, 2023, which does not disclose any new dilutive financing instruments or events, and only discusses historical stock option plans and standard corporate governance.']
+00:47:18  [XTLB]    [2024-04-30] 20-F 0001213900-24-037717 — 0 mutations
+00:47:18  [XTLB]    anchor 0001213900-24-037717 as_of=2023-12-31
+00:47:34  [XTLB]  overhang-combined 0001213900-24-037717 — w=0 c=0 p=0 s=0 a=0 e=0
+00:47:34  [XTLB]  walker 0001213900-24-037807 — dedup block: 1 candidates (all active, periodic form)
+00:47:34  [XTLB]  walker 0001213900-24-037807 — form=6-K (22 tools)
+00:47:43  [XTLB]  walker 0001213900-24-037807 — finish='REASON_TOOL_CALLS' calls=1
+00:47:43  [XTLB]  walker 0001213900-24-037807 — note_no_event reasons: ['shareholder approval of option grants and conditional private placement']
+00:47:43  [XTLB]    [2024-04-30] 6-K 0001213900-24-037807 — 0 mutations
+00:47:43  [XTLB]    [2024-04-30] 6-K 0001213900-24-037807 — no interim-financials markers; anchor reconciliation skipped
+00:47:43  [XTLB]  walker 0001213900-24-042015 — dedup block: 1 candidates (all active, periodic form)
+00:47:43  [XTLB]  walker 0001213900-24-042015 — form=6-K (22 tools)
+00:47:51  [XTLB]  walker 0001213900-24-042015 — finish='REASON_TOOL_CALLS' calls=1
+00:47:51  [XTLB]  walker 0001213900-24-042015 — note_no_event reasons: ['quarterly financial results and re-disclosure of pending Social Proxy transaction and private placement']
+00:47:51  [XTLB]    [2024-05-13] 6-K 0001213900-24-042015 — 0 mutations
+00:47:51  [XTLB]    anchor 0001213900-24-042015 as_of=2024-05-13
+00:48:00  [XTLB]  overhang-combined 0001213900-24-042015 — w=0 c=0 p=0 s=0 a=0 e=0
+00:48:00  [XTLB]  walker 0001213900-24-049874 — dedup block: 1 candidates (all active, periodic form)
+00:48:00  [XTLB]  walker 0001213900-24-049874 — form=6-K (22 tools)
+00:48:32  [XTLB]  walker 0001213900-24-049874 — finish='REASON_TOOL_CALLS' calls=4
+00:48:32  [XTLB]  walker 0001213900-24-049874 — call create_instrument:equity date=2024-06-05 price_per_share=0.0 known_owners=['Tal Klinger', 'Roee Klinger', 'Deni... count=5594371.0
+00:48:32  [XTLB]  walker 0001213900-24-049874 — call create_instrument:warrant date=2024-06-05 strike=0.0 expiration=2027-06-05 is_pre_funded=True series_letter=First ARR known_owners=['Tal Klinger', 'Roee Klinger', 'Deni... count=2188426.0 initial_count=2188426.0
+00:48:32  [XTLB]  walker 0001213900-24-049874 — call create_instrument:warrant date=2024-06-05 strike=0.0 expiration=2027-06-05 is_pre_funded=True series_letter=EBIDTA known_owners=['Tal Klinger', 'Roee Klinger', 'Deni... count=3000000.0 initial_count=3000000.0
+00:48:32  [XTLB]  walker 0001213900-24-049874 — call create_instrument:warrant date=2024-06-05 strike=0.0 expiration=2027-06-05 is_pre_funded=True series_letter=Second ARR known_owners=['Tal Klinger', 'Roee Klinger', 'Deni... count=3500000.0 initial_count=3500000.0
+00:48:32  [XTLB]    [2024-06-05] 6-K 0001213900-24-049874 — 4 mutations
+00:48:32  [XTLB]    anchor 0001213900-24-049874 as_of=2024-06-05
+00:48:37  [XTLB]  overhang-combined 0001213900-24-049874 — w=0 c=0 p=0 s=0 a=0 e=0
+00:48:37  [XTLB]  walker 0001213900-24-052080 — dedup block: 4 candidates (all active, periodic form)
+00:48:37  [XTLB]  walker 0001213900-24-052080 — form=6-K (22 tools)
+00:48:46  [XTLB]  walker 0001213900-24-052080 — finish='REASON_TOOL_CALLS' calls=1
+00:48:46  [XTLB]  walker 0001213900-24-052080 — note_no_event reasons: ['proxy statement for annual and extraordinary general meeting of shareholders to approve the Social Proxy acquisition']
+00:48:46  [XTLB]    [2024-06-12] 6-K 0001213900-24-052080 — 0 mutations
+00:48:46  [XTLB]    [2024-06-12] 6-K 0001213900-24-052080 — no interim-financials markers; anchor reconciliation skipped
+00:48:46  [XTLB]  walker 0001013762-24-000446 — dedup block: 4 candidates (all active, periodic form)
+00:48:46  [XTLB]  walker 0001013762-24-000446 — form=6-K (22 tools)
+00:48:53  [XTLB]  walker 0001013762-24-000446 — finish='REASON_TOOL_CALLS' calls=1
+00:48:53  [XTLB]  walker 0001013762-24-000446 — note_no_event reasons: ['Shareholder approval of the acquisition of The Social Proxy Ltd. and related board elections; no securities were issued or closed.']
+00:48:53  [XTLB]    [2024-07-22] 6-K 0001013762-24-000446 — 0 mutations
+00:48:53  [XTLB]    [2024-07-22] 6-K 0001013762-24-000446 — no interim-financials markers; anchor reconciliation skipped
+00:48:53  [XTLB]  walker 0001213900-24-068639 — dedup block: 4 candidates (all active, periodic form)
+00:48:53  [XTLB]  walker 0001213900-24-068639 — form=6-K (22 tools)
+00:49:06  [XTLB]  walker 0001213900-24-068639 — finish='REASON_TOOL_CALLS' calls=3
+00:49:06  [XTLB]  walker 0001213900-24-068639 — call record_event W-5396 date=2024-08-14
+00:49:06  [XTLB]  walker 0001213900-24-068639 — call record_event EQ-4053 date=2024-08-14 gross_proceeds_usd=1500000.0
+00:49:06  [XTLB]  walker 0001213900-24-068639 — call create_instrument:equity date=2024-08-14 price_per_share=0.0 closing_date=2024-08-14 count=5292153.0
+00:49:06  [XTLB]    [2024-08-14] 6-K 0001213900-24-068639 — 3 mutations
+00:49:06  [XTLB]    [2024-08-14] 6-K 0001213900-24-068639 — no interim-financials markers; anchor reconciliation skipped
+00:49:07  [XTLB]  walker 0001213900-24-087511 — dedup block: 4 candidates (all active, periodic form)
+00:49:07  [XTLB]  walker 0001213900-24-087511 — form=6-K (22 tools)
+00:49:09  [XTLB]  walker 0001213900-24-087511 — finish='REASON_TOOL_CALLS' calls=1
+00:49:09  [XTLB]  walker 0001213900-24-087511 — note_no_event reasons: ['corporate controversy and review committee regarding Social Proxy acquisition']
+00:49:09  [XTLB]    [2024-10-15] 6-K 0001213900-24-087511 — 0 mutations
+00:49:09  [XTLB]    [2024-10-15] 6-K 0001213900-24-087511 — no interim-financials markers; anchor reconciliation skipped
+00:49:09  [XTLB]  walker 0001213900-24-096334 — dedup block: 4 candidates (all active, periodic form)
+00:49:09  [XTLB]  walker 0001213900-24-096334 — form=6-K (22 tools)
+00:49:16  [XTLB]  walker 0001213900-24-096334 — finish='REASON_TOOL_CALLS' calls=1
+00:49:16  [XTLB]  walker 0001213900-24-096334 — note_no_event reasons: ['Settlement agreement reduces the number of ADSs and warrants issuable under the June 5, 2024 agreement by approximately two-thirds, but exact counts are not specified.']
+00:49:16  [XTLB]    [2024-11-12] 6-K 0001213900-24-096334 — 0 mutations
+00:49:16  [XTLB]    [2024-11-12] 6-K 0001213900-24-096334 — no interim-financials markers; anchor reconciliation skipped
+00:49:16  [XTLB]  walker 0001213900-24-100258 — dedup block: 4 candidates (all active, periodic form)
+00:49:16  [XTLB]  walker 0001213900-24-100258 — form=6-K (22 tools)
+00:49:27  [XTLB]  walker 0001213900-24-100258 — finish='REASON_TOOL_CALLS' calls=1
+00:49:27  [XTLB]  walker 0001213900-24-100258 — note_no_event reasons: ['Settlement agreement resulting in the return of 3,729,581 ADSs to treasury and unspecified adjustments to warrants.']
+00:49:27  [XTLB]    [2024-11-19] 6-K 0001213900-24-100258 — 0 mutations
+00:49:27  [XTLB]    [2024-11-19] 6-K 0001213900-24-100258 — no interim-financials markers; anchor reconciliation skipped
+00:49:27  [XTLB]  walker 0001213900-24-113540 — dedup block: 4 candidates (all active, periodic form)
+00:49:27  [XTLB]  walker 0001213900-24-113540 — form=6-K (22 tools)
+00:49:45  [XTLB]  walker 0001213900-24-113540 — finish='REASON_TOOL_CALLS' calls=1
+00:49:45  [XTLB]  walker 0001213900-24-113540 — note_no_event reasons: ['periodic financial results for the six months ended June 30, 2024, with no new dilutive instruments or events']
+00:49:45  [XTLB]    [2024-12-30] 6-K 0001213900-24-113540 — 0 mutations
+00:49:45  [XTLB]    anchor 0001213900-24-113540 as_of=2024-12-30
+00:49:57  [XTLB]  overhang-combined 0001213900-24-113540 — w=0 c=0 p=0 s=0 a=0 e=0
+00:49:57  [XTLB]  walker 0001213900-24-113555 — dedup block: 4 candidates (all active, periodic form)
+00:49:57  [XTLB]  walker 0001213900-24-113555 — form=6-K (22 tools)
+00:50:17  [XTLB]  walker 0001213900-24-113555 — finish='REASON_TOOL_CALLS' calls=1
+00:50:17  [XTLB]  walker 0001213900-24-113555 — note_no_event reasons: ['The filing is a periodic report of financial results for the nine months ended September 30, 2024, and contains only summaries of previously disclosed transactions (the Social Proxy acquisition and the August 2024 private placement) without any new dilutive events or actionable adjustments.']
+00:50:17  [XTLB]    [2024-12-30] 6-K 0001213900-24-113555 — 0 mutations
+00:50:17  [XTLB]    anchor 0001213900-24-113555 as_of=2024-12-30
+00:50:32  [XTLB]  overhang-combined 0001213900-24-113555 — w=2 c=0 p=0 s=0 a=0 e=0
+00:50:32  [XTLB]    anchor 0001213900-24-113555 — 4 diffs (missing=1 field=0 count=0 extra=3)
+00:50:32  [XTLB]      diff missing_in_ledger (new) [warrant] filing=issue_date=2024-08-14, maturity_or_expiry=2027-08-14
+00:50:32  [XTLB]      diff extra_in_ledger W-5397 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=First ARR, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=2188426.0, out.initial_count=2188426.0
+00:50:32  [XTLB]      diff extra_in_ledger W-5398 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=EBIDTA, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=3000000.0, out.initial_count=3000000.0
+00:50:32  [XTLB]      diff extra_in_ledger W-5399 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=Second ARR, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=3500000.0, out.initial_count=3500000.0
+00:50:32  [XTLB]      anchor proposal create_instrument:warrant date=2024-08-14 strike=0.0 expiration=2027-08-14 is_pre_funded=True count=0.0 initial_count=0.0
+00:50:32  [XTLB]    anchor corrections applied=1 rejected=0
+00:50:32  [XTLB]  walker 0001213900-25-009420 — dedup block: 5 candidates (all active, periodic form)
+00:50:32  [XTLB]  walker 0001213900-25-009420 — form=6-K (22 tools)
+00:50:33  [XTLB]  walker 0001213900-25-009420 — finish='REASON_TOOL_CALLS' calls=1
+00:50:33  [XTLB]  walker 0001213900-25-009420 — note_no_event reasons: ['director resignations']
+00:50:33  [XTLB]    [2025-02-03] 6-K 0001213900-25-009420 — 0 mutations
+00:50:33  [XTLB]    [2025-02-03] 6-K 0001213900-25-009420 — no interim-financials markers; anchor reconciliation skipped
+00:50:33  [XTLB]  walker 0001213900-25-019719 — dedup block: 5 candidates (all active, periodic form)
+00:50:33  [XTLB]  walker 0001213900-25-019719 — form=6-K (22 tools)
+00:50:36  [XTLB]  walker 0001213900-25-019719 — finish='REASON_TOOL_CALLS' calls=1
+00:50:36  [XTLB]  walker 0001213900-25-019719 — note_no_event reasons: ['Exclusive sublicense agreement with Biossil Inc. involving licensing fees and milestone payments, no dilutive securities issued.']
+00:50:36  [XTLB]    [2025-03-04] 6-K 0001213900-25-019719 — 0 mutations
+00:50:36  [XTLB]    [2025-03-04] 6-K 0001213900-25-019719 — no interim-financials markers; anchor reconciliation skipped
+00:50:36  [XTLB]  walker 0001213900-25-029194 — dedup block: 5 candidates (all active, periodic form)
+00:50:36  [XTLB]  walker 0001213900-25-029194 — form=6-K (22 tools)
+00:50:39  [XTLB]  walker 0001213900-25-029194 — finish='REASON_TOOL_CALLS' calls=1
+00:50:39  [XTLB]  walker 0001213900-25-029194 — note_no_event reasons: ['officer change']
+00:50:39  [XTLB]    [2025-04-07] 6-K 0001213900-25-029194 — 0 mutations
+00:50:39  [XTLB]    [2025-04-07] 6-K 0001213900-25-029194 — no interim-financials markers; anchor reconciliation skipped
+00:50:39  [XTLB]  walker 0001213900-25-037590 — dedup block: 5 candidates (all active, periodic form)
+00:50:39  [XTLB]  walker 0001213900-25-037590 — form=20-F (21 tools)
+00:51:18  [XTLB]  walker 0001213900-25-037590 — finish='REASON_TOOL_CALLS' calls=1
+00:51:18  [XTLB]  walker 0001213900-25-037590 — note_no_event reasons: ['Annual report on Form 20-F contains no new dilutive financing events or instruments; discussed option grants are employee compensation and the Biossil agreement is an out-license.']
+00:51:18  [XTLB]    [2025-04-30] 20-F 0001213900-25-037590 — 0 mutations
+00:51:18  [XTLB]    anchor 0001213900-25-037590 as_of=2024-12-31
+00:51:47  [XTLB]  overhang-combined 0001213900-25-037590 — w=1 c=0 p=0 s=0 a=0 e=0
+00:51:47  [XTLB]    anchor 0001213900-25-037590 — 5 diffs (missing=0 field=0 count=1 extra=4)
+00:51:47  [XTLB]      diff count_mismatch W-5401 [warrant] ledger=out.count=0.0 filing=out.count=2896142
+00:51:47  [XTLB]      diff extra_in_ledger W-5396 [warrant] ledger=terms.strike=1.2, terms.exercisable_date=2024-08-14, terms.expiration=2029-08-14, terms.units=ads, terms.known_owners=['Alexander Rabinovitch'], terms.issue_date=2024-08-14, out.count=1500000.0, out.initial_count=1500000.0, counterparty=Alexander Rabinovitch
+00:51:47  [XTLB]      diff extra_in_ledger W-5397 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=First ARR, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=2188426.0, out.initial_count=2188426.0
+00:51:47  [XTLB]      diff extra_in_ledger W-5398 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=EBIDTA, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=3000000.0, out.initial_count=3000000.0
+00:51:47  [XTLB]      diff extra_in_ledger W-5399 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=Second ARR, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=3500000.0, out.initial_count=3500000.0
+00:51:47  [XTLB]      anchor proposal amend_instrument:warrant W-5401 date=2024-12-31 count=2896142
+00:51:47  [XTLB]    anchor corrections applied=1 rejected=0
+00:51:47  [XTLB]  walker 0001213900-25-054349 — dedup block: 5 candidates (all active, periodic form)
+00:51:47  [XTLB]  walker 0001213900-25-054349 — form=6-K (22 tools)
+00:52:02  [XTLB]  walker 0001213900-25-054349 — finish='REASON_TOOL_CALLS' calls=1
+00:52:02  [XTLB]  walker 0001213900-25-054349 — call create_instrument:convertible date=2025-06-13 principal=1000000.0 rate=0.08 conv_price=1.5 conv_discount_pct=0.8 maturity=2026-12-13 known_owners=['Alexander Rabinovitch', 'Shlomo Sha... principal_remaining=1000000.0
+00:52:02  [XTLB]    [2025-06-13] 6-K 0001213900-25-054349 — 1 mutations
+00:52:02  [XTLB]    [2025-06-13] 6-K 0001213900-25-054349 — no interim-financials markers; anchor reconciliation skipped
+00:52:02  [XTLB]  walker 0001213900-25-055693 — dedup block: 6 candidates (all active, periodic form)
+00:52:02  [XTLB]  walker 0001213900-25-055693 — form=6-K/A (3 tools)
+00:52:18  [XTLB]  walker 0001213900-25-055693 — finish='REASON_TOOL_CALLS' calls=1
+00:52:18  [XTLB]  walker 0001213900-25-055693 — note_no_event reasons: ['proxy materials for annual and extraordinary general meeting of shareholders']
+00:52:18  [XTLB]    [2025-06-18] 6-K/A 0001213900-25-055693 — 0 mutations
+00:52:18  [XTLB]    [2025-06-18] 6-K 0001213900-25-055693 — no interim-financials markers; anchor reconciliation skipped
+00:52:18  [XTLB]  walker 0001213900-25-065962 — dedup block: 6 candidates (all active, periodic form)
+00:52:18  [XTLB]  walker 0001213900-25-065962 — form=6-K (22 tools)
+00:52:20  [XTLB]  walker 0001213900-25-065962 — finish='REASON_TOOL_CALLS' calls=1
+00:52:20  [XTLB]  walker 0001213900-25-065962 — note_no_event reasons: ["postponement of shareholders' meeting due to lack of quorum"]
+00:52:20  [XTLB]    [2025-07-21] 6-K 0001213900-25-065962 — 0 mutations
+00:52:20  [XTLB]    [2025-07-21] 6-K 0001213900-25-065962 — no interim-financials markers; anchor reconciliation skipped
+00:52:20  [XTLB]  walker 0001213900-25-068203 — dedup block: 6 candidates (all active, periodic form)
+00:52:20  [XTLB]  walker 0001213900-25-068203 — form=6-K (22 tools)
+00:52:28  [XTLB]  walker 0001213900-25-068203 — finish='REASON_TOOL_CALLS' calls=1
+00:52:28  [XTLB]  walker 0001213900-25-068203 — note_no_event reasons: ['shareholder meeting results approving proposals including a private placement of up to $1.0 million and executive equity compensation, with no closing or issuance confirmed']
+00:52:28  [XTLB]    [2025-07-28] 6-K 0001213900-25-068203 — 0 mutations
+00:52:28  [XTLB]    [2025-07-28] 6-K 0001213900-25-068203 — no interim-financials markers; anchor reconciliation skipped
+00:52:28  [XTLB]  walker 0001213900-25-101642 — dedup block: 6 candidates (all active, periodic form)
+00:52:28  [XTLB]  walker 0001213900-25-101642 — form=6-K (22 tools)
+00:52:30  [XTLB]  walker 0001213900-25-101642 — finish='REASON_TOOL_CALLS' calls=1
+00:52:30  [XTLB]  walker 0001213900-25-101642 — note_no_event reasons: ['director resignation and appointment']
+00:52:30  [XTLB]    [2025-10-23] 6-K 0001213900-25-101642 — 0 mutations
+00:52:30  [XTLB]    [2025-10-23] 6-K 0001213900-25-101642 — no interim-financials markers; anchor reconciliation skipped
+00:52:30  [XTLB]  walker 0001213900-25-118747 — dedup block: 6 candidates (all active, periodic form)
+00:52:30  [XTLB]  walker 0001213900-25-118747 — form=6-K (22 tools)
+00:52:33  [XTLB]  walker 0001213900-25-118747 — finish='REASON_TOOL_CALLS' calls=1
+00:52:33  [XTLB]  walker 0001213900-25-118747 — note_no_event reasons: ['CFO resignation and appointment of new CFO']
+00:52:33  [XTLB]    [2025-12-05] 6-K 0001213900-25-118747 — 0 mutations
+00:52:33  [XTLB]    [2025-12-05] 6-K 0001213900-25-118747 — no interim-financials markers; anchor reconciliation skipped
+00:52:33  [XTLB]  walker 0001213900-25-121299 — dedup block: 6 candidates (all active, periodic form)
+00:52:33  [XTLB]  walker 0001213900-25-121299 — form=6-K (22 tools)
+00:52:35  [XTLB]  walker 0001213900-25-121299 — finish='REASON_TOOL_CALLS' calls=1
+00:52:35  [XTLB]  walker 0001213900-25-121299 — note_no_event reasons: ['resignation of subsidiary officers Tal Klinger and Roee Klinger']
+00:52:35  [XTLB]    [2025-12-12] 6-K 0001213900-25-121299 — 0 mutations
+00:52:35  [XTLB]    [2025-12-12] 6-K 0001213900-25-121299 — no interim-financials markers; anchor reconciliation skipped
+00:52:35  [XTLB]  walker 0001213900-25-126039 — dedup block: 6 candidates (all active, periodic form)
+00:52:35  [XTLB]  walker 0001213900-25-126039 — form=6-K (22 tools)
+00:52:36  [XTLB]  walker 0001213900-25-126039 — finish='REASON_TOOL_CALLS' calls=1
+00:52:36  [XTLB]  walker 0001213900-25-126039 — note_no_event reasons: ['Nasdaq minimum bid price deficiency notification']
+00:52:36  [XTLB]    [2025-12-29] 6-K 0001213900-25-126039 — 0 mutations
+00:52:36  [XTLB]    [2025-12-29] 6-K 0001213900-25-126039 — no interim-financials markers; anchor reconciliation skipped
+00:52:36  [XTLB]  walker 0001213900-25-126514 — dedup block: 6 candidates (all active, periodic form)
+00:52:36  [XTLB]  walker 0001213900-25-126514 — form=6-K (22 tools)
+00:52:48  [XTLB]  walker 0001213900-25-126514 — finish='REASON_TOOL_CALLS' calls=1
+00:52:48  [XTLB]  walker 0001213900-25-126514 — note_no_event reasons: ['financial results for the six months ended June 30, 2025, with no new dilutive instruments or events disclosed']
+00:52:48  [XTLB]    [2025-12-30] 6-K 0001213900-25-126514 — 0 mutations
+00:52:48  [XTLB]    anchor 0001213900-25-126514 as_of=2025-12-30
+00:53:01  [XTLB]  overhang-combined 0001213900-25-126514 — w=1 c=0 p=0 s=0 a=0 e=0
+00:53:01  [XTLB]    anchor 0001213900-25-126514 — 7 diffs (missing=1 field=0 count=0 extra=6)
+00:53:01  [XTLB]      diff missing_in_ledger (new) [warrant] filing=-
+00:53:01  [XTLB]      diff extra_in_ledger W-5396 [warrant] ledger=terms.strike=1.2, terms.exercisable_date=2024-08-14, terms.expiration=2029-08-14, terms.units=ads, terms.known_owners=['Alexander Rabinovitch'], terms.issue_date=2024-08-14, out.count=1500000.0, out.initial_count=1500000.0, counterparty=Alexander Rabinovitch
+00:53:01  [XTLB]      diff extra_in_ledger W-5397 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=First ARR, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=2188426.0, out.initial_count=2188426.0
+00:53:01  [XTLB]      diff extra_in_ledger W-5398 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=EBIDTA, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=3000000.0, out.initial_count=3000000.0
+00:53:01  [XTLB]      diff extra_in_ledger W-5399 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-06-05, terms.is_pre_funded=True, terms.series_letter=Second ARR, terms.known_owners=['Tal Klinger', 'Roee Klinger', 'Denis Andrejew', 'A.Y Augmented Management'], out.count=3500000.0, out.initial_count=3500000.0
+00:53:01  [XTLB]      diff extra_in_ledger W-5401 [warrant] ledger=terms.strike=0.0, terms.expiration=2027-08-14, terms.is_pre_funded=True, out.count=2896142, out.initial_count=2896142
+00:53:01  [XTLB]      diff extra_in_ledger C-1135 [convertible] ledger=terms.principal=1000000.0, terms.rate=0.08, terms.conv_price=1.5, terms.conv_discount_pct=0.8, terms.maturity=2026-12-13, terms.known_owners=['Alexander Rabinovitch', 'Shlomo Shalev', 'Noam Band'], out.principal_remaining=1000000.0, out.principal_remaining_asof=2025-06-13
+00:53:01  [XTLB]      anchor proposal create_instrument:warrant date=2025-12-30 strike=0.0 is_pre_funded=True count=0.0 initial_count=0.0
+00:53:01  [XTLB]    anchor corrections applied=1 rejected=0
+00:53:01  [XTLB]  walker 0001213900-26-003672 — dedup block: 7 candidates (all active, periodic form)
+00:53:01  [XTLB]  walker 0001213900-26-003672 — form=6-K (22 tools)
+00:53:10  [XTLB]  walker 0001213900-26-003672 — finish='REASON_TOOL_CALLS' calls=1
+00:53:10  [XTLB]  walker 0001213900-26-003672 — note_no_event reasons: ['The filing discloses a binding letter of intent for a proposed acquisition and a board-approved proposed private placement, neither of which has resulted in definitive transaction agreements or issuances yet.']
+00:53:10  [XTLB]    [2026-01-13] 6-K 0001213900-26-003672 — 0 mutations
+00:53:10  [XTLB]    [2026-01-13] 6-K 0001213900-26-003672 — no interim-financials markers; anchor reconciliation skipped
+00:53:10  [XTLB]  walker 0001213900-26-003911 — dedup block: 7 candidates (all active, periodic form)
+00:53:10  [XTLB]  walker 0001213900-26-003911 — form=6-K (22 tools)
+00:53:23  [XTLB]  walker 0001213900-26-003911 — finish='REASON_TOOL_CALLS' calls=1
+00:53:23  [XTLB]  walker 0001213900-26-003911 — note_no_event reasons: ['proxy statement seeking shareholder approval for authorized share capital increase, director re-election, and a proposed private placement of up to $2.0 million in ADSs']
+00:53:23  [XTLB]    [2026-01-13] 6-K 0001213900-26-003911 — 0 mutations
+00:53:23  [XTLB]    [2026-01-13] 6-K 0001213900-26-003911 — no interim-financials markers; anchor reconciliation skipped
+00:53:23  [XTLB]  walker 0001213900-26-007212 — dedup block: 7 candidates (all active, periodic form)
+00:53:23  [XTLB]  walker 0001213900-26-007212 — form=6-K (22 tools)
+00:53:26  [XTLB]  walker 0001213900-26-007212 — finish='REASON_TOOL_CALLS' calls=1
+00:53:26  [XTLB]  walker 0001213900-26-007212 — note_no_event reasons: ["The filing discloses that the Company's subsidiary, The Social Proxy Ltd., has filed for insolvency proceedings, and contains no dilutive instruments or financing events."]
+00:53:26  [XTLB]    [2026-01-23] 6-K 0001213900-26-007212 — 0 mutations
+00:53:26  [XTLB]    [2026-01-23] 6-K 0001213900-26-007212 — no interim-financials markers; anchor reconciliation skipped
+00:53:26  [XTLB]  walker 0001213900-26-007213 — dedup block: 7 candidates (all active, periodic form)
+00:53:26  [XTLB]  walker 0001213900-26-007213 — form=6-K (22 tools)
+00:53:28  [XTLB]  walker 0001213900-26-007213 — finish='REASON_TOOL_CALLS' calls=1
+00:53:28  [XTLB]  walker 0001213900-26-007213 — note_no_event reasons: ["Nasdaq stockholders' equity deficiency notification"]
+00:53:28  [XTLB]    [2026-01-23] 6-K 0001213900-26-007213 — 0 mutations
+00:53:28  [XTLB]    [2026-01-23] 6-K 0001213900-26-007213 — no interim-financials markers; anchor reconciliation skipped
+00:53:28  [XTLB]  walker 0001213900-26-008572 — dedup block: 7 candidates (all active, periodic form)
+00:53:28  [XTLB]  walker 0001213900-26-008572 — form=6-K (22 tools)
+00:53:33  [XTLB]  walker 0001213900-26-008572 — finish='REASON_TOOL_CALLS' calls=1
+00:53:33  [XTLB]  walker 0001213900-26-008572 — note_no_event reasons: ['announcement of pending acquisition and upcoming shareholder meeting to approve private placement']
+00:53:33  [XTLB]    [2026-01-28] 6-K 0001213900-26-008572 — 0 mutations
+00:53:33  [XTLB]    [2026-01-28] 6-K 0001213900-26-008572 — no interim-financials markers; anchor reconciliation skipped
+00:53:33  [XTLB]  walker 0001213900-26-017282 — dedup block: 7 candidates (all active, periodic form)
+00:53:33  [XTLB]  walker 0001213900-26-017282 — form=6-K (22 tools)
+00:53:35  [XTLB]  walker 0001213900-26-017282 — finish='REASON_TOOL_CALLS' calls=1
+00:53:35  [XTLB]  walker 0001213900-26-017282 — note_no_event reasons: ['adjournment of extraordinary general meeting due to lack of quorum']
+00:53:35  [XTLB]    [2026-02-17] 6-K 0001213900-26-017282 — 0 mutations
+00:53:35  [XTLB]    [2026-02-17] 6-K 0001213900-26-017282 — no interim-financials markers; anchor reconciliation skipped
+00:53:35  [XTLB]  walker 0001213900-26-019324 — dedup block: 7 candidates (all active, periodic form)
+00:53:35  [XTLB]  walker 0001213900-26-019324 — form=6-K (22 tools)
+00:53:38  [XTLB]  walker 0001213900-26-019324 — finish='REASON_TOOL_CALLS' calls=1
+00:53:38  [XTLB]  walker 0001213900-26-019324 — note_no_event reasons: ['insolvency and liquidation of subsidiary The Social Proxy Ltd']
+00:53:38  [XTLB]    [2026-02-23] 6-K 0001213900-26-019324 — 0 mutations
+00:53:38  [XTLB]    [2026-02-23] 6-K 0001213900-26-019324 — no interim-financials markers; anchor reconciliation skipped
+00:53:38  [XTLB]  walker 0001213900-26-019877 — dedup block: 7 candidates (all active, periodic form)
+00:53:38  [XTLB]  walker 0001213900-26-019877 — form=6-K (22 tools)
+00:53:43  [XTLB]  walker 0001213900-26-019877 — finish='REASON_TOOL_CALLS' calls=1
+00:53:43  [XTLB]  walker 0001213900-26-019877 — note_no_event reasons: ['shareholder approval of authorized share capital increase and contingent private placement of up to $2,000,000 of securities']
+00:53:43  [XTLB]    [2026-02-24] 6-K 0001213900-26-019877 — 0 mutations
+00:53:43  [XTLB]    [2026-02-24] 6-K 0001213900-26-019877 — no interim-financials markers; anchor reconciliation skipped
+00:53:43  [XTLB]  walker 0001213900-26-021691 — dedup block: 7 candidates (all active, periodic form)
+00:53:43  [XTLB]  walker 0001213900-26-021691 — form=6-K (22 tools)
+00:53:45  [XTLB]  walker 0001213900-26-021691 — finish='REASON_TOOL_CALLS' calls=1
+00:53:45  [XTLB]  walker 0001213900-26-021691 — note_no_event reasons: ['Nasdaq delisting notice and shell company determination letter received by the Company.']
+00:53:45  [XTLB]    [2026-02-27] 6-K 0001213900-26-021691 — 0 mutations
+00:53:45  [XTLB]    [2026-02-27] 6-K 0001213900-26-021691 — no interim-financials markers; anchor reconciliation skipped
+00:53:45  [XTLB]  walker 0001213900-26-025691 — dedup block: 7 candidates (all active, periodic form)
+00:53:45  [XTLB]  walker 0001213900-26-025691 — form=6-K (22 tools)
+00:53:47  [XTLB]  walker 0001213900-26-025691 — finish='REASON_TOOL_CALLS' calls=1
+00:53:47  [XTLB]  walker 0001213900-26-025691 — note_no_event reasons: ['The Letter of Intent (LOI) with Beyond Air, Inc. regarding a proposed acquisition transaction expired and was terminated on March 9, 2026, with no dilutive instruments or events disclosed.']
+00:53:47  [XTLB]    [2026-03-10] 6-K 0001213900-26-025691 — 0 mutations
+00:53:47  [XTLB]    [2026-03-10] 6-K 0001213900-26-025691 — no interim-financials markers; anchor reconciliation skipped
+00:53:47  [XTLB]  walker 0001213900-26-032348 — dedup block: 7 candidates (all active, periodic form)
+00:53:47  [XTLB]  walker 0001213900-26-032348 — form=6-K (22 tools)
+00:53:52  [XTLB]  walker 0001213900-26-032348 — finish='REASON_TOOL_CALLS' calls=1
+00:53:52  [XTLB]  walker 0001213900-26-032348 — call apply_split date=2026-03-25 post=1 pre=4 direction=reverse units=ads
+00:53:52  [XTLB]    [2026-03-20] 6-K 0001213900-26-032348 — 1 mutations
+00:53:52  [XTLB]    [2026-03-20] 6-K 0001213900-26-032348 — no interim-financials markers; anchor reconciliation skipped
+00:53:52  [XTLB]    [2026-03-25] split 1-for-4 reverse (finviz+yfinance) units=ads
+00:53:52  [XTLB]  walker 0001213900-26-048875 — dedup block: 7 candidates (all active, periodic form)
+00:53:52  [XTLB]  walker 0001213900-26-048875 — form=6-K (22 tools)
+00:54:04  [XTLB]  walker 0001213900-26-048875 — finish='REASON_TOOL_CALLS' calls=1
+00:54:04  [XTLB]  walker 0001213900-26-048875 — note_no_event reasons: ['The acquisition of Psyga Bio and the associated private placement are pending shareholder approval and lack definite share counts and prices.']
+00:54:04  [XTLB]    [2026-04-29] 6-K 0001213900-26-048875 — 0 mutations
+00:54:04  [XTLB]    anchor 0001213900-26-048875 as_of=2026-04-29
+00:54:30  [XTLB]  overhang-combined 0001213900-26-048875 — w=0 c=0 p=0 s=0 a=0 e=0
+00:54:30  [XTLB]  walker 0001213900-26-053067 — dedup block: 7 candidates (all active, periodic form)
+00:54:30  [XTLB]  walker 0001213900-26-053067 — form=6-K (22 tools)
+00:54:38  [XTLB]  walker 0001213900-26-053067 — finish='REASON_TOOL_CALLS' calls=1
+00:54:38  [XTLB]  walker 0001213900-26-053067 — note_no_event reasons: ['The filing discusses a Nasdaq listing exception, a pending acquisition of Psyga Bio Ltd. with a pending $1.5M private placement (lacking share count or price details), and mentions a past reverse stock split on March 25, 2026 without providing the ratio details.']
+00:54:38  [XTLB]    [2026-05-07] 6-K 0001213900-26-053067 — 0 mutations
+00:54:38  [XTLB]    [2026-05-07] 6-K 0001213900-26-053067 — no interim-financials markers; anchor reconciliation skipped
+00:54:38  [XTLB]  walker 0001213900-26-057942 — dedup block: 7 candidates (all active, periodic form)
+00:54:38  [XTLB]  walker 0001213900-26-057942 — form=6-K (22 tools)
+00:54:51  [XTLB]  walker 0001213900-26-057942 — finish='REASON_TOOL_CALLS' calls=1
+00:54:51  [XTLB]  walker 0001213900-26-057942 — note_no_event reasons: ['proxy statement for extraordinary general meeting to approve proposed Psyga acquisition and conditional private placement']
+00:54:51  [XTLB]    [2026-05-15] 6-K 0001213900-26-057942 — 0 mutations
+00:54:51  [XTLB]    [2026-05-15] 6-K 0001213900-26-057942 — no interim-financials markers; anchor reconciliation skipped
+00:54:51  [XTLB]  walker 0001213900-26-060565 — dedup block: 7 candidates (all active, periodic form)
+00:54:51  [XTLB]  walker 0001213900-26-060565 — form=6-K (22 tools)
+00:54:53  [XTLB]  walker 0001213900-26-060565 — finish='REASON_TOOL_CALLS' calls=1
+00:54:53  [XTLB]  walker 0001213900-26-060565 — note_no_event reasons: ['Nasdaq delisting notice due to late Form 20-F filing']
+00:54:53  [XTLB]    [2026-05-22] 6-K 0001213900-26-060565 — 0 mutations
+00:54:53  [XTLB]    [2026-05-22] 6-K 0001213900-26-060565 — no interim-financials markers; anchor reconciliation skipped
+00:54:53  [XTLB]    walk done — seed=A_periodic walked=27 skipped=51 (resale=0 empty8k=0) applied=36 rejected=1 created=13 drawdowns=1 anchor_diffs=24 errors=0

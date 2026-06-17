@@ -33,7 +33,7 @@ from .anchor import (
     extract_stated_note_balances,
     reconcile_against_periodic,
 )
-from datetime import date as _date
+from datetime import date as _date, datetime as _datetime
 
 from .mutations import (
     AmendS1Offering, AmendWarrant, ApplySplit,
@@ -43,6 +43,7 @@ from .mutations import (
 from .seed import seed_ledger
 from .store import (
     apply_mutations,
+    close_converted_preferred,
     ensure_walk_tables,
     get_drawdowns_by_instrument,
     get_open_instruments,
@@ -131,6 +132,55 @@ def _sixk_carries_financials(text: str) -> bool:
     anchor-reconciling. See `_SIXK_FINANCIALS_MARKERS`."""
     low = text.lower()
     return any(marker in low for marker in _SIXK_FINANCIALS_MARKERS)
+
+
+# Full-preferred-conversion signal. A periodic filing AFFIRMS that all
+# preferred stock automatically/mandatorily converted to common with NONE
+# remaining outstanding (the Nasdaq-equity-compliance pattern — KSCP's
+# Series A/B/M/S converted 2024-05-15, "no shares of Preferred Stock
+# outstanding after the Preferred Stock Conversion Date"). The overhang LLM
+# re-matches the named series in the conversion narrative without flagging
+# is_terminated, so the anchor never closes them. Two gates, BOTH required,
+# keep this from firing on a partial per-series conversion, a "convertible
+# preferred" boilerplate description, or a conditional/pro-forma ("would be
+# no preferred outstanding"):
+#   (1) ZERO affirmation — "no (shares of) preferred stock ... outstanding"
+#       (a live-preferred issuer states the count instead); and
+#   (2) conversion ACTUALITY — "preferred stock ... automatically/mandatorily
+#       converted into ... common".
+# \xa0 non-breaking spaces appear in EDGAR dates, so \s (not literal space).
+_PFD_ZERO_RE = re.compile(
+    r"no\s+(?:shares\s+of\s+)?preferred\s+stock\b[\s\S]{0,80}?\boutstanding",
+    re.I)
+_PFD_CONV_RE = re.compile(
+    r"preferred\s+stock\b[\s\S]{0,300}?(?:automatically|mandatorily)\s+"
+    r"converted\s+into[\s\S]{0,150}?common", re.I)
+_PFD_DATE_RES = (
+    re.compile(r"\b([A-Z][a-z]+\s+\d{1,2},\s*\d{4})\b[\s\S]{0,60}?"
+               r"[Cc]onversion Date"),
+    re.compile(r"\bon\s+([A-Z][a-z]+\s+\d{1,2},\s*\d{4})\b[\s\S]{0,300}?"
+               r"(?:automatically|mandatorily)\s+converted", re.I),
+)
+
+
+def _full_preferred_conversion_date(text: str) -> _date | None:
+    """The conversion date when `text` affirms ALL preferred converted to
+    common with none outstanding; None otherwise. The date scopes the close
+    (only preferreds issued on/before it) so a later re-issuance is spared —
+    see ``store.close_converted_preferred``."""
+    if not text or not (_PFD_ZERO_RE.search(text)
+                        and _PFD_CONV_RE.search(text)):
+        return None
+    for rx in _PFD_DATE_RES:
+        m = rx.search(text)
+        if not m:
+            continue
+        raw = m.group(1).replace("\xa0", " ").replace(",", "")
+        try:
+            return _datetime.strptime(raw, "%B %d %Y").date()
+        except ValueError:
+            continue
+    return None
 
 
 def _form_rank(form: str | None) -> int:
@@ -1069,6 +1119,28 @@ async def _walk_one(
 
     # Anchor reconciliation runs unconditionally for periodic filings.
     if is_periodic:
+        # Deterministic full-preferred-conversion close: when this periodic
+        # filing affirms ALL preferred automatically converted to common
+        # with none remaining outstanding, close the lingering active
+        # preferreds (the overhang LLM re-matches the named series in the
+        # conversion narrative without flagging is_terminated, so the anchor
+        # never closes them — KSCP Series A/B/M/S, converted 2024-05-15).
+        # Runs BEFORE the anchor so reconciliation sees them closed; the
+        # store scopes the close to preferreds issued on/before the
+        # conversion date and is idempotent (active rows only).
+        conv_date = _full_preferred_conversion_date(text)
+        if conv_date is not None:
+            closed_pfd = close_converted_preferred(
+                cik, conversion_date=conv_date, accession=accession,
+                form=form, filing_date=filing_date,
+            )
+            if closed_pfd:
+                log.info(
+                    "  [%s] %s affirms full preferred conversion (%s) — "
+                    "closed %d phantom-active preferred(s): %s",
+                    filing_date, accession, conv_date,
+                    len(closed_pfd), ", ".join(closed_pfd),
+                )
         await _anchor_one(
             cik=cik, ticker=ticker, filing=filing, client=client,
             unit_ctx=unit_ctx, summary=summary,

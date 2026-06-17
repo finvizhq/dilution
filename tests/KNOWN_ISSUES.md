@@ -120,3 +120,18 @@ Run `pytest tests/ -q` — the suite is fully green with no `xfail` markers.
 13. **`_counterparty_tiers._norm`** — the `if not name` guard only catches
     falsy input; a truthy non-`str` (int/list/dict) would reach the string
     ops and raise. Never fires in production (callers pass strings).
+
+14. **`store._preferred_price_split_skip`** — the discriminator for "should a
+    common split adjust this preferred's conv_price?" is *presence of
+    `conversion_ratio`* (absent ⇒ price-based ⇒ adjust). This is correct for
+    every preferred that carries an applied split today, but it is a proxy,
+    not the true signal (which lives only in filing prose: did the filer
+    retroactively split-adjust the conversion price?). A fixed-RATIO series
+    that stores a conv_price but NOT a `conversion_ratio` — e.g. SCNI `EIB`
+    (P-439, conv_price 93.41 == $34,000 / 364, a derived reference) — would be
+    *wrongly* divided if it ever took a split. None such carries an applied
+    split now (SCNI has no split in-window), so there is no current eval
+    impact. **Durable fix:** have the walker stamp `conversion_ratio` on such
+    series, at which point this guard protects them. *Pinned by:*
+    `test_ledger_preferred_conv_price_split.py` (the ratio-present cases show
+    a stored ratio is what protects a series).

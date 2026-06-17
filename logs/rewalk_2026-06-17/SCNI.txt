@@ -1,0 +1,28 @@
+=== Eval: SCNI (cik 1611747) ===
+  cards exact     : 6/10
+  cards found     : 10/10
+  fields exact    : 67/73  (92%)
+  unexpected extra: 1
+
+PASS
+  [warrant] April 2026 Series A: ✓ all 8 fields exact
+  [warrant] April 2026 Series B: ✓ all 8 fields exact
+  [warrant] April 2026 Inducement: ✓ all 6 fields exact
+  [convertible_preferred] August 2024 EIB Preferred: ✓ all 10 fields exact
+  [equity_line] September 2025 YA II: ✓ all 6 fields exact
+  [equity_line] August 2024 RK Stone: ✓ all 6 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] December 2023: 5/8 fields exact
+      ✗ title: expected tokens of 'December 2023', got 'January 2024 Inducement Warrants'
+      ✗ known_owners: expected to contain ['Armistice', 'Sabby', 'Bigger Capital', 'District 2'], got []
+      ✗ expiration_date: expected ~'2029-01-03', got '2027-01-04'
+  [warrant] September 2023: 7/8 fields exact
+      ✗ known_owners: expected to contain ['Armistice'], got []
+  [equity_line] March 2025 YA II: 5/6 fields exact
+      ✗ remaining_capacity: expected 4306179, got 6928097.724
+  [shelf] August 2023: 6/7 fields exact
+      ✗ last_banker: expected ~'HC Wainwright', got None
+
+EXTRA (in actual, not in fixture)
+  [warrant] January 2024 Inducement Warrants (2024-01-04): unexpected actual card

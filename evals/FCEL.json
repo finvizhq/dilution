@@ -3,9 +3,10 @@
   "source": "DilutionTracker screenshots, manually transcribed",
   "notes": [
     "ROUND-3 EDITS 2026-06-05 (evals/_round3_findings.md, SEC-file-number convention pinned): DT partitions the SAME Jefferies ATM program's proceeds across two shelf cards by fiscal year; legally every takedown lives under the Oct-2023 shelf (333-274971) \u2014 the Dec-2025 $200M Amendment-No.3 424B5 (0001104659-25-125273) is headed 'Registration No. 333-274971', and the only filings under the April-2025 shelf (333-286842) are the S-3 + EFFECT, zero takedowns. So: April-2025 shelf total_amount_raised -> 0 and current_raisable_amount -> 200,000,000; Oct-2023 shelf total_amount_raised -> 368,779,594.92 (anchor 101.4M + post-asof 211.1M + Dec-program 56.2M; file-number-scoped cumulative \u2014 excludes the FY2023 $99.7M under the older 333-251054 shelf). Do NOT land a cards.py date-partition rollup to chase DT's split (proven dead end, regresses SCNI).",
-    "STILL-FAILING BY DESIGN: Dec-2025 ATM remaining_capacity asserts DT's 145,853,000 vs walker 143,752,690 (store anchor should re-baseline from the 10-Q's '$157.1M remained available' line \u2014 round-3 B-bucket FCEL-A1, re-pin both sides to the balance-sheet-date figure when it lands); April-2024 ATM missing (superseded:ATM-2457 suppressed by cards \u2014 per-amendment display convention, round-3 C3/FCEL-M1).",
+    "CORRECTION 2026-06-11 (evals/_eval_defect_findings_2026-06-11.md): Dec-2025 Jefferies ATM remaining_capacity / remaining_without_baby_shelf re-pinned (stale 154,799,000) -> 500,000. The 2026-06-08 10-Q (acc 0001104659-26-071183) states verbatim: '$54.5 million ... remained available' as of Apr-30-2026, then in Subsequent Events 'approximately 4.1 million shares ... gross proceeds of approximately $54.0 million ... Approximately $0.5 million of shares remained available ... following these sales' (program raised to $200M by Dec-2025 8-K 0001104659-25-125274 Amendment No.3). So as of the latest filing ~$199.5M is drawn, ~$0.5M remains. The walker renders 0 (treats it fully exhausted, a minor under-count vs the explicit '$0.5M remained' line) so this stays a small documented mismatch \u2014 but the egregious 300x DT-stale value is gone. April-2024 ATM ($1.1M vs walker $204.9M) is the per-supplement-segmentation needs-design item (FCEL-A1/C3), left asserting.",
     "Round-4: Apr-2024 ATM registered re-pinned Registered -> Replaced (deterministic superseded-chain-link label; DT uses Replaced for KSCP's same-agent chain links \u2014 its FCEL 'Registered' is inconsistent). remaining 1.1M target stands, pending the supersession-freeze accounting fix + rewalk.",
-    "Round-4 walk-2: Dec-2025 ATM remaining re-pinned 145,853,000 -> 154,799,000 (= 10-Q stated '$157.1M remained available' @2026-01-31 minus the 2026-03-09 $2.301M subsequent draw; DT's figure reconciles to nothing in the filing; walker value is stated-remaining-pin-backed)."
+    "Round-4 walk-2: Dec-2025 ATM remaining re-pinned 145,853,000 -> 154,799,000 (= 10-Q stated '$157.1M remained available' @2026-01-31 minus the 2026-03-09 $2.301M subsequent draw; DT's figure reconciles to nothing in the filing; walker value is stated-remaining-pin-backed).",
+    "CORRECTION 2026-06-16 (evals/_eval_defect_findings_2026-06-15.md): ADDED the June-2026 Shelf (S-3ASR 0001104659-26-071419, WKSI, filed/effect 2026-06-08, file# 333-296607). It was an unexpected EXTRA; asserting it (effect 2026-06-08, Registered, baby='No', total_amount_raised 0, expiration 2029-06-08, capacity 999999999 per the WKSI unlimited-shelf convention) matches the walker's card exactly and clears the extra (+1 found/+1 exact card, +7 fields, -1 extra). NOTE: the Oct-2023 shelf total_amount_raised (368,779,594.92) is left as-is and still asserts-to-fail against the walker's 298,914,876.65. B2 (the proposed cards._shelf_family_drawn companion-424B5 rollup to link the unlinked Dec-2025 ATM atm-amendment-3) was INVESTIGATED 2026-06-16 and DEFERRED as mis-grounded: the Jefferies program's per-chapter drawn_usd are CUMULATIVE-to-date figures across a 6-chapter amend chain (10-Q 0001104659-26-071183: the 'Sales Agreement' is a $300M program 'exclusive of any amounts previously sold prior to its amendment'; ATM-2637 discrete draws sum to only $72.8M vs its stored $203.8M cumulative). Summing chapters already double-counts (current 298.9M), and the synthesis's '+atm-amendment-3 -> 498.99M' both exceeds the $405M shelf capacity and compounds the overlap. The real total needs an incremental (not cumulative-per-chapter) ATM-family accounting redesign ([[shelf-family-units-grossnet]]), NOT a companion-424B5 linkage patch — so the Oct-2023 total is left asserting at the DT-era 368.78M pending that redesign."
   ],
   "cards": {
     "warrant": [],
@@ -16,10 +17,10 @@
         "agreement_start_date": "2025-12-30",
         "title_contains": "December 2025",
         "registered": "Registered",
-        "remaining_capacity": 154799000,
+        "remaining_capacity": 500000,
         "total_capacity": 200000000,
         "limited_by_baby_shelf": "No",
-        "remaining_without_baby_shelf": 154799000,
+        "remaining_without_baby_shelf": 500000,
         "placement_agent": "Jefferies"
       },
       {
@@ -56,6 +57,16 @@
         "baby_shelf_restriction": "No",
         "total_amount_raised": 0,
         "expiration_date": "2028-05-08"
+      },
+      {
+        "effect_date": "2026-06-08",
+        "title_contains": "June 2026",
+        "registered": "Registered",
+        "current_raisable_amount": 999999999,
+        "total_shelf_capacity": 999999999,
+        "baby_shelf_restriction": "No",
+        "total_amount_raised": 0,
+        "expiration_date": "2029-06-08"
       }
     ]
   }

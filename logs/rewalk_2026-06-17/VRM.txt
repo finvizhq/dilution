@@ -1,0 +1,15 @@
+=== Eval: VRM (cik 1580864) ===
+  cards exact     : 4/5
+  cards found     : 5/5
+  fields exact    : 30/31  (97%)
+  unexpected extra: 0
+
+PASS
+  [convertible] August 2025: ✓ all 9 fields exact
+  [atm] May 2026: ✓ all 5 fields exact
+  [atm] December 2023 Virtu: ✓ all 5 fields exact
+  [shelf] May 2026: ✓ all 6 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] January 2025: 5/6 fields exact
+      ✗ exercisable_date: expected ~'2025-01-14', got '2026-01-15'

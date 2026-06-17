@@ -1,0 +1,9 @@
+=== Eval: XTLB (cik 1023549) ===
+  cards exact     : 2/2
+  cards found     : 2/2
+  fields exact    : 13/13  (100%)
+  unexpected extra: 0
+
+PASS
+  [warrant] August 2024: ✓ all 8 fields exact
+  [convertible] June 2025: ✓ all 5 fields exact

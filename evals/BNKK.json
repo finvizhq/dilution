@@ -11,7 +11,9 @@
     "convertible=[] CONFIRMED filing-true: the Bigger Notes were exchanged into the 7,212 Series B shares (extinguishment, balance $0 as of 2025-12-31); May-2021 + Jan-2025 notes are $0-remaining (XTIA $0-converted convention); the April-2022 note ($1.5M on DT, matured 2024-01-31, DT last-update 2024-04-01) is ABSENT from the latest 10-Q → gone. The walker's only convertible is the spurious Silverback double-book (see above).",
     "DROPPED warrants (DT 0-remaining / expired, but the WALKER over-retains them as live EXTRAS — exercise/cancellation not tracked): July-2021 ($32.62, DT 0; walker 83,793 @ $49), April-2025 ($14.35, DT 0; walker 114,286 full), July-2025 ($12.95, DT 0; walker 8,676,790 un-split), November-2020 IPO ($297.50, exp 2025-11-03 EXPIRED; walker omits). The walker's warrant set does not reconcile to the 10-Q aggregate (685,254 @ $59.57 weighted, post-split): it under-detects the high-strike warrants (MISSES May-2021 Note Warrants @ $210 entirely) and over-retains exercised low-strike ones.",
     "Two January-2023 warrant tranches share issue 2023-01-23, strike $32.55, total_issued ~131,693, differing only in expiration (DT: 2028-07-23 rem 131,693 / 2026-07-23 rem 84,549). The walker emits both at the SAME rem 131,693 (didn't track the 2026-tranche partial exercise) with owners=[] (DT lists 6 holders) and total_issued 132,294 (DT 131,693). Fixture orders the 2026-tranche first to pin the date+title-tied matcher pairing; both labelled 'January 2023'.",
-    "September-2024 warrant: DT 'September 2024' / [Insiders] / rem 14,446; walker 'August 2024' / [Core 4 Capital] / rem 96,308 (full — exercise untracked). Kept DT values; title-month + owner + remaining are findings (Core 4 is plausibly the 'insider', and Aug-30 vs Sep-04 issue is within match tolerance)."
+    "September-2024 warrant: DT 'September 2024' / [Insiders] / rem 14,446; walker 'August 2024' / [Core 4 Capital] / rem 96,308 (full — exercise untracked). Kept DT values; title-month + owner + remaining are findings (Core 4 is plausibly the 'insider', and Aug-30 vs Sep-04 issue is within match tolerance).",
+    "CORRECTION 2026-06-11 (evals/_eval_defect_findings_2026-06-11.md): (a) DROPPED the May-2021 Note Warrant ($210) — issued 2021-05-11 with a 5-yr term => expired 2026-05-11, BEFORE the 2026-06-11 walk. Supersedes note #12's 'walker MISSES it entirely': the walker DID detect it (ledger W-5113/W-5114) and correctly REAPS it as expired; DT's still showing it is stale. (b) Jan-2025 warrant exercise_price 11.90 -> 11.55. The fixture's 11.90 was Series-B-conv ($0.34x35) cross-contamination, supported by no warrant filing. Filing-current strike = $0.33 (the July-2-2025 8-K 0001641172-25-018310 amends 'the exercise price of the warrant the investors purchased under the SPA from $0.4348 to $0.33') x 1:35 split = $11.55. ASSERTS-TO-FAIL: the walker now emits the split-adjusted-but-pre-amendment $15.218 ($0.4348x35) — it missed the July-2025 strike amendment (a walker amendment-extraction gap; supersedes note #7's '$0.4348 raw pre-split' parenthetical). known_owners stays ['Bigger Capital'] (the WARRANT stayed with Bigger; only the NOTES went to Trajan/Fried per 10-Q line 1626 — walker over-propagated, fixture is right; this REVERSES the note-#10-era Series-B-owner logic for the WARRANT specifically). The preferred conv_price 35x split bug (note #7) remains the fixture's primary target — a conditional store split-skip fix is the highest-leverage code change, tracked separately.",
+    "CORRECTION 2026-06-16 (evals/_eval_defect_findings_2026-06-15.md, filing-verified): three fixture values corrected against source, REVERSING earlier notes. (a) Jan-2025 warrant known_owners ['Bigger Capital'] -> ['Trajan Holdings','Fried'] (REVERSES note #15): amendment acc 0001641172-25-018310 is executed BY 'Trajan Holdings LLC and Fried LLC (collectively the Purchasers)' and amends 'the exercise price of [a] warrant dated January 20, 2025 ... from $0.4348 to $0.33' — you can only amend a warrant you hold, so the WARRANT (not just the notes) transferred to Trajan/Fried; the walker's owners are right. exercise_price stays 11.55 ($0.33x35, asserts-to-fail: walker emits 15.218, missed the amendment). (b) Sept-2024 warrant title 'September 2024'->'August 2024' + known_owners ['Insiders']->['Core 4 Capital'] (REVERSES note #14): 8-K 0001493152-24-035089 EX-10.1 SPA 'dated as of August 30, 2024, between Safety Shot, Inc. ... and Core 4 Capital Corp. (the Purchaser)'. remaining_outstanding 14446 stays (walker 96308 = untracked-exercise finding). (c) Jan-2023 warrants exercise_price 32.55->32.62: 424B5 0001493152-23-032382 'modify the exercise price of the Warrants to $0.932 per share' x35 = 32.62. DEFERRED: the April-2022 single card -> two twins (Greentree + L&H) split — both repriced to $0.932 per the same 424B5, but the per-tranche remaining counts need the latest 10-Q outstanding-warrant table; left as the one merged card (1 extra) for now."
   ],
   "cards": {
     "warrant": [
@@ -21,8 +23,8 @@
         "registered": "Registered",
         "remaining_outstanding": 152368,
         "total_issued": 152368,
-        "exercise_price": 11.90,
-        "known_owners": ["Bigger Capital"],
+        "exercise_price": 11.55,
+        "known_owners": ["Trajan Holdings", "Fried"],
         "exercisable_date": "2025-01-20",
         "expiration_date": "2030-01-20"
       },
@@ -32,7 +34,7 @@
         "registered": "Registered",
         "remaining_outstanding": 84549,
         "total_issued": 131693,
-        "exercise_price": 32.55,
+        "exercise_price": 32.62,
         "known_owners": ["Armistice", "Bigger Capital", "District 2", "Hudson Bay", "Intracoastal", "Sabby"],
         "underwriter": "Aegis",
         "exercisable_date": "2023-07-23",
@@ -44,7 +46,7 @@
         "registered": "Registered",
         "remaining_outstanding": 131693,
         "total_issued": 131693,
-        "exercise_price": 32.55,
+        "exercise_price": 32.62,
         "known_owners": ["Armistice", "Bigger Capital", "District 2", "Hudson Bay", "Intracoastal", "Sabby"],
         "underwriter": "Aegis",
         "exercisable_date": "2023-07-23",
@@ -62,12 +64,12 @@
       },
       {
         "issue_date": "2024-09-04",
-        "title_contains": "September 2024",
+        "title_contains": "August 2024",
         "registered": "Not Registered",
         "remaining_outstanding": 14446,
         "total_issued": 96308,
         "exercise_price": 31.15,
-        "known_owners": ["Insiders"],
+        "known_owners": ["Core 4 Capital"],
         "exercisable_date": "2024-09-04"
       },
       {
@@ -80,17 +82,6 @@
         "known_owners": ["GreenTree", "L&H"],
         "exercisable_date": "2022-04-20",
         "expiration_date": "2027-04-20"
-      },
-      {
-        "issue_date": "2021-05-11",
-        "title_contains": "May 2021",
-        "registered": "Registered",
-        "remaining_outstanding": 15000,
-        "total_issued": 15000,
-        "exercise_price": 210.00,
-        "known_owners": ["GPL", "GreenTree", "L&H"],
-        "exercisable_date": "2021-05-11",
-        "expiration_date": "2026-05-11"
       }
     ],
     "convertible": [],

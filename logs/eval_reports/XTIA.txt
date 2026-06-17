@@ -1,0 +1,30 @@
+=== Eval: XTIA (cik 1529113) ===
+  cards exact     : 4/8
+  cards found     : 7/8
+  fields exact    : 48/54  (89%)
+  unexpected extra: 3
+
+PASS
+  [warrant] September 2025: ✓ all 7 fields exact
+  [warrant] March 2025: ✓ all 7 fields exact
+  [warrant] October 2022 Warrants: ✓ all 7 fields exact
+  [shelf] August 2025: ✓ all 8 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] June 2025: 6/7 fields exact
+      ✗ remaining_outstanding: expected 6483892, got 10447300.0
+  [s1_offering] June 2025: 8/10 fields exact
+      ✗ anticipated_deal_size: expected 20000000, got 18400000.0
+      ✗ warrant_coverage_pct: expected 0, got 100.0
+  [shelf] May 2024: 5/8 fields exact
+      ✗ current_raisable_amount: expected 306299968, got 300999960.5
+      ✗ total_amount_raised: expected 43700032, got 49000039.5
+      ✗ last_banker: expected ~'Maxim', got 'ThinkEquity'
+
+MISSING (in fixture, not in actual)
+  [convertible_preferred] March 2022 Series 8: NO MATCH
+
+EXTRA (in actual, not in fixture)
+  [warrant] July 2023 Common Warrants (2023-07-19): unexpected actual card
+  [convertible_preferred] March 2024 Series 9 Preferred (2024-03-12): unexpected actual card
+  [convertible_preferred] May 2025 Series 5 Preferred (2025-05-19): unexpected actual card

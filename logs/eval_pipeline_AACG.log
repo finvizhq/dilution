@@ -1,0 +1,410 @@
+00:50:22  [AACG]  langfuse: LANGFUSE_PUBLIC_KEY/SECRET_KEY not set — tracing disabled
+00:50:22  [AACG]  Dilution tracker — ticker=AACG since=2020-06-17 llm_provider=gemini llm_model=gemini-3.5-flash llm_model_periodic=gemini-3.5-flash
+00:50:22  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:50:22  [AACG]  resolved AACG → CIK 1420529 AACG (ATA Creativity Global)
+00:50:22  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:50:22  [AACG]    65 relevant filings since 2020-06-17
+00:50:22  [AACG]    unit already detected — is_fpi=1 ads_ratio=0.5
+00:50:22  [AACG]    unit ctx — is_fpi=1 ads_ratio=0.5 reporting_unit=ads
+00:50:23  [AACG]    splits — finviz=0 yfinance=0 merged=0
+00:50:23  [AACG]    splits — 0 events persisted
+00:50:23  [AACG]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:50:23  [AACG]    fetch done — 0/0 filings, 0 docs, 0 errors
+00:50:23  [AACG]  walker --force: dropping ledger for cik=1420529
+00:50:23  [AACG]  walker: 63 events (filings=63 splits=0 cik=1420529); 0 filing(s) already walked
+00:50:23  [AACG]  seed: extracting overhang from 20-F 0001564590-21-018581 (2020-12-31)
+00:50:40  [AACG]  overhang-combined 0001564590-21-018581 — w=0 c=0 p=0 s=0 a=0 e=0
+00:50:40  [AACG]  seed: 0001564590-21-018581 extracted empty overhang — case C
+00:50:40  [AACG]  seed case=C_empty_extract — 0001564590-21-018581
+00:50:40  [AACG]  walker 0001564590-20-039759 — form=6-K (22 tools)
+00:50:45  [AACG]  walker 0001564590-20-039759 — finish='REASON_TOOL_CALLS' calls=1
+00:50:45  [AACG]  walker 0001564590-20-039759 — note_no_event reasons: ['earnings release and share repurchase update']
+00:50:45  [AACG]    [2020-08-13] 6-K 0001564590-20-039759 — 0 mutations
+00:50:45  [AACG]    anchor 0001564590-20-039759 as_of=2020-06-30
+00:50:48  [AACG]  overhang-combined 0001564590-20-039759 — w=0 c=0 p=0 s=0 a=0 e=0
+00:50:48  [AACG]  walker 0001564590-20-050947 — form=6-K (22 tools)
+00:50:53  [AACG]  walker 0001564590-20-050947 — finish='REASON_TOOL_CALLS' calls=1
+00:50:53  [AACG]  walker 0001564590-20-050947 — note_no_event reasons: ['proxy statement for annual general meeting']
+00:50:53  [AACG]    [2020-11-05] 6-K 0001564590-20-050947 — 0 mutations
+00:50:53  [AACG]    [2020-11-05] 6-K 0001564590-20-050947 — no interim-financials markers; anchor reconciliation skipped
+00:50:53  [AACG]  walker 0001564590-20-053603 — form=6-K (22 tools)
+00:51:00  [AACG]  walker 0001564590-20-053603 — finish='REASON_TOOL_CALLS' calls=1
+00:51:00  [AACG]  walker 0001564590-20-053603 — note_no_event reasons: ['earnings release and share repurchase update with no new dilutive instruments or events']
+00:51:00  [AACG]    [2020-11-12] 6-K 0001564590-20-053603 — 0 mutations
+00:51:00  [AACG]    anchor 0001564590-20-053603 as_of=2020-09-30
+00:51:03  [AACG]  overhang-combined 0001564590-20-053603 — w=0 c=0 p=0 s=0 a=0 e=0
+00:51:03  [AACG]  walker 0001564590-20-057529 — form=6-K (22 tools)
+00:51:07  [AACG]  walker 0001564590-20-057529 — finish='REASON_TOOL_CALLS' calls=1
+00:51:07  [AACG]  walker 0001564590-20-057529 — note_no_event reasons: ['Annual general meeting results and adoption of fourth amended and restated memorandum and articles of association with no dilutive instruments issued or modified.']
+00:51:07  [AACG]    [2020-12-18] 6-K 0001564590-20-057529 — 0 mutations
+00:51:07  [AACG]    [2020-12-18] 6-K 0001564590-20-057529 — no interim-financials markers; anchor reconciliation skipped
+00:51:07  [AACG]  walker 0001564590-21-016200 — form=6-K (22 tools)
+00:51:11  [AACG]  walker 0001564590-21-016200 — finish='REASON_TOOL_CALLS' calls=1
+00:51:11  [AACG]  walker 0001564590-21-016200 — note_no_event reasons: ['earnings release and financial results announcement with no new dilutive financing events or instruments disclosed']
+00:51:11  [AACG]    [2021-03-30] 6-K 0001564590-21-016200 — 0 mutations
+00:51:11  [AACG]    anchor 0001564590-21-016200 as_of=2020-12-31
+00:51:14  [AACG]  overhang-combined 0001564590-21-016200 — w=0 c=0 p=0 s=0 a=0 e=0
+00:51:14  [AACG]  walker 0001193125-21-113952 — form=F-3 (13 tools)
+00:51:28  [AACG]  walker 0001193125-21-113952 — finish='REASON_TOOL_CALLS' calls=1
+00:51:28  [AACG]  walker 0001193125-21-113952 — call create_instrument:shelf date=2021-04-13 capacity_usd=80000000.0 form=F-3
+00:51:28  [AACG]    [2021-04-13] F-3 0001193125-21-113952 — 1 mutations
+00:51:28  [AACG]  walker 0001564590-21-027634 — dedup block: 1 candidates (all active, periodic form)
+00:51:28  [AACG]  walker 0001564590-21-027634 — form=6-K (22 tools)
+00:51:32  [AACG]  walker 0001564590-21-027634 — finish='REASON_TOOL_CALLS' calls=1
+00:51:32  [AACG]  walker 0001564590-21-027634 — note_no_event reasons: ['earnings release']
+00:51:32  [AACG]    [2021-05-13] 6-K 0001564590-21-027634 — 0 mutations
+00:51:32  [AACG]    anchor 0001564590-21-027634 as_of=2021-03-31
+00:51:35  [AACG]  overhang-combined 0001564590-21-027634 — w=0 c=0 p=0 s=0 a=0 e=0
+00:51:35  [AACG]  walker 0001564590-21-044159 — dedup block: 1 candidates (all active, periodic form)
+00:51:35  [AACG]  walker 0001564590-21-044159 — form=6-K (22 tools)
+00:51:39  [AACG]  walker 0001564590-21-044159 — finish='REASON_TOOL_CALLS' calls=1
+00:51:39  [AACG]  walker 0001564590-21-044159 — note_no_event reasons: ['earnings release']
+00:51:39  [AACG]    [2021-08-13] 6-K 0001564590-21-044159 — 0 mutations
+00:51:39  [AACG]    anchor 0001564590-21-044159 as_of=2021-06-30
+00:51:43  [AACG]  overhang-combined 0001564590-21-044159 — w=0 c=0 p=0 s=0 a=0 e=0
+00:51:43  [AACG]  walker 0001564590-21-051485 — dedup block: 1 candidates (all active, periodic form)
+00:51:43  [AACG]  walker 0001564590-21-051485 — form=6-K (22 tools)
+00:51:47  [AACG]  walker 0001564590-21-051485 — finish='REASON_TOOL_CALLS' calls=1
+00:51:47  [AACG]  walker 0001564590-21-051485 — note_no_event reasons: ['annual general meeting notice and proxy statement with no dilutive financing events']
+00:51:47  [AACG]    [2021-10-22] 6-K 0001564590-21-051485 — 0 mutations
+00:51:47  [AACG]    [2021-10-22] 6-K 0001564590-21-051485 — no interim-financials markers; anchor reconciliation skipped
+00:51:47  [AACG]  walker 0001564590-21-056264 — dedup block: 1 candidates (all active, periodic form)
+00:51:47  [AACG]  walker 0001564590-21-056264 — form=6-K (22 tools)
+00:51:53  [AACG]  walker 0001564590-21-056264 — finish='REASON_TOOL_CALLS' calls=1
+00:51:53  [AACG]  walker 0001564590-21-056264 — note_no_event reasons: ['earnings release']
+00:51:53  [AACG]    [2021-11-10] 6-K 0001564590-21-056264 — 0 mutations
+00:51:53  [AACG]    anchor 0001564590-21-056264 as_of=2021-11-10
+00:51:56  [AACG]  overhang-combined 0001564590-21-056264 — w=0 c=0 p=0 s=0 a=0 e=0
+00:51:56  [AACG]  walker 0001564590-21-059263 — dedup block: 1 candidates (all active, periodic form)
+00:51:56  [AACG]  walker 0001564590-21-059263 — form=6-K (22 tools)
+00:51:58  [AACG]  walker 0001564590-21-059263 — finish='REASON_TOOL_CALLS' calls=1
+00:51:58  [AACG]  walker 0001564590-21-059263 — note_no_event reasons: ['annual general meeting results']
+00:51:58  [AACG]    [2021-12-03] 6-K 0001564590-21-059263 — 0 mutations
+00:51:58  [AACG]    [2021-12-03] 6-K 0001564590-21-059263 — no interim-financials markers; anchor reconciliation skipped
+00:51:58  [AACG]  walker 0001564590-22-010901 — dedup block: 1 candidates (all active, periodic form)
+00:51:58  [AACG]  walker 0001564590-22-010901 — form=6-K (22 tools)
+00:52:03  [AACG]  walker 0001564590-22-010901 — finish='REASON_TOOL_CALLS' calls=1
+00:52:03  [AACG]  walker 0001564590-22-010901 — note_no_event reasons: ['earnings release and year-end financial results with no dilutive financing events or shelf drawdowns disclosed']
+00:52:03  [AACG]    [2022-03-17] 6-K 0001564590-22-010901 — 0 mutations
+00:52:03  [AACG]    anchor 0001564590-22-010901 as_of=2021-12-31
+00:52:13  [AACG]  overhang-combined 0001564590-22-010901 — w=0 c=0 p=0 s=0 a=0 e=0
+00:52:13  [AACG]  walker 0001564590-22-015529 — dedup block: 1 candidates (all active, periodic form)
+00:52:13  [AACG]  walker 0001564590-22-015529 — form=20-F (21 tools)
+00:52:28  [AACG]  walker 0001564590-22-015529 — finish='REASON_TOOL_CALLS' calls=1
+00:52:28  [AACG]  walker 0001564590-22-015529 — note_no_event reasons: ['Annual report on Form 20-F contains no new dilutive instruments or events for the fiscal year ended December 31, 2021.']
+00:52:28  [AACG]    [2022-04-26] 20-F 0001564590-22-015529 — 0 mutations
+00:52:28  [AACG]    anchor 0001564590-22-015529 as_of=2021-12-31
+00:52:45  [AACG]  overhang-combined 0001564590-22-015529 — w=0 c=0 p=0 s=0 a=0 e=0
+00:52:45  [AACG]  walker 0001564590-22-018453 — dedup block: 1 candidates (all active, periodic form)
+00:52:45  [AACG]  walker 0001564590-22-018453 — form=6-K (22 tools)
+00:52:47  [AACG]  walker 0001564590-22-018453 — finish='REASON_TOOL_CALLS' calls=1
+00:52:47  [AACG]  walker 0001564590-22-018453 — note_no_event reasons: ['HFCAA status update']
+00:52:47  [AACG]    [2022-05-06] 6-K 0001564590-22-018453 — 0 mutations
+00:52:47  [AACG]    [2022-05-06] 6-K 0001564590-22-018453 — no interim-financials markers; anchor reconciliation skipped
+00:52:47  [AACG]  walker 0001564590-22-019935 — dedup block: 1 candidates (all active, periodic form)
+00:52:47  [AACG]  walker 0001564590-22-019935 — form=6-K (22 tools)
+00:52:52  [AACG]  walker 0001564590-22-019935 — finish='REASON_TOOL_CALLS' calls=1
+00:52:52  [AACG]  walker 0001564590-22-019935 — note_no_event reasons: ['earnings release for the first quarter ended march 31, 2022 with no dilutive events or financing transactions disclosed']
+00:52:52  [AACG]    [2022-05-12] 6-K 0001564590-22-019935 — 0 mutations
+00:52:52  [AACG]    anchor 0001564590-22-019935 as_of=2022-03-31
+00:52:56  [AACG]  overhang-combined 0001564590-22-019935 — w=0 c=0 p=0 s=0 a=0 e=0
+00:52:56  [AACG]  walker 0001564590-22-022530 — dedup block: 1 candidates (all active, periodic form)
+00:52:56  [AACG]  walker 0001564590-22-022530 — form=6-K (22 tools)
+00:52:58  [AACG]  walker 0001564590-22-022530 — finish='REASON_TOOL_CALLS' calls=1
+00:52:58  [AACG]  walker 0001564590-22-022530 — note_no_event reasons: ['CFO transition announcement only']
+00:52:58  [AACG]    [2022-06-06] 6-K 0001564590-22-022530 — 0 mutations
+00:52:58  [AACG]    [2022-06-06] 6-K 0001564590-22-022530 — no interim-financials markers; anchor reconciliation skipped
+00:52:58  [AACG]  walker 0001193125-22-218899 — dedup block: 1 candidates (all active, periodic form)
+00:52:58  [AACG]  walker 0001193125-22-218899 — form=6-K (22 tools)
+00:53:02  [AACG]  walker 0001193125-22-218899 — finish='REASON_TOOL_CALLS' calls=1
+00:53:02  [AACG]  walker 0001193125-22-218899 — note_no_event reasons: ['earnings release']
+00:53:02  [AACG]    [2022-08-12] 6-K 0001193125-22-218899 — 0 mutations
+00:53:02  [AACG]    anchor 0001193125-22-218899 as_of=2022-08-11
+00:53:05  [AACG]  overhang-combined 0001193125-22-218899 — w=0 c=0 p=0 s=0 a=0 e=0
+00:53:05  [AACG]  walker 0001193125-22-265348 — dedup block: 1 candidates (all active, periodic form)
+00:53:05  [AACG]  walker 0001193125-22-265348 — form=6-K (22 tools)
+00:53:08  [AACG]  walker 0001193125-22-265348 — finish='REASON_TOOL_CALLS' calls=1
+00:53:08  [AACG]  walker 0001193125-22-265348 — note_no_event reasons: ['proxy statement and notice of annual general meeting']
+00:53:08  [AACG]    [2022-10-19] 6-K 0001193125-22-265348 — 0 mutations
+00:53:08  [AACG]    [2022-10-19] 6-K 0001193125-22-265348 — no interim-financials markers; anchor reconciliation skipped
+00:53:08  [AACG]  walker 0001193125-22-270975 — dedup block: 1 candidates (all active, periodic form)
+00:53:08  [AACG]  walker 0001193125-22-270975 — form=6-K/A (3 tools)
+00:53:24  [AACG]  walker 0001193125-22-270975 — finish='REASON_TOOL_CALLS' calls=1
+00:53:24  [AACG]  walker 0001193125-22-270975 — note_no_event reasons: ['proxy materials and correction of outstanding share count']
+00:53:24  [AACG]    [2022-10-27] 6-K/A 0001193125-22-270975 — 0 mutations
+00:53:24  [AACG]    [2022-10-27] 6-K 0001193125-22-270975 — no interim-financials markers; anchor reconciliation skipped
+00:53:24  [AACG]  walker 0001193125-22-295474 — dedup block: 1 candidates (all active, periodic form)
+00:53:24  [AACG]  walker 0001193125-22-295474 — form=6-K (22 tools)
+00:53:28  [AACG]  walker 0001193125-22-295474 — finish='REASON_TOOL_CALLS' calls=1
+00:53:28  [AACG]  walker 0001193125-22-295474 — note_no_event reasons: ['earnings release for the third quarter ended september 30, 2022 with no dilutive financing events or instrument issuances disclosed']
+00:53:28  [AACG]    [2022-11-30] 6-K 0001193125-22-295474 — 0 mutations
+00:53:28  [AACG]    anchor 0001193125-22-295474 as_of=2022-11-30
+00:53:32  [AACG]  overhang-combined 0001193125-22-295474 — w=0 c=0 p=0 s=0 a=0 e=0
+00:53:32  [AACG]  walker 0001193125-22-296984 — dedup block: 1 candidates (all active, periodic form)
+00:53:32  [AACG]  walker 0001193125-22-296984 — form=6-K (22 tools)
+00:53:33  [AACG]  walker 0001193125-22-296984 — finish='REASON_TOOL_CALLS' calls=1
+00:53:33  [AACG]  walker 0001193125-22-296984 — note_no_event reasons: ['annual general meeting results only']
+00:53:33  [AACG]    [2022-12-02] 6-K 0001193125-22-296984 — 0 mutations
+00:53:33  [AACG]    [2022-12-02] 6-K 0001193125-22-296984 — no interim-financials markers; anchor reconciliation skipped
+00:53:33  [AACG]  walker 0001193125-23-085732 — dedup block: 1 candidates (all active, periodic form)
+00:53:33  [AACG]  walker 0001193125-23-085732 — form=6-K (22 tools)
+00:53:37  [AACG]  walker 0001193125-23-085732 — finish='REASON_TOOL_CALLS' calls=1
+00:53:37  [AACG]  walker 0001193125-23-085732 — note_no_event reasons: ['earnings release and financial results for fourth quarter and fiscal year 2022 with no dilutive events or financing transactions disclosed']
+00:53:37  [AACG]    [2023-03-30] 6-K 0001193125-23-085732 — 0 mutations
+00:53:37  [AACG]    anchor 0001193125-23-085732 as_of=2023-03-30
+00:53:40  [AACG]  overhang-combined 0001193125-23-085732 — w=0 c=0 p=0 s=0 a=0 e=0
+00:53:40  [AACG]  walker 0001193125-23-098383 — dedup block: 1 candidates (all active, periodic form)
+00:53:40  [AACG]  walker 0001193125-23-098383 — form=20-F (21 tools)
+00:53:53  [AACG]  walker 0001193125-23-098383 — finish='REASON_TOOL_CALLS' calls=1
+00:53:53  [AACG]  walker 0001193125-23-098383 — note_no_event reasons: ['annual report on Form 20-F with no dilutive events']
+00:53:53  [AACG]    [2023-04-12] 20-F 0001193125-23-098383 — 0 mutations
+00:53:53  [AACG]    anchor 0001193125-23-098383 as_of=2022-12-31
+00:54:04  [AACG]  overhang-combined 0001193125-23-098383 — w=0 c=0 p=0 s=0 a=0 e=0
+00:54:04  [AACG]  walker 0001193125-23-142143 — dedup block: 1 candidates (all active, periodic form)
+00:54:04  [AACG]  walker 0001193125-23-142143 — form=6-K (22 tools)
+00:54:08  [AACG]  walker 0001193125-23-142143 — finish='REASON_TOOL_CALLS' calls=1
+00:54:08  [AACG]  walker 0001193125-23-142143 — note_no_event reasons: ['First Quarter 2023 earnings release with no dilutive events disclosed.']
+00:54:08  [AACG]    [2023-05-11] 6-K 0001193125-23-142143 — 0 mutations
+00:54:08  [AACG]    anchor 0001193125-23-142143 as_of=2023-05-11
+00:54:11  [AACG]  overhang-combined 0001193125-23-142143 — w=0 c=0 p=0 s=0 a=0 e=0
+00:54:11  [AACG]  walker 0001193125-23-180912 — dedup block: 1 candidates (all active, periodic form)
+00:54:11  [AACG]  walker 0001193125-23-180912 — form=6-K (22 tools)
+00:54:13  [AACG]  walker 0001193125-23-180912 — finish='REASON_TOOL_CALLS' calls=1
+00:54:13  [AACG]  walker 0001193125-23-180912 — note_no_event reasons: ["Change in Registrant's Certifying Accountant"]
+00:54:13  [AACG]    [2023-07-03] 6-K 0001193125-23-180912 — 0 mutations
+00:54:13  [AACG]    [2023-07-03] 6-K 0001193125-23-180912 — no interim-financials markers; anchor reconciliation skipped
+00:54:13  [AACG]  walker 0001193125-23-209156 — dedup block: 1 candidates (all active, periodic form)
+00:54:13  [AACG]  walker 0001193125-23-209156 — form=6-K (22 tools)
+00:54:19  [AACG]  walker 0001193125-23-209156 — finish='REASON_TOOL_CALLS' calls=1
+00:54:19  [AACG]  walker 0001193125-23-209156 — note_no_event reasons: ['earnings release for the second quarter and first half ended June 30, 2023 with no dilutive events or transactions disclosed']
+00:54:19  [AACG]    [2023-08-10] 6-K 0001193125-23-209156 — 0 mutations
+00:54:19  [AACG]    anchor 0001193125-23-209156 as_of=2023-08-10
+00:54:25  [AACG]  overhang-combined 0001193125-23-209156 — w=0 c=0 p=0 s=0 a=0 e=0
+00:54:25  [AACG]  walker 0001104659-23-110534 — dedup block: 1 candidates (all active, periodic form)
+00:54:25  [AACG]  walker 0001104659-23-110534 — form=6-K (22 tools)
+00:54:28  [AACG]  walker 0001104659-23-110534 — finish='REASON_TOOL_CALLS' calls=1
+00:54:28  [AACG]  walker 0001104659-23-110534 — note_no_event reasons: ['annual general meeting proxy statement']
+00:54:28  [AACG]    [2023-10-20] 6-K 0001104659-23-110534 — 0 mutations
+00:54:28  [AACG]    [2023-10-20] 6-K 0001104659-23-110534 — no interim-financials markers; anchor reconciliation skipped
+00:54:28  [AACG]  walker 0001104659-23-117311 — dedup block: 1 candidates (all active, periodic form)
+00:54:28  [AACG]  walker 0001104659-23-117311 — form=6-K (22 tools)
+00:54:32  [AACG]  walker 0001104659-23-117311 — finish='REASON_TOOL_CALLS' calls=1
+00:54:32  [AACG]  walker 0001104659-23-117311 — note_no_event reasons: ['earnings release']
+00:54:32  [AACG]    [2023-11-13] 6-K 0001104659-23-117311 — 0 mutations
+00:54:32  [AACG]    anchor 0001104659-23-117311 as_of=2023-11-13
+00:54:35  [AACG]  overhang-combined 0001104659-23-117311 — w=0 c=0 p=0 s=0 a=0 e=0
+00:54:35  [AACG]  walker 0001104659-23-123397 — dedup block: 1 candidates (all active, periodic form)
+00:54:35  [AACG]  walker 0001104659-23-123397 — form=6-K (22 tools)
+00:54:37  [AACG]  walker 0001104659-23-123397 — finish='REASON_TOOL_CALLS' calls=1
+00:54:37  [AACG]  walker 0001104659-23-123397 — note_no_event reasons: ['results of annual general meeting of shareholders']
+00:54:37  [AACG]    [2023-12-05] 6-K 0001104659-23-123397 — 0 mutations
+00:54:37  [AACG]    [2023-12-05] 6-K 0001104659-23-123397 — no interim-financials markers; anchor reconciliation skipped
+00:54:37  [AACG]  walker 0001104659-23-126382 — dedup block: 1 candidates (all active, periodic form)
+00:54:37  [AACG]  walker 0001104659-23-126382 — form=6-K (22 tools)
+00:54:39  [AACG]  walker 0001104659-23-126382 — finish='REASON_TOOL_CALLS' calls=1
+00:54:39  [AACG]  walker 0001104659-23-126382 — note_no_event reasons: ['Nasdaq minimum bid price deficiency notification']
+00:54:39  [AACG]    [2023-12-15] 6-K 0001104659-23-126382 — 0 mutations
+00:54:39  [AACG]    [2023-12-15] 6-K 0001104659-23-126382 — no interim-financials markers; anchor reconciliation skipped
+00:54:39  [AACG]  walker 0001104659-23-130220 — dedup block: 1 candidates (all active, periodic form)
+00:54:39  [AACG]  walker 0001104659-23-130220 — form=6-K (22 tools)
+00:54:40  [AACG]  walker 0001104659-23-130220 — finish='REASON_TOOL_CALLS' calls=1
+00:54:40  [AACG]  walker 0001104659-23-130220 — note_no_event reasons: ['change of address']
+00:54:40  [AACG]    [2023-12-29] 6-K 0001104659-23-130220 — 0 mutations
+00:54:40  [AACG]    [2023-12-29] 6-K 0001104659-23-130220 — no interim-financials markers; anchor reconciliation skipped
+00:54:40  [AACG]  walker 0001104659-24-039100 — dedup block: 1 candidates (all active, periodic form)
+00:54:40  [AACG]  walker 0001104659-24-039100 — form=6-K (22 tools)
+00:54:44  [AACG]  walker 0001104659-24-039100 — finish='REASON_TOOL_CALLS' calls=1
+00:54:44  [AACG]  walker 0001104659-24-039100 — note_no_event reasons: ['quarterly earnings release with no dilutive events']
+00:54:44  [AACG]    [2024-03-26] 6-K 0001104659-24-039100 — 0 mutations
+00:54:44  [AACG]    anchor 0001104659-24-039100 as_of=2024-03-26
+00:54:47  [AACG]  overhang-combined 0001104659-24-039100 — w=0 c=0 p=0 s=0 a=0 e=0
+00:54:47  [AACG]  walker 0001104659-24-045459 — dedup block: 1 candidates (all active, periodic form)
+00:54:47  [AACG]  walker 0001104659-24-045459 — form=20-F (21 tools)
+00:55:02  [AACG]  walker 0001104659-24-045459 — finish='REASON_TOOL_CALLS' calls=1
+00:55:02  [AACG]  walker 0001104659-24-045459 — note_no_event reasons: ['Annual report on Form 20-F disclosing no new dilutive instruments or financing events during the period.']
+00:55:02  [AACG]    [2024-04-10] 20-F 0001104659-24-045459 — 0 mutations
+00:55:02  [AACG]    anchor 0001104659-24-045459 as_of=2023-12-31
+00:55:13  [AACG]  overhang-combined 0001104659-24-045459 — w=0 c=0 p=0 s=0 a=0 e=0
+00:55:13  [AACG]  walker 0001104659-24-051447 — form=F-3 (13 tools)
+00:55:27  [AACG]  walker 0001104659-24-051447 — finish='REASON_TOOL_CALLS' calls=2
+00:55:27  [AACG]  walker 0001104659-24-051447 — call close_instrument SH-2618 date=2024-04-25 reason=superseded replaced_by=shelf-2024-f3
+00:55:27  [AACG]  walker 0001104659-24-051447 — call create_instrument:shelf shelf-2024-f3 date=2024-04-25 capacity_usd=80000000.0 form=F-3
+00:55:27  [AACG]    [2024-04-25] F-3 0001104659-24-051447 — 2 mutations
+00:55:27  [AACG]  walker 0001104659-24-062184 — dedup block: 1 candidates (all active, periodic form)
+00:55:27  [AACG]  walker 0001104659-24-062184 — form=6-K (22 tools)
+00:55:31  [AACG]  walker 0001104659-24-062184 — finish='REASON_TOOL_CALLS' calls=1
+00:55:31  [AACG]  walker 0001104659-24-062184 — note_no_event reasons: ['earnings release']
+00:55:31  [AACG]    [2024-05-16] 6-K 0001104659-24-062184 — 0 mutations
+00:55:31  [AACG]    anchor 0001104659-24-062184 as_of=2024-05-16
+00:55:34  [AACG]  overhang-combined 0001104659-24-062184 — w=0 c=0 p=0 s=0 a=0 e=0
+00:55:34  [AACG]  walker 0001104659-24-067846 — dedup block: 1 candidates (all active, periodic form)
+00:55:34  [AACG]  walker 0001104659-24-067846 — form=6-K (22 tools)
+00:55:36  [AACG]  walker 0001104659-24-067846 — finish='REASON_TOOL_CALLS' calls=1
+00:55:36  [AACG]  walker 0001104659-24-067846 — note_no_event reasons: ['Nasdaq minimum bid price deficiency notification']
+00:55:36  [AACG]    [2024-06-03] 6-K 0001104659-24-067846 — 0 mutations
+00:55:36  [AACG]    [2024-06-03] 6-K 0001104659-24-067846 — no interim-financials markers; anchor reconciliation skipped
+00:55:36  [AACG]  walker 0001104659-24-086803 — dedup block: 1 candidates (all active, periodic form)
+00:55:36  [AACG]  walker 0001104659-24-086803 — form=6-K (22 tools)
+00:55:41  [AACG]  walker 0001104659-24-086803 — finish='REASON_TOOL_CALLS' calls=1
+00:55:41  [AACG]  walker 0001104659-24-086803 — note_no_event reasons: ['earnings release with no dilutive events or transactions disclosed']
+00:55:41  [AACG]    [2024-08-07] 6-K 0001104659-24-086803 — 0 mutations
+00:55:41  [AACG]    anchor 0001104659-24-086803 as_of=2024-08-07
+00:55:47  [AACG]  overhang-combined 0001104659-24-086803 — w=0 c=0 p=0 s=1 a=0 e=0
+00:55:47  [AACG]  walker 0001104659-24-109881 — dedup block: 1 candidates (all active, periodic form)
+00:55:47  [AACG]  walker 0001104659-24-109881 — form=6-K (22 tools)
+00:55:50  [AACG]  walker 0001104659-24-109881 — finish='REASON_TOOL_CALLS' calls=1
+00:55:50  [AACG]  walker 0001104659-24-109881 — note_no_event reasons: ['proxy materials for annual general meeting']
+00:55:50  [AACG]    [2024-10-18] 6-K 0001104659-24-109881 — 0 mutations
+00:55:50  [AACG]    [2024-10-18] 6-K 0001104659-24-109881 — no interim-financials markers; anchor reconciliation skipped
+00:55:50  [AACG]  walker 0001104659-24-115370 — dedup block: 1 candidates (all active, periodic form)
+00:55:50  [AACG]  walker 0001104659-24-115370 — form=6-K (22 tools)
+00:55:55  [AACG]  walker 0001104659-24-115370 — finish='REASON_TOOL_CALLS' calls=1
+00:55:55  [AACG]  walker 0001104659-24-115370 — note_no_event reasons: ['earnings release']
+00:55:55  [AACG]    [2024-11-07] 6-K 0001104659-24-115370 — 0 mutations
+00:55:55  [AACG]    anchor 0001104659-24-115370 as_of=2024-11-07
+00:56:02  [AACG]  overhang-combined 0001104659-24-115370 — w=0 c=0 p=0 s=1 a=0 e=0
+00:56:02  [AACG]  walker 0001104659-24-124819 — dedup block: 1 candidates (all active, periodic form)
+00:56:02  [AACG]  walker 0001104659-24-124819 — form=6-K (22 tools)
+00:56:04  [AACG]  walker 0001104659-24-124819 — finish='REASON_TOOL_CALLS' calls=1
+00:56:04  [AACG]  walker 0001104659-24-124819 — note_no_event reasons: ['annual general meeting results']
+00:56:04  [AACG]    [2024-12-03] 6-K 0001104659-24-124819 — 0 mutations
+00:56:04  [AACG]    [2024-12-03] 6-K 0001104659-24-124819 — no interim-financials markers; anchor reconciliation skipped
+00:56:04  [AACG]  walker 0001104659-24-124894 — dedup block: 1 candidates (all active, periodic form)
+00:56:04  [AACG]  walker 0001104659-24-124894 — form=6-K (22 tools)
+00:56:06  [AACG]  walker 0001104659-24-124894 — finish='REASON_TOOL_CALLS' calls=1
+00:56:06  [AACG]  walker 0001104659-24-124894 — note_no_event reasons: ["The filing contains only updates regarding the Company's compliance with Nasdaq's minimum bid price and stockholders' equity requirements, with no dilutive instruments or financing events disclosed."]
+00:56:06  [AACG]    [2024-12-03] 6-K 0001104659-24-124894 — 0 mutations
+00:56:06  [AACG]    [2024-12-03] 6-K 0001104659-24-124894 — no interim-financials markers; anchor reconciliation skipped
+00:56:06  [AACG]  walker 0001104659-25-014440 — dedup block: 1 candidates (all active, periodic form)
+00:56:06  [AACG]  walker 0001104659-25-014440 — form=6-K (22 tools)
+00:56:08  [AACG]  walker 0001104659-25-014440 — finish='REASON_TOOL_CALLS' calls=1
+00:56:08  [AACG]  walker 0001104659-25-014440 — note_no_event reasons: ['director resignation']
+00:56:08  [AACG]    [2025-02-18] 6-K 0001104659-25-014440 — 0 mutations
+00:56:08  [AACG]    [2025-02-18] 6-K 0001104659-25-014440 — no interim-financials markers; anchor reconciliation skipped
+00:56:08  [AACG]  walker 0001104659-25-027816 — dedup block: 1 candidates (all active, periodic form)
+00:56:08  [AACG]  walker 0001104659-25-027816 — form=6-K (22 tools)
+00:56:12  [AACG]  walker 0001104659-25-027816 — finish='REASON_TOOL_CALLS' calls=1
+00:56:12  [AACG]  walker 0001104659-25-027816 — note_no_event reasons: ['earnings release']
+00:56:12  [AACG]    [2025-03-25] 6-K 0001104659-25-027816 — 0 mutations
+00:56:12  [AACG]    anchor 0001104659-25-027816 as_of=2025-03-25
+00:56:17  [AACG]  overhang-combined 0001104659-25-027816 — w=0 c=0 p=0 s=1 a=0 e=0
+00:56:17  [AACG]  walker 0001410578-25-000679 — dedup block: 1 candidates (all active, periodic form)
+00:56:17  [AACG]  walker 0001410578-25-000679 — form=20-F (21 tools)
+00:56:43  [AACG]  walker 0001410578-25-000679 — finish='REASON_TOOL_CALLS' calls=1
+00:56:43  [AACG]  walker 0001410578-25-000679 — note_no_event reasons: ['Annual report on Form 20-F for the fiscal year ended December 31, 2024, which does not disclose any new dilutive instruments, equity issuances, or other cap table events.']
+00:56:43  [AACG]    [2025-04-10] 20-F 0001410578-25-000679 — 0 mutations
+00:56:43  [AACG]    anchor 0001410578-25-000679 as_of=2024-12-31
+00:56:57  [AACG]  overhang-combined 0001410578-25-000679 — w=0 c=0 p=0 s=0 a=0 e=0
+00:56:57  [AACG]  walker 0001104659-25-048600 — dedup block: 1 candidates (all active, periodic form)
+00:56:57  [AACG]  walker 0001104659-25-048600 — form=6-K (22 tools)
+00:56:59  [AACG]  walker 0001104659-25-048600 — finish='REASON_TOOL_CALLS' calls=1
+00:56:59  [AACG]  walker 0001104659-25-048600 — note_no_event reasons: ['Nasdaq minimum bid price deficiency notification']
+00:56:59  [AACG]    [2025-05-14] 6-K 0001104659-25-048600 — 0 mutations
+00:56:59  [AACG]    [2025-05-14] 6-K 0001104659-25-048600 — no interim-financials markers; anchor reconciliation skipped
+00:56:59  [AACG]  walker 0001104659-25-049786 — dedup block: 1 candidates (all active, periodic form)
+00:56:59  [AACG]  walker 0001104659-25-049786 — form=6-K (22 tools)
+00:57:05  [AACG]  walker 0001104659-25-049786 — finish='REASON_TOOL_CALLS' calls=1
+00:57:05  [AACG]  walker 0001104659-25-049786 — note_no_event reasons: ['Q1 2025 earnings release with no dilutive financing events']
+00:57:05  [AACG]    [2025-05-16] 6-K 0001104659-25-049786 — 0 mutations
+00:57:05  [AACG]    anchor 0001104659-25-049786 as_of=2025-05-16
+00:57:10  [AACG]  overhang-combined 0001104659-25-049786 — w=0 c=0 p=0 s=1 a=0 e=0
+00:57:10  [AACG]  walker 0001104659-25-050225 — dedup block: 1 candidates (all active, periodic form)
+00:57:10  [AACG]  walker 0001104659-25-050225 — form=6-K (22 tools)
+00:57:12  [AACG]  walker 0001104659-25-050225 — finish='REASON_TOOL_CALLS' calls=1
+00:57:12  [AACG]  walker 0001104659-25-050225 — note_no_event reasons: ['Nasdaq listing transfer and compliance update']
+00:57:12  [AACG]    [2025-05-19] 6-K 0001104659-25-050225 — 0 mutations
+00:57:12  [AACG]    [2025-05-19] 6-K 0001104659-25-050225 — no interim-financials markers; anchor reconciliation skipped
+00:57:12  [AACG]  walker 0001104659-25-073110 — dedup block: 1 candidates (all active, periodic form)
+00:57:12  [AACG]  walker 0001104659-25-073110 — form=6-K (22 tools)
+00:57:18  [AACG]  walker 0001104659-25-073110 — finish='REASON_TOOL_CALLS' calls=1
+00:57:18  [AACG]  walker 0001104659-25-073110 — note_no_event reasons: ['non-binding term sheet with Baby BTC Strategic Capital Limited for potential share and warrant issuance']
+00:57:18  [AACG]    [2025-08-01] 6-K 0001104659-25-073110 — 0 mutations
+00:57:18  [AACG]    [2025-08-01] 6-K 0001104659-25-073110 — no interim-financials markers; anchor reconciliation skipped
+00:57:18  [AACG]  walker 0001104659-25-073268 — dedup block: 1 candidates (all active, periodic form)
+00:57:18  [AACG]  walker 0001104659-25-073268 — form=6-K/A (3 tools)
+00:57:26  [AACG]  walker 0001104659-25-073268 — finish='REASON_TOOL_CALLS' calls=1
+00:57:26  [AACG]  walker 0001104659-25-073268 — note_no_event reasons: ['non-binding term sheet only']
+00:57:26  [AACG]    [2025-08-04] 6-K/A 0001104659-25-073268 — 0 mutations
+00:57:26  [AACG]    [2025-08-04] 6-K 0001104659-25-073268 — no interim-financials markers; anchor reconciliation skipped
+00:57:26  [AACG]  walker 0001104659-25-074761 — dedup block: 1 candidates (all active, periodic form)
+00:57:26  [AACG]  walker 0001104659-25-074761 — form=6-K (22 tools)
+00:57:29  [AACG]  walker 0001104659-25-074761 — finish='REASON_TOOL_CALLS' calls=1
+00:57:29  [AACG]  walker 0001104659-25-074761 — note_no_event reasons: ['earnings release']
+00:57:29  [AACG]    [2025-08-06] 6-K 0001104659-25-074761 — 0 mutations
+00:57:29  [AACG]    anchor 0001104659-25-074761 as_of=2025-08-06
+00:57:36  [AACG]  overhang-combined 0001104659-25-074761 — w=0 c=0 p=0 s=1 a=0 e=0
+00:57:36  [AACG]  walker 0001104659-25-100867 — dedup block: 1 candidates (all active, periodic form)
+00:57:36  [AACG]  walker 0001104659-25-100867 — form=6-K (22 tools)
+00:57:40  [AACG]  walker 0001104659-25-100867 — finish='REASON_TOOL_CALLS' calls=1
+00:57:40  [AACG]  walker 0001104659-25-100867 — note_no_event reasons: ['annual general meeting proxy statement']
+00:57:40  [AACG]    [2025-10-20] 6-K 0001104659-25-100867 — 0 mutations
+00:57:40  [AACG]    [2025-10-20] 6-K 0001104659-25-100867 — no interim-financials markers; anchor reconciliation skipped
+00:57:40  [AACG]  walker 0001104659-25-110495 — dedup block: 1 candidates (all active, periodic form)
+00:57:40  [AACG]  walker 0001104659-25-110495 — form=6-K (22 tools)
+00:57:44  [AACG]  walker 0001104659-25-110495 — finish='REASON_TOOL_CALLS' calls=1
+00:57:44  [AACG]  walker 0001104659-25-110495 — note_no_event reasons: ['Q3 2025 earnings release and update on non-binding term sheet with Baby Capital']
+00:57:44  [AACG]    [2025-11-12] 6-K 0001104659-25-110495 — 0 mutations
+00:57:44  [AACG]    anchor 0001104659-25-110495 as_of=2025-11-12
+00:57:51  [AACG]  overhang-combined 0001104659-25-110495 — w=0 c=0 p=0 s=1 a=0 e=0
+00:57:51  [AACG]  walker 0001104659-25-113200 — dedup block: 1 candidates (all active, periodic form)
+00:57:51  [AACG]  walker 0001104659-25-113200 — form=6-K (22 tools)
+00:58:01  [AACG]  walker 0001104659-25-113200 — finish='REASON_TOOL_CALLS' calls=1
+00:58:01  [AACG]  walker 0001104659-25-113200 — note_no_event reasons: ['The filing is a quarterly report on Form 6-K containing financial results and disclosures regarding employee stock options and lease obligations, but no new dilutive financing instruments or events.']
+00:58:01  [AACG]    [2025-11-17] 6-K 0001104659-25-113200 — 0 mutations
+00:58:01  [AACG]    anchor 0001104659-25-113200 as_of=2025-09-30
+00:58:08  [AACG]  overhang-combined 0001104659-25-113200 — w=0 c=0 p=0 s=1 a=0 e=0
+00:58:08  [AACG]  walker 0001104659-25-113209 — dedup block: 1 candidates (all active, periodic form)
+00:58:08  [AACG]  walker 0001104659-25-113209 — form=6-K (22 tools)
+00:58:18  [AACG]  walker 0001104659-25-113209 — finish='REASON_TOOL_CALLS' calls=1
+00:58:18  [AACG]  walker 0001104659-25-113209 — call record_event shelf-2024-f3 date=2025-11-17 drawdown_amount_usd=8854037.6 drawdown_shares=11067547.0 avg_price=0.8
+00:58:18  [AACG]    [2025-11-17] 6-K 0001104659-25-113209 — 1 mutations
+00:58:18  [AACG]    [2025-11-17] 6-K 0001104659-25-113209 — no interim-financials markers; anchor reconciliation skipped
+00:58:18  [AACG]  walker 0001104659-25-114090 — form=424B5 (13 tools)
+00:58:27  [AACG]  walker 0001104659-25-114090 — finish='REASON_TOOL_CALLS' calls=1
+00:58:27  [AACG]  walker 0001104659-25-114090 — note_no_event reasons: ['The drawdown of 11,067,547 ADSs at $0.80 per ADS on November 17, 2025, is already recorded in the ledger under shelf-2024-f3.']
+00:58:27  [AACG]    [2025-11-19] 424B5 0001104659-25-114090 — 0 mutations
+00:58:28  [AACG]  walker 0001104659-25-117867 — dedup block: 1 candidates (all active, periodic form)
+00:58:28  [AACG]  walker 0001104659-25-117867 — form=6-K (22 tools)
+00:58:30  [AACG]  walker 0001104659-25-117867 — finish='REASON_TOOL_CALLS' calls=1
+00:58:30  [AACG]  walker 0001104659-25-117867 — note_no_event reasons: ['results of annual general meeting of shareholders']
+00:58:30  [AACG]    [2025-12-03] 6-K 0001104659-25-117867 — 0 mutations
+00:58:30  [AACG]    [2025-12-03] 6-K 0001104659-25-117867 — no interim-financials markers; anchor reconciliation skipped
+00:58:30  [AACG]  walker 0001104659-26-007470 — dedup block: 1 candidates (all active, periodic form)
+00:58:30  [AACG]  walker 0001104659-26-007470 — form=6-K (22 tools)
+00:58:39  [AACG]  walker 0001104659-26-007470 — finish='REASON_TOOL_CALLS' calls=1
+00:58:39  [AACG]  walker 0001104659-26-007470 — note_no_event reasons: ['The closing of the registered direct offering of 11,067,547 ADSs is already recorded as a takedown on 2025-11-17 under shelf-2024-f3, and the terminated Baby Capital term sheet was non-binding.']
+00:58:39  [AACG]    [2026-01-28] 6-K 0001104659-26-007470 — 0 mutations
+00:58:39  [AACG]    [2026-01-28] 6-K 0001104659-26-007470 — no interim-financials markers; anchor reconciliation skipped
+00:58:39  [AACG]  walker 0001104659-26-009965 — dedup block: 1 candidates (all active, periodic form)
+00:58:39  [AACG]  walker 0001104659-26-009965 — form=6-K (22 tools)
+00:58:42  [AACG]  walker 0001104659-26-009965 — finish='REASON_TOOL_CALLS' calls=1
+00:58:42  [AACG]  walker 0001104659-26-009965 — note_no_event reasons: ['director changes']
+00:58:42  [AACG]    [2026-02-04] 6-K 0001104659-26-009965 — 0 mutations
+00:58:42  [AACG]    [2026-02-04] 6-K 0001104659-26-009965 — no interim-financials markers; anchor reconciliation skipped
+00:58:42  [AACG]  walker 0001104659-26-034830 — dedup block: 1 candidates (all active, periodic form)
+00:58:42  [AACG]  walker 0001104659-26-034830 — form=6-K (22 tools)
+00:58:49  [AACG]  walker 0001104659-26-034830 — finish='REASON_TOOL_CALLS' calls=1
+00:58:49  [AACG]  walker 0001104659-26-034830 — note_no_event reasons: ['The filing contains periodic financial results and re-discloses the closing of the Registered Direct Offering, which is already recorded as a drawdown under shelf-2024-f3.']
+00:58:49  [AACG]    [2026-03-26] 6-K 0001104659-26-034830 — 0 mutations
+00:58:49  [AACG]    anchor 0001104659-26-034830 as_of=2026-03-26
+00:58:57  [AACG]  overhang-combined 0001104659-26-034830 — w=0 c=0 p=0 s=1 a=0 e=0
+00:58:57  [AACG]  walker 0001104659-26-037267 — dedup block: 1 candidates (all active, periodic form)
+00:58:57  [AACG]  walker 0001104659-26-037267 — form=20-F (21 tools)
+00:59:36  [AACG]  walker 0001104659-26-037267 — finish='REASON_TOOL_CALLS' calls=1
+00:59:36  [AACG]  walker 0001104659-26-037267 — note_no_event reasons: ['The January 2026 registered direct offering of 11,067,547 ADSs is already recorded in the ledger as the 2025-11-17 takedown under shelf-2024-f3.']
+00:59:36  [AACG]    [2026-03-31] 20-F 0001104659-26-037267 — 0 mutations
+00:59:36  [AACG]    anchor 0001104659-26-037267 as_of=2025-12-31
+00:59:52  [AACG]  overhang-combined 0001104659-26-037267 — w=0 c=0 p=0 s=0 a=0 e=0
+00:59:52  [AACG]  walker 0001104659-26-056258 — dedup block: 1 candidates (all active, periodic form)
+00:59:52  [AACG]  walker 0001104659-26-056258 — form=6-K (22 tools)
+01:00:10  [AACG]  walker 0001104659-26-056258 — finish='REASON_TOOL_CALLS' calls=1
+01:00:10  [AACG]  walker 0001104659-26-056258 — call create_instrument:equity date=2026-05-06 price_per_share=0.9335 known_owners=['Everrise'] count=22653396.0
+01:00:10  [AACG]    [2026-05-06] 6-K 0001104659-26-056258 — 1 mutations
+01:00:10  [AACG]    [2026-05-06] 6-K 0001104659-26-056258 — no interim-financials markers; anchor reconciliation skipped
+01:00:10  [AACG]  walker 0001104659-26-070980 — dedup block: 1 candidates (all active, periodic form)
+01:00:10  [AACG]  walker 0001104659-26-070980 — form=6-K (22 tools)
+01:00:25  [AACG]  walker 0001104659-26-070980 — finish='REASON_TOOL_CALLS' calls=1
+01:00:25  [AACG]  walker 0001104659-26-070980 — note_no_event reasons: ['Shareholder approval of the May 6, 2026 PIPE transaction and other non-dilutive proposals at the extraordinary general meeting.']
+01:00:25  [AACG]    [2026-06-05] 6-K 0001104659-26-070980 — 0 mutations
+01:00:25  [AACG]    [2026-06-05] 6-K 0001104659-26-070980 — no interim-financials markers; anchor reconciliation skipped
+01:00:25  [AACG]    walk done — seed=C_empty_extract walked=33 skipped=29 (resale=0 empty8k=0) applied=5 rejected=0 created=3 drawdowns=1 anchor_diffs=0 errors=0

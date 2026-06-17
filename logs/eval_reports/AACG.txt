@@ -1,0 +1,8 @@
+=== Eval: AACG (cik 1420529) ===
+  cards exact     : 1/1
+  cards found     : 1/1
+  fields exact    : 7/7  (100%)
+  unexpected extra: 0
+
+PASS
+  [shelf] April 2024: ✓ all 7 fields exact

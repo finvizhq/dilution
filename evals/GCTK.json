@@ -4,7 +4,9 @@
   "notes": [
     "ROUND-3 EDITS 2026-06-05 (evals/_round3_findings.md, filing-verified): (1) Nov-2024 Series B exercise_price 2172.0 -> 36.20 \u2014 fixture copy error; 10-Q 0001493152-26-023205 states Series A '$2,172' and Series B '$36.20' (the fixture had copied A's strike onto B). (2) July-2024 (4th, 2024-07-01) exercise_price 5490 -> 5940 \u2014 digit transposition; Sep 10-Q 0001493152-25-022299 'Each June 27 Warrant has an exercise price of $5,940'. Its total_issued 250 stays asserted (card renders a stale initial_count 4582 left by a reverted fabricated amend \u2014 tracked store fix, round-3 B11). (3) ADDED the three Sept-2024 Series 1/2/3 unregistered debt-conversion warrants (Sept 5, 2024 Conversion Agreement, 424B4 0001493152-24-045365 era) \u2014 real instruments DT does not card separately; values transcribed from filing-verified walker output. Series token in titles keeps the scorer's series matcher from cross-binding the same-strike July 2024 cards.",
     "STILL-FAILING BY DESIGN: Nov-2024 Series A/B remaining_outstanding + total_issued assert DT's series-family aggregates (8,359/2,507 and 162,094/11) which no single per-issuance walker row can render (public + Ballantyne tranches are separate rows; the Ballantyne pair surfaces as extras) \u2014 segmentation convention, round-3 C3; do NOT collapse rows in code (refuted, round-2 D3).",
-    "Round-4 (2026-06-05): Nov-2024 warrants re-pinned per-tranche (public 5995 + concurrent 2201 per series, 424B4 0001493152-24-045365); DT's single aggregate card (8359) decomposed. Series B strike 36.2 was one-split under-adjusted -> 2172. Sept-2024 'Series 1/2/3' titles relaxed (8-K says first/second/third Warrant; series_letter emission nondeterministic) + dates pinned to filing 09-10. Remaining counts snapshot-exempt pending the exercised>initial split-rescale audit (W-4397 exercised_to_date 112,321 on 5,995 initial)."
+    "Round-4 (2026-06-05): Nov-2024 warrants re-pinned per-tranche (public 5995 + concurrent 2201 per series, 424B4 0001493152-24-045365); DT's single aggregate card (8359) decomposed. Series B strike 36.2 was one-split under-adjusted -> 2172. Sept-2024 'Series 1/2/3' titles relaxed (8-K says first/second/third Warrant; series_letter emission nondeterministic) + dates pinned to filing 09-10. Remaining counts snapshot-exempt pending the exercised>initial split-rescale audit (W-4397 exercised_to_date 112,321 on 5,995 initial).",
+    "CORRECTION 2026-06-11 (evals/_eval_defect_findings_2026-06-11.md): Nov-2024 Series A expiration 2029-11-14 -> 2030-01-03 and Series B 2027-05-14 -> 2027-07-03 (both tranches). The expirations run from the Initial Exercise Date = stockholder-approval date Jan 3, 2025 (not the Nov-14-2024 issue date): Series A 5yr -> 2030-01-03, Series B 2.5yr -> 2027-07-03 (424B4 0001493152-24-045365; approval date per 10-Q 0001493152-26-023205).",
+    "CORRECTION 2026-06-17 (post-re-walk drift triage, evals/_eval_defect_findings_2026-06-15.md follow-up; directly re-verified): Nov-2024 Series B exercise_price 2172 -> 36.2 (REVERSES the 06-11 'stays 2172' claim, which was a misdiagnosis). The latest 10-Q 0001493152-26-023205 reports the two series by Monte-Carlo term: a 4.62-yr-term warrant at $2,172 (= the long-dated Series A, exp 2030-01-03) and a 2.5-yr-term warrant at $36.20 (= the short-dated Series B, exp 2027-07-03). The 60x gap is real, NOT a one-split-under-adjustment; the round-3 finding (Series A=$2,172, Series B=$36.20) and the walker were right all along. Both Series B cards set to 36.2. ALSO Nov-2024 Series A total_issued 5995 -> 8359: '5,995' appears in ZERO GCTK filings (a fabricated round-4 public/Ballantyne decomposition); the 10-Qs (023205 / -25-022299 / -25-011981) all state 'an aggregate of 8,359 Series A Warrants' (which already includes the 2,201 Ballantyne tranche). Walker renders 8,358 (within 0.1% tol). The two Ballantyne 2,201 cards stay MISSING (segmentation, accepted as drift)."
   ],
   "cards": {
     "s1_offering": [
@@ -42,11 +44,11 @@
         "title_contains": "November 2024 Series A",
         "registered": "Registered",
         "remaining_outstanding": 2507,
-        "total_issued": 5995,
+        "total_issued": 8359,
         "exercise_price": 2172.0,
         "underwriter": "Dawson James",
         "exercisable_date": "2024-11-14",
-        "expiration_date": "2029-11-14",
+        "expiration_date": "2030-01-03",
         "snapshot_fields": [
           "remaining_outstanding"
         ]
@@ -57,10 +59,10 @@
         "registered": "Registered",
         "remaining_outstanding": 11,
         "total_issued": 5995,
-        "exercise_price": 2172.0,
+        "exercise_price": 36.2,
         "underwriter": "Dawson James",
         "exercisable_date": "2024-11-14",
-        "expiration_date": "2027-05-14",
+        "expiration_date": "2027-07-03",
         "snapshot_fields": [
           "remaining_outstanding"
         ]
@@ -144,7 +146,7 @@
         "exercise_price": 2172.0,
         "underwriter": "Dawson James",
         "exercisable_date": "2024-11-14",
-        "expiration_date": "2029-11-14",
+        "expiration_date": "2030-01-03",
         "snapshot_fields": [
           "remaining_outstanding"
         ]
@@ -155,10 +157,10 @@
         "registered": "Registered",
         "remaining_outstanding": 2201,
         "total_issued": 2201,
-        "exercise_price": 2172.0,
+        "exercise_price": 36.2,
         "underwriter": "Dawson James",
         "exercisable_date": "2024-11-14",
-        "expiration_date": "2027-05-14",
+        "expiration_date": "2027-07-03",
         "snapshot_fields": [
           "remaining_outstanding"
         ]

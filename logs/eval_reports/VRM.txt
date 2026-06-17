@@ -1,0 +1,17 @@
+=== Eval: VRM (cik 1580864) ===
+  cards exact     : 3/4
+  cards found     : 4/4
+  fields exact    : 25/26  (96%)
+  unexpected extra: 1
+
+PASS
+  [warrant] January 2025: ✓ all 6 fields exact
+  [atm] May 2026: ✓ all 5 fields exact
+  [shelf] May 2026: ✓ all 6 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [convertible] August 2025: 8/9 fields exact
+      ✗ maturity_date: expected ~'2030-08-29', got '2030-10-01'
+
+EXTRA (in actual, not in fixture)
+  [atm] December 2023 Virtu ATM (2023-12-01): unexpected actual card

@@ -1,0 +1,216 @@
+{
+  "ticker": "CELU",
+  "source": "DilutionTracker screenshots (9 sections), manually transcribed 2026-06-12 then HEAVILY triaged against EDGAR (236 cached filings incl. the FY2025 10-K acc 0001493152-26-020424 filed 2026-04-30 and 8-Ks through 2026-05-28). Celularity Inc, cik 1752828 (not FPI; de-SPAC'd from GX Acquisition Corp II, merger closed 2021-07-16). Picked as the LARGEST-WARRANT-BOOK fixture (deepest warrant surface in the DB). Re-walked `run_dilution.py CELU --force` 2026-06-12 (gemini-3.5-flash; walked=70 created=59 errors=0).",
+  "notes": [
+    "SCOPE = live/outstanding only, what cards.py emits. 17 positive cards (16 warrants + 1 convertible + 1 equity_line... =18; see below) + FOUR reaper assertions (convertible_preferred / atm / shelf / s1_offering all []).",
+    "*** DT SNAPSHOT IS BADLY STALE on the financing instruments (SUNE/QTEX lesson, taken to the extreme): most DT cards were last-updated 2025-08-29 while the walker read filings through 2026-05-28. On nearly every disagreement the WALKER IS RIGHT and DT is stale — this fixture asserts the FILING-VERIFIED truth, not the raw DT screenshot. [[fixture-can-be-wrong]] applied ~6 times. ***",
+    "CONVERTIBLE — only ONE is live. DT shows 4; three are dead per filings: (1) 'March 2024 Convertible Note' (YA II/Yorkville) was FULLY CONVERTED into common during 2025 (FY2025 10-K: 'Yorkville convertible promissory note was fully converted into common shares during 2025', residual $3,469) → walker redeemed it, correct. (2) 'April 2026 Helena Convertible Note' was SETTLED 2026-05-21 (8-K 0001493152-26-025646: Helena surrendered the Series A Preferred it had exchanged into the note, company pays $0.5M + 5x$0.1M cash) → walker closed it, correct; DT's 2026-04-21 snapshot predates the settlement. (3) 'December 2024 Convertible Note' ($500K Madison, matured 2025-11-25) is not listed as outstanding in the FY2025 10-K and the walker converted+closed it. The lone live convertible is the December 2025 Convertible Note.",
+    "DEC-2025 CONVERTIBLE PRINCIPAL — DT's '$10,000,000' is WRONG: it merges two separate Dec-2025 instruments. FY2025 10-K verbatim: 'The December 2025 Convertible Note was issued with a principal of $3,000[K], ... conversion price of $1.66 ... matures December 31, 2026. The December 2025 Promissory Note was issued with a principal amount of $7,000[K] ... repaid in February [2026].' The convertible is $3.0M (1,807,229 as-converted @ $1.66); the $7M promissory note was non-convertible and already repaid. Walker's $3M is correct.",
+    "DEC-2025 WARRANTS are TWO, not one (DT merged them into a single 3,707,657 card). FY2025 10-K: a 'Senior Note Warrant' to purchase up to 2,448,917 sh (with the $7M Senior Note) AND a 'Convertible Note Warrant' to purchase up to 1,258,740 sh (with the $3M convertible); 2,448,917+1,258,740=3,707,657, both @ $2.00, Barach Family Trust. Walker emits both correctly. Fixture asserts both (same date/strike/owner → bound by array order).",
+    "PUBLIC SPAC WARRANTS re-pinned to issue 2021-07-16 (GX/Celularity merger close, filing-true + walker-confirmed 1,437,459 @ $115) rather than DT's 2021-08-15. The $115 strike = the CELUW warrants' '$11.50 per share, each exercisable for one-tenth of a share' after the 1:10 reverse split (the one split the walker detected). title omitted (walker titles it 'July 2021 Warrants'); strike+date bind it.",
+    "REAPER convertible_preferred=[]: 'October 2025 Series A Convertible Preferred' ($2M) was EXCHANGED (holder Helena delivered an exchange notice → exchanged into the Helena note → surrendered in the 2026-05-21 settlement). DT shows it converted ($0 remaining). The walker FAILED to close it (re-walk left preferred P-464 active @ $2,222,222, 'close_instrument blocked: count!=0') → that active preferred card is a documented WALKER BUG (preferred-conversion/exchange close gap), an EXTRA against this reaper.",
+    "REAPER shelf=[] AND atm=[]: only primary shelf is the 'August 2022 Shelf' ($450M S-3 acc ...218588, effect 2022-08-18) EXPIRED 2025-08-18 (Rule 415(a)(5)); DT still renders it (stale, last-update 2026-06-11) but shelf_cards reaps derived_status='expired'. The only later S-3 (2023-05-25 acc ...154204) is a RESALE registration (selling securityholders, 32,086,487 sh / $17.5M) — not a primary shelf. The 'September 2022 BTIG ATM' draws on that dead shelf (DT itself says 'Shelf Expired') → atm_cards reaps the dead chain.",
+    "REAPER s1_offering=[]: 'January 2025 S-1 Offering' ($15M ThinkEquity) is Withdrawn — EDGAR: S-1 2025-01-30 + S-1/A 2025-02-13 then RW 2025-03-10 (acc ...009644) → derive_s1_status='withdrawn' → dropped. The Dec-2025 S-1s (acc ...028562/...029802) are RESALE registrations for the Dec-2025 PIPE, not primary offerings.",
+    "EQUITY LINE kept: 'March 2024 YA II SPA' (Yorkville SEPA, $10M total). remaining_capacity asserted $6.85M = $10M less the $3.15M Initial Advance (structured as the now-converted March-2024 Yorkville note); the SEPA itself is still live (10-K: resale registration 'not yet filed', so advances can't yet convert). Walker emits $10M (full, advance not netted) → drawdown-undercount finding ([[shelf-family-units-grossnet]]). DROPPED the 'September 2022 YA II SPA' ($40M, $0 remaining, ended 2024-03-15) — exhausted + displaced.",
+    "DOCUMENTED WALKER FINDINGS (warrant book — the headline stress): (a) SPAC Sponsor warrants ($115/849,999) mangled to strike $2.4898 [the Yorkville note FLOOR leaking cross-instrument] + remaining 1.0; (b) single offerings SPLIT into partial cards summing to the DT total — April 2023 ($4.50/923,077 → $7.50/435,625 + $3.50/487,451) and March 2023 PIPE ($2.50/938,184 → $30/938,184 + $1.69/75,000); (c) wrong expirations (May 2022, May 2023, Jan-2024 T2 each off by months); (d) October-2025 multi-owner extraction 1/6 (only 'Helena'); (e) several phantom/extra warrants ('March 2024', 'July 2025 Starr', 'November 2024' — though the Nov-2024 Purchaser Warrants ARE real per the 10-K, so that one is walker-beats-DT). DT's 'Chairman' on March-2023 = Robert Hariri (walker got the name).",
+    "CORRECTION 2026-06-16 (evals/_eval_defect_findings_2026-06-15.md, all filing-verified — DT was stale, walker right): (a) 2021-07-16 public-warrant exercisable_date 2021-09-14 -> 2021-08-15 (S-1/A 0001213900-21-040814: warrants issued July 16, 2021 'will become exercisable on August 15, 2021'). (b) Jan-2024 RWI Tranche-2 warrant: exercise_price 2.99 -> 2.844, exercisable 2024-01-16 -> 2024-07-15, expiration 2029-01-16 -> 2029-07-15 (Q3-2025 10-Q 0001493152-25-023467 master table: 'Tranche #2 ... 1,350,000 $2.84 July 15, 2029' and 'became exercisable on July 15, 2024'; the repriced $2.844 is verbatim in 8-K/A 0001641172-25-021378 'the Exercise Price ... shall be $2.844' — the 10-Q table rounds it to $2.84, so 2.844 is the precise filing value and clears the 0.1%% tolerance that 2.84 fails). (c) April-2023 RD warrant remaining_outstanding 923077 -> 435625 and exercise_price 4.50 -> 7.50 (master table line 'April 2023 Registered Direct Warrants 435,625 $7.50 October 10, 2028'; DT's $4.50 conflated the RD offering share price; exercisable/expiration left as walker date findings). (d) May-2022 PIPE expiration 2027-05-20 -> 2028-10-10 (master table + narrative 'extended the expiration date to ... October 10, 2028'). (e) June-2023 RWI exercise_price 8.10 -> 2.844 (repriced, master table $2.84 = 8-K/A $2.844). The 2.844 precision is the key trap: DT/10-Q display $2.84 but the warrant amendments state $2.844."
+  ],
+  "cards": {
+    "warrant": [
+      {
+        "issue_date": "2025-12-19",
+        "title_contains": "December 2025",
+        "registered": "Registered",
+        "remaining_outstanding": 2448917,
+        "total_issued": 2448917,
+        "exercise_price": 2.00,
+        "known_owners": ["Barach Family Trust"],
+        "expiration_date": "2030-12-19"
+      },
+      {
+        "issue_date": "2025-12-19",
+        "title_contains": "December 2025",
+        "registered": "Registered",
+        "remaining_outstanding": 1258740,
+        "total_issued": 1258740,
+        "exercise_price": 2.00,
+        "known_owners": ["Barach Family Trust"],
+        "expiration_date": "2030-12-19"
+      },
+      {
+        "issue_date": "2025-07-21",
+        "registered": "Not Registered",
+        "remaining_outstanding": 3700000,
+        "total_issued": 3700000,
+        "exercise_price": 2.53,
+        "exercisable_date": "2025-07-21",
+        "expiration_date": "2030-07-21"
+      },
+      {
+        "issue_date": "2024-01-16",
+        "title_contains": "January 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 1650000,
+        "total_issued": 1650000,
+        "exercise_price": 2.49,
+        "known_owners": ["RWI"],
+        "exercisable_date": "2024-01-16",
+        "expiration_date": "2029-01-16"
+      },
+      {
+        "issue_date": "2021-07-16",
+        "registered": "Registered",
+        "remaining_outstanding": 1437447,
+        "total_issued": 1437499,
+        "exercise_price": 115.00,
+        "exercisable_date": "2021-08-15",
+        "expiration_date": "2026-07-16"
+      },
+      {
+        "issue_date": "2024-01-16",
+        "title_contains": "January 2024",
+        "registered": "Not Registered",
+        "remaining_outstanding": 1350000,
+        "total_issued": 1350000,
+        "exercise_price": 2.844,
+        "known_owners": ["RWI"],
+        "exercisable_date": "2024-07-15",
+        "expiration_date": "2029-07-15"
+      },
+      {
+        "issue_date": "2024-12-27",
+        "registered": "Not Registered",
+        "remaining_outstanding": 1263157,
+        "total_issued": 1263157,
+        "exercise_price": 2.97,
+        "exercisable_date": "2025-06-27",
+        "expiration_date": "2029-12-27"
+      },
+      {
+        "issue_date": "2025-07-14",
+        "title_contains": "July 2025",
+        "registered": "Not Registered",
+        "remaining_outstanding": 1230769,
+        "total_issued": 1230769,
+        "exercise_price": 1.50,
+        "exercisable_date": "2025-07-14",
+        "expiration_date": "2027-07-14"
+      },
+      {
+        "issue_date": "2023-03-24",
+        "title_contains": "March 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 938184,
+        "total_issued": 938184,
+        "exercise_price": 2.50,
+        "exercisable_date": "2023-03-24",
+        "expiration_date": "2028-03-24"
+      },
+      {
+        "issue_date": "2023-04-10",
+        "title_contains": "April 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 435625,
+        "total_issued": 923077,
+        "exercise_price": 7.50,
+        "known_owners": ["Armistice"],
+        "underwriter": "AGP",
+        "exercisable_date": "2023-10-10",
+        "expiration_date": "2028-10-10"
+      },
+      {
+        "issue_date": "2023-07-31",
+        "title_contains": "July 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 857143,
+        "total_issued": 857143,
+        "exercise_price": 3.50,
+        "known_owners": ["Armistice"],
+        "underwriter": "AGP",
+        "exercisable_date": "2023-07-31",
+        "expiration_date": "2028-07-31"
+      },
+      {
+        "issue_date": "2021-08-15",
+        "registered": "Registered",
+        "remaining_outstanding": 849999,
+        "total_issued": 850000,
+        "exercise_price": 115.00,
+        "exercisable_date": "2021-09-14",
+        "expiration_date": "2026-07-16"
+      },
+      {
+        "issue_date": "2023-05-18",
+        "title_contains": "May 2023",
+        "registered": "Registered",
+        "remaining_outstanding": 581395,
+        "total_issued": 581395,
+        "exercise_price": 2.50,
+        "exercisable_date": "2023-05-18",
+        "expiration_date": "2028-05-18"
+      },
+      {
+        "issue_date": "2022-05-20",
+        "title_contains": "May 2022",
+        "registered": "Registered",
+        "remaining_outstanding": 405406,
+        "total_issued": 405406,
+        "exercise_price": 3.50,
+        "known_owners": ["Armistice"],
+        "exercisable_date": "2022-05-20",
+        "expiration_date": "2028-10-10"
+      },
+      {
+        "issue_date": "2023-06-20",
+        "title_contains": "June 2023",
+        "registered": "Not Registered",
+        "remaining_outstanding": 300000,
+        "total_issued": 300000,
+        "exercise_price": 2.844,
+        "known_owners": ["RWI"],
+        "exercisable_date": "2023-06-20",
+        "expiration_date": "2028-06-20"
+      },
+      {
+        "issue_date": "2025-10-24",
+        "title_contains": "October 2025",
+        "registered": "Registered",
+        "remaining_outstanding": 267308,
+        "total_issued": 267308,
+        "exercise_price": 3.00,
+        "known_owners": ["Helena"],
+        "exercisable_date": "2025-10-24",
+        "expiration_date": "2030-10-24"
+      }
+    ],
+    "convertible": [
+      {
+        "issue_date": "2025-12-19",
+        "title_contains": "December 2025",
+        "registered": "Registered",
+        "remaining_shares_issuable": 1807229,
+        "principal_remaining": 3000000,
+        "conversion_price": 1.66,
+        "total_shares_issuable": 1807229,
+        "principal_total": 3000000,
+        "known_owners": ["Barach Family Trust"],
+        "convertible_date": "2025-12-19",
+        "maturity_date": "2026-12-31"
+      }
+    ],
+    "convertible_preferred": [],
+    "atm": [],
+    "equity_line": [
+      {
+        "agreement_start_date": "2024-03-13",
+        "title_contains": "March 2024 YA II",
+        "registered": "Not Registered",
+        "remaining_capacity": 6850000,
+        "total_capacity": 10000000,
+        "agreement_end_date": "2027-03-13"
+      }
+    ],
+    "shelf": [],
+    "s1_offering": []
+  }
+}

@@ -1,7 +1,7 @@
 {
   "ticker": "XTIA",
   "source": "DilutionTracker screenshots, manually transcribed",
-  "notes": "Dropped the September 2021 (strike 2,343,750, out 0) and March 2022 (strike 884,437.5, out 0) warrant entries: both correspond to walker rows W-2641 / W-2657 with status=converted (Feb 2023 exchange), which warrant_cards() correctly hides — converted/extinguished tranches no longer exist on the cap table. DT keeps them as out=0 historical entries; we do not. Do not restore from a DT screenshot. Dropped the 'June 2023 Maxim' ATM entry: the Maxim Equity Distribution Agreement (dated 2022-07-22) expired 2024-12-31 per 10-Q 0001213900-25-112615 ('now expired'); the program is terminated with remaining=0, so no live/Registered ATM card exists. DT's stale 38.6M-remaining snapshot predates the wind-down. Do not restore.",
+  "notes": "Dropped the September 2021 (strike 2,343,750, out 0) and March 2022 (strike 884,437.5, out 0) warrant entries: both correspond to walker rows W-2641 / W-2657 with status=converted (Feb 2023 exchange), which warrant_cards() correctly hides — converted/extinguished tranches no longer exist on the cap table. DT keeps them as out=0 historical entries; we do not. Do not restore from a DT screenshot. Dropped the 'June 2023 Maxim' ATM entry: the Maxim Equity Distribution Agreement (dated 2022-07-22) expired 2024-12-31 per 10-Q 0001213900-25-112615 ('now expired'); the program is terminated with remaining=0, so no live/Registered ATM card exists. DT's stale 38.6M-remaining snapshot predates the wind-down. Do not restore. CORRECTION 2026-06-11 (evals/_eval_defect_findings_2026-06-11.md): (a) DROPPED the 'March 2022 Series 8' convertible_preferred entry (out=0, terminated/redeemed 2022-09-30 per 8-K 0001213900-22-065092) — ledger P-438 is status=terminated which preferred_cards() correctly hides, same converted/extinguished convention as the dropped warrants; DT keeps it as a 0-remaining historical row, we do not. (b) May-2024 shelf total_amount_raised 43,700,032 -> 49,000,040 and current_raisable 306,299,968 -> 300,999,960: the walker is primary-source-correct — $49.0M = Jan-10-2025 $20.0M offering + Mar-31-2025 $4.0M takedown + $25.0M ATM (all file_number 333-279901, per 8-K 0001213900-25-006029 'Raised $20,000,000 ... at $13.75 ... AND ... approximately $25,000,000 ... ATM'); the fixture's $43.7M relied on a $19.7M ATM figure that appears in NO filing. STILL-FAILING/needs-design (left unchanged): last_banker Maxim vs walker ThinkEquity (registration-statement vs standing-ATM-agent convention); s1 warrant_coverage_pct 0 vs 100 and anticipated_deal_size $20M (FWP) vs $18.4M (S-1/A fee-table) — source-convention questions; June-2025 warrant remaining 6,483,892 is CORRECT and more current than the walker's stale 10,447,300 (walker never re-walked the Q1-2026 exercises in 10-Q 0001213900-26-056270 — a walker-staleness re-walk item, NOT a fixture error).",
   "cards": {
     "warrant": [
       {
@@ -50,20 +50,7 @@
       }
     ],
     "convertible": [],
-    "convertible_preferred": [
-      {
-        "issue_date": "2022-03-24",
-        "title_contains": "March 2022 Series 8",
-        "registered": "Registered",
-        "remaining_shares_issuable": 0,
-        "principal_remaining": 0,
-        "conversion_price": 884437.5,
-        "total_shares_issuable": 60,
-        "principal_total": 53198000,
-        "underwriter": "Maxim",
-        "convertible_date": "2022-03-24"
-      }
-    ],
+    "convertible_preferred": [],
     "atm": [],
     "equity_line": [],
     "s1_offering": [
@@ -97,10 +84,10 @@
         "effect_date": "2024-06-18",
         "title_contains": "May 2024",
         "registered": "Registered",
-        "current_raisable_amount": 306299968,
+        "current_raisable_amount": 300999960,
         "total_shelf_capacity": 350000000,
         "baby_shelf_restriction": "No",
-        "total_amount_raised": 43700032,
+        "total_amount_raised": 49000040,
         "last_banker": "Maxim",
         "expiration_date": "2027-06-18"
       }

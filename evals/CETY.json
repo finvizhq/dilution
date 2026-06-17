@@ -11,7 +11,9 @@
     "Warrants/ATM/ELOC/shelf: DT shows exactly one ATM (Roth), one equity line (Mast Hill SPA), one shelf (baby shelf), and four live warrants \u2014 the complete live non-convertible set per the screenshots.",
     "ROUND-3 EDITS 2026-06-05 (evals/_round3_findings.md, all filing-verified): (1) DELETED the 'March 2024' warrant \u2014 DT ghost; the real Mar-2024 warrant (8-K 0001493152-24-010697) was $1.60 strike, 1-year expiry, i.e. expired 2025; the fixture's 133,333 @ $13.50 / 2029 expiry appears in no filing. (2) 'Convertible Portion of Loan' re-pinned to filing truth (8-K 0001493152-24-025276): conversion right belongs to the LENDERS (FPM Development / Evergreen Credit Facility I / AMEC, not borrower Vermont Renewable Gas) at a 15%-discount VARIABLE price \u2014 conversion_price/shares fields OMITTED per the April-2026 variable-rate convention; principal kept at DT's $3.6M convertible-portion basis (vs walker's $12M full loan face) pending the gross-vs-net convention decision (C1). (3) shelf total_shelf_capacity 75M -> 70M per the S-3/A filed 2025-03-13. (4) ADDED post-DT-snapshot real instruments transcribed from filing-verified walker values: Aug-2022 Jefferson Street warrant (SPA 8-K 0001493152-22-023181; underwriter key omitted \u2014 walker's 'J.H. Darbie' broker misattribution is a tracked prompt fix), June-2025 Mast Hill note (principal_remaining 335,000 is the walker's value; the Nov-2025 10-Q reports $223,184 as of 2025-09-30 \u2014 re-pin after the periodic-balance walker fix lands), and the three March-2026 notes (8-K 0001493152-26-009577: 1800 Diagonal $147,840, Mega Sincere $664,916, Noblebear $660,000).",
     "ROUND-5 DROPS 2026-06-06 (evals/_round5_triage.md, all verified against the NEW FY2025 10-K 0001493152-26-027409 filed 2026-06-05, which postdates the DT screenshots): (1) June 2024 FPM/Evergreen convertible-portion card DELETED \u2014 no tranche was ever disbursed; Sept-2024 10-Q 'There was no balance owed as of September 30, 2024' and 10-K 'FPM Development is in default, and there was $0 owed as of December 31, 2025'; $0 outstanding = dropped per the live-only SCOPE rule (its $3.6M was the speculative 30%-of-$12M DT basis, C1 still open). (2) Sept-2024 Coventry card DELETED \u2014 fully repaid, 10-K 'The balance of this note as of December 31, 2025, was $0'; the old 10,120 was one remaining payment captured before final payoff. (3) June 2025 Mast Hill card DELETED \u2014 10-K Item 5 conversion notices report it fully converted (the 223,184 was true as of the Nov-2025 10-Q). Walker behavior is CORRECT on all three; do not restore from stale DT screenshots.",
-    "ROUND-6c RE-PIN 2026-06-06: Jan-2025 Mast Hill principal_remaining 810,228 -> 702,581. Verified against source: 810,228 appears in NO CETY filing (searched all of dilution_raw); the DT screenshot (2026-06-02) PREDATES the 2026-06-05 amendment batch. 702,581 is the verbatim restated balance in the Q3-2025 10-Q/A (0001493152-26-027406, as-of 2025-09-30), the latest filing-stated figure for this note. The shares/conversion_price fields on this card remain blocked on the conv-price ping-pong follow-up (DT 2.86 conversion-derived vs walker 0.63), unchanged by this re-pin."
+    "ROUND-6c RE-PIN 2026-06-06: Jan-2025 Mast Hill principal_remaining 810,228 -> 702,581. Verified against source: 810,228 appears in NO CETY filing (searched all of dilution_raw); the DT screenshot (2026-06-02) PREDATES the 2026-06-05 amendment batch. 702,581 is the verbatim restated balance in the Q3-2025 10-Q/A (0001493152-26-027406, as-of 2025-09-30), the latest filing-stated figure for this note. The shares/conversion_price fields on this card remain blocked on the conv-price ping-pong follow-up (DT 2.86 conversion-derived vs walker 0.63), unchanged by this re-pin.",
+    "CORRECTION 2026-06-11 (evals/_eval_defect_findings_2026-06-11.md, all filing-verified + adversarially re-verified vs the FY2025 10-K 0001493152-26-027409 / Q3 10-Q/A 0001493152-26-027406): (1) Feb-2025 Mast Hill warrant title 'March 2025' -> 'February 2025' (8-K 0001493152-25-008949: SPA closed Feb 28 2025, warrants dated Feb 27 2025; DT's 'March' was a transcription artifact). (2) Jan-2025 Mast Hill warrant: added 'remaining_outstanding' to snapshot_fields — DT's 672,309 = ratcheted total_issued 2,132,596 (already snapshot-exempt) minus 1,460,287 cashless-exercised (8-K 0001493152-25-025780); no filing-derived count can reproduce a market-ratchet snapshot. (3) C-1062 (Apr-4 Pacific Pier, $345k) principal_remaining 49,835 -> 188,558 and remaining_shares_issuable 51,885 -> 196,315 (10-K: 'balance as of December 31, 2025, was $188,558'; walker filing-current; fixture carried DT's stale interim post-Dec-1-conversion residual). (4) C-1069 (Jul-18 FirstFire, $201,250) principal_remaining 83,572 -> 120,750 (10-K: '...was $120,750'; fixture carried the earlier 9/30 balance). (5) C-1065 (Apr-23 Pacific Pier, $256k face) principal_remaining 256,000 -> 384,000 (10-K: '...was $384,000'); ASSERTS-TO-FAIL: the walker carries a stale 149,314 because its FY2025 periodic balance-restate pass skipped C-1065/C-1070 (covered C-1062/C-1069) — a real walker coverage gap, left failing per the assert-filing-true convention. NOTE: the Jan-2025 CONVERTIBLE (C-1060) conv_price 2.86 / share-count gaps also stay failing — the walker never processed the Q3 10-Q/A 027406, so it missed the Mast Hill conversion notices ($2.86 realized) and the $702,581 restate; same coverage gap, tracked as a walker fix not a fixture change.",
+    "CORRECTION 2026-06-17 (post-re-walk drift triage): ADDED two live 1800 Diagonal Lending convertible notes that were post-re-walk EXTRAS (live, walker-rendered, DT-curated-out / newer than the DT snapshot): May-2025 (issue 2025-05-08, principal_total 131,610, principal_remaining 29,247, maturity 2026-02-15) and July-2025 (issue 2025-07-30, principal_total 151,800, principal_remaining 91,957, maturity 2026-05-30). Both balances are verbatim in the FY2025 10-K 0001493152-26-027409 ('balance of the note as of December 31, 2025, was $29,247' / '$91,957'). Both are variable-rate ('toxic') notes, so conversion_price/total_shares/remaining_shares are OMITTED per the existing CETY variable-rate convention (April-2026 / August-2025 cards). July maturity is 2026-05-30 per the binding note exhibit; the 10-K prose 'Feb 15' is a carry-over typo, walker stored 05-30 correctly. Clears 2 extras, +2 cards found/exact."
   ],
   "cards": {
     "warrant": [
@@ -44,7 +46,7 @@
       },
       {
         "issue_date": "2025-02-28",
-        "title_contains": "March 2025",
+        "title_contains": "February 2025",
         "registered": "Not Registered",
         "remaining_outstanding": 20667,
         "total_issued": 20667,
@@ -71,7 +73,8 @@
         "expiration_date": "2030-01-16",
         "snapshot_fields": [
           "exercise_price",
-          "total_issued"
+          "total_issued",
+          "remaining_outstanding"
         ]
       }
     ],
@@ -95,8 +98,8 @@
         "issue_date": "2025-04-04",
         "title_contains": "April 2025",
         "registered": "Not Registered",
-        "remaining_shares_issuable": 51885,
-        "principal_remaining": 49835,
+        "remaining_shares_issuable": 196315,
+        "principal_remaining": 188558,
         "conversion_price": 0.96,
         "total_shares_issuable": 359189,
         "principal_total": 345000,
@@ -111,7 +114,7 @@
         "title_contains": "April 2025",
         "registered": "Not Registered",
         "remaining_shares_issuable": 68267,
-        "principal_remaining": 256000,
+        "principal_remaining": 384000,
         "conversion_price": 3.75,
         "total_shares_issuable": 68267,
         "principal_total": 256000,
@@ -131,7 +134,7 @@
         "title_contains": "July 2025",
         "registered": "Not Registered",
         "remaining_shares_issuable": 22286,
-        "principal_remaining": 83572,
+        "principal_remaining": 120750,
         "conversion_price": 3.75,
         "total_shares_issuable": 53667,
         "principal_total": 201250,
@@ -175,6 +178,30 @@
         ],
         "convertible_date": "2026-10-20",
         "maturity_date": "2027-04-20"
+      },
+      {
+        "issue_date": "2025-05-08",
+        "title_contains": "May 2025 1800 Diagonal",
+        "registered": "Not Registered",
+        "principal_remaining": 29247,
+        "principal_total": 131610,
+        "known_owners": [
+          "1800 Diagonal Lending"
+        ],
+        "convertible_date": "2025-05-08",
+        "maturity_date": "2026-02-15"
+      },
+      {
+        "issue_date": "2025-07-30",
+        "title_contains": "July 2025 1800 Diagonal",
+        "registered": "Not Registered",
+        "principal_remaining": 91957,
+        "principal_total": 151800,
+        "known_owners": [
+          "1800 Diagonal Lending"
+        ],
+        "convertible_date": "2025-07-30",
+        "maturity_date": "2026-05-30"
       },
       {
         "issue_date": "2026-03-04",

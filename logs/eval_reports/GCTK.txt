@@ -1,0 +1,48 @@
+=== Eval: GCTK (cik 1506983) ===
+  cards exact     : 4/17
+  cards found     : 14/17
+  fields exact    : 73/88  (83%)
+  unexpected extra: 3
+
+PASS
+  [warrant] December 2025: ✓ all 8 fields exact
+  [warrant] September 2024: ✓ all 6 fields exact
+  [convertible] September 2025: ✓ all 8 fields exact
+  [equity_line] September 2025: ✓ all 5 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] November 2024 Series A: 5/6 fields exact
+      ✗ expiration_date: expected ~'2029-11-14', got '2030-01-03'
+  [warrant] November 2024 Series B: 4/6 fields exact
+      ✗ exercise_price: expected 2172.0, got 36.2
+      ✗ expiration_date: expected ~'2027-05-14', got '2027-07-03'
+  [warrant] July 2024: 4/6 fields exact
+      ✗ exercisable_date: expected ~'2025-07-30', got '2034-07-30'
+      ✗ expiration_date: expected ~'2034-07-30', got '2044-07-30'
+  [warrant] July 2024: 4/6 fields exact
+      ✗ exercisable_date: expected ~'2025-07-30', got '2034-07-30'
+      ✗ expiration_date: expected ~'2034-07-30', got '2044-07-30'
+  [warrant] July 2024: 4/6 fields exact
+      ✗ exercisable_date: expected ~'2025-07-30', got '2034-07-30'
+      ✗ expiration_date: expected ~'2034-07-30', got '2044-07-30'
+  [warrant] July 2024: 5/6 fields exact
+      ✗ exercise_price: expected 5940.0, got 5490.0
+  [warrant] September 2024: 5/6 fields exact
+      ✗ remaining_outstanding: expected 115, got 18.0
+  [warrant] September 2024: 5/6 fields exact
+      ✗ remaining_outstanding: expected 82, got 13.0
+  [atm] December 2024: 5/7 fields exact
+      ✗ remaining_capacity: expected 0, got 12307.131999999285
+      ✗ remaining_without_baby_shelf: expected 0, got 12307.131999999285
+  [shelf] September 2024: 5/6 fields exact
+      ✗ total_amount_raised: expected 11263748, got 11251441.168000001
+
+MISSING (in fixture, not in actual)
+  [s1_offering] September 2024: NO MATCH
+  [warrant] November 2024 Series A: NO MATCH
+  [warrant] November 2024 Series B: NO MATCH
+
+EXTRA (in actual, not in fixture)
+  [s1_offering] November 2024 Dawson James S-1 Offering (2024-11-08): unexpected actual card
+  [s1_offering] November 2024 Dawson James S-1 Offering (2024-11-08): unexpected actual card
+  [warrant] June 2024 Private Placement Warrants (2024-06-27): unexpected actual card

@@ -1,0 +1,63 @@
+=== Eval: BNKK (cik 1760903) ===
+  cards exact     : 2/11
+  cards found     : 10/11
+  fields exact    : 43/71  (61%)
+  unexpected extra: 11
+
+PASS
+  [warrant] February 2025: ✓ all 6 fields exact
+  [shelf] April 2026: ✓ all 6 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] January 2025: 5/7 fields exact
+      ✗ exercise_price: expected 11.9, got 15.218
+      ✗ known_owners: expected to contain ['Bigger Capital'], got ['Trajan Holdings', 'Fried']
+  [warrant] January 2023: 4/8 fields exact
+      ✗ remaining_outstanding: expected 84549, got 24522.0
+      ✗ total_issued: expected 131693, got 123308.0
+      ✗ exercise_price: expected 32.55, got 32.62
+      ✗ known_owners: expected to contain ['Armistice', 'Bigger Capital', 'District 2', 'Hudson Bay', 'Intracoastal', 'Sabby'], got []
+  [warrant] January 2023: 4/8 fields exact
+      ✗ remaining_outstanding: expected 131693, got 132291.0
+      ✗ total_issued: expected 131693, got 132291.0
+      ✗ exercise_price: expected 32.55, got 32.62
+      ✗ known_owners: expected to contain ['Armistice', 'Bigger Capital', 'District 2', 'Hudson Bay', 'Intracoastal', 'Sabby'], got []
+  [warrant] September 2024: 3/6 fields exact
+      ✗ title: expected tokens of 'September 2024', got 'August 2024 Common Warrants'
+      ✗ remaining_outstanding: expected 14446, got 96308.0
+      ✗ known_owners: expected to contain ['Insiders'], got ['Core 4 Capital']
+  [warrant] April 2022: 4/7 fields exact
+      ✗ remaining_outstanding: expected 7429, got 0
+      ✗ total_issued: expected 41714, got 31429.0
+      ✗ known_owners: expected to contain ['GreenTree'], got ['L&H']
+  [convertible_preferred] Series C: 4/7 fields exact
+      ✗ remaining_shares_issuable: expected 6909966, got 241848799.71336436
+      ✗ conversion_price: expected 19.54, got 0.5582
+      ✗ total_shares_issuable: expected 6909966, got 241848799.71336436
+  [convertible_preferred] Series B: 4/8 fields exact
+      ✗ remaining_shares_issuable: expected 114265, got 605.8823529411765
+      ✗ principal_remaining: expected 1359750, got 206.0
+      ✗ conversion_price: expected 11.9, got 0.34
+      ✗ total_shares_issuable: expected 454538, got 15908823.529411763
+  [convertible_preferred] May 2025: 3/8 fields exact
+      ✗ remaining_shares_issuable: expected 195062, got None
+      ✗ principal_remaining: expected 29994750, got None
+      ✗ conversion_price: expected 153.77, got None
+      ✗ total_shares_issuable: expected 195062, got None
+      ✗ principal_total: expected 29994750, got None
+
+MISSING (in fixture, not in actual)
+  [warrant] May 2021: NO MATCH
+
+EXTRA (in actual, not in fixture)
+  [warrant] July 2021 Common Warrants (2021-07-23): unexpected actual card
+  [warrant] April 2022 Greentree Warrants (2022-04-22): unexpected actual card
+  [warrant] January 2023 Common Warrants (2023-01-19): unexpected actual card
+  [warrant] January 2023 Common Warrants (2023-01-19): unexpected actual card
+  [warrant] August 2023 Purchase Warrants (2023-08-10): unexpected actual card
+  [warrant] April 2025 Core 4 Capital Warrants (2025-04-10): unexpected actual card
+  [warrant] July 2025 Private Placement Warrants (2025-07-24): unexpected actual card
+  [convertible] May 2025 SCC Convertible Note (2025-05-20): unexpected actual card
+  [convertible_preferred] December 2021 Series B Preferred (2021-12-08): unexpected actual card
+  [equity_line] May 2025 Silverback Capital Corporation ELOC (2025-05-13): unexpected actual card
+  [s1_offering] April 2025 S-1 Offering (2025-04-10): unexpected actual card

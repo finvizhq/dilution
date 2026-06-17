@@ -1,0 +1,36 @@
+=== Eval: XTIA (cik 1529113) ===
+  cards exact     : 2/7
+  cards found     : 6/7
+  fields exact    : 39/47  (83%)
+  unexpected extra: 8
+
+PASS
+  [warrant] October 2022 Warrants: ✓ all 7 fields exact
+  [shelf] August 2025: ✓ all 8 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] June 2025: 5/7 fields exact
+      ✗ remaining_outstanding: expected 6483892, got 2520484.0
+      ✗ expiration_date: expected ~'2030-06-24', got '2030-09-12'
+  [warrant] March 2025: 5/7 fields exact
+      ✗ exercisable_date: expected ~'2025-03-28', got '2025-01-10'
+      ✗ expiration_date: expected ~'2030-03-28', got '2030-01-10'
+  [s1_offering] June 2025: 8/10 fields exact
+      ✗ anticipated_deal_size: expected 20000000, got 18400000.0
+      ✗ warrant_coverage_pct: expected 0, got 100.0
+  [shelf] May 2024: 6/8 fields exact
+      ✗ current_raisable_amount: expected 300999960, got 264676493.14574
+      ✗ total_amount_raised: expected 49000040, got 85323506.85426
+
+MISSING (in fixture, not in actual)
+  [warrant] September 2025: NO MATCH
+
+EXTRA (in actual, not in fixture)
+  [warrant] March 2022 Common Warrants (2022-03-24): unexpected actual card
+  [warrant] July 2023 Common Warrants (2023-07-19): unexpected actual card
+  [atm] June 2023 Maxim ATM (2023-06-13): unexpected actual card
+  [atm] May 2024 Maxim ATM (2024-05-28): unexpected actual card
+  [atm] May 2024 Maxim ATM (2024-05-31): unexpected actual card
+  [atm] June 2024 Maxim ATM (2024-06-10): unexpected actual card
+  [atm] June 2024 Maxim ATM (2024-06-14): unexpected actual card
+  [equity_line] August 2024 FC Imperial ELOC (2024-08-14): unexpected actual card

@@ -1,0 +1,315 @@
+00:54:30  [ACTU]  langfuse: LANGFUSE_PUBLIC_KEY/SECRET_KEY not set — tracing disabled
+00:54:30  [ACTU]  Dilution tracker — ticker=ACTU since=2020-06-17 llm_provider=gemini llm_model=gemini-3.5-flash llm_model_periodic=gemini-3.5-flash
+00:54:30  [ACTU]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:54:30  [ACTU]  resolved ACTU → CIK 1652935 ACTU (ACTUATE THERAPEUTICS, INC.)
+00:54:30  [ACTU]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:54:31  [ACTU]    54 relevant filings since 2020-06-17
+00:54:31  [ACTU]    unit already detected — is_fpi=0 ads_ratio=None
+00:54:31  [ACTU]    unit ctx — is_fpi=0 ads_ratio=None reporting_unit=common
+00:54:31  [ACTU]    splits — finviz=0 yfinance=0 merged=0
+00:54:31  [ACTU]    splits — 0 events persisted
+00:54:31  [ACTU]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+00:54:31  [ACTU]    fetch done — 0/0 filings, 0 docs, 0 errors
+00:54:31  [ACTU]  walker --force: dropping ledger for cik=1652935
+00:54:31  [ACTU]  walker: 50 events (filings=50 splits=0 cik=1652935); 0 filing(s) already walked
+00:54:32  [ACTU]  seed: extracting overhang from 10-Q 0001683168-24-006623 (2024-06-30)
+00:55:09  [ACTU]  [overhang-combined] 0001683168-24-006623 — output truncated at max_tokens
+00:55:09  [ACTU]  overhang-combined 0001683168-24-006623 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+00:55:09  [ACTU]  overhang-combined 0001683168-24-006623 — w=2 c=0 p=0 s=0 a=0 e=0
+00:55:09  [ACTU]  seed: 0001683168-24-006623 extracted 2 rows (warrant=2)
+00:55:09  [ACTU]  seed:   row → warrant name='Series C Redeemable Convertible Preferred Stock Warrants' issue_date=2023-06-30 maturity_or_expiry=2028-06-30 outstanding_count=18223.0 common_shares_issuable=18223.0 strike_or_conversion_price=9.42
+00:55:09  [ACTU]  seed:   row → warrant name='Series B-1 Redeemable Convertible Preferred Stock Warrants ($5.27 strike)' issue_date=2018-09-07 maturity_or_expiry=2028-09-07 outstanding_count=76376.0 common_shares_issuable=76376.0 strike_or_conversion_price=5.27
+00:55:09  [ACTU]  seed: case A — created 2 instruments (rejected 0)
+00:55:09  [ACTU]  seed case=A_periodic — 0001683168-24-006623
+00:55:09  [ACTU]  walker 0001104659-24-065172 — form=S-1 (9 tools)
+00:56:01  [ACTU]  walker 0001104659-24-065172 — finish='REASON_TOOL_CALLS' calls=3
+00:56:01  [ACTU]  walker 0001104659-24-065172 — call create_instrument:s1_offering date=2024-05-24 anticipated_deal_size=50000000.0
+00:56:01  [ACTU]  walker 0001104659-24-065172 — call create_instrument:convertible date=2024-02-20 principal=3000000.0 rate=0.07 conv_discount_pct=0.8 maturity=2024-06-30 known_owners=['Bios Clinical Opportunity Fund'] principal_remaining=3000000.0
+00:56:01  [ACTU]  walker 0001104659-24-065172 — call create_instrument:convertible date=2024-03-27 principal=1500000.0 rate=0.07 conv_discount_pct=0.8 maturity=2024-06-30 known_owners=['Bios Clinical Opportunity Fund'] principal_remaining=1500000.0
+00:56:01  [ACTU]  walker 0001104659-24-065172 — propagated banker 'Titan Partners' to 2 create_instrument(s)
+00:56:01  [ACTU]    [2024-05-24] S-1 0001104659-24-065172 — 3 mutations
+00:56:01  [ACTU]  walker 0001104659-24-070185 — dedup block: 1 candidates within ±180d
+00:56:01  [ACTU]  walker 0001104659-24-070185 — form=S-1/A (5 tools)
+00:57:07  [ACTU]  walker 0001104659-24-070185 — finish='REASON_TOOL_CALLS' calls=2
+00:57:07  [ACTU]  walker 0001104659-24-070185 — call create_instrument:warrant date=2024-06-11 strike=11.25 exercisable_date=2024-12-11 expiration=2027-06-11 is_pre_funded=False known_owners=['Titan Partners'] count=319444.0 initial_count=319444.0
+00:57:07  [ACTU]  walker 0001104659-24-070185 — call amend_instrument:warrant W-5403 date=2024-06-11 known_owners=['Newbridge']
+00:57:07  [ACTU]    [2024-06-11] S-1/A 0001104659-24-070185 — 2 mutations
+00:57:07  [ACTU]  walker 0001104659-24-070197 — dedup block: 2 candidates within ±30d
+00:57:07  [ACTU]  walker 0001104659-24-070197 — no tool subset for form 'FWP'; treating as no-op
+00:57:07  [ACTU]    [2024-06-11] FWP 0001104659-24-070197 — 0 mutations
+00:57:07  [ACTU]  walker 0001104659-24-073848 — dedup block: 2 candidates within ±180d
+00:57:07  [ACTU]  walker 0001104659-24-073848 — form=S-1/A (5 tools)
+00:57:34  [ACTU]  walker 0001104659-24-073848 — finish='REASON_TOOL_CALLS' calls=1
+00:57:34  [ACTU]  walker 0001104659-24-073848 — note_no_event reasons: ["The filing is an S-1/A amendment that re-discloses the S-1 offering (S1-221) and the representative's warrants (W-5405) without any material changes to their terms."]
+00:57:34  [ACTU]    [2024-06-21] S-1/A 0001104659-24-073848 — 0 mutations
+00:57:34  [ACTU]  walker 0001104659-24-073990 — dedup block: 2 candidates within ±30d
+00:57:34  [ACTU]  walker 0001104659-24-073990 — no tool subset for form 'FWP'; treating as no-op
+00:57:34  [ACTU]    [2024-06-21] FWP 0001104659-24-073990 — 0 mutations
+00:57:34  [ACTU]  walker 0001104659-24-080179 — dedup block: 2 candidates within ±180d
+00:57:34  [ACTU]  walker 0001104659-24-080179 — form=S-1/A (5 tools)
+00:58:15  [ACTU]  walker 0001104659-24-080179 — finish='REASON_TOOL_CALLS' calls=1
+00:58:15  [ACTU]  walker 0001104659-24-080179 — note_no_event reasons: ['The filing is an S-1/A amendment (Amendment No. 3) for the existing S-1 offering (S1-221) with no material changes to the registered capacity, and the disclosed underwriter warrants are already recorded in the ledger as W-5405.']
+00:58:15  [ACTU]    [2024-07-16] S-1/A 0001104659-24-080179 — 0 mutations
+00:58:15  [ACTU]  walker 0001104659-24-081008 — dedup block: 2 candidates within ±180d
+00:58:15  [ACTU]  walker 0001104659-24-081008 — form=S-1/A (5 tools)
+00:58:17  [ACTU]  Retrying request to /chat/completions in 0.422852 seconds
+01:01:11  [ACTU]  walker 0001104659-24-081008 — finish='REASON_TOOL_CALLS' calls=1
+01:01:11  [ACTU]  walker 0001104659-24-081008 — call amend_instrument:s1_offering S1-221 date=2024-07-19 anticipated_deal_size=31944440.0
+01:01:11  [ACTU]    [2024-07-19] S-1/A 0001104659-24-081008 — 1 mutations
+01:01:11  [ACTU]  walker 0001104659-24-081013 — no tool subset for form 'FWP'; treating as no-op
+01:01:11  [ACTU]    [2024-07-19] FWP 0001104659-24-081013 — 0 mutations
+01:01:11  [ACTU]  walker 0001104659-24-081626 — dedup block: 2 candidates within ±180d
+01:01:11  [ACTU]  walker 0001104659-24-081626 — form=S-1/A (5 tools)
+01:01:48  [ACTU]  walker 0001104659-24-081626 — finish='REASON_TOOL_CALLS' calls=1
+01:01:48  [ACTU]  walker 0001104659-24-081626 — call amend_instrument:s1_offering S1-221 date=2024-07-23 anticipated_deal_size=33925000.0
+01:01:48  [ACTU]    [2024-07-23] S-1/A 0001104659-24-081626 — 1 mutations
+01:01:48  [ACTU]  walker 0001104659-24-081632 — no tool subset for form 'FWP'; treating as no-op
+01:01:48  [ACTU]    [2024-07-23] FWP 0001104659-24-081632 — 0 mutations
+01:01:48  [ACTU]  walker 0001104659-24-088877 — dedup block: 2 candidates within ±180d
+01:01:48  [ACTU]  walker 0001104659-24-088877 — form=424B4 (7 tools)
+01:02:42  [ACTU]  walker 0001104659-24-088877 — finish='REASON_TOOL_CALLS' calls=1
+01:02:42  [ACTU]  walker 0001104659-24-088877 — call amend_instrument:s1_offering S1-221 date=2024-08-13 anticipated_deal_size=22400000.0 final_deal_size=22400000.0 final_pricing=8.0 final_shares_offered=2800000.0
+01:02:42  [ACTU]    [2024-08-13] 424B4 0001104659-24-088877 — 1 mutations
+01:02:42  [ACTU]  walker 0001104659-24-089693 — dedup block: 2 candidates within ±180d
+01:02:42  [ACTU]    0001104659-24-089693 — pruned 1 create tool(s): create_atm
+01:02:42  [ACTU]  walker 0001104659-24-089693 — form=8-K (20 tools)
+01:02:49  [ACTU]  walker 0001104659-24-089693 — finish='REASON_TOOL_CALLS' calls=1
+01:02:49  [ACTU]  walker 0001104659-24-089693 — call record_event S1-221 date=2024-08-14 drawdown_amount_usd=22400000.0 drawdown_shares=2800000.0 avg_price=8.0
+01:02:49  [ACTU]    [2024-08-14] 8-K 0001104659-24-089693 — 1 mutations
+01:02:49  [ACTU]    [2024-08-19] 8-K 0001683168-24-005919 — skipped (no dilutive item + no substantive exhibit (items=4.01,9.01))
+01:02:49  [ACTU]  walker 0001683168-24-007857 — dedup block: 2 candidates within ±180d
+01:02:49  [ACTU]    0001683168-24-007857 — pruned 2 create tool(s): create_atm,create_preferred
+01:02:49  [ACTU]  walker 0001683168-24-007857 — form=8-K (19 tools)
+01:02:51  [ACTU]  walker 0001683168-24-007857 — finish='REASON_TOOL_CALLS' calls=1
+01:02:51  [ACTU]  walker 0001683168-24-007857 — note_no_event reasons: ['FDA Rare Pediatric Disease Designation announcement for elraglusib']
+01:02:51  [ACTU]    [2024-11-12] 8-K 0001683168-24-007857 — 0 mutations
+01:02:51  [ACTU]  walker 0001683168-24-007971 — dedup block: 4 candidates (all active, periodic form)
+01:02:51  [ACTU]  walker 0001683168-24-007971 — form=10-Q (17 tools)
+01:07:34  [ACTU]  [ledger-walker] 0001683168-24-007971 — output truncated at max_tokens
+01:07:34  [ACTU]  walker 0001683168-24-007971 — finish='REASON_MAX_LEN' calls=10
+01:07:34  [ACTU]  walker 0001683168-24-007971 — collapsed 1 duplicate tool call(s) (runaway-loop guard)
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call create_instrument:convertible date=2024-05-08 principal=1000000.0 rate=0.07 conv_price=7.848 conv_discount_pct=0.8 maturity=2024-08-16 known_owners=['Bios Clinical Opportunity Fund'] principal_remaining=0.0
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call record_event C-1136 date=2024-08-14 shares_issued=484572.0 principal_converted=3000000.0
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call close_instrument C-1136 date=2024-08-14 reason=converted
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call record_event C-1137 date=2024-08-14 shares_issued=240668.0 principal_converted=1500000.0
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call close_instrument C-1137 date=2024-08-14 reason=converted
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call close_instrument W-5404 date=2024-08-14 reason=exercised
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call close_instrument W-5403 date=2024-08-14 reason=superseded replaced_by=w-5403-amended
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call close_instrument W-5405 date=2024-08-14 reason=superseded replaced_by=w-5405-amended
+01:07:34  [ACTU]  walker 0001683168-24-007971 — call close_instrument S1-221 date=2024-08-14 reason=terminated
+01:07:34  [ACTU]    [2024-11-13] 10-Q 0001683168-24-007971 — 9 mutations
+01:07:34  [ACTU]      reject close_instrument W-5404 date=2024-08-14 reason=exercised — close_with_outstanding: close_instrument(reason='exercised') blocked: count=76376.0 on warrant W-5404; full exercise requires 0. Use record_event(exercise) for partial exercises.
+01:07:34  [ACTU]    close_instrument W-5403 superseded by nonexistent w-5403-amended — dropping the close; row stays active
+01:07:34  [ACTU]    close_instrument W-5405 superseded by nonexistent w-5405-amended — dropping the close; row stays active
+01:07:34  [ACTU]    anchor 0001683168-24-007971 as_of=2024-09-30
+01:07:54  [ACTU]  overhang-combined 0001683168-24-007971 — w=3 c=0 p=0 s=0 a=0 e=0
+01:07:54  [ACTU]    anchor 0001683168-24-007971 — 4 diffs (missing=1 field=1 count=0 extra=2)
+01:07:54  [ACTU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=10.0, outstanding_count=161000.0, issue_date=2024-08-14, maturity_or_expiry=2027-08-12
+01:07:54  [ACTU]      diff field_mismatch W-5404 [warrant] ledger=terms.strike=5.27 filing=terms.strike=10.55
+01:07:54  [ACTU]      diff extra_in_ledger W-5405 [warrant] ledger=terms.strike=11.25, terms.exercisable_date=2024-12-11, terms.expiration=2027-06-11, terms.is_pre_funded=False, terms.known_owners=['Titan Partners'], out.count=319444.0, out.initial_count=319444.0, counterparty=Titan Partners
+01:07:54  [ACTU]      diff extra_in_ledger C-1151 [convertible] ledger=terms.principal=1000000.0, terms.rate=0.07, terms.conv_price=7.848, terms.conv_discount_pct=0.8, terms.maturity=2024-08-16, terms.known_owners=['Bios Clinical Opportunity Fund'], out.principal_remaining=0.0, out.principal_remaining_asof=2024-05-08, counterparty=Bios Clinical Opportunity Fund
+01:07:54  [ACTU]      anchor proposal create_instrument:warrant date=2024-08-14 strike=10.0 expiration=2027-08-12 count=161000.0 initial_count=161000.0
+01:07:54  [ACTU]      anchor proposal amend_instrument:warrant W-5404 date=2024-09-30 strike=10.55
+01:07:54  [ACTU]      anchor proposal close_instrument C-1151 date=2024-09-30 reason=redeemed
+01:07:54  [ACTU]    anchor corrections applied=3 rejected=0
+01:07:54  [ACTU]  walker 0001683168-24-008794 — dedup block: 1 candidates within ±180d
+01:07:54  [ACTU]    0001683168-24-008794 — pruned 2 create tool(s): create_atm,create_preferred
+01:07:54  [ACTU]  walker 0001683168-24-008794 — form=8-K (19 tools)
+01:07:56  [ACTU]  walker 0001683168-24-008794 — finish='REASON_TOOL_CALLS' calls=1
+01:07:56  [ACTU]  walker 0001683168-24-008794 — note_no_event reasons: ['interim phase 2 clinical trial data announcement']
+01:07:56  [ACTU]    [2024-12-17] 8-K 0001683168-24-008794 — 0 mutations
+01:07:56  [ACTU]  walker 0001683168-25-000826 — dedup block: 1 candidates within ±180d
+01:07:56  [ACTU]    0001683168-25-000826 — pruned 2 create tool(s): create_atm,create_preferred
+01:07:56  [ACTU]  walker 0001683168-25-000826 — form=8-K (19 tools)
+01:08:00  [ACTU]  walker 0001683168-25-000826 — finish='REASON_TOOL_CALLS' calls=1
+01:08:00  [ACTU]  walker 0001683168-25-000826 — note_no_event reasons: ['annual meeting announcement']
+01:08:00  [ACTU]    [2025-02-07] 8-K 0001683168-25-000826 — 0 mutations
+01:08:00  [ACTU]  walker 0001683168-25-001581 — dedup block: 4 candidates (all active, periodic form)
+01:08:00  [ACTU]  walker 0001683168-25-001581 — form=10-K (17 tools)
+01:08:32  [ACTU]  walker 0001683168-25-001581 — finish='REASON_TOOL_CALLS' calls=1
+01:08:32  [ACTU]  walker 0001683168-25-001581 — call amend_instrument:warrant W-5404 date=2025-03-13 expiration=2026-08-13 known_owners=['Bios Equity', 'Kairos Venture']
+01:08:32  [ACTU]    [2025-03-13] 10-K 0001683168-25-001581 — 1 mutations
+01:08:32  [ACTU]    anchor 0001683168-25-001581 as_of=2024-12-31
+01:09:00  [ACTU]  overhang-combined 0001683168-25-001581 — w=3 c=0 p=0 s=0 a=0 e=0
+01:09:00  [ACTU]    anchor 0001683168-25-001581 — 2 diffs (missing=0 field=0 count=1 extra=1)
+01:09:00  [ACTU]      diff count_mismatch W-5404 [warrant] ledger=out.count=76376.0 filing=out.count=66415
+01:09:00  [ACTU]      diff extra_in_ledger W-5405 [warrant] ledger=terms.strike=11.25, terms.exercisable_date=2024-12-11, terms.expiration=2027-06-11, terms.is_pre_funded=False, terms.known_owners=['Titan Partners'], out.count=319444.0, out.initial_count=319444.0, counterparty=Titan Partners
+01:09:00  [ACTU]      anchor proposal amend_instrument:warrant W-5404 date=2024-12-31 count=66415
+01:09:00  [ACTU]    anchor corrections applied=1 rejected=0
+01:09:00  [ACTU]    [2025-03-28] S-1 0001683168-25-001948 — skipped (fee-table=resale; 457(c)/(g) only)
+01:09:00  [ACTU]  walker 0001683168-25-001945 — form=8-K (21 tools)
+01:09:07  [ACTU]  walker 0001683168-25-001945 — finish='REASON_TOOL_CALLS' calls=1
+01:09:07  [ACTU]  walker 0001683168-25-001945 — must_record net fired (content:close); re-asking
+01:09:20  [ACTU]  walker 0001683168-25-001945 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+01:09:20  [ACTU]  walker 0001683168-25-001945 — content-expectation second look (content:close): no gap calls returned (re-disclosure or model declined)
+01:09:20  [ACTU]  walker 0001683168-25-001945 — call create_instrument:equity_line date=2025-03-28 capacity_usd=50000000.0 agreement_date=2025-03-27 agreement_end_date=2028-03-27
+01:09:20  [ACTU]    [2025-03-28] 8-K 0001683168-25-001945 — 1 mutations
+01:09:20  [ACTU]  walker 0001683168-25-002344 — dedup block: 1 candidates within ±30d
+01:09:20  [ACTU]  walker 0001683168-25-002344 — form=DEF 14A (3 tools)
+01:09:38  [ACTU]  walker 0001683168-25-002344 — finish='REASON_TOOL_CALLS' calls=1
+01:09:38  [ACTU]  walker 0001683168-25-002344 — call amend_instrument:warrant W-5404 date=2025-04-08 known_owners=['Bios Equity Affiliated Funds', 'Kai...
+01:09:38  [ACTU]    [2025-04-08] DEF 14A 0001683168-25-002344 — 1 mutations
+01:09:38  [ACTU]  walker 0001683168-25-002345 — dedup block: 1 candidates within ±30d
+01:09:38  [ACTU]  walker 0001683168-25-002345 — form=DEFA14A (3 tools)
+01:09:39  [ACTU]  walker 0001683168-25-002345 — finish='REASON_TOOL_CALLS' calls=1
+01:09:39  [ACTU]  walker 0001683168-25-002345 — note_no_event reasons: ['definitive additional proxy materials cover page only with no dilutive events or instruments disclosed']
+01:09:39  [ACTU]    [2025-04-09] DEFA14A 0001683168-25-002345 — 0 mutations
+01:09:39  [ACTU]    [2025-04-16] 424B3 0001683168-25-002638 — skipped (resale, file_number outside primary set)
+01:09:39  [ACTU]  walker 0001683168-25-003163 — dedup block: 1 candidates within ±180d
+01:09:39  [ACTU]    0001683168-25-003163 — pruned 2 create tool(s): create_atm,create_preferred
+01:09:39  [ACTU]  walker 0001683168-25-003163 — form=8-K (19 tools)
+01:09:49  [ACTU]  walker 0001683168-25-003163 — finish='REASON_TOOL_CALLS' calls=1
+01:09:49  [ACTU]  walker 0001683168-25-003163 — note_no_event reasons: ['press release announcing clinical trial results']
+01:09:49  [ACTU]    [2025-05-06] 8-K 0001683168-25-003163 — 0 mutations
+01:09:49  [ACTU]  walker 0001683168-25-003705 — dedup block: 5 candidates (all active, periodic form)
+01:09:49  [ACTU]  walker 0001683168-25-003705 — form=10-Q (17 tools)
+01:10:12  [ACTU]  walker 0001683168-25-003705 — finish='REASON_TOOL_CALLS' calls=2
+01:10:12  [ACTU]  walker 0001683168-25-003705 — call amend_instrument:warrant W-5404 date=2025-03-31 count=76376.0
+01:10:12  [ACTU]  walker 0001683168-25-003705 — call amend_instrument:warrant W-5403 date=2025-03-31 expiration=2026-08-13
+01:10:12  [ACTU]    [2025-05-15] 10-Q 0001683168-25-003705 — 2 mutations
+01:10:12  [ACTU]    anchor 0001683168-25-003705 as_of=2025-03-31
+01:10:36  [ACTU]  overhang-combined 0001683168-25-003705 — w=3 c=0 p=0 s=0 a=0 e=1
+01:10:36  [ACTU]    anchor 0001683168-25-003705 — 1 diffs (missing=0 field=0 count=0 extra=1)
+01:10:36  [ACTU]      diff extra_in_ledger W-5405 [warrant] ledger=terms.strike=11.25, terms.exercisable_date=2024-12-11, terms.expiration=2027-06-11, terms.is_pre_funded=False, terms.known_owners=['Titan Partners'], out.count=319444.0, out.initial_count=319444.0, counterparty=Titan Partners
+01:10:36  [ACTU]    [2025-05-23] 8-K 0001683168-25-003995 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+01:10:36  [ACTU]  walker 0001683168-25-004117 — dedup block: 1 candidates within ±180d
+01:10:36  [ACTU]    0001683168-25-004117 — pruned 1 create tool(s): create_atm
+01:10:36  [ACTU]  walker 0001683168-25-004117 — form=8-K (20 tools)
+01:10:40  [ACTU]  walker 0001683168-25-004117 — finish='REASON_TOOL_CALLS' calls=1
+01:10:40  [ACTU]  walker 0001683168-25-004117 — note_no_event reasons: ['The filing is a Form 8-K disclosing topline Phase 2 clinical trial data for elraglusib and contains no dilutive financing events or instrument issuances.']
+01:10:40  [ACTU]    [2025-06-02] 8-K 0001683168-25-004117 — 0 mutations
+01:10:40  [ACTU]  walker 0001683168-25-004258 — dedup block: 1 candidates within ±180d
+01:10:40  [ACTU]    0001683168-25-004258 — pruned 1 create tool(s): create_preferred
+01:10:40  [ACTU]  walker 0001683168-25-004258 — form=8-K (20 tools)
+01:10:47  [ACTU]  walker 0001683168-25-004258 — finish='REASON_TOOL_CALLS' calls=1
+01:10:47  [ACTU]  walker 0001683168-25-004258 — note_no_event reasons: ['KOL event transcript discussing clinical trial data for elraglusib with no dilutive financing events or transactions disclosed.']
+01:10:47  [ACTU]    [2025-06-05] 8-K 0001683168-25-004258 — 0 mutations
+01:10:47  [ACTU]  walker 0001683168-25-004766 — dedup block: 1 candidates within ±180d
+01:10:47  [ACTU]  walker 0001683168-25-004766 — form=8-K (21 tools)
+01:10:58  [ACTU]  walker 0001683168-25-004766 — finish='REASON_TOOL_CALLS' calls=2
+01:10:58  [ACTU]  walker 0001683168-25-004766 — call create_instrument:equity date=2025-06-25 price_per_share=7.0 known_owners=['Bios 2024 Co-Invest'] count=666497.0
+01:10:58  [ACTU]  walker 0001683168-25-004766 — call create_instrument:warrant date=2025-06-25 strike=7.0 exercisable_date=2025-06-25 known_owners=['Bios 2024 Co-Invest'] count=666497.0 initial_count=666497.0
+01:10:58  [ACTU]    [2025-06-26] 8-K 0001683168-25-004766 — 2 mutations
+01:10:58  [ACTU]    [2025-07-25] S-1 0001683168-25-005402 — skipped (fee-table=resale; 457(c)/(g) only)
+01:10:58  [ACTU]    [2025-08-04] 424B3 0001683168-25-005641 — skipped (resale, file_number outside primary set)
+01:10:58  [ACTU]  walker 0001683168-25-006159 — dedup block: 6 candidates (all active, periodic form)
+01:10:58  [ACTU]  walker 0001683168-25-006159 — form=10-Q (17 tools)
+01:11:28  [ACTU]  walker 0001683168-25-006159 — finish='REASON_TOOL_CALLS' calls=2
+01:11:28  [ACTU]  walker 0001683168-25-006159 — retrying 2 call(s) (kinds=['drawdown_missing_price'])
+01:12:02  [ACTU]  walker 0001683168-25-006159 — retry finish='REASON_TOOL_CALLS' calls=1
+01:12:02  [ACTU]  walker 0001683168-25-006159 — call record_event EL-212 date=2025-06-30 drawdown_amount_usd=2492354.0 drawdown_shares=256429.0 avg_price=9.719470106735198
+01:12:02  [ACTU]    [2025-08-14] 10-Q 0001683168-25-006159 — 1 mutations
+01:12:02  [ACTU]    anchor 0001683168-25-006159 as_of=2025-06-30
+01:12:30  [ACTU]  overhang-combined 0001683168-25-006159 — w=4 c=0 p=0 s=0 a=0 e=1
+01:12:30  [ACTU]    anchor 0001683168-25-006159 — 2 diffs (missing=0 field=0 count=1 extra=1)
+01:12:30  [ACTU]      diff count_mismatch EL-212 [equity_line] ledger=out.drawn_usd=2492354.0 filing=out.drawn_usd=2148506.0
+01:12:30  [ACTU]      diff extra_in_ledger W-5405 [warrant] ledger=terms.strike=11.25, terms.exercisable_date=2024-12-11, terms.expiration=2027-06-11, terms.is_pre_funded=False, terms.known_owners=['Titan Partners'], out.count=319444.0, out.initial_count=319444.0, counterparty=Titan Partners
+01:12:30  [ACTU]      anchor proposal amend_instrument:equity_line EL-212 date=2025-06-30 drawn_usd=2148506.0
+01:12:30  [ACTU]    anchor corrections applied=1 rejected=0
+01:12:31  [ACTU]  walker 0001683168-25-006622 — form=S-3 (16 tools)
+01:12:39  [ACTU]  walker 0001683168-25-006622 — finish='REASON_TOOL_CALLS' calls=1
+01:12:39  [ACTU]  walker 0001683168-25-006622 — call create_instrument:shelf date=2025-09-02 capacity_usd=250000000.0 form=S-3
+01:12:39  [ACTU]    [2025-09-02] S-3 0001683168-25-006622 — 1 mutations
+01:12:39  [ACTU]  walker 0001683168-25-006782 — dedup block: 3 candidates within ±180d
+01:12:39  [ACTU]  walker 0001683168-25-006782 — form=424B5 (13 tools)
+01:12:46  [ACTU]  walker 0001683168-25-006782 — finish='REASON_TOOL_CALLS' calls=1
+01:12:46  [ACTU]  walker 0001683168-25-006782 — note_no_event reasons: ['preliminary unpriced prospectus supplement with placeholder terms']
+01:12:46  [ACTU]    [2025-09-09] 424B5 0001683168-25-006782 — 0 mutations
+01:12:46  [ACTU]  walker 0001683168-25-006829 — dedup block: 3 candidates within ±180d
+01:12:46  [ACTU]  walker 0001683168-25-006829 — form=424B5 (13 tools)
+01:12:51  [ACTU]  walker 0001683168-25-006829 — finish='REASON_TOOL_CALLS' calls=1
+01:12:51  [ACTU]  walker 0001683168-25-006829 — call record_event SH-2619 date=2025-09-10 drawdown_amount_usd=15000006.0 drawdown_shares=2142858.0 avg_price=7.0 placement_agent_canonical=Lucid
+01:12:51  [ACTU]    [2025-09-10] 424B5 0001683168-25-006829 — 1 mutations
+01:12:51  [ACTU]  walker 0001683168-25-006831 — dedup block: 3 candidates within ±180d
+01:12:51  [ACTU]  walker 0001683168-25-006831 — form=8-K (21 tools)
+01:12:57  [ACTU]  walker 0001683168-25-006831 — finish='REASON_TOOL_CALLS' calls=1
+01:12:57  [ACTU]  walker 0001683168-25-006831 — note_no_event reasons: ['The underwritten offering of 2,142,858 shares of common stock at $7.00 per share under the S-3 shelf (SH-2619) is already recorded in the ledger as a takedown on 2025-09-10.']
+01:12:57  [ACTU]    [2025-09-10] 8-K 0001683168-25-006831 — 0 mutations
+01:12:57  [ACTU]  walker 0001683168-25-008323 — dedup block: 7 candidates (all active, periodic form)
+01:12:57  [ACTU]  walker 0001683168-25-008323 — form=10-Q (17 tools)
+01:13:26  [ACTU]  walker 0001683168-25-008323 — finish='REASON_TOOL_CALLS' calls=2
+01:13:26  [ACTU]  walker 0001683168-25-008323 — retrying 1 call(s) (kinds=['drawdown_missing_price'])
+01:13:41  [ACTU]  walker 0001683168-25-008323 — retry finish='REASON_TOOL_CALLS' calls=1
+01:13:41  [ACTU]  walker 0001683168-25-008323 — call record_event SH-2619 date=2025-09-11 drawdown_amount_usd=2249996.0 drawdown_shares=321428.0 avg_price=7.0
+01:13:41  [ACTU]  walker 0001683168-25-008323 — call record_event EL-212 date=2025-09-30 drawdown_amount_usd=1911766.0 drawdown_shares=283538.0 avg_price=6.742538918945609
+01:13:41  [ACTU]    [2025-11-13] 10-Q 0001683168-25-008323 — 2 mutations
+01:13:41  [ACTU]    anchor 0001683168-25-008323 as_of=2025-09-30
+01:14:08  [ACTU]  overhang-combined 0001683168-25-008323 — w=4 c=0 p=0 s=0 a=0 e=1
+01:14:08  [ACTU]    anchor 0001683168-25-008323 — 3 diffs (missing=0 field=0 count=1 extra=2)
+01:14:08  [ACTU]      diff count_mismatch EL-212 [equity_line] ledger=out.drawn_usd=4060272.0 filing=out.drawn_usd=3800465.0
+01:14:08  [ACTU]      diff extra_in_ledger W-5405 [warrant] ledger=terms.strike=11.25, terms.exercisable_date=2024-12-11, terms.expiration=2027-06-11, terms.is_pre_funded=False, terms.known_owners=['Titan Partners'], out.count=319444.0, out.initial_count=319444.0, counterparty=Titan Partners
+01:14:08  [ACTU]      diff extra_in_ledger SH-2619 [shelf] ledger=terms.capacity_usd=250000000.0, terms.form=S-3, out.drawn_usd=17250002.0, out.sold_to_date=2464286.0
+01:14:08  [ACTU]      anchor proposal amend_instrument:equity_line EL-212 date=2025-09-30 drawn_usd=3800465.0
+01:14:08  [ACTU]    anchor corrections applied=1 rejected=0
+01:14:08  [ACTU]  walker 0001683168-25-008618 — dedup block: 2 candidates within ±180d
+01:14:08  [ACTU]    0001683168-25-008618 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+01:14:08  [ACTU]  walker 0001683168-25-008618 — form=8-K (18 tools)
+01:14:10  [ACTU]  walker 0001683168-25-008618 — finish='REASON_TOOL_CALLS' calls=1
+01:14:10  [ACTU]  walker 0001683168-25-008618 — note_no_event reasons: ["The filing is an Item 8.01 disclosure regarding the company's channels for disseminating material information (website, social media, etc.) and contains no dilutive instruments or events."]
+01:14:10  [ACTU]    [2025-11-21] 8-K 0001683168-25-008618 — 0 mutations
+01:14:10  [ACTU]  walker 0001683168-25-008730 — dedup block: 2 candidates within ±180d
+01:14:10  [ACTU]  walker 0001683168-25-008730 — form=424B5 (13 tools)
+01:14:22  [ACTU]  walker 0001683168-25-008730 — finish='REASON_TOOL_CALLS' calls=1
+01:14:22  [ACTU]  walker 0001683168-25-008730 — call create_instrument:atm date=2025-11-28 capacity_usd=100000000.0 agreement_date=2025-11-28
+01:14:22  [ACTU]    [2025-11-28] 424B5 0001683168-25-008730 — 1 mutations
+01:14:22  [ACTU]  walker 0001683168-25-008732 — dedup block: 3 candidates within ±180d
+01:14:22  [ACTU]  walker 0001683168-25-008732 — form=8-K (21 tools)
+01:14:30  [ACTU]  walker 0001683168-25-008732 — finish='REASON_TOOL_CALLS' calls=1
+01:14:30  [ACTU]  walker 0001683168-25-008732 — note_no_event reasons: ['The filing discloses the entry into an At the Market Issuance Sales Agreement on November 28, 2025, which is already recorded in the ledger as ATM-2691.']
+01:14:30  [ACTU]    [2025-11-28] 8-K 0001683168-25-008732 — 0 mutations
+01:14:30  [ACTU]  walker 0001683168-26-000217 — dedup block: 2 candidates within ±180d
+01:14:30  [ACTU]    0001683168-26-000217 — pruned 2 create tool(s): create_convertible,create_preferred
+01:14:30  [ACTU]  walker 0001683168-26-000217 — form=8-K (19 tools)
+01:14:33  [ACTU]  walker 0001683168-26-000217 — finish='REASON_TOOL_CALLS' calls=1
+01:14:33  [ACTU]  walker 0001683168-26-000217 — note_no_event reasons: ['clinical trial data announcement']
+01:14:33  [ACTU]    [2026-01-12] 8-K 0001683168-26-000217 — 0 mutations
+01:14:33  [ACTU]  walker 0001683168-26-002257 — dedup block: 8 candidates (all active, periodic form)
+01:14:33  [ACTU]  walker 0001683168-26-002257 — form=10-K (17 tools)
+01:14:51  [ACTU]  walker 0001683168-26-002257 — finish='REASON_TOOL_CALLS' calls=1
+01:14:51  [ACTU]  walker 0001683168-26-002257 — note_no_event reasons: ['The 10-K filing re-discloses the March 2025 Committed Equity Facility (EL-212), the June 2025 Private Placement (W-5413), the September 2025 Public Offering (SH-2619), and the November 2025 ATM Facility (ATM-2691), all of which are already on the ledger with no new dilutive events or term changes.']
+01:14:51  [ACTU]    [2026-03-26] 10-K 0001683168-26-002257 — 0 mutations
+01:14:51  [ACTU]    anchor 0001683168-26-002257 as_of=2025-12-31
+01:15:12  [ACTU]  overhang-combined 0001683168-26-002257 — w=1 c=0 p=0 s=0 a=1 e=1
+01:15:12  [ACTU]    anchor 0001683168-26-002257 — 5 diffs (missing=0 field=0 count=0 extra=5)
+01:15:12  [ACTU]      diff extra_in_ledger W-5404 [warrant] ledger=terms.strike=10.55, terms.expiration=2026-08-13, terms.known_owners=['Bios Equity Affiliated Funds', 'Kairos Venture Affiliated Funds'], out.count=76376.0, out.initial_count=76376.0
+01:15:12  [ACTU]      diff extra_in_ledger W-5403 [warrant] ledger=terms.strike=9.42, terms.expiration=2026-08-13, terms.known_owners=['Newbridge'], out.count=18223.0, out.initial_count=18223.0
+01:15:12  [ACTU]      diff extra_in_ledger W-5405 [warrant] ledger=terms.strike=11.25, terms.exercisable_date=2024-12-11, terms.expiration=2027-06-11, terms.is_pre_funded=False, terms.known_owners=['Titan Partners'], out.count=319444.0, out.initial_count=319444.0, counterparty=Titan Partners
+01:15:12  [ACTU]      diff extra_in_ledger W-5410 [warrant] ledger=terms.strike=10.0, terms.expiration=2027-08-12, out.count=161000.0, out.initial_count=161000.0
+01:15:12  [ACTU]      diff extra_in_ledger SH-2619 [shelf] ledger=terms.capacity_usd=250000000.0, terms.form=S-3, out.drawn_usd=17250002.0, out.sold_to_date=2464286.0
+01:15:12  [ACTU]  walker 0001683168-26-002691 — form=DEF 14A (3 tools)
+01:15:31  [ACTU]  walker 0001683168-26-002691 — finish='REASON_TOOL_CALLS' calls=1
+01:15:31  [ACTU]  walker 0001683168-26-002691 — call amend_instrument:warrant W-5404 date=2026-04-06 known_owners=['Bios Equity', 'Kairos Venture']
+01:15:31  [ACTU]    [2026-04-06] DEF 14A 0001683168-26-002691 — 1 mutations
+01:15:31  [ACTU]  walker 0001683168-26-002692 — form=DEFA14A (3 tools)
+01:15:34  [ACTU]  walker 0001683168-26-002692 — finish='REASON_TOOL_CALLS' calls=1
+01:15:34  [ACTU]  walker 0001683168-26-002692 — note_no_event reasons: ['annual meeting notice and proxy materials with no dilutive proposals']
+01:15:34  [ACTU]    [2026-04-06] DEFA14A 0001683168-26-002692 — 0 mutations
+01:15:34  [ACTU]  walker 0001683168-26-003517 — form=DEFA14A (3 tools)
+01:15:38  [ACTU]  walker 0001683168-26-003517 — finish='REASON_TOOL_CALLS' calls=1
+01:15:38  [ACTU]  walker 0001683168-26-003517 — note_no_event reasons: ['director appointment and related stock option grant']
+01:15:38  [ACTU]    [2026-05-06] DEFA14A 0001683168-26-003517 — 0 mutations
+01:15:38  [ACTU]  walker 0001683168-26-003515 — dedup block: 1 candidates within ±180d
+01:15:38  [ACTU]    0001683168-26-003515 — pruned 2 create tool(s): create_convertible,create_preferred
+01:15:38  [ACTU]  walker 0001683168-26-003515 — form=8-K (19 tools)
+01:15:40  [ACTU]  walker 0001683168-26-003515 — finish='REASON_TOOL_CALLS' calls=1
+01:15:40  [ACTU]  walker 0001683168-26-003515 — note_no_event reasons: ['director appointment']
+01:15:40  [ACTU]    [2026-05-06] 8-K 0001683168-26-003515 — 0 mutations
+01:15:40  [ACTU]  walker 0001683168-26-003684 — dedup block: 1 candidates within ±180d
+01:15:40  [ACTU]    0001683168-26-003684 — pruned 2 create tool(s): create_convertible,create_preferred
+01:15:40  [ACTU]  walker 0001683168-26-003684 — form=8-K (19 tools)
+01:15:44  [ACTU]  walker 0001683168-26-003684 — finish='REASON_TOOL_CALLS' calls=1
+01:15:44  [ACTU]  walker 0001683168-26-003684 — note_no_event reasons: ['The filing is a Regulation FD disclosure (Item 7.01) furnishing a press release and corporate presentation regarding FDA clearance of an IND for oral elraglusib and board changes, with no dilutive financing events or instruments disclosed.']
+01:15:44  [ACTU]    [2026-05-11] 8-K 0001683168-26-003684 — 0 mutations
+01:15:44  [ACTU]  walker 0001683168-26-003909 — dedup block: 8 candidates (all active, periodic form)
+01:15:44  [ACTU]  walker 0001683168-26-003909 — form=10-Q (17 tools)
+01:16:02  [ACTU]  walker 0001683168-26-003909 — finish='REASON_TOOL_CALLS' calls=2
+01:16:02  [ACTU]  walker 0001683168-26-003909 — call record_event ATM-2691 date=2026-03-31 drawdown_amount_usd=532765.24 drawdown_shares=198793.0 avg_price=2.68
+01:16:02  [ACTU]  walker 0001683168-26-003909 — call record_event ATM-2691 date=2026-05-13 drawdown_amount_usd=600075.5 drawdown_shares=213550.0 avg_price=2.81
+01:16:02  [ACTU]    [2026-05-14] 10-Q 0001683168-26-003909 — 2 mutations
+01:16:02  [ACTU]    anchor 0001683168-26-003909 as_of=2026-03-31
+01:16:31  [ACTU]  overhang-combined 0001683168-26-003909 — w=4 c=0 p=0 s=0 a=1 e=1
+01:16:31  [ACTU]    anchor 0001683168-26-003909 — 2 diffs (missing=0 field=0 count=0 extra=2)
+01:16:31  [ACTU]      diff extra_in_ledger W-5405 [warrant] ledger=terms.strike=11.25, terms.exercisable_date=2024-12-11, terms.expiration=2027-06-11, terms.is_pre_funded=False, terms.known_owners=['Titan Partners'], out.count=319444.0, out.initial_count=319444.0, counterparty=Titan Partners
+01:16:31  [ACTU]      diff extra_in_ledger SH-2619 [shelf] ledger=terms.capacity_usd=250000000.0, terms.form=S-3, out.drawn_usd=17250002.0, out.sold_to_date=2464286.0
+01:16:31  [ACTU]    [2026-05-22] 8-K 0001683168-26-004268 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+01:16:31  [ACTU]    walk done — seed=A_periodic walked=20 skipped=29 (resale=4 empty8k=3) applied=37 rejected=1 created=13 drawdowns=7 anchor_diffs=19 errors=0

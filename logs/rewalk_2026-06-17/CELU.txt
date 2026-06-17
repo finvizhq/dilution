@@ -1,0 +1,50 @@
+=== Eval: CELU (cik 1752828) ===
+  cards exact     : 9/18
+  cards found     : 15/18
+  fields exact    : 89/99  (90%)
+  unexpected extra: 9
+
+PASS
+  [warrant] December 2025: ✓ all 6 fields exact
+  [warrant] December 2025: ✓ all 6 fields exact
+  [warrant] 2025-07-21: ✓ all 6 fields exact
+  [warrant] January 2024: ✓ all 7 fields exact
+  [warrant] January 2024: ✓ all 7 fields exact
+  [warrant] 2024-12-27: ✓ all 6 fields exact
+  [warrant] May 2022: ✓ all 7 fields exact
+  [warrant] June 2023: ✓ all 7 fields exact
+  [convertible] December 2025: ✓ all 9 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] 2021-07-16: 5/6 fields exact
+      ✗ exercisable_date: expected ~'2021-08-15', got '2021-07-22'
+  [warrant] March 2023: 3/6 fields exact
+      ✗ remaining_outstanding: expected 938184, got 75000.0
+      ✗ total_issued: expected 938184, got 75000.0
+      ✗ exercise_price: expected 2.5, got 1.692
+  [warrant] April 2023: 5/8 fields exact
+      ✗ exercise_price: expected 7.5, got 3.5
+      ✗ exercisable_date: expected ~'2023-10-10', got '2024-01-28'
+      ✗ expiration_date: expected ~'2028-10-10', got '2029-01-28'
+  [warrant] May 2023: 5/6 fields exact
+      ✗ exercise_price: expected 2.5, got 10.0
+  [warrant] October 2025: 6/7 fields exact
+      ✗ known_owners: expected to contain ['Helena'], got []
+  [equity_line] March 2024 YA II: 4/5 fields exact
+      ✗ remaining_capacity: expected 6850000, got 10000000.0
+
+MISSING (in fixture, not in actual)
+  [warrant] July 2025: NO MATCH
+  [warrant] July 2023: NO MATCH
+  [warrant] 2021-08-15: NO MATCH
+
+EXTRA (in actual, not in fixture)
+  [warrant] March 2023 Private Placement Warrants (2023-03-27): unexpected actual card
+  [warrant] September 2023 Inducement Warrants (2023-09-14): unexpected actual card
+  [warrant] March 2024 Common Warrants (2024-03-13): unexpected actual card
+  [warrant] November 2024 Common Warrants (2024-11-25): unexpected actual card
+  [warrant] July 2025 Starr Warrants (2025-07-29): unexpected actual card
+  [warrant] July 2025 Starr Warrants (2025-07-29): unexpected actual card
+  [warrant] July 2025 RWI Warrants (2025-07-29): unexpected actual card
+  [warrant] July 2025 Common Warrants (2025-07-30): unexpected actual card
+  [convertible_preferred] October 2025 Series A Preferred (2025-10-24): unexpected actual card

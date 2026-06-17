@@ -568,6 +568,7 @@ def _chain_head_terminated(r: dict) -> bool:
     if not status.startswith("superseded:"):
         return False
     seen: set[str] = {r.get("instrument_id")}
+    head_terms = "{}"
     with get_conn() as conn:
         while status.startswith("superseded:"):
             succ = status.split(":", 1)[1]
@@ -575,13 +576,25 @@ def _chain_head_terminated(r: dict) -> bool:
                 return False
             seen.add(succ)
             row = conn.execute(
-                "SELECT status FROM dilution_ledger WHERE instrument_id=?",
+                "SELECT status, terms_json FROM dilution_ledger"
+                " WHERE instrument_id=?",
                 (succ,),
             ).fetchone()
             if row is None:
                 return False
             status = row["status"] or ""
-    return status == "terminated"
+            head_terms = row["terms_json"] or "{}"
+    if status == "terminated":
+        return True
+    # A head still flagged `active` whose sales-agreement term has already
+    # expired is a dead program too (XTIA Maxim ATM-2678: agreement_end
+    # 2024-12-31, the walker never marked it terminated) — its restated
+    # predecessors drop with it instead of leaking as stale extras.
+    try:
+        agree_end = json.loads(head_terms).get("agreement_end_date")
+    except (ValueError, TypeError):
+        agree_end = None
+    return _date_before(agree_end, _d.today())
 
 
 _AGREEMENT_DATE_MAX_DRIFT_DAYS = 90
@@ -606,6 +619,20 @@ def _plausible_agreement_date(agreement_date: str | None,
     if abs((ad - cd).days) > _AGREEMENT_DATE_MAX_DRIFT_DAYS:
         return None
     return agreement_date
+
+
+# Periodic-report forms: a warrant-reconciliation TABLE in one of these
+# lists every outstanding warrant the issuer has, so two rows sharing such a
+# created_accession are co-listed, NOT a paired offering. Offering forms
+# (8-K / S-1 / F-1 / 424B* / 6-K take-down / S-3) are excluded — there the
+# shared accession IS a genuine multi-tranche offering. Prefix match covers
+# /A amendments and the -SB small-business variants.
+_PERIODIC_REPORT_PREFIXES = ("10-Q", "10-K", "20-F", "40-F")
+
+
+def _is_periodic_report(form: str | None) -> bool:
+    f = (form or "").strip().upper()
+    return any(f.startswith(p) for p in _PERIODIC_REPORT_PREFIXES)
 
 
 def _warrant_dead(r: dict) -> bool:
@@ -637,6 +664,14 @@ def _warrant_dead(r: dict) -> bool:
     terminated = _to_float(out.get("terminated_to_date")) or 0
     if count_now == 0 and exercised == 0 and terminated == 0:
         return True
+    # Count-dust: a warrant exercised down to <=1 share out of a much
+    # larger issuance is exhausted — the residual share is a walker
+    # placeholder it couldn't fully zero (CELU W-5275 Dragasac 652,982 ->
+    # 1, W-5284 535,275 -> 1, both still rendering live as extras). The
+    # exercised>0 gate spares a warrant genuinely issued at <=1 share
+    # (which carries no exercise activity).
+    if 0 < count_now <= 1 and exercised > 0:
+        return True
     if (count_now == 0 and exercised > 0
             and (r.get("status") or "") == "exercised"):
         with get_conn() as conn:
@@ -646,7 +681,22 @@ def _warrant_dead(r: dict) -> bool:
                 "   AND status='active' AND instrument_id != ? LIMIT 1",
                 (r.get("created_accession"), r.get("instrument_id")),
             ).fetchone()
-        if sib is None:
+            created_form = conn.execute(
+                "SELECT form FROM dilution_filings WHERE accession_number=?",
+                (r.get("created_accession"),),
+            ).fetchone()
+        # The paired-tranche keep only holds for a genuine OFFERING
+        # disclosure (8-K / S-1 / 424B / 6-K take-down), where the live
+        # sibling is the co-issued common/Series-A leg. Two UNRELATED
+        # warrants merely co-listed in a PERIODIC warrant-reconciliation
+        # table (10-Q / 10-K / 20-F) share a created_accession without
+        # being a paired offering, so the sibling test wrongly resurrects
+        # the dead one: CETY W-5189 (FirstFire) revived by the unrelated
+        # Jefferson W-5190; ACTU W-5237 ($5.27, net-exercised into
+        # Series B-1 preferred) revived by the live $10.55 W-5238 — both
+        # created off a 10-Q warrant table. Drop the dead row in that case.
+        form = (created_form["form"] if created_form else "") or ""
+        if sib is None or _is_periodic_report(form):
             return True
     if (terms.get("maturity") is None
             and terms.get("expiration") is None):
@@ -934,7 +984,11 @@ def _registered_label(r: dict, *, default: str = "Registered") -> str:
     """
     status = (r.get("status") or "").lower()
     type_ = (r.get("type") or "").lower()
-    if status == "terminated":
+    # 'Terminated' is equity-line-only vocabulary. A fully-drawn terminated
+    # ATM that still renders (GCTK Dec-2024 Dawson) follows the ATM
+    # vocabulary {Registered, Replaced} — fall through to registration
+    # inference, which reads its S-3 history as Registered (DT convention).
+    if status == "terminated" and type_ != "atm":
         return "Terminated"
     if status.startswith("superseded:") and type_ == "atm":
         return "Replaced"
@@ -1438,8 +1492,16 @@ def s1_offering_cards(cik: int) -> list[dict]:
             "underwriter": _short_banker(
                 _banker(r) or _drawdown_banker(cik, r["instrument_id"])),
             "filing_date": _format_date(r.get("created_at")),
-            "warrant_coverage_pct":
-                coverage_pct * 100 if coverage_pct is not None else None,
+            # Anticipated coverage falls back to the FINAL (priced) coverage
+            # when the walker only captured the latter (GCTK S1-217: final
+            # 2.0 stored, anticipated null). Explicit None-check, NOT `or`:
+            # a legitimate 0.0 (no warrant coverage) must render 0, not be
+            # overridden by the final value (S1-042/053/089 store 0.0).
+            "warrant_coverage_pct": (
+                (coverage_pct if coverage_pct is not None
+                 else final_coverage_pct) * 100
+                if (coverage_pct is not None or final_coverage_pct is not None)
+                else None),
             "final_deal_size": final,
             "final_pricing": final_pricing,
             "final_shares_offered": sold,
@@ -1523,7 +1585,7 @@ def _resolve_float_shares(
 def atm_cards(cik: int, finviz: dict | None = None,
               latest_os: float | None = None) -> list[dict]:
     rows = _select_by_type(cik, "atm",
-                           statuses=("active",),
+                           statuses=("active", "terminated"),
                            status_prefixes=("superseded:",))
     # A restate chain's head is the successor the predecessor was restated
     # into. The active/superseded selection above already includes any head
@@ -1602,12 +1664,34 @@ def atm_cards(cik: int, finviz: dict | None = None,
         # drawdown (FCEL Dec-2025: 42.9M pin + 56.4M discrete = 101.6M
         # vs filing-true 45.2M).
         drawn = _drawn_to_date(cik, r["instrument_id"], out)
+        # DT hides ENDED ATM programs — both an explicit `terminated` status
+        # and an `active` row whose sales-agreement term has already expired
+        # (XTIA Maxim ATM-2678: agreement_end 2024-12-31, never marked
+        # terminated) — EXCEPT one that raised its full capacity before
+        # ending (GCTK Dec-2024 Dawson: drawn to within rounding of its
+        # $8.23M cap). A program that ended with material capacity left was
+        # abandoned mid-stream and stays hidden. DB-wide the fully-drawn
+        # carve-out flags ATM-2679 alone; the expired-term skip flags the
+        # XTIA Maxim chain alone.
+        program_ended = ((r.get("status") or "") == "terminated"
+                         or _date_before(terms.get("agreement_end_date"),
+                                         _d.today()))
+        if program_ended:
+            if not (capacity and capacity > 0
+                    and 0 <= capacity - drawn < 0.005 * capacity):
+                continue
         # Prefer capacity − drawn over the persisted remaining_capacity_usd
         # snapshot, which goes stale when a drawn_usd anchor amend lands
         # without refreshing it (CGEN Leerink: persisted 23.9M vs
         # filing-true 50M − 15.1M = 34.9M). Fall back to the snapshot only
         # when no capacity is known — mirrors what shelf_cards already does.
         if capacity is not None:
+            # A program the filing recorded as fully drawn (stored
+            # remaining 0) raised its full capacity; snap a tiny rounding
+            # shortfall up so the card doesn't show a ghost residual
+            # (GCTK Dawson ATM 8,217,693 → 8,230,000). See
+            # _fully_drawn_clamp; mirrors the shelf-rollup path.
+            drawn = _fully_drawn_clamp(drawn, capacity, out)
             remaining = max(0.0, capacity - drawn)
         else:
             remaining = _to_float(out.get("remaining_capacity_usd"))
@@ -1963,6 +2047,7 @@ def _shelf_family_drawn(cik: int, instrument_id: str) -> float:
         rows = conn.execute(
             """SELECT sib_l.instrument_id AS sib_id,
                       sib_l.outstanding_json AS sib_out,
+                      sib_l.terms_json AS sib_terms,
                       COALESCE(SUM(d.amount_usd), 0) AS draw_sum,
                       COALESCE(SUM(CASE WHEN d.event_date >
                                    json_extract(sib_l.outstanding_json,
@@ -1993,14 +2078,41 @@ def _shelf_family_drawn(cik: int, instrument_id: str) -> float:
     total = 0.0
     for r in rows:
         out = json.loads(r["sib_out"] or "{}")
+        terms = json.loads(r["sib_terms"] or "{}")
         total += _drawn_from_parts(
             out, float(r["draw_sum"]), float(r["post_asof_sum"]),
+            capacity=_to_float(terms.get("capacity_usd")),
         )
     return total
 
 
+def _fully_drawn_clamp(drawn: float, capacity: float | None,
+                       out: dict) -> float:
+    """Snap a fully-drawn program's raised-to-date up to its capacity.
+
+    A program the filing explicitly recorded as fully exhausted carries a
+    stored ``remaining_capacity_usd == 0``; by definition it raised its
+    whole capacity. The running ``drawn_usd`` / discrete-draw sum can fall
+    a hair short from share-by-share rounding (GCTK Dawson ATM: 8,217,693
+    vs 8,230,000 capacity), which surfaced as a $12,307 ghost remaining on
+    the ATM card AND under-stated the parent shelf's total raised by the
+    same $12,307. Snap to capacity in that case.
+
+    Gated two ways so it only absorbs float noise: (1) the shortfall must
+    be under 0.5% of capacity, and (2) the stored remaining must be an
+    EXPLICIT 0 — never a non-zero stale-low snapshot, which capacity−drawn
+    is correctly allowed to override (the CGEN Leerink case: persisted
+    23.9M vs filing-true 34.9M)."""
+    if (capacity and capacity > 0
+            and _to_float(out.get("remaining_capacity_usd")) == 0
+            and 0 <= capacity - drawn < capacity * 0.005):
+        return capacity
+    return drawn
+
+
 def _drawn_from_parts(
     out: dict, draw_sum: float, post_asof_sum: float,
+    capacity: float | None = None,
 ) -> float:
     """Raised-to-date for one shelf-family instrument from its
     outstanding dict plus pre-aggregated discrete sums.
@@ -2011,34 +2123,69 @@ def _drawn_from_parts(
     checkpoint already subsumes everything on or before it. Without a
     checkpoint, fall back to max(discrete log, running/create-pinned
     drawn_usd) — the latter covers an ATM whose only signal is an
-    LLM-pinned cumulative with no discrete rows."""
+    LLM-pinned cumulative with no discrete rows. A fully-drawn sibling
+    (stored remaining 0) snaps up to `capacity` — see _fully_drawn_clamp."""
     anchor = _to_float(out.get("drawn_usd_anchor"))
     if anchor is not None:
-        return anchor + post_asof_sum
-    running = _to_float(out.get("drawn_usd")) or 0.0
-    return max(draw_sum, running)
+        base = anchor + post_asof_sum
+    else:
+        running = _to_float(out.get("drawn_usd")) or 0.0
+        base = max(draw_sum, running)
+    return _fully_drawn_clamp(base, capacity, out)
+
+
+def _drawdown_sums(conn, cik: int, instrument_id: str,
+                   after_date: str | None = None) -> tuple[float, float]:
+    """``(raw_sum, deduped_sum)`` of an instrument's discrete take-downs.
+
+    Same-(event_date, price) rows are collapsed to the single LARGEST
+    amount, not summed: a follow-on filing that re-books an offering with
+    its over-allotment exercised re-states the SAME take-down at a larger
+    share count / dollar amount on the SAME pricing date — it supersedes,
+    it does not add (ACTU SH-2598: $15,000,006 / 2,142,858 sh then
+    $17,250,002 / 2,464,286 sh, both @ $7.00 on 2025-09-10; summing
+    double-counts the $15M base). Draws on different dates or at different
+    prices are summed normally. ``after_date`` restricts to rows strictly
+    after it (the ``drawn_usd_anchor`` as-of path)."""
+    q = ("SELECT event_date, price, amount_usd "
+         "FROM dilution_ledger_drawdowns WHERE cik=? AND instrument_id=?")
+    args: list[Any] = [cik, instrument_id]
+    if after_date is not None:
+        q += " AND event_date > ?"
+        args.append(after_date)
+    raw = 0.0
+    groups: dict[tuple, float] = {}
+    for r in conn.execute(q, args).fetchall():
+        amt = float(r["amount_usd"] or 0)
+        raw += amt
+        price = r["price"]
+        key = (r["event_date"],
+               round(float(price), 6) if price is not None else None)
+        groups[key] = max(groups.get(key, 0.0), amt)
+    return raw, sum(groups.values())
 
 
 def _drawn_to_date(cik: int, instrument_id: str, out: dict) -> float:
     """`_drawn_from_parts` for a single instrument (the shelf's OWN
-    direct take-downs), querying its discrete drawdown sums directly."""
+    direct take-downs), querying its discrete drawdown sums directly.
+    Same-date/same-price restatements are de-duped — see _drawdown_sums."""
     anchor = _to_float(out.get("drawn_usd_anchor"))
     with get_conn() as conn:
         if anchor is not None:
-            row = conn.execute(
-                "SELECT COALESCE(SUM(amount_usd), 0) AS s "
-                "FROM dilution_ledger_drawdowns "
-                "WHERE cik=? AND instrument_id=? AND event_date > ?",
-                (cik, instrument_id, out.get("drawn_usd_asof") or ""),
-            ).fetchone()
-            return anchor + float(row["s"] or 0)
-        row = conn.execute(
-            "SELECT COALESCE(SUM(amount_usd), 0) AS s "
-            "FROM dilution_ledger_drawdowns "
-            "WHERE cik=? AND instrument_id=?",
-            (cik, instrument_id),
-        ).fetchone()
-        return max(float(row["s"] or 0), _to_float(out.get("drawn_usd")) or 0.0)
+            _raw, deduped = _drawdown_sums(
+                conn, cik, instrument_id, out.get("drawn_usd_asof") or "")
+            return anchor + deduped
+        raw, deduped = _drawdown_sums(conn, cik, instrument_id)
+    drawn_usd = _to_float(out.get("drawn_usd")) or 0.0
+    # The stored cumulative wins only when it EXCEEDS the raw discrete log
+    # (an LLM-pinned total carrying take-downs that never landed as rows —
+    # CGEN's SVB ATM). When it merely EQUALS the raw (double-counted)
+    # discrete sum it carries the same restatement double-count, so trust
+    # the de-duped discrete total instead (ACTU SH-2598: drawn_usd 32.25M
+    # == raw 32.25M, de-duped 17.25M).
+    if drawn_usd and abs(drawn_usd - raw) <= max(1.0, raw * 0.001):
+        return deduped
+    return max(deduped, drawn_usd)
 
 
 def _drawdown_banker(cik: int, instrument_id: str) -> str | None:

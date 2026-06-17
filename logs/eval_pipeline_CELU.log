@@ -1,0 +1,1484 @@
+22:52:13  [CELU]  langfuse: LANGFUSE_PUBLIC_KEY/SECRET_KEY not set — tracing disabled
+22:52:13  [CELU]  Dilution tracker — ticker=CELU since=2020-06-16 llm_provider=gemini llm_model=gemini-3.5-flash llm_model_periodic=gemini-3.5-flash
+22:52:13  [CELU]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+22:52:14  [CELU]  resolved CELU → CIK 1752828 CELU (Celularity Inc)
+22:52:14  [CELU]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+22:52:14  [CELU]    239 relevant filings since 2020-06-16
+22:52:14  [CELU]    unit already detected — is_fpi=0 ads_ratio=None
+22:52:14  [CELU]    unit ctx — is_fpi=0 ads_ratio=None reporting_unit=common
+22:52:15  [CELU]    splits — finviz=1 yfinance=1 merged=1
+22:52:15  [CELU]    splits — 1 events persisted
+22:52:15  [CELU]  Identity of the Edgar REST client set to [Peter Pagac quarkus7@gmail.com]
+22:52:15  [CELU]    fetch concurrency=3 over 1 filings
+22:52:19  [CELU]  Pattern detection successful: 1 sections found
+22:52:19  [CELU]    8-K 0001493152-26-028519 section-select fallback: no keep sections present
+22:52:19  [CELU]    fetched 1/1 filings, 1 docs total (err=0)
+22:52:19  [CELU]    fetch done — 1/1 filings, 1 docs, 0 errors
+22:52:19  [CELU]  walker --force: dropping ledger for cik=1752828
+22:52:19  [CELU]  walker: 227 events (filings=226 splits=1 cik=1752828); 0 filing(s) already walked
+22:52:19  [CELU]  seed: extracting overhang from 10-Q 0001213900-20-021702 (2020-06-30)
+22:52:35  [CELU]  overhang-combined 0001213900-20-021702 — w=2 c=0 p=0 s=0 a=0 e=0
+22:52:35  [CELU]  seed: 0001213900-20-021702 extracted 2 rows (warrant=2)
+22:52:35  [CELU]  seed:   row → warrant name='Public Warrants' issue_date=2019-05-23 outstanding_count=14375000.0 common_shares_issuable=14375000.0 strike_or_conversion_price=11.5
+22:52:35  [CELU]  seed:   row → warrant name='Private Placement Warrants' issue_date=2019-05-23 outstanding_count=7000000.0 common_shares_issuable=7000000.0 strike_or_conversion_price=11.5
+22:52:35  [CELU]  seed: case A — created 0 instruments (rejected 2)
+22:52:35  [CELU]  seed:   rejected: [periodic_create_missing_terms] create_instrument(warrant) from periodic form '10-Q' requires terms.strike AND terms.expiration. Got strike=11.5 expiration=None. Roll-forward warrant tables rarely carry per-tranche terms — emit amend_instrument against an existing ledger row, or skip (the anchor specialist captures summary-only warrants).
+22:52:35  [CELU]  seed:   rejected: [periodic_create_missing_terms] create_instrument(warrant) from periodic form '10-Q' requires terms.strike AND terms.expiration. Got strike=11.5 expiration=None. Roll-forward warrant tables rarely carry per-tranche terms — emit amend_instrument against an existing ledger row, or skip (the anchor specialist captures summary-only warrants).
+22:52:35  [CELU]  seed case=A_periodic — 0001213900-20-021702
+22:52:35  [CELU]  walker 0001213900-20-037167 — form=10-Q (17 tools)
+22:52:51  [CELU]  walker 0001213900-20-037167 — finish='REASON_TOOL_CALLS' calls=1
+22:52:51  [CELU]  walker 0001213900-20-037167 — note_no_event reasons: ['Quarterly report on Form 10-Q discloses no new dilutive instruments or events during the period.']
+22:52:51  [CELU]    [2020-11-16] 10-Q 0001213900-20-037167 — 0 mutations
+22:52:51  [CELU]    anchor 0001213900-20-037167 as_of=2020-09-30
+22:53:05  [CELU]  overhang-combined 0001213900-20-037167 — w=2 c=0 p=0 s=0 a=0 e=0
+22:53:05  [CELU]    anchor 0001213900-20-037167 — 2 diffs (missing=2 field=0 count=0 extra=0)
+22:53:05  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=14375000.0, issue_date=2019-05-23
+22:53:05  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=7000000.0, issue_date=2019-05-23
+22:53:05  [CELU]      anchor proposal create_instrument:warrant date=2019-05-23 strike=11.5 count=14375000.0 initial_count=14375000.0
+22:53:05  [CELU]      anchor proposal create_instrument:warrant date=2019-05-23 strike=11.5 count=7000000.0 initial_count=7000000.0
+22:53:05  [CELU]    anchor corrections applied=0 rejected=2
+22:53:05  [CELU]    0001213900-20-040523 — pruned 4 create tool(s): create_atm,create_convertible,create_preferred,create_warrant
+22:53:05  [CELU]  walker 0001213900-20-040523 — form=8-K (17 tools)
+22:53:07  [CELU]  walker 0001213900-20-040523 — finish='REASON_TOOL_CALLS' calls=1
+22:53:07  [CELU]  walker 0001213900-20-040523 — note_no_event reasons: ['annual meeting date and stockholder proposal deadline']
+22:53:07  [CELU]    [2020-12-02] 8-K 0001213900-20-040523 — 0 mutations
+22:53:07  [CELU]  walker 0001213900-20-041141 — form=DEF 14A (3 tools)
+22:53:16  [CELU]  walker 0001213900-20-041141 — finish='REASON_TOOL_CALLS' calls=1
+22:53:16  [CELU]  walker 0001213900-20-041141 — note_no_event reasons: ['annual proxy statement for director election and auditor ratification']
+22:53:16  [CELU]    [2020-12-04] DEF 14A 0001213900-20-041141 — 0 mutations
+22:53:16  [CELU]    [2021-01-04] 8-K 0001213900-21-000100 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+22:53:16  [CELU]  walker 0001213900-21-001040 — form=8-K (21 tools)
+22:53:32  [CELU]  walker 0001213900-21-001040 — finish='REASON_TOOL_CALLS' calls=1
+22:53:32  [CELU]  walker 0001213900-21-001040 — call create_instrument:equity date=2021-01-08 price_per_share=10.0 known_owners=['Starr', 'Dragasac', 'Sorrento'] count=8340000.0
+22:53:32  [CELU]    [2021-01-08] 8-K 0001213900-21-001040 — 1 mutations
+22:53:32  [CELU]  walker 0001213900-21-001041 — no tool subset for form '425'; treating as no-op
+22:53:32  [CELU]    [2021-01-08] 425 0001213900-21-001041 — 0 mutations
+22:53:32  [CELU]  walker 0001213900-21-004069 — no tool subset for form 'S-4'; treating as no-op
+22:53:32  [CELU]    [2021-01-25] S-4 0001213900-21-004069 — 0 mutations
+22:53:32  [CELU]  walker 0001213900-21-005841 — no tool subset for form '425'; treating as no-op
+22:53:32  [CELU]    [2021-02-01] 425 0001213900-21-005841 — 0 mutations
+22:53:32  [CELU]  walker 0001213900-21-006203 — no tool subset for form '425'; treating as no-op
+22:53:32  [CELU]    [2021-02-02] 425 0001213900-21-006203 — 0 mutations
+22:53:32  [CELU]  walker 0001213900-21-008258 — no tool subset for form '425'; treating as no-op
+22:53:32  [CELU]    [2021-02-11] 425 0001213900-21-008258 — 0 mutations
+22:53:32  [CELU]  walker 0001213900-21-013228 — form=10-K (17 tools)
+22:53:48  [CELU]  walker 0001213900-21-013228 — finish='REASON_TOOL_CALLS' calls=1
+22:53:48  [CELU]  walker 0001213900-21-013228 — note_no_event reasons: ['The filing is a 10-K disclosing historical transactions and the January 8, 2021 merger agreement which is already recorded as EQ-3965.']
+22:53:48  [CELU]    [2021-03-04] 10-K 0001213900-21-013228 — 0 mutations
+22:53:48  [CELU]    anchor 0001213900-21-013228 as_of=2020-12-31
+22:54:04  [CELU]  overhang-combined 0001213900-21-013228 — w=1 c=0 p=0 s=0 a=0 e=0
+22:54:04  [CELU]    anchor 0001213900-21-013228 — 1 diffs (missing=1 field=0 count=0 extra=0)
+22:54:04  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=7000000.0, issue_date=2019-05-23
+22:54:04  [CELU]      anchor proposal create_instrument:warrant date=2019-05-23 strike=11.5 count=7000000.0 initial_count=7000000.0
+22:54:04  [CELU]    anchor corrections applied=0 rejected=1
+22:54:04  [CELU]    0001213900-21-016260 — pruned 4 create tool(s): create_atm,create_convertible,create_preferred,create_warrant
+22:54:04  [CELU]  walker 0001213900-21-016260 — form=8-K (17 tools)
+22:54:08  [CELU]  walker 0001213900-21-016260 — finish='REASON_TOOL_CALLS' calls=1
+22:54:08  [CELU]  walker 0001213900-21-016260 — note_no_event reasons: ['press release announcing FDA Fast Track designation for CYNK-001']
+22:54:08  [CELU]    [2021-03-18] 8-K 0001213900-21-016260 — 0 mutations
+22:54:08  [CELU]  walker 0001213900-21-016261 — no tool subset for form '425'; treating as no-op
+22:54:08  [CELU]    [2021-03-18] 425 0001213900-21-016261 — 0 mutations
+22:54:08  [CELU]  walker 0001213900-21-018114 — no tool subset for form 'S-4/A'; treating as no-op
+22:54:08  [CELU]    [2021-03-29] S-4/A 0001213900-21-018114 — 0 mutations
+22:54:08  [CELU]  walker 0001213900-21-018116 — form=PRE 14A (3 tools)
+22:54:16  [CELU]  walker 0001213900-21-018116 — finish='REASON_TOOL_CALLS' calls=1
+22:54:16  [CELU]  walker 0001213900-21-018116 — note_no_event reasons: ['preliminary proxy statement to extend the business combination period']
+22:54:16  [CELU]    [2021-03-29] PRE 14A 0001213900-21-018116 — 0 mutations
+22:54:16  [CELU]  walker 0001213900-21-020992 — no tool subset for form '425'; treating as no-op
+22:54:16  [CELU]    [2021-04-09] 425 0001213900-21-020992 — 0 mutations
+22:54:16  [CELU]  walker 0001213900-21-021329 — no tool subset for form '425'; treating as no-op
+22:54:16  [CELU]    [2021-04-13] 425 0001213900-21-021329 — 0 mutations
+22:54:16  [CELU]  walker 0001213900-21-021542 — form=DEF 14A (3 tools)
+22:54:27  [CELU]  walker 0001213900-21-021542 — finish='REASON_TOOL_CALLS' calls=1
+22:54:27  [CELU]  walker 0001213900-21-021542 — note_no_event reasons: ['The filing is a proxy statement (DEF 14A) seeking stockholder approval to extend the business combination deadline and contains no new dilutive instruments or events.']
+22:54:27  [CELU]    [2021-04-14] DEF 14A 0001213900-21-021542 — 0 mutations
+22:54:27  [CELU]  walker 0001213900-21-021820 — form=DEFA14A (3 tools)
+22:54:32  [CELU]  walker 0001213900-21-021820 — finish='REASON_TOOL_CALLS' calls=1
+22:54:32  [CELU]  walker 0001213900-21-021820 — note_no_event reasons: ['The filing is a proxy solicitation material (DEFA14A) regarding a proposed extension of the deadline to complete the business combination and does not disclose any new dilutive instruments or events.']
+22:54:32  [CELU]    [2021-04-16] DEFA14A 0001213900-21-021820 — 0 mutations
+22:54:32  [CELU]    0001213900-21-021819 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+22:54:32  [CELU]  walker 0001213900-21-021819 — form=8-K (18 tools)
+22:54:35  [CELU]  walker 0001213900-21-021819 — finish='REASON_TOOL_CALLS' calls=1
+22:54:35  [CELU]  walker 0001213900-21-021819 — note_no_event reasons: ['stockholder meeting to extend business combination deadline']
+22:54:35  [CELU]    [2021-04-16] 8-K 0001213900-21-021819 — 0 mutations
+22:54:35  [CELU]  walker 0001213900-21-022200 — no tool subset for form '425'; treating as no-op
+22:54:35  [CELU]    [2021-04-20] 425 0001213900-21-022200 — 0 mutations
+22:54:35  [CELU]  walker 0001213900-21-022430 — no tool subset for form '425'; treating as no-op
+22:54:35  [CELU]    [2021-04-21] 425 0001213900-21-022430 — 0 mutations
+22:54:35  [CELU]  walker 0001213900-21-022750 — no tool subset for form 'S-4/A'; treating as no-op
+22:54:35  [CELU]    [2021-04-23] S-4/A 0001213900-21-022750 — 0 mutations
+22:54:35  [CELU]  walker 0001213900-21-023164 — no tool subset for form '425'; treating as no-op
+22:54:35  [CELU]    [2021-04-28] 425 0001213900-21-023164 — 0 mutations
+22:54:35  [CELU]    [2021-04-30] 8-K 0001213900-21-023729 — skipped (no dilutive item + no substantive exhibit (items=4.02))
+22:54:35  [CELU]  walker 0001213900-21-023731 — no tool subset for form '425'; treating as no-op
+22:54:35  [CELU]    [2021-04-30] 425 0001213900-21-023731 — 0 mutations
+22:54:35  [CELU]    0001213900-21-024707 — pruned 4 create tool(s): create_atm,create_convertible,create_preferred,create_warrant
+22:54:35  [CELU]  walker 0001213900-21-024707 — form=8-K (17 tools)
+22:54:41  [CELU]  walker 0001213900-21-024707 — finish='REASON_TOOL_CALLS' calls=1
+22:54:41  [CELU]  walker 0001213900-21-024707 — call create_instrument:equity date=2021-05-05 price_per_share=10.0 known_owners=['Palantir'] count=2000000.0
+22:54:41  [CELU]    [2021-05-05] 8-K 0001213900-21-024707 — 1 mutations
+22:54:41  [CELU]  walker 0001213900-21-024709 — no tool subset for form '425'; treating as no-op
+22:54:41  [CELU]    [2021-05-05] 425 0001213900-21-024709 — 0 mutations
+22:54:41  [CELU]  walker 0001213900-21-025274 — form=DEFA14A (3 tools)
+22:54:49  [CELU]  walker 0001213900-21-025274 — finish='REASON_TOOL_CALLS' calls=1
+22:54:49  [CELU]  walker 0001213900-21-025274 — note_no_event reasons: ['reaffirmation of extension proposal and sponsor loan commitment']
+22:54:49  [CELU]    [2021-05-10] DEFA14A 0001213900-21-025274 — 0 mutations
+22:54:49  [CELU]    0001213900-21-025266 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+22:54:49  [CELU]  walker 0001213900-21-025266 — form=8-K (18 tools)
+22:54:59  [CELU]  walker 0001213900-21-025266 — finish='REASON_TOOL_CALLS' calls=1
+22:54:59  [CELU]  walker 0001213900-21-025266 — note_no_event reasons: ['The filing discusses a proposed extension of the business combination deadline and a potential sponsor loan that may be repaid in warrants in the future, but no dilutive instruments are currently issued.']
+22:54:59  [CELU]    [2021-05-10] 8-K 0001213900-21-025266 — 0 mutations
+22:54:59  [CELU]  walker 0001213900-21-025267 — no tool subset for form '425'; treating as no-op
+22:54:59  [CELU]    [2021-05-10] 425 0001213900-21-025267 — 0 mutations
+22:54:59  [CELU]  walker 0001213900-21-026410 — no tool subset for form '425'; treating as no-op
+22:54:59  [CELU]    [2021-05-14] 425 0001213900-21-026410 — 0 mutations
+22:54:59  [CELU]    0001213900-21-026517 — pruned 2 create tool(s): create_atm,create_convertible
+22:54:59  [CELU]  walker 0001213900-21-026517 — form=8-K (19 tools)
+22:55:03  [CELU]  walker 0001213900-21-026517 — finish='REASON_TOOL_CALLS' calls=1
+22:55:03  [CELU]  walker 0001213900-21-026517 — must_record net fired (exhibits=EX-3.1); re-asking
+22:55:07  [CELU]  walker 0001213900-21-026517 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+22:55:07  [CELU]  walker 0001213900-21-026517 — must_record (exhibits=EX-3.1): recorded nothing after second look — possible missed instrument
+22:55:07  [CELU]  walker 0001213900-21-026517 — note_no_event reasons: ['SPAC extension of business combination deadline to July 31, 2021']
+22:55:07  [CELU]    [2021-05-14] 8-K 0001213900-21-026517 — 0 mutations
+22:55:08  [CELU]  walker 0001213900-21-026519 — no tool subset for form '425'; treating as no-op
+22:55:08  [CELU]    [2021-05-14] 425 0001213900-21-026519 — 0 mutations
+22:55:08  [CELU]  walker 0001213900-21-028849 — form=10-K/A (14 tools)
+22:55:19  [CELU]  walker 0001213900-21-028849 — finish='REASON_TOOL_CALLS' calls=1
+22:55:19  [CELU]  walker 0001213900-21-028849 — note_no_event reasons: ['Amended annual report restating warrant classification to liability with no new dilutive instruments or events.']
+22:55:19  [CELU]    [2021-05-24] 10-K/A 0001213900-21-028849 — 0 mutations
+22:55:19  [CELU]    anchor 0001213900-21-028849 as_of=2020-12-31
+22:55:36  [CELU]  overhang-combined 0001213900-21-028849 — w=1 c=0 p=0 s=0 a=0 e=0
+22:55:36  [CELU]    anchor 0001213900-21-028849 — 1 diffs (missing=1 field=0 count=0 extra=0)
+22:55:36  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=7000000.0, issue_date=2019-05-23
+22:55:36  [CELU]      anchor proposal create_instrument:warrant date=2019-05-23 strike=11.5 count=7000000.0 initial_count=7000000.0
+22:55:36  [CELU]    anchor corrections applied=0 rejected=1
+22:55:36  [CELU]  walker 0001213900-21-028857 — form=10-Q (17 tools)
+22:56:20  [CELU]  walker 0001213900-21-028857 — finish='REASON_TOOL_CALLS' calls=1
+22:56:20  [CELU]  walker 0001213900-21-028857 — note_no_event reasons: ['The filing is a quarterly report (10-Q) that discusses historical SPAC warrants, a pending merger with Celularity, and related party working capital loans, with no new dilutive financing instruments or events during the period.']
+22:56:20  [CELU]    [2021-05-24] 10-Q 0001213900-21-028857 — 0 mutations
+22:56:20  [CELU]    anchor 0001213900-21-028857 as_of=2021-03-31
+22:56:41  [CELU]  overhang-combined 0001213900-21-028857 — parse failed (2 validation errors for CombinedOverhangList
+warrants.0.expiry
+  String should have at most 30 characters [type=string_too_long, input_value='5 years after Business Combination', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_too_long
+warrants.1.expiry
+  String should have at most 30 characters [type=string_too_long, input_value='5 years after Business Combination', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_too_long)
+22:56:41  [CELU]  overhang-combined 0001213900-21-028857 — merged parse failed; falling back to per-specialist extraction
+22:56:54  [CELU]    anchor 0001213900-21-028857 — 3 diffs (missing=3 field=0 count=0 extra=0)
+22:56:54  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=14375000.0, issue_date=2019-05-23
+22:56:54  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=7000000.0, issue_date=2019-05-23
+22:56:54  [CELU]      diff missing_in_ledger (new) [convertible] filing=strike_or_conversion_price=10.0, principal_amount=120000.0
+22:56:54  [CELU]      anchor proposal create_instrument:warrant date=2019-05-23 strike=11.5 count=14375000.0 initial_count=14375000.0
+22:56:54  [CELU]      anchor proposal create_instrument:warrant date=2019-05-23 strike=11.5 count=7000000.0 initial_count=7000000.0
+22:56:54  [CELU]      anchor proposal create_instrument:convertible date=2021-05-24 principal=120000.0 conv_price=10.0 principal_remaining=120000.0
+22:56:54  [CELU]    anchor corrections applied=0 rejected=3
+22:56:54  [CELU]  walker 0001213900-21-031067 — no tool subset for form 'S-4/A'; treating as no-op
+22:56:54  [CELU]    [2021-06-07] S-4/A 0001213900-21-031067 — 0 mutations
+22:56:54  [CELU]  walker 0001213900-21-032381 — no tool subset for form '425'; treating as no-op
+22:56:54  [CELU]    [2021-06-15] 425 0001213900-21-032381 — 0 mutations
+22:56:54  [CELU]  walker 0001213900-21-033441 — no tool subset for form 'S-4/A'; treating as no-op
+22:56:54  [CELU]    [2021-06-22] S-4/A 0001213900-21-033441 — 0 mutations
+22:56:54  [CELU]  walker 0001213900-21-033428 — no tool subset for form '425'; treating as no-op
+22:56:54  [CELU]    [2021-06-22] 425 0001213900-21-033428 — 0 mutations
+22:56:54  [CELU]    0001213900-21-034125 — pruned 1 create tool(s): create_atm
+22:56:54  [CELU]  walker 0001213900-21-034125 — form=424B3 (6 tools)
+22:57:19  [CELU]  walker 0001213900-21-034125 — finish='REASON_TOOL_CALLS' calls=1
+22:57:19  [CELU]  walker 0001213900-21-034125 — note_no_event reasons: ['The filing is a proxy statement/prospectus (Form 424B3) for the proposed business combination with Celularity Inc. It re-discloses the merger, the PIPE financing (EQ-3965), and the Palantir investment (EQ-3968), which are already on the ledger. No new dilutive financing instruments or events are newly disclosed or closed.']
+22:57:19  [CELU]    [2021-06-25] 424B3 0001213900-21-034125 — 0 mutations
+22:57:19  [CELU]    0001213900-21-034718 — pruned 4 create tool(s): create_atm,create_convertible,create_preferred,create_warrant
+22:57:19  [CELU]  walker 0001213900-21-034718 — form=8-K (17 tools)
+22:57:22  [CELU]  walker 0001213900-21-034718 — finish='REASON_TOOL_CALLS' calls=1
+22:57:22  [CELU]  walker 0001213900-21-034718 — note_no_event reasons: ['clinical trial update and merger progress announcement']
+22:57:22  [CELU]    [2021-06-29] 8-K 0001213900-21-034718 — 0 mutations
+22:57:23  [CELU]  walker 0001213900-21-034719 — no tool subset for form '425'; treating as no-op
+22:57:23  [CELU]    [2021-06-29] 425 0001213900-21-034719 — 0 mutations
+22:57:23  [CELU]    0001213900-21-035328 — pruned 4 create tool(s): create_atm,create_convertible,create_preferred,create_warrant
+22:57:23  [CELU]  walker 0001213900-21-035328 — form=8-K (17 tools)
+22:57:27  [CELU]  walker 0001213900-21-035328 — finish='REASON_TOOL_CALLS' calls=1
+22:57:27  [CELU]  walker 0001213900-21-035328 — note_no_event reasons: ['The filing discloses an exclusive supply and distribution agreement with Arthrex and trust account deposits for an extension, with no dilutive instruments or events.']
+22:57:27  [CELU]    [2021-07-01] 8-K 0001213900-21-035328 — 0 mutations
+22:57:27  [CELU]  walker 0001213900-21-035329 — no tool subset for form '425'; treating as no-op
+22:57:27  [CELU]    [2021-07-01] 425 0001213900-21-035329 — 0 mutations
+22:57:27  [CELU]  walker 0001213900-21-035966 — no tool subset for form '425'; treating as no-op
+22:57:27  [CELU]    [2021-07-07] 425 0001213900-21-035966 — 0 mutations
+22:57:27  [CELU]    [2021-07-15] 8-K 0001213900-21-036933 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+22:57:27  [CELU]  walker 0001213900-21-038102 — form=8-K (21 tools)
+22:58:01  [CELU]  walker 0001213900-21-038102 — finish='REASON_TOOL_CALLS' calls=5
+22:58:01  [CELU]  walker 0001213900-21-038102 — call record_event EQ-3965 date=2021-07-16 gross_proceeds_usd=83400000.0
+22:58:01  [CELU]  walker 0001213900-21-038102 — call record_event EQ-3968 date=2021-07-16 gross_proceeds_usd=20000000.0
+22:58:01  [CELU]  walker 0001213900-21-038102 — call create_instrument:equity date=2021-07-22 price_per_share=0.0 closing_date=2021-07-16 known_owners=['Ardea'] count=576943.0
+22:58:01  [CELU]  walker 0001213900-21-038102 — call create_instrument:equity date=2021-07-22 price_per_share=0.0 closing_date=2021-07-16 known_owners=['Credit Suisse'] count=400000.0
+22:58:01  [CELU]  walker 0001213900-21-038102 — call create_instrument:warrant date=2021-07-22 strike=11.5 count=1499999.0 initial_count=1499999.0
+22:58:01  [CELU]    [2021-07-22] 8-K 0001213900-21-038102 — 5 mutations
+22:58:01  [CELU]  walker 0001213900-21-040814 — dedup block: 1 candidates within ±180d
+22:58:01  [CELU]  walker 0001213900-21-040814 — form=S-1 (9 tools)
+22:58:31  [CELU]  walker 0001213900-21-040814 — finish='REASON_TOOL_CALLS' calls=1
+22:58:31  [CELU]  walker 0001213900-21-040814 — call amend_instrument:warrant W-5255 date=2021-08-06 known_owners=['Cooper Road', 'Dean C. Kehler', 'Jo...
+22:58:31  [CELU]    [2021-08-06] S-1 0001213900-21-040814 — 1 mutations
+22:58:31  [CELU]  walker 0001213900-21-042045 — dedup block: 1 candidates within ±180d
+22:58:31  [CELU]  walker 0001213900-21-042045 — form=424B3 (6 tools)
+22:59:04  [CELU]  walker 0001213900-21-042045 — finish='REASON_TOOL_CALLS' calls=1
+22:59:04  [CELU]  walker 0001213900-21-042045 — note_no_event reasons: ['resale registration of Class A common stock and warrants']
+22:59:04  [CELU]    [2021-08-12] 424B3 0001213900-21-042045 — 0 mutations
+22:59:04  [CELU]  walker 0001213900-21-043146 — dedup block: 1 candidates within ±180d
+22:59:04  [CELU]    0001213900-21-043146 — pruned 3 create tool(s): create_atm,create_convertible,create_preferred
+22:59:04  [CELU]  walker 0001213900-21-043146 — form=8-K (18 tools)
+22:59:10  [CELU]  walker 0001213900-21-043146 — finish='REASON_TOOL_CALLS' calls=1
+22:59:10  [CELU]  walker 0001213900-21-043146 — note_no_event reasons: ['earnings release and merger closing announcement without specific transaction details']
+22:59:10  [CELU]    [2021-08-16] 8-K 0001213900-21-043146 — 0 mutations
+22:59:10  [CELU]  walker 0001213900-21-043155 — dedup block: 1 candidates within ±180d
+22:59:10  [CELU]  walker 0001213900-21-043155 — form=8-K/A (21 tools)
+22:59:30  [CELU]  walker 0001213900-21-043155 — finish='REASON_TOOL_CALLS' calls=1
+22:59:30  [CELU]  walker 0001213900-21-043155 — must_record net fired (content:warrant); re-asking
+23:00:08  [CELU]  walker 0001213900-21-043155 — must_record retry finish='REASON_TOOL_CALLS' calls=2
+23:00:08  [CELU]  walker 0001213900-21-043155 — must_record (content:warrant): second look recovered 2 instrument(s)/event(s)
+23:00:08  [CELU]  walker 0001213900-21-043155 — call create_instrument:warrant date=2020-03-16 strike=5.787 expiration=2025-03-16 count=17280109.0 initial_count=17280109.0
+23:00:08  [CELU]  walker 0001213900-21-043155 — call create_instrument:warrant date=2020-01-09 strike=5.2 expiration=2025-03-16 known_owners=['Dragasac'] count=8495796.0 initial_count=8495796.0
+23:00:08  [CELU]    [2021-08-16] 8-K/A 0001213900-21-043155 — 2 mutations
+23:00:08  [CELU]  walker 0001213900-21-043760 — dedup block: 3 candidates (all active, periodic form)
+23:00:08  [CELU]  walker 0001213900-21-043760 — form=10-Q (17 tools)
+23:01:02  [CELU]  walker 0001213900-21-043760 — finish='REASON_TOOL_CALLS' calls=1
+23:01:02  [CELU]  walker 0001213900-21-043760 — note_no_event reasons: ['The filing discloses the closing of the business combination and the conversion of convertible notes into warrants, but these events occurred subsequent to the period of report and the corresponding instruments are either already in the ledger or do not have applicable tools for closing confirmation in the current toolset.']
+23:01:02  [CELU]    [2021-08-19] 10-Q 0001213900-21-043760 — 0 mutations
+23:01:02  [CELU]    anchor 0001213900-21-043760 as_of=2021-06-30
+23:01:29  [CELU]  overhang-combined 0001213900-21-043760 — w=2 c=2 p=0 s=0 a=0 e=0
+23:01:29  [CELU]    anchor 0001213900-21-043760 — 6 diffs (missing=3 field=0 count=1 extra=2)
+23:01:29  [CELU]      diff count_mismatch W-5255 [warrant] ledger=out.count=1499999.0 filing=out.count=14375000
+23:01:29  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=7000000.0, issue_date=2019-05-23
+23:01:29  [CELU]      diff missing_in_ledger (new) [convertible] filing=strike_or_conversion_price=1.0, principal_amount=398500.0, issue_date=2021-05-14, maturity_or_expiry=2021-07-31
+23:01:29  [CELU]      diff missing_in_ledger (new) [convertible] filing=strike_or_conversion_price=1.0, principal_amount=710770.0, issue_date=2021-05-14, maturity_or_expiry=2021-07-31
+23:01:29  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=5.2, terms.expiration=2025-03-16, terms.known_owners=['Dragasac'], out.count=8495796.0, out.initial_count=8495796.0, counterparty=Dragasac
+23:01:29  [CELU]      diff extra_in_ledger W-5261 [warrant] ledger=terms.strike=5.787, terms.expiration=2025-03-16, out.count=17280109.0, out.initial_count=17280109.0
+23:01:29  [CELU]      anchor proposal amend_instrument:warrant W-5255 date=2021-06-30 count=14375000
+23:01:29  [CELU]      anchor proposal create_instrument:convertible date=2021-05-14 principal=398500.0 conv_price=1.0 maturity=2021-07-31 principal_remaining=398500.0
+23:01:29  [CELU]      anchor proposal create_instrument:convertible date=2021-05-14 principal=710770.0 conv_price=1.0 maturity=2021-07-31 principal_remaining=710770.0
+23:01:29  [CELU]    redisclosure: 0001213900-21-043760 create (type=convertible) collapsed onto C-1078
+23:01:29  [CELU]    anchor corrections applied=3 rejected=0
+23:01:29  [CELU]  walker 0001213900-21-043940 — dedup block: 2 candidates within ±180d
+23:01:29  [CELU]    0001213900-21-043940 — pruned 1 create tool(s): create_atm
+23:01:29  [CELU]  walker 0001213900-21-043940 — form=424B3 (6 tools)
+23:01:55  [CELU]  walker 0001213900-21-043940 — finish='REASON_TOOL_CALLS' calls=1
+23:01:55  [CELU]  walker 0001213900-21-043940 — note_no_event reasons: ['resale registration and beneficial ownership update']
+23:01:55  [CELU]    [2021-08-20] 424B3 0001213900-21-043940 — 0 mutations
+23:01:55  [CELU]  walker 0001213900-21-043948 — dedup block: 2 candidates within ±180d
+23:01:55  [CELU]    0001213900-21-043948 — pruned 1 create tool(s): create_atm
+23:01:55  [CELU]  walker 0001213900-21-043948 — form=424B3 (6 tools)
+23:02:35  [CELU]  walker 0001213900-21-043948 — finish='REASON_TOOL_CALLS' calls=4
+23:02:35  [CELU]  walker 0001213900-21-043948 — call record_event EQ-3965 date=2021-07-16 gross_proceeds_usd=83400000.0
+23:02:35  [CELU]  walker 0001213900-21-043948 — call record_event EQ-3968 date=2021-07-16 gross_proceeds_usd=20000000.0
+23:02:35  [CELU]  walker 0001213900-21-043948 — call create_instrument:warrant date=2021-07-14 strike=11.5 expiration=2026-07-14 known_owners=['Sponsor'] count=1499999.0 initial_count=1499999.0
+23:02:35  [CELU]  walker 0001213900-21-043948 — call create_instrument:equity date=2021-07-21 price_per_share=0.0 closing_date=2021-07-21 count=976943.0
+23:02:35  [CELU]  walker 0001213900-21-043948 — dedup gap-fill warrant W-5255 via amend: expiration (create deduped, info preserved)
+23:02:35  [CELU]  walker 0001213900-21-043948 — guards dropped 1 dup-creates (1 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+23:02:35  [CELU]    [2021-08-20] 424B3 0001213900-21-043948 — 4 mutations
+23:02:35  [CELU]  walker 0001213900-21-043950 — dedup block: 2 candidates within ±180d
+23:02:35  [CELU]    0001213900-21-043950 — pruned 1 create tool(s): create_atm
+23:02:35  [CELU]  walker 0001213900-21-043950 — form=424B3 (6 tools)
+23:02:58  [CELU]  walker 0001213900-21-043950 — finish='REASON_TOOL_CALLS' calls=1
+23:02:58  [CELU]  walker 0001213900-21-043950 — note_no_event reasons: ['resale registration']
+23:02:58  [CELU]    [2021-08-20] 424B3 0001213900-21-043950 — 0 mutations
+23:02:58  [CELU]  walker 0001213900-21-043933 — dedup block: 2 candidates within ±180d
+23:02:58  [CELU]    0001213900-21-043933 — pruned 1 create tool(s): create_atm
+23:02:58  [CELU]  walker 0001213900-21-043933 — form=8-K/A (20 tools)
+23:03:18  [CELU]  walker 0001213900-21-043933 — finish='REASON_TOOL_CALLS' calls=1
+23:03:18  [CELU]  walker 0001213900-21-043933 — call create_instrument:warrant date=2021-08-20 strike=11.5 known_owners=['GX Sponsor'] count=1499999.0 initial_count=1499999.0
+23:03:18  [CELU]  walker 0001213900-21-043933 — guard dropped duplicate create warrant (matches existing W-5255 strike=11.5 created=2021-07-22)
+23:03:18  [CELU]  walker 0001213900-21-043933 — guards dropped 1 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+23:03:18  [CELU]    [2021-08-20] 8-K/A 0001213900-21-043933 — 0 mutations
+23:03:18  [CELU]    [2021-09-15] 8-K 0001213900-21-048256 — skipped (no dilutive item + no substantive exhibit (items=5.02,9.01))
+23:03:18  [CELU]  walker 0001213900-21-048464 — dedup block: 2 candidates within ±180d
+23:03:18  [CELU]    0001213900-21-048464 — pruned 2 create tool(s): create_atm,create_preferred
+23:03:18  [CELU]  walker 0001213900-21-048464 — form=424B3 (6 tools)
+23:03:29  [CELU]  walker 0001213900-21-048464 — finish='REASON_TOOL_CALLS' calls=1
+23:03:29  [CELU]  walker 0001213900-21-048464 — note_no_event reasons: ['resale prospectus supplement and officer appointment with compensation option grants']
+23:03:29  [CELU]    [2021-09-17] 424B3 0001213900-21-048464 — 0 mutations
+23:03:29  [CELU]  walker 0001564590-21-056724 — dedup block: 4 candidates (all active, periodic form)
+23:03:29  [CELU]  walker 0001564590-21-056724 — form=10-Q (17 tools)
+23:04:14  [CELU]  walker 0001564590-21-056724 — finish='REASON_TOOL_CALLS' calls=4
+23:04:14  [CELU]  walker 0001564590-21-056724 — call amend_instrument:warrant W-5262 date=2021-09-30 strike=6.77 count=6529818.0
+23:04:14  [CELU]  walker 0001564590-21-056724 — call amend_instrument:warrant W-5261 date=2021-09-30 strike=7.53 count=13281386.0
+23:04:14  [CELU]  walker 0001564590-21-056724 — call amend_instrument:warrant W-5255 date=2021-09-30 strike=11.5 count=14374992.0
+23:04:14  [CELU]  walker 0001564590-21-056724 — call create_instrument:warrant date=2021-07-16 strike=11.5 expiration=2026-07-16 known_owners=['Sponsor'] count=8499999.0 initial_count=8499999.0
+23:04:14  [CELU]  walker 0001564590-21-056724 — guard dropped duplicate create warrant (matches existing W-5255 strike=11.5 created=2021-07-22)
+23:04:14  [CELU]  walker 0001564590-21-056724 — guards dropped 1 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+23:04:14  [CELU]    [2021-11-12] 10-Q 0001564590-21-056724 — 3 mutations
+23:04:14  [CELU]    anchor 0001564590-21-056724 as_of=2021-09-30
+23:04:52  [CELU]  overhang-combined 0001564590-21-056724 — w=4 c=0 p=0 s=0 a=0 e=0
+23:04:52  [CELU]    anchor 0001564590-21-056724 — 2 diffs (missing=1 field=0 count=0 extra=1)
+23:04:52  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, issue_date=2019-05, maturity_or_expiry=2026-07-16
+23:04:52  [CELU]      diff extra_in_ledger C-1078 [convertible] ledger=terms.principal=398500.0, terms.conv_price=1.0, terms.maturity=2021-07-31, out.principal_remaining=398500.0, out.principal_remaining_asof=2021-05-14
+23:04:52  [CELU]      anchor proposal amend_instrument:convertible C-1078 date=2021-09-30 principal_remaining=0
+23:04:52  [CELU]      anchor proposal close_instrument C-1078 date=2021-09-30 reason=redeemed
+23:04:52  [CELU]    anchor corrections applied=2 rejected=0
+23:04:52  [CELU]  walker 0001564590-21-056727 — dedup block: 1 candidates within ±180d
+23:04:52  [CELU]    0001564590-21-056727 — pruned 1 create tool(s): create_atm
+23:04:52  [CELU]  walker 0001564590-21-056727 — form=424B3 (6 tools)
+23:05:23  [CELU]  walker 0001564590-21-056727 — finish='REASON_TOOL_CALLS' calls=1
+23:05:23  [CELU]  walker 0001564590-21-056727 — note_no_event reasons: ['resale registration and quarterly report with no new dilutive events']
+23:05:23  [CELU]    [2021-11-12] 424B3 0001564590-21-056727 — 0 mutations
+23:05:23  [CELU]  walker 0001564590-21-056712 — dedup block: 1 candidates within ±180d
+23:05:23  [CELU]    0001564590-21-056712 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:23  [CELU]  walker 0001564590-21-056712 — form=8-K (19 tools)
+23:05:26  [CELU]  walker 0001564590-21-056712 — finish='REASON_TOOL_CALLS' calls=1
+23:05:26  [CELU]  walker 0001564590-21-056712 — note_no_event reasons: ['earnings release and third quarter 2021 financial results']
+23:05:26  [CELU]    [2021-11-12] 8-K 0001564590-21-056712 — 0 mutations
+23:05:26  [CELU]  walker 0001193125-21-360071 — dedup block: 1 candidates within ±180d
+23:05:26  [CELU]    0001193125-21-360071 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:26  [CELU]  walker 0001193125-21-360071 — form=424B3 (6 tools)
+23:05:35  [CELU]  walker 0001193125-21-360071 — finish='REASON_TOOL_CALLS' calls=1
+23:05:35  [CELU]  walker 0001193125-21-360071 — note_no_event reasons: ['prospectus supplement updating clinical trial presentation with no new dilutive instruments or events']
+23:05:35  [CELU]    [2021-12-17] 424B3 0001193125-21-360071 — 0 mutations
+23:05:35  [CELU]  walker 0001193125-21-360062 — dedup block: 1 candidates within ±180d
+23:05:35  [CELU]    0001193125-21-360062 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:35  [CELU]  walker 0001193125-21-360062 — form=8-K (19 tools)
+23:05:39  [CELU]  walker 0001193125-21-360062 — finish='REASON_TOOL_CALLS' calls=1
+23:05:39  [CELU]  walker 0001193125-21-360062 — note_no_event reasons: ['clinical trial update presentation']
+23:05:39  [CELU]    [2021-12-17] 8-K 0001193125-21-360062 — 0 mutations
+23:05:39  [CELU]  walker 0001193125-21-367926 — dedup block: 1 candidates within ±180d
+23:05:39  [CELU]    0001193125-21-367926 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:39  [CELU]  walker 0001193125-21-367926 — form=424B3 (6 tools)
+23:05:47  [CELU]  walker 0001193125-21-367926 — finish='REASON_TOOL_CALLS' calls=1
+23:05:47  [CELU]  walker 0001193125-21-367926 — note_no_event reasons: ['prospectus supplement and 8-K regarding FDA Fast Track Designation with no dilutive events']
+23:05:47  [CELU]    [2021-12-28] 424B3 0001193125-21-367926 — 0 mutations
+23:05:47  [CELU]  walker 0001193125-21-367920 — dedup block: 1 candidates within ±180d
+23:05:47  [CELU]    0001193125-21-367920 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:47  [CELU]  walker 0001193125-21-367920 — form=8-K (19 tools)
+23:05:48  [CELU]  walker 0001193125-21-367920 — finish='REASON_TOOL_CALLS' calls=1
+23:05:48  [CELU]  walker 0001193125-21-367920 — note_no_event reasons: ['FDA Fast Track Designation announcement for CYNK-001']
+23:05:48  [CELU]    [2021-12-28] 8-K 0001193125-21-367920 — 0 mutations
+23:05:48  [CELU]  walker 0001193125-22-011243 — dedup block: 1 candidates within ±180d
+23:05:48  [CELU]    0001193125-22-011243 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:48  [CELU]  walker 0001193125-22-011243 — form=424B3 (6 tools)
+23:05:56  [CELU]  walker 0001193125-22-011243 — finish='REASON_TOOL_CALLS' calls=1
+23:05:56  [CELU]  walker 0001193125-22-011243 — note_no_event reasons: ['resale registration and clinical update']
+23:05:56  [CELU]    [2022-01-18] 424B3 0001193125-22-011243 — 0 mutations
+23:05:56  [CELU]  walker 0001193125-22-011229 — dedup block: 1 candidates within ±180d
+23:05:56  [CELU]    0001193125-22-011229 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:56  [CELU]  walker 0001193125-22-011229 — form=8-K (19 tools)
+23:05:59  [CELU]  walker 0001193125-22-011229 — finish='REASON_TOOL_CALLS' calls=1
+23:05:59  [CELU]  walker 0001193125-22-011229 — note_no_event reasons: ['FDA Fast Track Designation announcement for CYNK-101']
+23:05:59  [CELU]    [2022-01-18] 8-K 0001193125-22-011229 — 0 mutations
+23:05:59  [CELU]    0001193125-22-044026 — pruned 2 create tool(s): create_atm,create_preferred
+23:05:59  [CELU]  walker 0001193125-22-044026 — form=424B3 (6 tools)
+23:06:06  [CELU]  walker 0001193125-22-044026 — finish='REASON_TOOL_CALLS' calls=1
+23:06:06  [CELU]  walker 0001193125-22-044026 — note_no_event reasons: ['resale registration update and orphan drug designation announcement']
+23:06:06  [CELU]    [2022-02-16] 424B3 0001193125-22-044026 — 0 mutations
+23:06:06  [CELU]    0001193125-22-044020 — pruned 2 create tool(s): create_atm,create_preferred
+23:06:06  [CELU]  walker 0001193125-22-044020 — form=8-K (19 tools)
+23:06:09  [CELU]  walker 0001193125-22-044020 — finish='REASON_TOOL_CALLS' calls=1
+23:06:09  [CELU]  walker 0001193125-22-044020 — note_no_event reasons: ['The filing is a press release announcing the receipt of Orphan Drug Designation from the FDA for CYNK-101, with no dilutive instruments or financing events disclosed.']
+23:06:09  [CELU]    [2022-02-16] 8-K 0001193125-22-044020 — 0 mutations
+23:06:09  [CELU]    0001193125-22-061455 — pruned 2 create tool(s): create_atm,create_preferred
+23:06:09  [CELU]  walker 0001193125-22-061455 — form=424B3 (6 tools)
+23:06:24  [CELU]  walker 0001193125-22-061455 — finish='REASON_TOOL_CALLS' calls=1
+23:06:24  [CELU]  walker 0001193125-22-061455 — note_no_event reasons: ['The filing is a resale registration and describes the amendment and exercise of existing warrants (W-5261) held by Starr International, with no new dilutive instruments created.']
+23:06:24  [CELU]    [2022-03-01] 424B3 0001193125-22-061455 — 0 mutations
+23:06:24  [CELU]  walker 0001193125-22-061431 — form=8-K (21 tools)
+23:06:38  [CELU]  walker 0001193125-22-061431 — finish='REASON_TOOL_CALLS' calls=2
+23:06:38  [CELU]  walker 0001193125-22-061431 — call record_event W-5261 date=2022-03-01 shares=13281386.0 price=3.5 gross_proceeds=46484851.0
+23:06:38  [CELU]  walker 0001193125-22-061431 — call close_instrument W-5261 date=2022-03-01 reason=exercised
+23:06:38  [CELU]    [2022-03-01] 8-K 0001193125-22-061431 — 2 mutations
+23:06:38  [CELU]    0001193125-22-077237 — pruned 2 create tool(s): create_atm,create_preferred
+23:06:38  [CELU]  walker 0001193125-22-077237 — form=424B3 (6 tools)
+23:06:45  [CELU]  walker 0001193125-22-077237 — finish='REASON_TOOL_CALLS' calls=1
+23:06:45  [CELU]  walker 0001193125-22-077237 — note_no_event reasons: ['prospectus supplement updating existing registration statement with pipeline chart 8-K']
+23:06:45  [CELU]    [2022-03-16] 424B3 0001193125-22-077237 — 0 mutations
+23:06:45  [CELU]    0001193125-22-077225 — pruned 2 create tool(s): create_atm,create_preferred
+23:06:45  [CELU]  walker 0001193125-22-077225 — form=8-K (19 tools)
+23:06:47  [CELU]  walker 0001193125-22-077225 — finish='REASON_TOOL_CALLS' calls=1
+23:06:47  [CELU]  walker 0001193125-22-077225 — note_no_event reasons: ['pipeline chart update']
+23:06:47  [CELU]    [2022-03-16] 8-K 0001193125-22-077225 — 0 mutations
+23:06:47  [CELU]  walker 0001564590-22-013004 — dedup block: 2 candidates (all active, periodic form)
+23:06:47  [CELU]  walker 0001564590-22-013004 — form=10-K (17 tools)
+23:08:26  [CELU]  walker 0001564590-22-013004 — finish='REASON_TOOL_CALLS' calls=1
+23:08:26  [CELU]  walker 0001564590-22-013004 — note_no_event reasons: ['The filing primarily discusses executive compensation, related party transactions, and subsequent warrant exercises, with no new dilutive financing instruments or events that are not already represented on the ledger or are employee stock options.']
+23:08:26  [CELU]    [2022-03-31] 10-K 0001564590-22-013004 — 0 mutations
+23:08:26  [CELU]    anchor 0001564590-22-013004 as_of=2021-12-31
+23:09:04  [CELU]  [overhang-combined] 0001564590-22-013004 — output truncated at max_tokens
+23:09:04  [CELU]  overhang-combined 0001564590-22-013004 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+23:09:04  [CELU]  overhang-combined 0001564590-22-013004 — w=2 c=0 p=0 s=0 a=0 e=0
+23:09:04  [CELU]    anchor 0001564590-22-013004 — 2 diffs (missing=1 field=0 count=0 extra=1)
+23:09:04  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=7.53, outstanding_count=13281386.0, issue_date=2020-03-16, maturity_or_expiry=2025-03-16
+23:09:04  [CELU]      diff extra_in_ledger W-5255 [warrant] ledger=terms.strike=11.5, terms.known_owners=['Cooper Road', 'Dean C. Kehler', 'Jordan S. Bloom'], terms.expiration=2026-07-14, out.count=14374992.0, out.initial_count=14375000
+23:09:04  [CELU]      anchor proposal create_instrument:warrant date=2020-03-16 strike=7.53 expiration=2025-03-16 count=13281386.0 initial_count=13281386.0
+23:09:04  [CELU]    resurrection-guard: 0001564590-22-013004 create (type=warrant) matched CLOSED row W-5261 — not re-creating as active
+23:09:04  [CELU]    redisclosure: 0001564590-22-013004 create (type=warrant) collapsed onto W-5261
+23:09:04  [CELU]    anchor corrections applied=1 rejected=0
+23:09:04  [CELU]    0001564590-22-012992 — pruned 2 create tool(s): create_atm,create_preferred
+23:09:04  [CELU]  walker 0001564590-22-012992 — form=8-K (19 tools)
+23:09:10  [CELU]  walker 0001564590-22-012992 — finish='REASON_TOOL_CALLS' calls=1
+23:09:10  [CELU]  walker 0001564590-22-012992 — note_no_event reasons: ['earnings release']
+23:09:10  [CELU]    [2022-03-31] 8-K 0001564590-22-012992 — 0 mutations
+23:09:11  [CELU]  walker 0001193125-22-094010 — form=POS AM (3 tools)
+23:09:56  [CELU]  walker 0001193125-22-094010 — finish='REASON_TOOL_CALLS' calls=1
+23:09:56  [CELU]  walker 0001193125-22-094010 — amend_shelf args failed validation: AmendShelf requires at least one mutating field to be set (instrument_id='EQ-3965') (args={'event_date': '2022-04-04', 'instrument_id': 'EQ-3965'})
+23:09:56  [CELU]  walker 0001193125-22-094010 — retrying 1 call(s) (kinds=['empty_amend'])
+23:10:29  [CELU]  walker 0001193125-22-094010 — retry finish='REASON_TOOL_CALLS' calls=1
+23:10:29  [CELU]  walker 0001193125-22-094010 — note_no_event reasons: ['resale registration of existing shares and warrants']
+23:10:29  [CELU]    [2022-04-04] POS AM 0001193125-22-094010 — 0 mutations
+23:10:29  [CELU]  walker 0001193125-22-130204 — form=S-1 (9 tools)
+23:11:07  [CELU]  walker 0001193125-22-130204 — finish='REASON_TOOL_CALLS' calls=2
+23:11:07  [CELU]  walker 0001193125-22-130204 — call create_instrument:s1_offering date=2022-04-29 anticipated_deal_size=86250000.0
+23:11:07  [CELU]  walker 0001193125-22-130204 — call create_instrument:warrant date=2022-04-29 strike=11.94 exercisable_date=2022-04-29 expiration=2027-04-29 count=62814.0 initial_count=62814.0
+23:11:07  [CELU]    [2022-04-29] S-1 0001193125-22-130204 — 2 mutations
+23:11:07  [CELU]    [2022-05-03] 424B3 0001193125-22-138671 — skipped (resale, file_number outside primary set)
+23:11:07  [CELU]    [2022-05-03] 424B3 0001193125-22-138700 — skipped (resale, file_number outside primary set)
+23:11:07  [CELU]  walker 0001193125-22-138682 — dedup block: 2 candidates within ±180d
+23:11:07  [CELU]    0001193125-22-138682 — pruned 2 create tool(s): create_atm,create_preferred
+23:11:07  [CELU]  walker 0001193125-22-138682 — form=8-K (19 tools)
+23:11:10  [CELU]  walker 0001193125-22-138682 — finish='REASON_TOOL_CALLS' calls=1
+23:11:10  [CELU]  walker 0001193125-22-138682 — note_no_event reasons: ['FDA notification regarding IND application for CYCART-19']
+23:11:10  [CELU]    [2022-05-03] 8-K 0001193125-22-138682 — 0 mutations
+23:11:10  [CELU]  walker 0001193125-22-146808 — dedup block: 2 candidates within ±180d
+23:11:10  [CELU]  walker 0001193125-22-146808 — form=S-1/A (5 tools)
+23:11:53  [CELU]  walker 0001193125-22-146808 — finish='REASON_TOOL_CALLS' calls=1
+23:11:53  [CELU]  walker 0001193125-22-146808 — call amend_instrument:s1_offering S1-213 date=2022-05-11 anticipated_deal_size=74999994.0
+23:11:53  [CELU]    [2022-05-11] S-1/A 0001193125-22-146808 — 1 mutations
+23:11:53  [CELU]  walker 0001564590-22-020422 — dedup block: 4 candidates (all active, periodic form)
+23:11:53  [CELU]  walker 0001564590-22-020422 — form=10-Q (17 tools)
+23:12:18  [CELU]  walker 0001564590-22-020422 — finish='REASON_TOOL_CALLS' calls=1
+23:12:18  [CELU]  walker 0001564590-22-020422 — note_no_event reasons: ['The warrant amendment and exercise of W-5261 on March 1, 2022 is already recorded on the ledger, and other disclosures are re-disclosures of existing instruments.']
+23:12:18  [CELU]    [2022-05-16] 10-Q 0001564590-22-020422 — 0 mutations
+23:12:18  [CELU]    anchor 0001564590-22-020422 as_of=2022-03-31
+23:12:42  [CELU]  overhang-combined 0001564590-22-020422 — w=3 c=0 p=0 s=0 a=0 e=0
+23:12:42  [CELU]    anchor 0001564590-22-020422 — 2 diffs (missing=1 field=0 count=0 extra=1)
+23:12:42  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, maturity_or_expiry=2026-07-16
+23:12:42  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=11.94, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, out.count=62814.0, out.initial_count=62814.0
+23:12:42  [CELU]  walker 0001193125-22-151903 — dedup block: 2 candidates within ±180d
+23:12:42  [CELU]    0001193125-22-151903 — pruned 2 create tool(s): create_atm,create_preferred
+23:12:42  [CELU]  walker 0001193125-22-151903 — form=8-K (19 tools)
+23:12:54  [CELU]  walker 0001193125-22-151903 — finish='REASON_TOOL_CALLS' calls=1
+23:12:54  [CELU]  walker 0001193125-22-151903 — note_no_event reasons: ['earnings release']
+23:12:54  [CELU]    [2022-05-16] 8-K 0001193125-22-151903 — 0 mutations
+23:12:54  [CELU]    [2022-05-17] 424B3 0001564590-22-020464 — skipped (resale, file_number outside primary set)
+23:12:54  [CELU]    [2022-05-20] 424B3 0001193125-22-156138 — skipped (resale, file_number outside primary set)
+23:12:54  [CELU]  walker 0001193125-22-156126 — dedup block: 2 candidates within ±180d
+23:12:54  [CELU]  walker 0001193125-22-156126 — form=8-K (21 tools)
+23:13:05  [CELU]  walker 0001193125-22-156126 — finish='REASON_TOOL_CALLS' calls=2
+23:13:05  [CELU]  walker 0001193125-22-156126 — must_record net fired (content:close); re-asking
+23:13:11  [CELU]  walker 0001193125-22-156126 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:13:11  [CELU]  walker 0001193125-22-156126 — content-expectation second look (content:close): no gap calls returned (re-disclosure or model declined)
+23:13:11  [CELU]  walker 0001193125-22-156126 — call create_instrument:equity date=2022-05-18 price_per_share=7.4 closing_date=2022-05-20 known_owners=['Armistice'] count=4054055.0
+23:13:11  [CELU]  walker 0001193125-22-156126 — call create_instrument:warrant date=2022-05-18 strike=8.25 exercisable_date=2022-05-20 expiration=2027-05-20 known_owners=['Armistice'] count=4054055.0 initial_count=4054055.0
+23:13:11  [CELU]  walker 0001193125-22-156126 — guard dropped create_instrument(equity) (active s1_offering S1-213 created=2022-04-29 within 30d of filing)
+23:13:11  [CELU]  walker 0001193125-22-156126 — guards dropped 0 dup-creates (0 gap-filled via amend), 1 equity-on-shelf, 0 placeholder-finalized
+23:13:11  [CELU]    [2022-05-20] 8-K 0001193125-22-156126 — 1 mutations
+23:13:11  [CELU]    [2022-05-25] S-1 0001193125-22-158801 — skipped (fee-table=resale; 457(c)/(g) only)
+23:13:11  [CELU]    [2022-06-01] 424B3 0001193125-22-165158 — skipped (resale, file_number outside primary set)
+23:13:11  [CELU]  walker 0001193125-22-167393 — dedup block: 1 candidates within ±30d
+23:13:11  [CELU]  walker 0001193125-22-167393 — form=DEF 14A (3 tools)
+23:13:34  [CELU]  walker 0001193125-22-167393 — finish='REASON_TOOL_CALLS' calls=1
+23:13:34  [CELU]  walker 0001193125-22-167393 — note_no_event reasons: ['proxy materials only']
+23:13:34  [CELU]    [2022-06-03] DEF 14A 0001193125-22-167393 — 0 mutations
+23:13:34  [CELU]    [2022-06-03] 424B3 0001193125-22-167409 — skipped (resale, file_number outside primary set)
+23:13:34  [CELU]    [2022-06-03] 424B3 0001193125-22-167414 — skipped (resale, file_number outside primary set)
+23:13:34  [CELU]    [2022-06-03] 8-K 0001193125-22-167406 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:13:34  [CELU]  walker 0001193125-22-176615 — dedup block: 3 candidates within ±180d
+23:13:34  [CELU]    0001193125-22-176615 — pruned 1 create tool(s): create_atm
+23:13:34  [CELU]  walker 0001193125-22-176615 — form=8-K (20 tools)
+23:13:39  [CELU]  walker 0001193125-22-176615 — finish='REASON_TOOL_CALLS' calls=1
+23:13:39  [CELU]  walker 0001193125-22-176615 — note_no_event reasons: ['corporate presentation only']
+23:13:39  [CELU]    [2022-06-17] 8-K 0001193125-22-176615 — 0 mutations
+23:13:39  [CELU]    [2022-06-21] 424B3 0001193125-22-177630 — skipped (resale, file_number outside primary set)
+23:13:39  [CELU]    [2022-06-21] 424B3 0001193125-22-177643 — skipped (resale, file_number outside primary set)
+23:13:39  [CELU]    [2022-07-14] 424B3 0001193125-22-193772 — skipped (resale, file_number outside primary set)
+23:13:39  [CELU]    [2022-07-14] 424B3 0001193125-22-193776 — skipped (resale, file_number outside primary set)
+23:13:39  [CELU]    [2022-07-14] 8-K 0001193125-22-193761 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+23:13:39  [CELU]  walker 0001193125-22-195133 — dedup block: 5 candidates (all active, periodic form)
+23:13:39  [CELU]  walker 0001193125-22-195133 — form=10-K/A (14 tools)
+23:14:14  [CELU]  walker 0001193125-22-195133 — finish='REASON_TOOL_CALLS' calls=1
+23:14:14  [CELU]  walker 0001193125-22-195133 — note_no_event reasons: ['The filing is a Form 10-K/A (Amendment No. 1) for the fiscal year ended December 31, 2021, filed solely to correct omitted certification language in Exhibits 31.1 and 31.2, and contains no new dilutive instruments or events applicable to the existing ledger.']
+23:14:14  [CELU]    [2022-07-15] 10-K/A 0001193125-22-195133 — 0 mutations
+23:14:14  [CELU]    anchor 0001193125-22-195133 as_of=2021-12-31
+23:14:42  [CELU]  overhang-combined 0001193125-22-195133 — w=4 c=0 p=0 s=0 a=0 e=0
+23:14:42  [CELU]    anchor 0001193125-22-195133 — 4 diffs (missing=2 field=0 count=0 extra=2)
+23:14:42  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=7.53, outstanding_count=13281386.0, issue_date=2020-03-16, maturity_or_expiry=2025-03-16
+23:14:42  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, issue_date=2019-05-20, maturity_or_expiry=2026-07-16
+23:14:42  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=11.94, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, out.count=62814.0, out.initial_count=62814.0
+23:14:42  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=8.25, terms.exercisable_date=2022-05-20, terms.expiration=2027-05-20, terms.known_owners=['Armistice'], out.count=4054055.0, out.initial_count=4054055.0, counterparty=Armistice
+23:14:42  [CELU]      anchor proposal create_instrument:warrant date=2020-03-16 strike=7.53 expiration=2025-03-16 count=13281386.0 initial_count=13281386.0
+23:14:42  [CELU]    resurrection-guard: 0001193125-22-195133 create (type=warrant) matched CLOSED row W-5261 — not re-creating as active
+23:14:42  [CELU]    redisclosure: 0001193125-22-195133 create (type=warrant) collapsed onto W-5261
+23:14:42  [CELU]    anchor corrections applied=1 rejected=0
+23:14:42  [CELU]    [2022-07-20] 424B3 0001193125-22-198108 — skipped (resale, file_number outside primary set)
+23:14:42  [CELU]    [2022-07-20] 424B3 0001193125-22-198116 — skipped (resale, file_number outside primary set)
+23:14:42  [CELU]    [2022-07-20] 8-K 0001193125-22-198101 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:14:42  [CELU]  walker 0001564590-22-028775 — dedup block: 5 candidates (all active, periodic form)
+23:14:42  [CELU]  walker 0001564590-22-028775 — form=10-Q (17 tools)
+23:15:27  [CELU]  walker 0001564590-22-028775 — finish='REASON_TOOL_CALLS' calls=1
+23:15:27  [CELU]  walker 0001564590-22-028775 — call record_event W-5255 date=2022-06-30 shares=304.0 price=11.5 gross_proceeds=3496.0
+23:15:27  [CELU]    [2022-08-09] 10-Q 0001564590-22-028775 — 1 mutations
+23:15:27  [CELU]    anchor 0001564590-22-028775 as_of=2022-06-30
+23:15:44  [CELU]  overhang-combined 0001564590-22-028775 — w=4 c=0 p=0 s=0 a=0 e=0
+23:15:44  [CELU]    anchor 0001564590-22-028775 — 2 diffs (missing=1 field=0 count=0 extra=1)
+23:15:44  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, issue_date=2021-07-16, maturity_or_expiry=2026-07-16
+23:15:44  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=11.94, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, out.count=62814.0, out.initial_count=62814.0
+23:15:44  [CELU]    [2022-08-10] 424B3 0001564590-22-028832 — skipped (resale, file_number outside primary set)
+23:15:44  [CELU]    [2022-08-10] 424B3 0001564590-22-028835 — skipped (resale, file_number outside primary set)
+23:15:44  [CELU]  walker 0001193125-22-216404 — dedup block: 3 candidates within ±180d
+23:15:44  [CELU]    0001193125-22-216404 — pruned 1 create tool(s): create_preferred
+23:15:44  [CELU]  walker 0001193125-22-216404 — form=8-K (20 tools)
+23:15:51  [CELU]  walker 0001193125-22-216404 — finish='REASON_TOOL_CALLS' calls=1
+23:15:51  [CELU]  walker 0001193125-22-216404 — note_no_event reasons: ['earnings release and corporate update for second quarter 2022']
+23:15:51  [CELU]    [2022-08-10] 8-K 0001193125-22-216404 — 0 mutations
+23:15:51  [CELU]    [2022-08-11] POS AM 0001193125-22-218576 — skipped (resale-family: parent registration under same file_number is fee-table resale)
+23:15:51  [CELU]  walker 0001193125-22-218579 — form=POS AM (3 tools)
+23:16:28  [CELU]  walker 0001193125-22-218579 — finish='REASON_TOOL_CALLS' calls=1
+23:16:28  [CELU]  walker 0001193125-22-218579 — note_no_event reasons: ['The filing is a post-effective amendment converting an existing S-1 registration statement into an S-3, registering no new primary capacity or dilutive instruments, and only covering resale of existing securities.']
+23:16:28  [CELU]    [2022-08-11] POS AM 0001193125-22-218579 — 0 mutations
+23:16:28  [CELU]  walker 0001193125-22-218588 — form=S-3 (16 tools)
+23:16:40  [CELU]  walker 0001193125-22-218588 — finish='REASON_TOOL_CALLS' calls=1
+23:16:40  [CELU]  walker 0001193125-22-218588 — call create_instrument:shelf date=2022-08-11 capacity_usd=450000000.0 form=S-3
+23:16:40  [CELU]    [2022-08-11] S-3 0001193125-22-218588 — 1 mutations
+23:16:40  [CELU]    [2022-08-24] 424B3 0001193125-22-228603 — skipped (resale, file_number outside primary set)
+23:16:40  [CELU]    [2022-08-24] 424B3 0001193125-22-228608 — skipped (resale, file_number outside primary set)
+23:16:40  [CELU]  walker 0001193125-22-240628 — dedup block: 4 candidates within ±180d
+23:16:40  [CELU]  walker 0001193125-22-240628 — form=424B5 (13 tools)
+23:16:51  [CELU]  walker 0001193125-22-240628 — finish='REASON_TOOL_CALLS' calls=1
+23:16:51  [CELU]  walker 0001193125-22-240628 — call create_instrument:atm date=2022-09-08 capacity_usd=150000000.0 agreement_date=2022-09-08
+23:16:51  [CELU]    [2022-09-08] 424B5 0001193125-22-240628 — 1 mutations
+23:16:51  [CELU]  walker 0001193125-22-240629 — dedup block: 5 candidates within ±180d
+23:16:51  [CELU]  walker 0001193125-22-240629 — form=8-K (21 tools)
+23:16:58  [CELU]  walker 0001193125-22-240629 — finish='REASON_TOOL_CALLS' calls=1
+23:16:58  [CELU]  walker 0001193125-22-240629 — note_no_event reasons: ['The At-the-Market Sales Agreement entered into on September 8, 2022, is already recorded in the ledger as ATM-2663. No sales or drawdowns are reported in this filing.']
+23:16:58  [CELU]    [2022-09-08] 8-K 0001193125-22-240629 — 0 mutations
+23:16:58  [CELU]  walker 0001193125-22-245611 — dedup block: 5 candidates within ±180d
+23:16:58  [CELU]  walker 0001193125-22-245611 — form=424B5 (13 tools)
+23:17:10  [CELU]  walker 0001193125-22-245611 — finish='REASON_TOOL_CALLS' calls=1
+23:17:10  [CELU]  walker 0001193125-22-245611 — call create_instrument:equity_line date=2022-09-15 capacity_usd=150000000.0 agreement_date=2022-09-15 agreement_end_date=2024-03-15 drawn_usd=40000000.0
+23:17:10  [CELU]    [2022-09-15] 424B5 0001193125-22-245611 — 1 mutations
+23:17:10  [CELU]  walker 0001193125-22-245623 — dedup block: 6 candidates within ±180d
+23:17:10  [CELU]  walker 0001193125-22-245623 — form=8-K (21 tools)
+23:17:18  [CELU]  walker 0001193125-22-245623 — finish='REASON_TOOL_CALLS' calls=1
+23:17:18  [CELU]  walker 0001193125-22-245623 — must_record net fired (items=2.03); re-asking
+23:17:30  [CELU]  walker 0001193125-22-245623 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:17:30  [CELU]  walker 0001193125-22-245623 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+23:17:30  [CELU]  walker 0001193125-22-245623 — note_no_event reasons: ['The Pre-Paid Advance Agreement with YA II PN, Ltd. (Yorkville) is already recorded in the ledger as EL-198, and no shares have been issued yet under the agreement.']
+23:17:30  [CELU]    [2022-09-15] 8-K 0001193125-22-245623 — 0 mutations
+23:17:30  [CELU]    [2022-09-23] 8-K 0001193125-22-250130 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:17:30  [CELU]    [2022-10-06] 8-K 0001193125-22-258852 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:17:30  [CELU]  walker 0000950170-22-024523 — dedup block: 8 candidates (all active, periodic form)
+23:17:30  [CELU]  walker 0000950170-22-024523 — form=10-Q (17 tools)
+23:18:16  [CELU]  walker 0000950170-22-024523 — finish='REASON_TOOL_CALLS' calls=1
+23:18:16  [CELU]  walker 0000950170-22-024523 — call record_event ATM-2663 date=2022-09-30 drawdown_amount_usd=4562753.3 drawdown_shares=1817830.0 avg_price=2.51
+23:18:16  [CELU]    [2022-11-10] 10-Q 0000950170-22-024523 — 1 mutations
+23:18:16  [CELU]    anchor 0000950170-22-024523 as_of=2022-09-30
+23:18:44  [CELU]  overhang-combined 0000950170-22-024523 — w=4 c=0 p=0 s=0 a=1 e=1
+23:18:44  [CELU]    anchor 0000950170-22-024523 — 3 diffs (missing=1 field=0 count=0 extra=2)
+23:18:44  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, issue_date=2021-07-16, maturity_or_expiry=2026-07-16
+23:18:44  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=11.94, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, out.count=62814.0, out.initial_count=62814.0
+23:18:44  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3
+23:18:44  [CELU]  walker 0000950170-22-024493 — dedup block: 4 candidates within ±180d
+23:18:44  [CELU]    0000950170-22-024493 — pruned 2 create tool(s): create_convertible,create_preferred
+23:18:44  [CELU]  walker 0000950170-22-024493 — form=8-K (19 tools)
+23:18:52  [CELU]  walker 0000950170-22-024493 — finish='REASON_TOOL_CALLS' calls=1
+23:18:52  [CELU]  walker 0000950170-22-024493 — note_no_event reasons: ['Q3 2022 earnings release and corporate update']
+23:18:52  [CELU]    [2022-11-10] 8-K 0000950170-22-024493 — 0 mutations
+23:18:52  [CELU]  walker 0000950170-22-026638 — dedup block: 3 candidates within ±180d
+23:18:52  [CELU]    0000950170-22-026638 — pruned 2 create tool(s): create_convertible,create_preferred
+23:18:52  [CELU]  walker 0000950170-22-026638 — form=8-K (19 tools)
+23:18:53  [CELU]  walker 0000950170-22-026638 — finish='REASON_TOOL_CALLS' calls=1
+23:18:53  [CELU]  walker 0000950170-22-026638 — note_no_event reasons: ['stockholder letter regarding osteoarthritis preclinical work']
+23:18:53  [CELU]    [2022-12-16] 8-K 0000950170-22-026638 — 0 mutations
+23:18:53  [CELU]  walker 0000950170-23-001378 — dedup block: 3 candidates within ±180d
+23:18:53  [CELU]    0000950170-23-001378 — pruned 2 create tool(s): create_convertible,create_preferred
+23:18:53  [CELU]  walker 0000950170-23-001378 — form=8-K (19 tools)
+23:18:57  [CELU]  walker 0000950170-23-001378 — finish='REASON_TOOL_CALLS' calls=1
+23:18:57  [CELU]  walker 0000950170-23-001378 — note_no_event reasons: ['The filing announces the completion of a strategic review of 2023 initiatives, pipeline prioritization, and a potential workforce reduction, with no dilutive instruments or financing events disclosed.']
+23:18:57  [CELU]    [2023-01-30] 8-K 0000950170-23-001378 — 0 mutations
+23:18:57  [CELU]  walker 0000950170-23-007462 — dedup block: 1 candidates within ±180d
+23:18:57  [CELU]    0000950170-23-007462 — pruned 2 create tool(s): create_convertible,create_preferred
+23:18:57  [CELU]  walker 0000950170-23-007462 — form=8-K (19 tools)
+23:18:59  [CELU]  walker 0000950170-23-007462 — finish='REASON_TOOL_CALLS' calls=1
+23:18:59  [CELU]  walker 0000950170-23-007462 — note_no_event reasons: ['The filing is a Regulation FD disclosure stating that the company has no cash deposits, securities, or business relationships with Silicon Valley Bank or Signature Bank.']
+23:18:59  [CELU]    [2023-03-13] 8-K 0000950170-23-007462 — 0 mutations
+23:18:59  [CELU]    [2023-03-17] 8-K 0000950170-23-008662 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:18:59  [CELU]    0000950170-23-008663 — pruned 2 create tool(s): create_convertible,create_preferred
+23:18:59  [CELU]  walker 0000950170-23-008663 — form=8-K (19 tools)
+23:19:01  [CELU]  walker 0000950170-23-008663 — finish='REASON_TOOL_CALLS' calls=1
+23:19:01  [CELU]  walker 0000950170-23-008663 — note_no_event reasons: ['Section 205 petition filed in the Delaware Court of Chancery to validate authorized share capital and resolve potential corporate act uncertainties.']
+23:19:01  [CELU]    [2023-03-17] 8-K 0000950170-23-008663 — 0 mutations
+23:19:01  [CELU]    0000950170-23-009338 — pruned 1 create tool(s): create_preferred
+23:19:01  [CELU]  walker 0000950170-23-009338 — form=8-K (20 tools)
+23:19:14  [CELU]  walker 0000950170-23-009338 — finish='REASON_TOOL_CALLS' calls=4
+23:19:14  [CELU]  walker 0000950170-23-009338 — call create_instrument:warrant date=2023-03-17 strike=0.71 exercisable_date=2023-03-17 expiration=2028-03-17 known_owners=['Starr'] count=750000.0 initial_count=750000.0
+23:19:14  [CELU]  walker 0000950170-23-009338 — call create_instrument:equity date=2023-03-20 price_per_share=0.59 count=1694915.0
+23:19:14  [CELU]  walker 0000950170-23-009338 — call create_instrument:equity date=2023-03-20 price_per_share=0.8343 known_owners=['Robert Hariri'] count=9381841.0
+23:19:14  [CELU]  walker 0000950170-23-009338 — call create_instrument:warrant date=2023-03-20 strike=3.0 exercisable_date=2023-03-20 expiration=2028-03-20 known_owners=['Robert Hariri'] count=9381841.0 initial_count=9381841.0
+23:19:14  [CELU]    [2023-03-23] 8-K 0000950170-23-009338 — 4 mutations
+23:19:14  [CELU]  walker 0000950170-23-011440 — dedup block: 10 candidates (all active, periodic form)
+23:19:14  [CELU]  walker 0000950170-23-011440 — form=10-K (17 tools)
+23:20:22  [CELU]  walker 0000950170-23-011440 — finish='REASON_TOOL_CALLS' calls=2
+23:20:22  [CELU]  walker 0000950170-23-011440 — call amend_instrument:atm ATM-2663 date=2022-12-31 remaining_capacity_usd=143481000.0 drawn_usd=6519000.0
+23:20:22  [CELU]  walker 0000950170-23-011440 — call amend_instrument:warrant W-5281 date=2023-03-27 expiration=2028-03-27 issue_date=2023-03-27
+23:20:22  [CELU]    [2023-03-31] 10-K 0000950170-23-011440 — 2 mutations
+23:20:22  [CELU]    anchor 0000950170-23-011440 as_of=2022-12-31
+23:21:00  [CELU]  overhang-combined 0000950170-23-011440 — w=4 c=0 p=0 s=0 a=1 e=1
+23:21:00  [CELU]    anchor 0000950170-23-011440 — 5 diffs (missing=1 field=0 count=0 extra=4)
+23:21:00  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, issue_date=2019-05, maturity_or_expiry=2026-07-16
+23:21:00  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=11.94, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, out.count=62814.0, out.initial_count=62814.0
+23:21:00  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=0.71, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], out.count=750000.0, out.initial_count=750000.0, counterparty=Starr
+23:21:00  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=3.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, out.count=9381841.0, out.initial_count=9381841.0, counterparty=Robert Hariri
+23:21:00  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3
+23:21:00  [CELU]  walker 0001193125-23-094340 — dedup block: 2 candidates within ±180d
+23:21:00  [CELU]  walker 0001193125-23-094340 — form=424B5 (13 tools)
+23:21:14  [CELU]  walker 0001193125-23-094340 — finish='REASON_TOOL_CALLS' calls=2
+23:21:14  [CELU]  walker 0001193125-23-094340 — call record_event SH-2602 date=2023-04-04 drawdown_amount_usd=6000000.5 drawdown_shares=9230770.0 avg_price=0.65
+23:21:14  [CELU]  walker 0001193125-23-094340 — call create_instrument:warrant date=2023-04-04 strike=0.75 exercisable_date=2023-10-04 expiration=2028-10-04 count=9230770.0 initial_count=9230770.0
+23:21:14  [CELU]    [2023-04-07] 424B5 0001193125-23-094340 — 2 mutations
+23:21:14  [CELU]  walker 0001193125-23-094337 — dedup block: 3 candidates within ±180d
+23:21:14  [CELU]  walker 0001193125-23-094337 — form=8-K (21 tools)
+23:21:29  [CELU]  walker 0001193125-23-094337 — finish='REASON_TOOL_CALLS' calls=1
+23:21:29  [CELU]  walker 0001193125-23-094337 — must_record net fired (content:close,warrant); re-asking
+23:21:44  [CELU]  walker 0001193125-23-094337 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:21:44  [CELU]  walker 0001193125-23-094337 — content-expectation second look (content:close,warrant): no gap calls returned (re-disclosure or model declined)
+23:21:44  [CELU]  walker 0001193125-23-094337 — call amend_instrument:warrant W-5275 date=2023-04-04 strike=0.75 expiration=2028-10-10
+23:21:44  [CELU]    [2023-04-07] 8-K 0001193125-23-094337 — 1 mutations
+23:21:44  [CELU]  walker 0001193125-23-110503 — dedup block: 1 candidates within ±30d
+23:21:44  [CELU]  walker 0001193125-23-110503 — form=PRE 14A (3 tools)
+23:22:11  [CELU]  walker 0001193125-23-110503 — finish='REASON_TOOL_CALLS' calls=1
+23:22:11  [CELU]  walker 0001193125-23-110503 — note_no_event reasons: ['Preliminary proxy statement covering director elections, Yorkville PPA share issuance and floor price amendment proposals, and officer exculpation charter amendment.']
+23:22:11  [CELU]    [2023-04-21] PRE 14A 0001193125-23-110503 — 0 mutations
+23:22:11  [CELU]  walker 0000950170-23-015374 — dedup block: 3 candidates within ±180d
+23:22:11  [CELU]    0000950170-23-015374 — pruned 2 create tool(s): create_convertible,create_preferred
+23:22:11  [CELU]  walker 0000950170-23-015374 — form=8-K (19 tools)
+23:22:13  [CELU]  walker 0000950170-23-015374 — finish='REASON_TOOL_CALLS' calls=1
+23:22:13  [CELU]  walker 0000950170-23-015374 — note_no_event reasons: ['press release announcing clinical trial results']
+23:22:13  [CELU]    [2023-04-27] 8-K 0000950170-23-015374 — 0 mutations
+23:22:13  [CELU]  walker 0001193125-23-128936 — dedup block: 1 candidates within ±30d
+23:22:13  [CELU]  walker 0001193125-23-128936 — form=DEF 14A (3 tools)
+23:22:41  [CELU]  walker 0001193125-23-128936 — finish='REASON_TOOL_CALLS' calls=1
+23:22:41  [CELU]  walker 0001193125-23-128936 — note_no_event reasons: ['proxy materials only (director election, PPA floor price amendment, officer exculpation)']
+23:22:41  [CELU]    [2023-05-01] DEF 14A 0001193125-23-128936 — 0 mutations
+23:22:41  [CELU]  walker 0000950170-23-022503 — dedup block: 3 candidates within ±180d
+23:22:41  [CELU]  walker 0000950170-23-022503 — form=8-K (21 tools)
+23:22:47  [CELU]  walker 0000950170-23-022503 — finish='REASON_TOOL_CALLS' calls=1
+23:22:47  [CELU]  walker 0000950170-23-022503 — must_record net fired (items=2.03); re-asking
+23:22:55  [CELU]  walker 0000950170-23-022503 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:22:55  [CELU]  walker 0000950170-23-022503 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+23:22:55  [CELU]  walker 0000950170-23-022503 — note_no_event reasons: ['The senior secured loan agreement with Resorts World Inc Pte Ltd is straight debt with no conversion features or warrants.']
+23:22:55  [CELU]    [2023-05-16] 8-K 0000950170-23-022503 — 0 mutations
+23:22:55  [CELU]  walker 0000950170-23-023264 — dedup block: 3 candidates within ±180d
+23:22:55  [CELU]  walker 0000950170-23-023264 — form=8-K (21 tools)
+23:23:09  [CELU]  walker 0000950170-23-023264 — finish='REASON_TOOL_CALLS' calls=2
+23:23:09  [CELU]  walker 0000950170-23-023264 — call create_instrument:equity date=2023-05-17 price_per_share=0.52 closing_date=2023-05-18 count=5813945.0
+23:23:09  [CELU]  walker 0000950170-23-023264 — call create_instrument:warrant date=2023-05-17 strike=1.0 exercisable_date=2023-05-18 expiration=2028-05-18 count=5813945.0 initial_count=5813945.0
+23:23:09  [CELU]    [2023-05-19] 8-K 0000950170-23-023264 — 2 mutations
+23:23:09  [CELU]  walker 0000950170-23-023462 — dedup block: 12 candidates (all active, periodic form)
+23:23:09  [CELU]  walker 0000950170-23-023462 — form=10-Q (17 tools)
+23:23:54  [CELU]  walker 0000950170-23-023462 — finish='REASON_TOOL_CALLS' calls=1
+23:23:54  [CELU]  walker 0000950170-23-023462 — call record_event ATM-2663 date=2023-03-31 drawdown_amount_usd=140935.48 drawdown_shares=132958.0 avg_price=1.06
+23:23:54  [CELU]    [2023-05-22] 10-Q 0000950170-23-023462 — 1 mutations
+23:23:54  [CELU]    anchor 0000950170-23-023462 as_of=2023-03-31
+23:24:30  [CELU]  overhang-combined 0000950170-23-023462 — w=6 c=0 p=0 s=0 a=1 e=1
+23:24:30  [CELU]    anchor 0000950170-23-023462 — 7 diffs (missing=1 field=1 count=1 extra=4)
+23:24:30  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, maturity_or_expiry=2026-07-16
+23:24:30  [CELU]      diff field_mismatch W-5273 [warrant] ledger=terms.strike=11.94, out.count=62814.0 filing=terms.strike=8.25, out.count=4054055
+23:24:30  [CELU]      diff count_mismatch ATM-2663 [atm] ledger=out.drawn_usd=6659935.48 filing=out.drawn_usd=141000.0
+23:24:30  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=0.75, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], out.count=4054055.0, out.initial_count=4054055.0, counterparty=Armistice
+23:24:30  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=0.75, terms.exercisable_date=2023-10-04, terms.expiration=2028-10-04, out.count=9230770.0, out.initial_count=9230770.0
+23:24:30  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=1.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, out.count=5813945.0, out.initial_count=5813945.0
+23:24:30  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=6000000.5, out.sold_to_date=9230770.0
+23:24:30  [CELU]      anchor proposal amend_instrument:warrant W-5273 date=2023-03-31 strike=8.25 count=4054055
+23:24:30  [CELU]      anchor proposal amend_instrument:atm ATM-2663 date=2023-03-31 drawn_usd=141000.0
+23:24:30  [CELU]    anchor corrections applied=2 rejected=0
+23:24:30  [CELU]    [2023-05-25] S-3 0001193125-23-154204 — skipped (fee-table=resale; 457(c)/(g) only)
+23:24:30  [CELU]  walker 0000950170-23-025401 — dedup block: 4 candidates within ±180d
+23:24:30  [CELU]    0000950170-23-025401 — pruned 1 create tool(s): create_convertible
+23:24:30  [CELU]  walker 0000950170-23-025401 — form=8-K (20 tools)
+23:24:36  [CELU]  walker 0000950170-23-025401 — finish='REASON_TOOL_CALLS' calls=1
+23:24:36  [CELU]  walker 0000950170-23-025401 — note_no_event reasons: ['corporate presentation only']
+23:24:36  [CELU]    [2023-05-31] 8-K 0000950170-23-025401 — 0 mutations
+23:24:36  [CELU]    [2023-06-02] 424B3 0001193125-23-159925 — skipped (resale, file_number outside primary set)
+23:24:36  [CELU]  walker 0000950170-23-028627 — dedup block: 4 candidates within ±180d
+23:24:36  [CELU]    0000950170-23-028627 — pruned 1 create tool(s): create_convertible
+23:24:36  [CELU]  walker 0000950170-23-028627 — form=8-K (20 tools)
+23:24:38  [CELU]  walker 0000950170-23-028627 — finish='REASON_TOOL_CALLS' calls=1
+23:24:38  [CELU]  walker 0000950170-23-028627 — must_record net fired (items=5.03; exhibits=EX-3.1); re-asking
+23:24:41  [CELU]  walker 0000950170-23-028627 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:24:41  [CELU]  walker 0000950170-23-028627 — must_record (items=5.03; exhibits=EX-3.1): recorded nothing after second look — possible missed instrument
+23:24:41  [CELU]  walker 0000950170-23-028627 — note_no_event reasons: ['The filing is a Form 8-K disclosing an amendment to the Certificate of Incorporation to limit officer liability, with no dilutive instruments or events.']
+23:24:41  [CELU]    [2023-06-16] 8-K 0000950170-23-028627 — 0 mutations
+23:24:41  [CELU]  walker 0000950170-23-029159 — dedup block: 4 candidates within ±180d
+23:24:41  [CELU]  walker 0000950170-23-029159 — form=8-K (21 tools)
+23:24:52  [CELU]  walker 0000950170-23-029159 — finish='REASON_TOOL_CALLS' calls=1
+23:24:52  [CELU]  walker 0000950170-23-029159 — call create_instrument:warrant date=2023-06-20 strike=0.81 exercisable_date=2023-06-20 expiration=2028-06-20 known_owners=['RWI'] count=3000000.0 initial_count=3000000.0
+23:24:52  [CELU]    [2023-06-21] 8-K 0000950170-23-029159 — 1 mutations
+23:24:52  [CELU]  walker 0001193125-23-197726 — dedup block: 5 candidates within ±180d
+23:24:52  [CELU]  walker 0001193125-23-197726 — form=424B5 (13 tools)
+23:25:04  [CELU]  walker 0001193125-23-197726 — finish='REASON_TOOL_CALLS' calls=2
+23:25:04  [CELU]  walker 0001193125-23-197726 — call record_event SH-2602 date=2023-07-28 drawdown_amount_usd=3000000.15 drawdown_shares=8571429.0 avg_price=0.35
+23:25:04  [CELU]  walker 0001193125-23-197726 — call create_instrument:warrant date=2023-07-28 strike=0.35 exercisable_date=2024-01-28 expiration=2029-01-28 count=8571429.0 initial_count=8571429.0
+23:25:04  [CELU]    [2023-07-28] 424B5 0001193125-23-197726 — 2 mutations
+23:25:04  [CELU]    0001193125-23-197726 — rerouted create_warrant → amend_warrant W-5285 (file_number 333-266786 common sibling; new strike=0.35 count=8571429.0)
+23:25:04  [CELU]  walker 0001193125-23-197738 — dedup block: 5 candidates within ±180d
+23:25:04  [CELU]  walker 0001193125-23-197738 — form=8-K (21 tools)
+23:25:31  [CELU]  walker 0001193125-23-197738 — finish='REASON_TOOL_CALLS' calls=2
+23:25:31  [CELU]  walker 0001193125-23-197738 — must_record net fired (content:close); re-asking
+23:25:59  [CELU]  walker 0001193125-23-197738 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:25:59  [CELU]  walker 0001193125-23-197738 — content-expectation second look (content:close): no gap calls returned (re-disclosure or model declined)
+23:25:59  [CELU]  walker 0001193125-23-197738 — call create_instrument:warrant date=2023-07-27 strike=0.35 exercisable_date=2024-01-27 expiration=2029-01-27 known_owners=['Armistice'] count=8571429.0 initial_count=8571429.0
+23:25:59  [CELU]  walker 0001193125-23-197738 — call amend_instrument:warrant W-5275 date=2023-07-27 strike=0.35
+23:25:59  [CELU]  walker 0001193125-23-197738 — dedup gap-fill warrant W-5285 via amend: known_owners (create deduped, info preserved)
+23:25:59  [CELU]  walker 0001193125-23-197738 — guards dropped 1 dup-creates (1 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+23:25:59  [CELU]    [2023-07-28] 8-K 0001193125-23-197738 — 2 mutations
+23:25:59  [CELU]    [2023-08-04] 8-K 0000950170-23-038577 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:25:59  [CELU]  walker 0000950170-23-042544 — dedup block: 13 candidates (all active, periodic form)
+23:25:59  [CELU]  walker 0000950170-23-042544 — form=10-Q (17 tools)
+23:26:43  [CELU]  walker 0000950170-23-042544 — finish='REASON_TOOL_CALLS' calls=2
+23:26:43  [CELU]  walker 0000950170-23-042544 — call create_instrument:warrant date=2023-04-10 strike=0.75 exercisable_date=2023-10-10 expiration=2028-10-10 count=9230770.0 initial_count=9230770.0
+23:26:43  [CELU]  walker 0000950170-23-042544 — call create_instrument:warrant date=2023-06-20 strike=0.81 exercisable_date=2023-06-20 expiration=2028-06-20 known_owners=['C.V. Starr'] count=500000.0 initial_count=500000.0
+23:26:43  [CELU]  walker 0000950170-23-042544 — guard dropped duplicate create warrant (matches existing W-5290 strike=0.81 created=2023-06-20)
+23:26:43  [CELU]  walker 0000950170-23-042544 — guards dropped 1 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+23:26:43  [CELU]    [2023-08-14] 10-Q 0000950170-23-042544 — 1 mutations
+23:26:43  [CELU]    redisclosure: 0000950170-23-042544 create (type=warrant) collapsed onto W-5285
+23:26:43  [CELU]    anchor 0000950170-23-042544 as_of=2023-06-30
+23:27:26  [CELU]  [overhang-combined] 0000950170-23-042544 — output truncated at max_tokens
+23:27:26  [CELU]  overhang-combined 0000950170-23-042544 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+23:27:26  [CELU]  overhang-combined 0000950170-23-042544 — w=2 c=0 p=0 s=0 a=0 e=0
+23:27:26  [CELU]    anchor 0000950170-23-042544 — 10 diffs (missing=0 field=0 count=0 extra=10)
+23:27:26  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=8.25, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, out.count=4054055, out.initial_count=4054055
+23:27:26  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=0.35, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], out.count=4054055.0, out.initial_count=4054055.0, counterparty=Armistice
+23:27:26  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=0.71, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], out.count=750000.0, out.initial_count=750000.0, counterparty=Starr
+23:27:26  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=3.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, out.count=9381841.0, out.initial_count=9381841.0, counterparty=Robert Hariri
+23:27:26  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=0.35, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], out.count=8571429.0, out.initial_count=9230770.0
+23:27:26  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=1.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, out.count=5813945.0, out.initial_count=5813945.0
+23:27:26  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=0.81, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=3000000.0, out.initial_count=3000000.0, counterparty=RWI
+23:27:26  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:27:26  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:27:26  [CELU]      diff extra_in_ledger EL-198 [equity_line] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-15, terms.agreement_end_date=2024-03-15, out.drawn_usd=40000000.0, counterparty=YA II
+23:27:26  [CELU]  walker 0001193125-23-221469 — dedup block: 5 candidates within ±180d
+23:27:26  [CELU]  walker 0001193125-23-221469 — form=8-K (21 tools)
+23:27:32  [CELU]  walker 0001193125-23-221469 — finish='REASON_TOOL_CALLS' calls=1
+23:27:32  [CELU]  walker 0001193125-23-221469 — must_record net fired (items=2.03); re-asking
+23:27:37  [CELU]  walker 0001193125-23-221469 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:27:37  [CELU]  walker 0001193125-23-221469 — must_record (items=2.03): recorded nothing after second look — possible missed instrument
+23:27:37  [CELU]  walker 0001193125-23-221469 — note_no_event reasons: ['The filing discloses a $3.0 million straight debt loan agreement with no conversion features, warrants, or other dilutive equity components.']
+23:27:37  [CELU]    [2023-08-25] 8-K 0001193125-23-221469 — 0 mutations
+23:27:37  [CELU]  walker 0000950170-23-044896 — dedup block: 5 candidates within ±180d
+23:27:37  [CELU]    0000950170-23-044896 — pruned 2 create tool(s): create_convertible,create_preferred
+23:27:37  [CELU]  walker 0000950170-23-044896 — form=8-K (19 tools)
+23:27:39  [CELU]  walker 0000950170-23-044896 — finish='REASON_TOOL_CALLS' calls=1
+23:27:39  [CELU]  walker 0000950170-23-044896 — note_no_event reasons: ['research collaboration services agreement with Regeneron']
+23:27:39  [CELU]    [2023-08-29] 8-K 0000950170-23-044896 — 0 mutations
+23:27:39  [CELU]  walker 0000950170-23-047017 — dedup block: 5 candidates within ±180d
+23:27:39  [CELU]    0000950170-23-047017 — pruned 2 create tool(s): create_convertible,create_preferred
+23:27:39  [CELU]  walker 0000950170-23-047017 — form=8-K (19 tools)
+23:27:41  [CELU]  walker 0000950170-23-047017 — finish='REASON_TOOL_CALLS' calls=1
+23:27:41  [CELU]  walker 0000950170-23-047017 — note_no_event reasons: ['board of directors appointment and resignation']
+23:27:41  [CELU]    [2023-09-07] 8-K 0000950170-23-047017 — 0 mutations
+23:27:41  [CELU]  walker 0000950170-23-048663 — dedup block: 3 candidates within ±180d
+23:27:41  [CELU]    0000950170-23-048663 — pruned 2 create tool(s): create_convertible,create_preferred
+23:27:41  [CELU]  walker 0000950170-23-048663 — form=8-K (19 tools)
+23:27:54  [CELU]  walker 0000950170-23-048663 — finish='REASON_TOOL_CALLS' calls=1
+23:27:54  [CELU]  walker 0000950170-23-048663 — call create_instrument:equity date=2023-09-19 price_per_share=0.0 closing_date=2023-09-18 known_owners=['YA II'] count=2707308.0
+23:27:54  [CELU]    [2023-09-19] 8-K 0000950170-23-048663 — 1 mutations
+23:27:54  [CELU]    [2023-11-24] 8-K 0001193125-23-282722 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:27:54  [CELU]    [2023-12-29] 8-K 0000950170-23-073894 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:27:54  [CELU]  walker 0000950170-24-000474 — dedup block: 13 candidates (all active, periodic form)
+23:27:54  [CELU]  walker 0000950170-24-000474 — form=10-Q (17 tools)
+23:28:37  [CELU]  [ledger-walker] 0000950170-24-000474 — output truncated at max_tokens
+23:28:37  [CELU]  walker 0000950170-24-000474 — finish='REASON_MAX_LEN' calls=6
+23:28:37  [CELU]  walker 0000950170-24-000474 — call create_instrument:warrant date=2023-06-20 strike=0.81 exercisable_date=2023-06-20 expiration=2028-06-20 known_owners=['C.V. Starr'] count=500000.0 initial_count=500000.0
+23:28:37  [CELU]  walker 0000950170-24-000474 — call create_instrument:warrant date=2023-04-10 strike=0.75 exercisable_date=2023-10-10 expiration=2028-10-10 count=9230770.0 initial_count=9230770.0
+23:28:37  [CELU]  walker 0000950170-24-000474 — call amend_instrument:warrant W-5281 date=2023-09-14 count=2084854.0
+23:28:37  [CELU]  walker 0000950170-24-000474 — call create_instrument:warrant date=2023-09-14 strike=1.0 expiration=2028-03-27 count=7296987.0 initial_count=7296987.0
+23:28:37  [CELU]  walker 0000950170-24-000474 — call amend_instrument:warrant W-5285 date=2023-07-31 count=4356253.0
+23:28:37  [CELU]  walker 0000950170-24-000474 — call amend_instrument:warrant EL-198 date=2023-09-30 count=16622873.0
+23:28:37  [CELU]  walker 0000950170-24-000474 — guard dropped duplicate create warrant (matches existing W-5290 strike=0.81 created=2023-06-20)
+23:28:37  [CELU]  walker 0000950170-24-000474 — guards dropped 1 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+23:28:37  [CELU]    [2024-01-03] 10-Q 0000950170-24-000474 — 5 mutations
+23:28:37  [CELU]    redisclosure: 0000950170-24-000474 create (type=warrant) collapsed onto W-5285
+23:28:37  [CELU]    anchor 0000950170-24-000474 as_of=2023-09-30
+23:29:14  [CELU]  [overhang-combined] 0000950170-24-000474 — output truncated at max_tokens
+23:29:14  [CELU]  overhang-combined 0000950170-24-000474 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+23:29:14  [CELU]  overhang-combined 0000950170-24-000474 — w=3 c=0 p=0 s=0 a=0 e=0
+23:29:14  [CELU]    anchor 0000950170-24-000474 — 12 diffs (missing=1 field=0 count=0 extra=11)
+23:29:14  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=11.5, outstanding_count=8499999.0, maturity_or_expiry=2026-07-16
+23:29:14  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=8.25, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, out.count=4054055, out.initial_count=4054055
+23:29:14  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=0.35, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], out.count=4054055.0, out.initial_count=4054055.0, counterparty=Armistice
+23:29:14  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=0.71, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], out.count=750000.0, out.initial_count=750000.0, counterparty=Starr
+23:29:14  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=3.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, out.count=2084854.0, out.initial_count=9381841.0, counterparty=Robert Hariri
+23:29:14  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=0.35, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], out.count=4356253.0, out.initial_count=9230770.0
+23:29:14  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=1.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, out.count=5813945.0, out.initial_count=5813945.0
+23:29:14  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=0.81, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=3000000.0, out.initial_count=3000000.0, counterparty=RWI
+23:29:14  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=1.0, terms.expiration=2028-03-27, out.count=7296987.0, out.initial_count=7296987.0
+23:29:14  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:29:14  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:29:14  [CELU]      diff extra_in_ledger EL-198 [equity_line] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-15, terms.agreement_end_date=2024-03-15, out.drawn_usd=40000000.0, out.count=16622873.0, out.initial_count=16622873.0, counterparty=YA II
+23:29:14  [CELU]  walker 0000950170-24-003387 — dedup block: 1 candidates within ±180d
+23:29:14  [CELU]    0000950170-24-003387 — pruned 2 create tool(s): create_convertible,create_preferred
+23:29:14  [CELU]  walker 0000950170-24-003387 — form=8-K (19 tools)
+23:29:17  [CELU]  walker 0000950170-24-003387 — finish='REASON_TOOL_CALLS' calls=1
+23:29:17  [CELU]  walker 0000950170-24-003387 — note_no_event reasons: ['revenue expectations announcement']
+23:29:17  [CELU]    [2024-01-09] 8-K 0000950170-24-003387 — 0 mutations
+23:29:17  [CELU]  walker 0000950170-24-005029 — dedup block: 1 candidates within ±180d
+23:29:17  [CELU]  walker 0000950170-24-005029 — form=8-K (21 tools)
+23:29:53  [CELU]  walker 0000950170-24-005029 — finish='REASON_TOOL_CALLS' calls=4
+23:29:53  [CELU]  walker 0000950170-24-005029 — call create_instrument:equity date=2024-01-17 price_per_share=0.24898 closing_date=2024-01-16 known_owners=['Dragasac'] count=21410983.0
+23:29:53  [CELU]  walker 0000950170-24-005029 — call create_instrument:warrant date=2024-01-17 strike=0.24898 exercisable_date=2024-01-17 expiration=2029-01-16 known_owners=['Dragasac'] count=5352746.0 initial_count=5352746.0
+23:29:53  [CELU]  walker 0000950170-24-005029 — call amend_instrument:warrant W-5262 date=2024-01-17 strike=0.24898 expiration=2030-03-16
+23:29:53  [CELU]  walker 0000950170-24-005029 — call create_instrument:warrant date=2024-01-17 strike=0.24898 exercisable_date=2024-01-17 expiration=2029-01-16 series_letter=1 known_owners=['RWI'] count=16500000.0 initial_count=16500000.0
+23:29:53  [CELU]    [2024-01-17] 8-K 0000950170-24-005029 — 4 mutations
+23:29:53  [CELU]  walker 0001493152-24-003352 — dedup block: 2 candidates within ±30d
+23:29:53  [CELU]  walker 0001493152-24-003352 — form=PRE 14A (3 tools)
+23:30:17  [CELU]  walker 0001493152-24-003352 — finish='REASON_TOOL_CALLS' calls=1
+23:30:17  [CELU]  walker 0001493152-24-003352 — note_no_event reasons: ['preliminary proxy statement seeking stockholder approval for a reverse stock split and the potential issuance of shares under a warrant tranche']
+23:30:17  [CELU]    [2024-01-23] PRE 14A 0001493152-24-003352 — 0 mutations
+23:30:17  [CELU]  walker 0001493152-24-004649 — dedup block: 2 candidates within ±30d
+23:30:17  [CELU]  walker 0001493152-24-004649 — form=DEF 14A (3 tools)
+23:30:35  [CELU]  walker 0001493152-24-004649 — finish='REASON_TOOL_CALLS' calls=1
+23:30:35  [CELU]  walker 0001493152-24-004649 — note_no_event reasons: ['The filing is a proxy statement (DEF 14A) proposing a reverse stock split and seeking stockholder approval for a warrant floor price, with no currently effective dilutive events or new instrument issuances.']
+23:30:35  [CELU]    [2024-02-02] DEF 14A 0001493152-24-004649 — 0 mutations
+23:30:35  [CELU]  walker 0001493152-24-005900 — dedup block: 3 candidates within ±180d
+23:30:35  [CELU]    0001493152-24-005900 — pruned 2 create tool(s): create_convertible,create_preferred
+23:30:35  [CELU]  walker 0001493152-24-005900 — form=8-K (19 tools)
+23:30:38  [CELU]  walker 0001493152-24-005900 — finish='REASON_TOOL_CALLS' calls=1
+23:30:38  [CELU]  walker 0001493152-24-005900 — note_no_event reasons: ['updated business description summary furnished under Item 7.01']
+23:30:38  [CELU]    [2024-02-12] 8-K 0001493152-24-005900 — 0 mutations
+23:30:38  [CELU]  walker 0001493152-24-007505 — dedup block: 3 candidates within ±180d
+23:30:38  [CELU]  walker 0001493152-24-007505 — form=8-K (21 tools)
+23:30:43  [CELU]  walker 0001493152-24-007505 — finish='REASON_TOOL_CALLS' calls=1
+23:30:43  [CELU]  walker 0001493152-24-007505 — note_no_event reasons: ['amendments to executive employment agreements regarding salary reductions and cash bonus programs with no dilutive instruments issued']
+23:30:43  [CELU]    [2024-02-22] 8-K 0001493152-24-007505 — 0 mutations
+23:30:43  [CELU]  walker 0001493152-24-007848 — dedup block: 3 candidates within ±180d
+23:30:43  [CELU]    0001493152-24-007848 — pruned 1 create tool(s): create_convertible
+23:30:43  [CELU]  walker 0001493152-24-007848 — form=8-K (20 tools)
+23:30:45  [CELU]  walker 0001493152-24-007848 — finish='REASON_TOOL_CALLS' calls=1
+23:30:45  [CELU]  walker 0001493152-24-007848 — call apply_split date=2024-02-28 post=1 pre=10 direction=reverse units=common
+23:30:45  [CELU]    [2024-02-26] 8-K 0001493152-24-007848 — 1 mutations
+23:30:45  [CELU]    [2024-02-29] split 1-for-10 reverse (finviz+yfinance) units=common
+23:30:45  [CELU]  walker 0001493152-24-010134 — dedup block: 2 candidates within ±180d
+23:30:45  [CELU]  walker 0001493152-24-010134 — form=8-K (21 tools)
+23:31:16  [CELU]  walker 0001493152-24-010134 — finish='REASON_TOOL_CALLS' calls=5
+23:31:16  [CELU]  walker 0001493152-24-010134 — must_record net fired (content:close); re-asking
+23:31:36  [CELU]  walker 0001493152-24-010134 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:31:36  [CELU]  walker 0001493152-24-010134 — content-expectation second look (content:close): recovered 1 gap call(s)
+23:31:36  [CELU]  walker 0001493152-24-010134 — call create_instrument:equity_line date=2024-03-15 capacity_usd=10000000.0 agreement_date=2024-03-13 agreement_end_date=2027-03-13
+23:31:36  [CELU]  walker 0001493152-24-010134 — call create_instrument:convertible date=2024-03-13 principal=3150000.0 rate=0.08 conv_price=2.4898 maturity=2025-03-13 oid_pct=0.05 known_owners=['YA II'] principal_remaining=3150000.0
+23:31:36  [CELU]  walker 0001493152-24-010134 — call create_instrument:equity date=2024-03-13 price_per_share=0.0 known_owners=['YA II'] count=16964.0
+23:31:36  [CELU]  walker 0001493152-24-010134 — call create_instrument:warrant date=2024-03-13 strike=5.895 expiration=2028-06-20 known_owners=['RWI'] count=300000.0 initial_count=300000.0
+23:31:36  [CELU]  walker 0001493152-24-010134 — call amend_instrument:warrant W-5280 date=2024-03-13 strike=5.895
+23:31:36  [CELU]  walker 0001493152-24-010134 — call close_instrument EL-198 date=2024-03-13 reason=terminated
+23:31:36  [CELU]    [2024-03-15] 8-K 0001493152-24-010134 — 6 mutations
+23:31:36  [CELU]    [2024-04-22] 8-K 0001493152-24-015455 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:31:36  [CELU]  walker 0001493152-24-020832 — dedup block: 5 candidates within ±180d
+23:31:36  [CELU]    0001493152-24-020832 — pruned 1 create tool(s): create_preferred
+23:31:36  [CELU]  walker 0001493152-24-020832 — form=8-K (20 tools)
+23:31:38  [CELU]  walker 0001493152-24-020832 — finish='REASON_TOOL_CALLS' calls=1
+23:31:38  [CELU]  walker 0001493152-24-020832 — note_no_event reasons: ['investor and r&d day presentation']
+23:31:38  [CELU]    [2024-05-21] 8-K 0001493152-24-020832 — 0 mutations
+23:31:38  [CELU]    [2024-05-24] 8-K 0001493152-24-021404 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:31:38  [CELU]  walker 0000950170-24-087886 — dedup block: 18 candidates (all active, periodic form)
+23:31:38  [CELU]  walker 0000950170-24-087886 — form=10-K (17 tools)
+23:32:19  [CELU]  walker 0000950170-24-087886 — finish='REASON_TOOL_CALLS' calls=1
+23:32:19  [CELU]  walker 0000950170-24-087886 — note_no_event reasons: ['This filing is a 10-K annual report that re-discloses previously recorded warrants, convertibles, ATMs, and equity lines without any new dilutive issuances or material amendments during the period. All mentioned transactions (such as the January 2024 Dragasac and RWI transactions, and the March 2024 Yorkville SEPA/convertible note) are already reflected in the ledger.']
+23:32:19  [CELU]    [2024-07-30] 10-K 0000950170-24-087886 — 0 mutations
+23:32:19  [CELU]    anchor 0000950170-24-087886 as_of=2023-12-31
+23:32:57  [CELU]  [overhang-combined] 0000950170-24-087886 — output truncated at max_tokens
+23:32:57  [CELU]  overhang-combined 0000950170-24-087886 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+23:32:57  [CELU]  overhang-combined 0000950170-24-087886 — w=2 c=0 p=0 s=0 a=0 e=0
+23:32:57  [CELU]    anchor 0000950170-24-087886 — 18 diffs (missing=1 field=0 count=0 extra=17)
+23:32:57  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=67.7, outstanding_count=652981.0, maturity_or_expiry=2025-03-16
+23:32:57  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=2.4898, terms.expiration=2030-03-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=652982, out.initial_count=849580, counterparty=Dragasac
+23:32:57  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:32:57  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406, counterparty=Armistice
+23:32:57  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=5.895, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:32:57  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=208485, out.initial_count=938184, counterparty=Robert Hariri
+23:32:57  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:32:57  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:32:57  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=8.1, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:32:57  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:32:57  [CELU]      diff extra_in_ledger W-5294 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=535275, out.initial_count=535275, counterparty=Dragasac
+23:32:57  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:32:57  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=5.895, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:32:57  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=2.4898, terms.maturity=2025-03-13, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=3150000.0, out.principal_remaining_asof=2024-03-13, counterparty=YA II
+23:32:57  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:32:57  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:32:57  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:32:57  [CELU]      diff extra_in_ledger S1-213 [s1_offering] ledger=terms.anticipated_deal_size=74999994.0, last_seen_date=2022-05-11
+23:32:57  [CELU]      anchor proposal create_instrument:warrant date=2024-07-30 strike=67.7 expiration=2025-03-16 count=652981.0 initial_count=652981.0
+23:32:57  [CELU]      anchor proposal close_instrument S1-213 date=2023-12-31 reason=terminated
+23:32:57  [CELU]    anchor corrections applied=2 rejected=0
+23:32:57  [CELU]    [2024-08-05] 8-K 0001493152-24-030288 — skipped (no dilutive item + no substantive exhibit (items=4.01,5.02,9.01))
+23:32:57  [CELU]    [2024-08-23] 8-K 0001493152-24-033763 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:32:57  [CELU]  walker 0001493152-24-034216 — dedup block: 4 candidates within ±180d
+23:32:57  [CELU]    0001493152-24-034216 — pruned 1 create tool(s): create_preferred
+23:32:57  [CELU]  walker 0001493152-24-034216 — form=8-K (20 tools)
+23:32:59  [CELU]  walker 0001493152-24-034216 — finish='REASON_TOOL_CALLS' calls=1
+23:32:59  [CELU]  walker 0001493152-24-034216 — note_no_event reasons: ['director appointment']
+23:32:59  [CELU]    [2024-08-28] 8-K 0001493152-24-034216 — 0 mutations
+23:33:00  [CELU]    [2024-09-13] 8-K 0001493152-24-036234 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:33:00  [CELU]  walker 0000950170-24-115082 — dedup block: 18 candidates (all active, periodic form)
+23:33:00  [CELU]  walker 0000950170-24-115082 — form=10-Q (17 tools)
+23:33:41  [CELU]  [ledger-walker] 0000950170-24-115082 — output truncated at max_tokens
+23:33:41  [CELU]  walker 0000950170-24-115082 — finish='REASON_MAX_LEN' calls=5
+23:33:41  [CELU]  walker 0000950170-24-115082 — call create_instrument:warrant date=2024-01-12 strike=3.076 exercisable_date=2024-07-12 expiration=2029-07-12 known_owners=['RWI'] count=1350000.0 initial_count=1350000.0
+23:33:41  [CELU]  walker 0000950170-24-115082 — call amend_instrument:warrant W-5298 date=2024-01-12 strike=2.4898
+23:33:41  [CELU]  walker 0000950170-24-115082 — call create_instrument:warrant date=2023-06-20 strike=8.1 expiration=2028-06-20 known_owners=['Starr'] count=50000.0 initial_count=50000.0
+23:33:41  [CELU]  walker 0000950170-24-115082 — call amend_instrument:warrant W-5280 date=2024-03-13 strike=5.895
+23:33:41  [CELU]  walker 0000950170-24-115082 — call amend_instrument:convertible C-1084 date=2024-09-13 conv_price=2.7546
+23:33:41  [CELU]    [2024-10-16] 10-Q 0000950170-24-115082 — 5 mutations
+23:33:41  [CELU]    redisclosure: 0000950170-24-115082 create (type=warrant) collapsed onto W-5290
+23:33:41  [CELU]    anchor 0000950170-24-115082 as_of=2024-03-31
+23:34:21  [CELU]  [overhang-combined] 0000950170-24-115082 — output truncated at max_tokens
+23:34:21  [CELU]  overhang-combined 0000950170-24-115082 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+23:34:21  [CELU]  overhang-combined 0000950170-24-115082 — w=2 c=0 p=0 s=0 a=0 e=0
+23:34:21  [CELU]    anchor 0000950170-24-115082 — 17 diffs (missing=0 field=0 count=0 extra=17)
+23:34:21  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=2.4898, terms.expiration=2030-03-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=652982, out.initial_count=849580, counterparty=Dragasac
+23:34:21  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:34:21  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406, counterparty=Armistice
+23:34:21  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=5.895, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:34:21  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=208485, out.initial_count=938184, counterparty=Robert Hariri
+23:34:21  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:34:21  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:34:21  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=8.1, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:34:21  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:34:21  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=3.076, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-12, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:34:21  [CELU]      diff extra_in_ledger W-5294 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=535275, out.initial_count=535275, counterparty=Dragasac
+23:34:21  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:34:21  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=5.895, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:34:21  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=2.7546, terms.maturity=2025-03-13, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=3150000.0, out.principal_remaining_asof=2024-03-13, counterparty=YA II
+23:34:21  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:34:21  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:34:21  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:34:21  [CELU]  walker 0001493152-24-041330 — dedup block: 1 candidates within ±180d
+23:34:21  [CELU]    0001493152-24-041330 — pruned 1 create tool(s): create_preferred
+23:34:21  [CELU]  walker 0001493152-24-041330 — form=8-K (20 tools)
+23:34:23  [CELU]  walker 0001493152-24-041330 — finish='REASON_TOOL_CALLS' calls=1
+23:34:23  [CELU]  walker 0001493152-24-041330 — note_no_event reasons: ['acquisition of Rebound product from Sequence LifeScience, Inc. with no dilutive financing terms disclosed']
+23:34:23  [CELU]    [2024-10-16] 8-K 0001493152-24-041330 — 0 mutations
+23:34:23  [CELU]    [2024-10-21] 8-K 0001493152-24-041706 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:34:23  [CELU]  walker 0001493152-24-042525 — dedup block: 1 candidates within ±180d
+23:34:23  [CELU]    0001493152-24-042525 — pruned 1 create tool(s): create_preferred
+23:34:23  [CELU]  walker 0001493152-24-042525 — form=8-K (20 tools)
+23:34:28  [CELU]  walker 0001493152-24-042525 — finish='REASON_TOOL_CALLS' calls=1
+23:34:28  [CELU]  walker 0001493152-24-042525 — note_no_event reasons: ['corporate update and preliminary financial results']
+23:34:28  [CELU]    [2024-10-25] 8-K 0001493152-24-042525 — 0 mutations
+23:34:28  [CELU]  walker 0000950170-24-122493 — dedup block: 19 candidates (all active, periodic form)
+23:34:28  [CELU]  walker 0000950170-24-122493 — form=10-Q (17 tools)
+23:35:07  [CELU]  walker 0000950170-24-122493 — finish='REASON_TOOL_CALLS' calls=1
+23:35:07  [CELU]  walker 0000950170-24-122493 — call amend_instrument:warrant W-5280 date=2024-03-13 strike=5.895
+23:35:07  [CELU]    [2024-11-07] 10-Q 0000950170-24-122493 — 1 mutations
+23:35:07  [CELU]    anchor 0000950170-24-122493 as_of=2024-06-30
+23:35:47  [CELU]  [overhang-combined] 0000950170-24-122493 — output truncated at max_tokens
+23:35:47  [CELU]  overhang-combined 0000950170-24-122493 — truncated at token cap; salvaged 5 row(s) from the valid prefix
+23:35:47  [CELU]  overhang-combined 0000950170-24-122493 — w=5 c=0 p=0 s=0 a=0 e=0
+23:35:47  [CELU]    anchor 0000950170-24-122493 — 16 diffs (missing=1 field=0 count=0 extra=15)
+23:35:47  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=115.0, outstanding_count=849999.0, maturity_or_expiry=2026-07-16
+23:35:47  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=2.4898, terms.expiration=2030-03-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=652982, out.initial_count=849580, counterparty=Dragasac
+23:35:47  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:35:47  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=5.895, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:35:47  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:35:47  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:35:47  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=8.1, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:35:47  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:35:47  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=3.076, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-12, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:35:47  [CELU]      diff extra_in_ledger W-5294 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=535275, out.initial_count=535275, counterparty=Dragasac
+23:35:47  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:35:47  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=5.895, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:35:47  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=2.7546, terms.maturity=2025-03-13, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=3150000.0, out.principal_remaining_asof=2024-03-13, counterparty=YA II
+23:35:47  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:35:47  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:35:47  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:35:47  [CELU]  walker 0001493152-24-043924 — dedup block: 1 candidates within ±180d
+23:35:47  [CELU]    0001493152-24-043924 — pruned 1 create tool(s): create_preferred
+23:35:47  [CELU]  walker 0001493152-24-043924 — form=8-K (20 tools)
+23:35:49  [CELU]  walker 0001493152-24-043924 — finish='REASON_TOOL_CALLS' calls=1
+23:35:49  [CELU]  walker 0001493152-24-043924 — note_no_event reasons: ['The filing is an 8-K announcing an update to full year 2024 financial guidance and the filing of its second quarter Form 10-Q, with no dilutive instruments or events disclosed.']
+23:35:49  [CELU]    [2024-11-07] 8-K 0001493152-24-043924 — 0 mutations
+23:35:49  [CELU]  walker 0001493152-24-044292 — dedup block: 1 candidates within ±180d
+23:35:49  [CELU]    0001493152-24-044292 — pruned 1 create tool(s): create_preferred
+23:35:49  [CELU]  walker 0001493152-24-044292 — form=8-K (20 tools)
+23:35:51  [CELU]  walker 0001493152-24-044292 — finish='REASON_TOOL_CALLS' calls=1
+23:35:51  [CELU]  walker 0001493152-24-044292 — note_no_event reasons: ['annual meeting date and stockholder proposal deadlines']
+23:35:51  [CELU]    [2024-11-08] 8-K 0001493152-24-044292 — 0 mutations
+23:35:51  [CELU]  walker 0001493152-24-046819 — form=DEF 14A (3 tools)
+23:36:10  [CELU]  walker 0001493152-24-046819 — finish='REASON_TOOL_CALLS' calls=1
+23:36:10  [CELU]  walker 0001493152-24-046819 — note_no_event reasons: ['Annual proxy statement containing director election, executive compensation, and related party transaction disclosures with no new dilutive instruments or events.']
+23:36:10  [CELU]    [2024-11-19] DEF 14A 0001493152-24-046819 — 0 mutations
+23:36:10  [CELU]    [2024-11-29] 8-K 0001493152-24-048082 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:36:10  [CELU]  walker 0001493152-24-048330 — dedup block: 1 candidates within ±180d
+23:36:10  [CELU]  walker 0001493152-24-048330 — form=8-K (21 tools)
+23:36:36  [CELU]  walker 0001493152-24-048330 — finish='REASON_TOOL_CALLS' calls=3
+23:36:36  [CELU]  walker 0001493152-24-048330 — call create_instrument:convertible date=2024-11-25 principal=500000.0 rate=0.08 conv_price=2.85 maturity=2025-11-25 principal_remaining=500000.0
+23:36:36  [CELU]  walker 0001493152-24-048330 — call create_instrument:warrant date=2024-11-25 strike=2.85 exercisable_date=2024-11-25 expiration=2029-11-25 count=175439.0 initial_count=175439.0
+23:36:36  [CELU]  walker 0001493152-24-048330 — call create_instrument:warrant date=2024-11-25 strike=3.56 exercisable_date=2024-11-25 expiration=2029-11-25 count=35000.0 initial_count=35000.0
+23:36:36  [CELU]    [2024-12-02] 8-K 0001493152-24-048330 — 3 mutations
+23:36:36  [CELU]  walker 0000950170-24-133799 — dedup block: 22 candidates (all active, periodic form)
+23:36:36  [CELU]  walker 0000950170-24-133799 — form=10-Q (17 tools)
+23:37:17  [CELU]  walker 0000950170-24-133799 — finish='REASON_TOOL_CALLS' calls=4
+23:37:17  [CELU]  walker 0000950170-24-133799 — call amend_instrument:warrant W-5300 date=2024-07-15 strike=2.988 expiration=2029-07-15
+23:37:17  [CELU]  walker 0000950170-24-133799 — call amend_instrument:convertible C-1085 date=2024-12-06 principal_remaining=750000.0
+23:37:17  [CELU]  walker 0000950170-24-133799 — call amend_instrument:warrant W-5301 date=2024-12-06 count=263158.0
+23:37:17  [CELU]  walker 0000950170-24-133799 — call amend_instrument:warrant W-5302 date=2024-12-06 count=52500.0
+23:37:17  [CELU]    [2024-12-06] 10-Q 0000950170-24-133799 — 4 mutations
+23:37:17  [CELU]    anchor 0000950170-24-133799 as_of=2024-09-30
+23:37:55  [CELU]  [overhang-combined] 0000950170-24-133799 — output truncated at max_tokens
+23:37:55  [CELU]  overhang-combined 0000950170-24-133799 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+23:37:55  [CELU]  overhang-combined 0000950170-24-133799 — w=2 c=0 p=0 s=0 a=0 e=0
+23:37:55  [CELU]    anchor 0000950170-24-133799 — 20 diffs (missing=0 field=0 count=0 extra=20)
+23:37:55  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=2.4898, terms.expiration=2030-03-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=652982, out.initial_count=849580, counterparty=Dragasac
+23:37:55  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:37:55  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406, counterparty=Armistice
+23:37:55  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=5.895, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:37:55  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=208485, out.initial_count=938184, counterparty=Robert Hariri
+23:37:55  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:37:55  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:37:55  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=8.1, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:37:55  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:37:55  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=2.988, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-15, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:37:55  [CELU]      diff extra_in_ledger W-5294 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=535275, out.initial_count=535275, counterparty=Dragasac
+23:37:55  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:37:55  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=5.895, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:37:55  [CELU]      diff extra_in_ledger W-5301 [warrant] ledger=terms.strike=2.85, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=263158.0, out.initial_count=263158.0
+23:37:55  [CELU]      diff extra_in_ledger W-5302 [warrant] ledger=terms.strike=3.56, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=52500.0, out.initial_count=52500.0
+23:37:55  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=2.7546, terms.maturity=2025-03-13, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=3150000.0, out.principal_remaining_asof=2024-03-13, counterparty=YA II
+23:37:55  [CELU]      diff extra_in_ledger C-1085 [convertible] ledger=terms.principal=500000.0, terms.rate=0.08, terms.conv_price=2.85, terms.maturity=2025-11-25, out.principal_remaining=750000.0, out.principal_remaining_asof=2024-12-06
+23:37:55  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:37:55  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:37:55  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:37:55  [CELU]    [2024-12-20] 8-K 0001493152-24-050885 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+23:37:55  [CELU]  walker 0001493152-25-000294 — dedup block: 4 candidates within ±180d
+23:37:55  [CELU]  walker 0001493152-25-000294 — form=8-K (21 tools)
+23:38:04  [CELU]  walker 0001493152-25-000294 — finish='REASON_TOOL_CALLS' calls=2
+23:38:04  [CELU]  walker 0001493152-25-000294 — call create_instrument:equity date=2024-12-27 price_per_share=2.25 count=1263157.0
+23:38:04  [CELU]  walker 0001493152-25-000294 — call create_instrument:warrant date=2024-12-27 strike=2.97 exercisable_date=2025-06-27 expiration=2029-12-27 count=1263157.0 initial_count=1263157.0
+23:38:04  [CELU]    [2025-01-03] 8-K 0001493152-25-000294 — 2 mutations
+23:38:04  [CELU]  walker 0001493152-25-003635 — dedup block: 5 candidates within ±180d
+23:38:04  [CELU]    0001493152-25-003635 — pruned 1 create tool(s): create_preferred
+23:38:04  [CELU]  walker 0001493152-25-003635 — form=8-K (20 tools)
+23:38:15  [CELU]  walker 0001493152-25-003635 — finish='REASON_TOOL_CALLS' calls=2
+23:38:15  [CELU]  walker 0001493152-25-003635 — call close_instrument W-5305 date=2025-01-23 reason=terminated
+23:38:15  [CELU]  walker 0001493152-25-003635 — call close_instrument EQ-4006 date=2025-01-23 reason=terminated
+23:38:15  [CELU]    [2025-01-24] 8-K 0001493152-25-003635 — 2 mutations
+23:38:15  [CELU]      reject close_instrument W-5305 date=2025-01-23 reason=terminated — close_with_outstanding: close_instrument(reason='terminated') blocked: count=1263157.0 on warrant W-5305; termination requires 0 outstanding.
+23:38:15  [CELU]  walker 0001493152-25-003722 — dedup block: 4 candidates within ±180d
+23:38:15  [CELU]    0001493152-25-003722 — pruned 1 create tool(s): create_preferred
+23:38:15  [CELU]  walker 0001493152-25-003722 — form=8-K (20 tools)
+23:38:30  [CELU]  walker 0001493152-25-003722 — finish='REASON_TOOL_CALLS' calls=1
+23:38:30  [CELU]  walker 0001493152-25-003722 — call amend_instrument:warrant W-5262 date=2025-01-24 strike=2.07
+23:38:30  [CELU]    [2025-01-27] 8-K 0001493152-25-003722 — 1 mutations
+23:38:30  [CELU]  walker 0001493152-25-004313 — dedup block: 4 candidates within ±180d
+23:38:30  [CELU]  walker 0001493152-25-004313 — form=S-1 (9 tools)
+23:39:14  [CELU]  walker 0001493152-25-004313 — finish='REASON_TOOL_CALLS' calls=2
+23:39:14  [CELU]  walker 0001493152-25-004313 — call create_instrument:s1_offering date=2025-01-30 anticipated_deal_size=17250000.0
+23:39:14  [CELU]  walker 0001493152-25-004313 — call amend_instrument:warrant W-5294 date=2025-01-24 strike=2.07
+23:39:14  [CELU]    [2025-01-30] S-1 0001493152-25-004313 — 2 mutations
+23:39:14  [CELU]  walker 0001493152-25-006219 — dedup block: 5 candidates within ±180d
+23:39:14  [CELU]  walker 0001493152-25-006219 — form=S-1/A (5 tools)
+23:40:00  [CELU]  walker 0001493152-25-006219 — finish='REASON_TOOL_CALLS' calls=1
+23:40:00  [CELU]  walker 0001493152-25-006219 — call amend_instrument:s1_offering S1-214 date=2025-02-13 anticipated_deal_size=1150000.0
+23:40:00  [CELU]    [2025-02-13] S-1/A 0001493152-25-006219 — 1 mutations
+23:40:00  [CELU]  walker 0001493152-25-006221 — dedup block: 1 candidates within ±30d
+23:40:00  [CELU]  walker 0001493152-25-006221 — no tool subset for form 'FWP'; treating as no-op
+23:40:00  [CELU]    [2025-02-13] FWP 0001493152-25-006221 — 0 mutations
+23:40:00  [CELU]  walker 0001493152-25-007097 — dedup block: 5 candidates within ±180d
+23:40:00  [CELU]    0001493152-25-007097 — pruned 1 create tool(s): create_preferred
+23:40:00  [CELU]  walker 0001493152-25-007097 — form=8-K (20 tools)
+23:40:11  [CELU]  walker 0001493152-25-007097 — finish='REASON_TOOL_CALLS' calls=1
+23:40:11  [CELU]  walker 0001493152-25-007097 — must_record net fired (items=3.02; content:warrant); re-asking
+23:40:42  [CELU]  walker 0001493152-25-007097 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:40:42  [CELU]  walker 0001493152-25-007097 — must_record (items=3.02; content:warrant): recorded nothing after second look — possible missed instrument
+23:40:42  [CELU]  walker 0001493152-25-007097 — note_no_event reasons: ['The filing discloses binding term sheets for forbearance extensions and future warrant commitments with undetermined strike prices, with no currently dilutive instruments issued or modified.']
+23:40:42  [CELU]    [2025-02-18] 8-K 0001493152-25-007097 — 0 mutations
+23:40:42  [CELU]  walker 0001493152-25-007986 — dedup block: 5 candidates within ±180d
+23:40:42  [CELU]    0001493152-25-007986 — pruned 1 create tool(s): create_preferred
+23:40:42  [CELU]  walker 0001493152-25-007986 — form=8-K (20 tools)
+23:40:44  [CELU]  walker 0001493152-25-007986 — finish='REASON_TOOL_CALLS' calls=1
+23:40:44  [CELU]  walker 0001493152-25-007986 — note_no_event reasons: ['Master Services Collaboration Agreement with BlueSphere Bio, Inc. covering manufacturing activities']
+23:40:44  [CELU]    [2025-02-24] 8-K 0001493152-25-007986 — 0 mutations
+23:40:44  [CELU]  walker 0001493152-25-011156 — dedup block: 5 candidates within ±180d
+23:40:44  [CELU]  walker 0001493152-25-011156 — form=8-K (21 tools)
+23:40:55  [CELU]  walker 0001493152-25-011156 — finish='REASON_TOOL_CALLS' calls=2
+23:40:55  [CELU]  walker 0001493152-25-011156 — must_record net fired (content:convertible,equity_line); re-asking
+23:41:03  [CELU]  walker 0001493152-25-011156 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:41:03  [CELU]  walker 0001493152-25-011156 — content-expectation second look (content:convertible,equity_line): no gap calls returned (re-disclosure or model declined)
+23:41:03  [CELU]  walker 0001493152-25-011156 — call amend_instrument:convertible C-1084 date=2025-03-17 maturity=2025-05-12 principal_remaining=2152602.74
+23:41:03  [CELU]  walker 0001493152-25-011156 — call create_instrument:equity date=2025-03-17 price_per_share=0.0 closing_date=2025-03-17 known_owners=['YA II'] count=100000.0
+23:41:03  [CELU]    [2025-03-21] 8-K 0001493152-25-011156 — 2 mutations
+23:41:03  [CELU]    [2025-04-23] 8-K 0001641172-25-005884 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:41:03  [CELU]  walker 0001641172-25-008104 — dedup block: 5 candidates within ±180d
+23:41:03  [CELU]    0001641172-25-008104 — pruned 1 create tool(s): create_preferred
+23:41:03  [CELU]  walker 0001641172-25-008104 — form=8-K (20 tools)
+23:41:05  [CELU]  walker 0001641172-25-008104 — finish='REASON_TOOL_CALLS' calls=1
+23:41:05  [CELU]  walker 0001641172-25-008104 — note_no_event reasons: ['regained compliance with Nasdaq Listing Rule 5250(f) after paying past due fee balance']
+23:41:05  [CELU]    [2025-05-01] 8-K 0001641172-25-008104 — 0 mutations
+23:41:06  [CELU]  walker 0001641172-25-009319 — dedup block: 24 candidates (all active, periodic form)
+23:41:06  [CELU]  walker 0001641172-25-009319 — form=10-K (17 tools)
+23:42:02  [CELU]  [ledger-walker] 0001641172-25-009319 — output truncated at max_tokens
+23:42:02  [CELU]  walker 0001641172-25-009319 — finish='REASON_MAX_LEN' calls=57
+23:42:02  [CELU]  walker 0001641172-25-009319 — collapsed 50 duplicate tool call(s) (runaway-loop guard)
+23:42:02  [CELU]  walker 0001641172-25-009319 — call close_instrument W-5305 date=2025-01-23 reason=terminated
+23:42:02  [CELU]  walker 0001641172-25-009319 — call record_event W-5262 date=2025-01-24 shares=652981.0 price=2.07
+23:42:02  [CELU]  walker 0001641172-25-009319 — call close_instrument W-5262 date=2025-01-24 reason=exercised
+23:42:02  [CELU]  walker 0001641172-25-009319 — call record_event W-5294 date=2025-01-24 shares=535274.0 price=2.07
+23:42:02  [CELU]  walker 0001641172-25-009319 — call close_instrument W-5294 date=2025-01-24 reason=exercised
+23:42:02  [CELU]  walker 0001641172-25-009319 — call record_event C-1084 date=2024-11-14 shares_issued=478881.0 principal_converted=1150000.0
+23:42:02  [CELU]  walker 0001641172-25-009319 — call record_event date=2024-11-14 shares_issued=478881.0 principal_converted=1150000.0
+23:42:02  [CELU]    [2025-05-08] 10-K 0001641172-25-009319 — 7 mutations
+23:42:02  [CELU]      reject record_event date=2024-11-14 shares_issued=478881.0 principal_converted=1150000.0 — missing_id: instrument_id '' not found in ledger
+23:42:02  [CELU]      reject close_instrument W-5305 date=2025-01-23 reason=terminated — close_with_outstanding: close_instrument(reason='terminated') blocked: count=1263157.0 on warrant W-5305; termination requires 0 outstanding.
+23:42:02  [CELU]      reject close_instrument W-5262 date=2025-01-24 reason=exercised — close_with_outstanding: close_instrument(reason='exercised') blocked: count=1.0 on warrant W-5262; full exercise requires 0. Use record_event(exercise) for partial exercises.
+23:42:02  [CELU]      reject close_instrument W-5294 date=2025-01-24 reason=exercised — close_with_outstanding: close_instrument(reason='exercised') blocked: count=1.0 on warrant W-5294; full exercise requires 0. Use record_event(exercise) for partial exercises.
+23:42:02  [CELU]    anchor 0001641172-25-009319 as_of=2024-12-31
+23:42:41  [CELU]  [overhang-combined] 0001641172-25-009319 — output truncated at max_tokens
+23:42:41  [CELU]  overhang-combined 0001641172-25-009319 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+23:42:41  [CELU]  overhang-combined 0001641172-25-009319 — w=3 c=0 p=0 s=0 a=0 e=0
+23:42:41  [CELU]    anchor 0001641172-25-009319 — 22 diffs (missing=1 field=0 count=0 extra=21)
+23:42:41  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=115.0, outstanding_count=849999.0, maturity_or_expiry=2026-07-16
+23:42:41  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=2.07, terms.expiration=2030-03-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1.0, out.initial_count=849580, out.exercised_to_date=652981.0, counterparty=Dragasac
+23:42:41  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:42:41  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406, counterparty=Armistice
+23:42:41  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=5.895, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:42:41  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=208485, out.initial_count=938184, counterparty=Robert Hariri
+23:42:41  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:42:41  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:42:41  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=8.1, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:42:41  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:42:41  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=2.988, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-15, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:42:41  [CELU]      diff extra_in_ledger W-5294 [warrant] ledger=terms.strike=2.07, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1.0, out.initial_count=535275, out.exercised_to_date=535274.0, counterparty=Dragasac
+23:42:41  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:42:41  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=5.895, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:42:41  [CELU]      diff extra_in_ledger W-5301 [warrant] ledger=terms.strike=2.85, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=263158.0, out.initial_count=263158.0
+23:42:41  [CELU]      diff extra_in_ledger W-5302 [warrant] ledger=terms.strike=3.56, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=52500.0, out.initial_count=52500.0
+23:42:41  [CELU]      diff extra_in_ledger W-5305 [warrant] ledger=terms.strike=2.97, terms.exercisable_date=2025-06-27, terms.expiration=2029-12-27, out.count=1263157.0, out.initial_count=1263157.0
+23:42:41  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=2.7546, terms.maturity=2025-05-12, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=2152602.74, out.principal_remaining_asof=2025-03-17, out.principal_converted_to_date=1150000.0, counterparty=YA II
+23:42:41  [CELU]      diff extra_in_ledger C-1085 [convertible] ledger=terms.principal=500000.0, terms.rate=0.08, terms.conv_price=2.85, terms.maturity=2025-11-25, out.principal_remaining=750000.0, out.principal_remaining_asof=2024-12-06
+23:42:41  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:42:41  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:42:41  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:42:41  [CELU]  walker 0001641172-25-009462 — dedup block: 5 candidates within ±180d
+23:42:41  [CELU]  walker 0001641172-25-009462 — form=8-K (21 tools)
+23:42:44  [CELU]  walker 0001641172-25-009462 — finish='REASON_TOOL_CALLS' calls=1
+23:42:44  [CELU]  walker 0001641172-25-009462 — note_no_event reasons: ['earnings release and financial results announcement']
+23:42:44  [CELU]    [2025-05-09] 8-K 0001641172-25-009462 — 0 mutations
+23:42:44  [CELU]    [2025-05-16] 8-K 0001641172-25-011253 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:42:44  [CELU]  walker 0001641172-25-011751 — dedup block: 5 candidates within ±180d
+23:42:44  [CELU]    0001641172-25-011751 — pruned 1 create tool(s): create_preferred
+23:42:44  [CELU]  walker 0001641172-25-011751 — form=8-K (20 tools)
+23:42:51  [CELU]  walker 0001641172-25-011751 — finish='REASON_TOOL_CALLS' calls=2
+23:42:51  [CELU]  walker 0001641172-25-011751 — call amend_instrument:convertible C-1084 date=2025-05-20 maturity=2025-08-15
+23:42:51  [CELU]  walker 0001641172-25-011751 — call create_instrument:equity date=2025-05-20 price_per_share=0.0 closing_date=2025-05-20 known_owners=['YA II'] count=100000.0
+23:42:51  [CELU]    [2025-05-20] 8-K 0001641172-25-011751 — 2 mutations
+23:42:51  [CELU]  walker 0001641172-25-011942 — dedup block: 24 candidates (all active, periodic form)
+23:42:51  [CELU]  walker 0001641172-25-011942 — form=10-K/A (14 tools)
+23:43:30  [CELU]  walker 0001641172-25-011942 — finish='REASON_TOOL_CALLS' calls=1
+23:43:30  [CELU]  walker 0001641172-25-011942 — note_no_event reasons: ['10-K/A discloses executive compensation, beneficial ownership, and related party transactions with no new dilutive instruments or events.']
+23:43:30  [CELU]    [2025-05-21] 10-K/A 0001641172-25-011942 — 0 mutations
+23:43:30  [CELU]    anchor 0001641172-25-011942 as_of=2024-12-31
+23:44:08  [CELU]  [overhang-combined] 0001641172-25-011942 — output truncated at max_tokens
+23:44:08  [CELU]  overhang-combined 0001641172-25-011942 — truncated at token cap; salvaged 2 row(s) from the valid prefix
+23:44:08  [CELU]  overhang-combined 0001641172-25-011942 — w=2 c=0 p=0 s=0 a=0 e=0
+23:44:08  [CELU]    anchor 0001641172-25-011942 — 22 diffs (missing=0 field=0 count=1 extra=21)
+23:44:08  [CELU]      diff count_mismatch W-5281 [warrant] ledger=out.count=208485.0 filing=out.count=938184
+23:44:08  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=2.07, terms.expiration=2030-03-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1.0, out.initial_count=849580, out.exercised_to_date=652981.0, counterparty=Dragasac
+23:44:08  [CELU]      diff extra_in_ledger W-5255 [warrant] ledger=terms.strike=115.0, terms.known_owners=['Cooper Road', 'Dean C. Kehler', 'Jordan S. Bloom'], terms.expiration=2026-07-14, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1437469, out.initial_count=1437500, out.exercised_to_date=30
+23:44:08  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:44:08  [CELU]      diff extra_in_ledger W-5275 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2022-05-20, terms.expiration=2028-10-10, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406, counterparty=Armistice
+23:44:08  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:44:08  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:44:08  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=8.1, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:44:08  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:44:08  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=2.988, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-15, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:44:08  [CELU]      diff extra_in_ledger W-5294 [warrant] ledger=terms.strike=2.07, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1.0, out.initial_count=535275, out.exercised_to_date=535274.0, counterparty=Dragasac
+23:44:08  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:44:08  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=5.895, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:44:08  [CELU]      diff extra_in_ledger W-5298 [warrant] ledger=terms.strike=2.4898, terms.expiration=2025-03-16, out.count=652981.0, out.initial_count=652981.0
+23:44:08  [CELU]      diff extra_in_ledger W-5301 [warrant] ledger=terms.strike=2.85, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=263158.0, out.initial_count=263158.0
+23:44:08  [CELU]      diff extra_in_ledger W-5302 [warrant] ledger=terms.strike=3.56, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=52500.0, out.initial_count=52500.0
+23:44:08  [CELU]      diff extra_in_ledger W-5305 [warrant] ledger=terms.strike=2.97, terms.exercisable_date=2025-06-27, terms.expiration=2029-12-27, out.count=1263157.0, out.initial_count=1263157.0
+23:44:08  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=2.7546, terms.maturity=2025-08-15, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=2152602.74, out.principal_remaining_asof=2025-03-17, out.principal_converted_to_date=1150000.0, counterparty=YA II
+23:44:08  [CELU]      diff extra_in_ledger C-1085 [convertible] ledger=terms.principal=500000.0, terms.rate=0.08, terms.conv_price=2.85, terms.maturity=2025-11-25, out.principal_remaining=750000.0, out.principal_remaining_asof=2024-12-06
+23:44:08  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:44:08  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:44:08  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:44:08  [CELU]      anchor proposal amend_instrument:warrant W-5281 date=2024-12-31 count=938184
+23:44:08  [CELU]    anchor corrections applied=1 rejected=0
+23:44:08  [CELU]    [2025-06-06] 8-K 0001641172-25-014073 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:44:08  [CELU]  walker 0001641172-25-014525 — dedup block: 2 candidates within ±180d
+23:44:08  [CELU]    0001641172-25-014525 — pruned 1 create tool(s): create_preferred
+23:44:08  [CELU]  walker 0001641172-25-014525 — form=8-K (20 tools)
+23:44:10  [CELU]  walker 0001641172-25-014525 — finish='REASON_TOOL_CALLS' calls=1
+23:44:10  [CELU]  walker 0001641172-25-014525 — note_no_event reasons: ['Chief Financial Officer transition and appointment of interim CFO']
+23:44:10  [CELU]    [2025-06-10] 8-K 0001641172-25-014525 — 0 mutations
+23:44:10  [CELU]  walker 0001641172-25-020580 — dedup block: 1 candidates within ±180d
+23:44:10  [CELU]  walker 0001641172-25-020580 — form=8-K (21 tools)
+23:44:45  [CELU]  walker 0001641172-25-020580 — finish='REASON_TOOL_CALLS' calls=1
+23:44:45  [CELU]  walker 0001641172-25-020580 — call create_instrument:equity date=2025-06-23 price_per_share=1.4 count=739286.0
+23:44:45  [CELU]    [2025-07-22] 8-K 0001641172-25-020580 — 1 mutations
+23:44:45  [CELU]  walker 0001641172-25-021378 — dedup block: 1 candidates within ±180d
+23:44:45  [CELU]  walker 0001641172-25-021378 — form=8-K/A (21 tools)
+23:45:21  [CELU]  walker 0001641172-25-021378 — finish='REASON_TOOL_CALLS' calls=7
+23:45:21  [CELU]  walker 0001641172-25-021378 — call amend_instrument:warrant W-5280 date=2025-07-29 strike=1.692
+23:45:21  [CELU]  walker 0001641172-25-021378 — call create_instrument:warrant date=2025-07-29 strike=1.692 exercisable_date=2025-07-29 expiration=2030-07-29 known_owners=['Starr'] count=50000.0 initial_count=50000.0
+23:45:21  [CELU]  walker 0001641172-25-021378 — call create_instrument:warrant date=2025-07-29 strike=1.692 exercisable_date=2025-07-29 expiration=2030-07-29 known_owners=['Starr'] count=100000.0 initial_count=100000.0
+23:45:21  [CELU]  walker 0001641172-25-021378 — call amend_instrument:warrant W-5290 date=2025-07-29 strike=2.844
+23:45:21  [CELU]  walker 0001641172-25-021378 — call amend_instrument:warrant W-5300 date=2025-07-29 strike=2.844
+23:45:21  [CELU]  walker 0001641172-25-021378 — call amend_instrument:warrant W-5297 date=2025-07-29 strike=2.844
+23:45:21  [CELU]  walker 0001641172-25-021378 — call create_instrument:warrant date=2025-07-29 strike=2.844 exercisable_date=2025-07-29 expiration=2030-07-29 known_owners=['RWI'] count=500000.0 initial_count=500000.0
+23:45:21  [CELU]    [2025-07-29] 8-K/A 0001641172-25-021378 — 7 mutations
+23:45:21  [CELU]  walker 0001641172-25-021556 — dedup block: 3 candidates within ±180d
+23:45:21  [CELU]  walker 0001641172-25-021556 — form=8-K (21 tools)
+23:45:39  [CELU]  walker 0001641172-25-021556 — finish='REASON_TOOL_CALLS' calls=2
+23:45:39  [CELU]  walker 0001641172-25-021556 — call create_instrument:equity date=2025-07-30 price_per_share=1.625 count=1230769.0
+23:45:39  [CELU]  walker 0001641172-25-021556 — call create_instrument:warrant date=2025-07-30 strike=1.5 exercisable_date=2025-07-30 expiration=2027-07-30 count=1230769.0 initial_count=1230769.0
+23:45:39  [CELU]    [2025-07-30] 8-K 0001641172-25-021556 — 2 mutations
+23:45:39  [CELU]  walker 0001641172-25-021831 — dedup block: 4 candidates within ±180d
+23:45:39  [CELU]  walker 0001641172-25-021831 — form=8-K (21 tools)
+23:45:52  [CELU]  walker 0001641172-25-021831 — finish='REASON_TOOL_CALLS' calls=1
+23:45:52  [CELU]  walker 0001641172-25-021831 — must_record net fired (content:convertible); re-asking
+23:46:06  [CELU]  walker 0001641172-25-021831 — must_record retry finish='REASON_TOOL_CALLS' calls=1
+23:46:06  [CELU]  walker 0001641172-25-021831 — content-expectation second look (content:convertible): no gap calls returned (re-disclosure or model declined)
+23:46:06  [CELU]  walker 0001641172-25-021831 — call create_instrument:warrant date=2025-07-21 strike=2.528 exercisable_date=2025-07-21 expiration=2030-07-21 known_owners=['Lim Kok Thay'] count=3700000.0 initial_count=3700000.0
+23:46:06  [CELU]    [2025-08-01] 8-K 0001641172-25-021831 — 1 mutations
+23:46:06  [CELU]  walker 0001641172-25-023231 — dedup block: 5 candidates within ±180d
+23:46:06  [CELU]  walker 0001641172-25-023231 — form=8-K (21 tools)
+23:46:13  [CELU]  walker 0001641172-25-023231 — finish='REASON_TOOL_CALLS' calls=1
+23:46:13  [CELU]  walker 0001641172-25-023231 — note_no_event reasons: ["The filing discloses Celularity's acquisition of Series Seed-2 Preferred Stock of Defeye, Inc. as an investment, which is not a dilutive issuance of Celularity's own securities."]
+23:46:13  [CELU]    [2025-08-12] 8-K 0001641172-25-023231 — 0 mutations
+23:46:13  [CELU]  walker 0001641172-25-024623 — dedup block: 5 candidates within ±180d
+23:46:13  [CELU]  walker 0001641172-25-024623 — form=8-K (21 tools)
+23:46:27  [CELU]  walker 0001641172-25-024623 — finish='REASON_TOOL_CALLS' calls=1
+23:46:27  [CELU]  walker 0001641172-25-024623 — note_no_event reasons: ['The filing describes an asset purchase agreement and license agreement to restructure and retire senior secured debt, with no dilutive instruments issued or modified.']
+23:46:27  [CELU]    [2025-08-18] 8-K 0001641172-25-024623 — 0 mutations
+23:46:27  [CELU]  walker 0001641172-25-026056 — dedup block: 29 candidates (all active, periodic form)
+23:46:27  [CELU]  walker 0001641172-25-026056 — form=10-Q (17 tools)
+23:47:07  [CELU]  walker 0001641172-25-026056 — finish='REASON_TOOL_CALLS' calls=2
+23:47:07  [CELU]  walker 0001641172-25-026056 — call record_event W-5298 date=2025-01-24 shares=652981.0 price=2.07
+23:47:07  [CELU]  walker 0001641172-25-026056 — call close_instrument W-5298 date=2025-01-24 reason=exercised
+23:47:07  [CELU]    [2025-08-29] 10-Q 0001641172-25-026056 — 2 mutations
+23:47:07  [CELU]    anchor 0001641172-25-026056 as_of=2025-03-31
+23:47:48  [CELU]  [overhang-combined] 0001641172-25-026056 — output truncated at max_tokens
+23:47:48  [CELU]  overhang-combined 0001641172-25-026056 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+23:47:48  [CELU]  overhang-combined 0001641172-25-026056 — w=3 c=0 p=0 s=0 a=0 e=0
+23:47:48  [CELU]    anchor 0001641172-25-026056 — 26 diffs (missing=1 field=0 count=0 extra=25)
+23:47:48  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=115.0, outstanding_count=849999.0, maturity_or_expiry=2026-07-16
+23:47:48  [CELU]      diff extra_in_ledger W-5262 [warrant] ledger=terms.strike=2.07, terms.expiration=2030-03-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1.0, out.initial_count=849580, out.exercised_to_date=652981.0, counterparty=Dragasac
+23:47:48  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:47:48  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:47:48  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=938184, out.initial_count=938184, counterparty=Robert Hariri
+23:47:48  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:47:48  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:47:48  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:47:48  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:47:48  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-15, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:47:48  [CELU]      diff extra_in_ledger W-5294 [warrant] ledger=terms.strike=2.07, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.known_owners=['Dragasac'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1.0, out.initial_count=535275, out.exercised_to_date=535274.0, counterparty=Dragasac
+23:47:48  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:47:48  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=2.844, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:47:48  [CELU]      diff extra_in_ledger W-5301 [warrant] ledger=terms.strike=2.85, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=263158.0, out.initial_count=263158.0
+23:47:48  [CELU]      diff extra_in_ledger W-5302 [warrant] ledger=terms.strike=3.56, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=52500.0, out.initial_count=52500.0
+23:47:48  [CELU]      diff extra_in_ledger W-5305 [warrant] ledger=terms.strike=2.97, terms.exercisable_date=2025-06-27, terms.expiration=2029-12-27, out.count=1263157.0, out.initial_count=1263157.0
+23:47:48  [CELU]      diff extra_in_ledger W-5316 [warrant] ledger=terms.strike=2.528, terms.exercisable_date=2025-07-21, terms.expiration=2030-07-21, terms.known_owners=['Lim Kok Thay'], out.count=3700000.0, out.initial_count=3700000.0, counterparty=Lim Kok Thay
+23:47:48  [CELU]      diff extra_in_ledger W-5311 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=50000.0, out.initial_count=50000.0, counterparty=Starr
+23:47:48  [CELU]      diff extra_in_ledger W-5312 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=100000.0, out.initial_count=100000.0, counterparty=Starr
+23:47:48  [CELU]      diff extra_in_ledger W-5313 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['RWI'], out.count=500000.0, out.initial_count=500000.0, counterparty=RWI
+23:47:48  [CELU]      diff extra_in_ledger W-5314 [warrant] ledger=terms.strike=1.5, terms.exercisable_date=2025-07-30, terms.expiration=2027-07-30, out.count=1230769.0, out.initial_count=1230769.0
+23:47:48  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=2.7546, terms.maturity=2025-08-15, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=2152602.74, out.principal_remaining_asof=2025-03-17, out.principal_converted_to_date=1150000.0, counterparty=YA II
+23:47:48  [CELU]      diff extra_in_ledger C-1085 [convertible] ledger=terms.principal=500000.0, terms.rate=0.08, terms.conv_price=2.85, terms.maturity=2025-11-25, out.principal_remaining=750000.0, out.principal_remaining_asof=2024-12-06
+23:47:48  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:47:48  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:47:48  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:47:48  [CELU]  walker 0001641172-25-026067 — dedup block: 28 candidates (all active, periodic form)
+23:47:48  [CELU]  walker 0001641172-25-026067 — form=10-Q (17 tools)
+23:48:38  [CELU]  [ledger-walker] 0001641172-25-026067 — output truncated at max_tokens
+23:48:38  [CELU]  walker 0001641172-25-026067 — finish='REASON_MAX_LEN' calls=8
+23:48:38  [CELU]  walker 0001641172-25-026067 — call record_event C-1085 date=2025-06-25 shares_issued=490632.0 principal_converted=750000.0
+23:48:38  [CELU]  walker 0001641172-25-026067 — call close_instrument C-1085 date=2025-06-25 reason=converted
+23:48:38  [CELU]  walker 0001641172-25-026067 — call record_event W-5262 date=2025-01-24 shares=652981.0 price=2.07 gross_proceeds=1351670.67
+23:48:38  [CELU]  walker 0001641172-25-026067 — call close_instrument W-5262 date=2025-01-24 reason=exercised
+23:48:38  [CELU]  walker 0001641172-25-026067 — call record_event W-5294 date=2025-01-24 shares=535274.0 price=2.07 gross_proceeds=1108017.18
+23:48:38  [CELU]  walker 0001641172-25-026067 — call close_instrument W-5294 date=2025-01-24 reason=exercised
+23:48:38  [CELU]  walker 0001641172-25-026067 — call amend_instrument:convertible C-1084 date=2025-06-23 conv_price=1.4
+23:48:38  [CELU]  walker 0001641172-25-026067 — call amend_instrument:convertible C-1084 date=2025-08-05 maturity=2025-10-15
+23:48:38  [CELU]    [2025-08-29] 10-Q 0001641172-25-026067 — 8 mutations
+23:48:38  [CELU]    anchor 0001641172-25-026067 as_of=2025-06-30
+23:49:19  [CELU]  [overhang-combined] 0001641172-25-026067 — output truncated at max_tokens
+23:49:19  [CELU]  overhang-combined 0001641172-25-026067 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+23:49:19  [CELU]  overhang-combined 0001641172-25-026067 — w=3 c=0 p=0 s=0 a=0 e=0
+23:49:19  [CELU]    anchor 0001641172-25-026067 — 24 diffs (missing=1 field=0 count=0 extra=23)
+23:49:19  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=115.0, outstanding_count=849999.0, maturity_or_expiry=2026-07-16
+23:49:19  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:49:19  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:49:19  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=938184, out.initial_count=938184, counterparty=Robert Hariri
+23:49:19  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:49:19  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:49:19  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:49:19  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:49:19  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-15, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:49:19  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:49:19  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=2.844, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:49:19  [CELU]      diff extra_in_ledger W-5301 [warrant] ledger=terms.strike=2.85, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=263158.0, out.initial_count=263158.0
+23:49:19  [CELU]      diff extra_in_ledger W-5302 [warrant] ledger=terms.strike=3.56, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=52500.0, out.initial_count=52500.0
+23:49:19  [CELU]      diff extra_in_ledger W-5305 [warrant] ledger=terms.strike=2.97, terms.exercisable_date=2025-06-27, terms.expiration=2029-12-27, out.count=1263157.0, out.initial_count=1263157.0
+23:49:19  [CELU]      diff extra_in_ledger W-5316 [warrant] ledger=terms.strike=2.528, terms.exercisable_date=2025-07-21, terms.expiration=2030-07-21, terms.known_owners=['Lim Kok Thay'], out.count=3700000.0, out.initial_count=3700000.0, counterparty=Lim Kok Thay
+23:49:19  [CELU]      diff extra_in_ledger W-5311 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=50000.0, out.initial_count=50000.0, counterparty=Starr
+23:49:19  [CELU]      diff extra_in_ledger W-5312 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=100000.0, out.initial_count=100000.0, counterparty=Starr
+23:49:19  [CELU]      diff extra_in_ledger W-5313 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['RWI'], out.count=500000.0, out.initial_count=500000.0, counterparty=RWI
+23:49:19  [CELU]      diff extra_in_ledger W-5314 [warrant] ledger=terms.strike=1.5, terms.exercisable_date=2025-07-30, terms.expiration=2027-07-30, out.count=1230769.0, out.initial_count=1230769.0
+23:49:19  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=1.4, terms.maturity=2025-10-15, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=2152602.74, out.principal_remaining_asof=2025-03-17, out.principal_converted_to_date=1150000.0, counterparty=YA II
+23:49:19  [CELU]      diff extra_in_ledger C-1085 [convertible] ledger=terms.principal=500000.0, terms.rate=0.08, terms.conv_price=2.85, terms.maturity=2025-11-25, out.principal_remaining=0.0, out.principal_remaining_asof=2025-06-25, out.principal_converted_to_date=750000.0
+23:49:19  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:49:19  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:49:19  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:49:19  [CELU]  walker 0001641172-25-026245 — dedup block: 5 candidates within ±180d
+23:49:19  [CELU]    0001641172-25-026245 — pruned 1 create tool(s): create_preferred
+23:49:19  [CELU]  walker 0001641172-25-026245 — form=8-K (20 tools)
+23:49:22  [CELU]  walker 0001641172-25-026245 — finish='REASON_TOOL_CALLS' calls=1
+23:49:22  [CELU]  walker 0001641172-25-026245 — note_no_event reasons: ['Nasdaq compliance notification regarding Listing Rule 5250(c)(1)']
+23:49:22  [CELU]    [2025-09-03] 8-K 0001641172-25-026245 — 0 mutations
+23:49:22  [CELU]  walker 0001493152-25-019839 — dedup block: 5 candidates within ±180d
+23:49:22  [CELU]  walker 0001493152-25-019839 — form=8-K (21 tools)
+23:49:42  [CELU]  walker 0001493152-25-019839 — finish='REASON_TOOL_CALLS' calls=2
+23:49:42  [CELU]  walker 0001493152-25-019839 — call create_instrument:preferred date=2025-10-24 series_letter=A conv_price=1.6 convertible_date=2025-10-24 maturity=2026-10-24 stated_value=1.111111 liquidation_preference=2222222.0 dividend_rate=0.05 count=2000000.0 initial_count=2000000.0
+23:49:42  [CELU]  walker 0001493152-25-019839 — call create_instrument:warrant date=2025-10-24 strike=3.0 exercisable_date=2025-10-24 expiration=2030-10-24 count=267308.0 initial_count=267308.0
+23:49:42  [CELU]    [2025-10-28] 8-K 0001493152-25-019839 — 2 mutations
+23:49:42  [CELU]  walker 0001493152-25-021208 — dedup block: 2 candidates within ±30d
+23:49:42  [CELU]  walker 0001493152-25-021208 — form=DEF 14A (3 tools)
+23:50:10  [CELU]  walker 0001493152-25-021208 — finish='REASON_TOOL_CALLS' calls=1
+23:50:10  [CELU]  walker 0001493152-25-021208 — note_no_event reasons: ['Proxy statement for annual meeting of stockholders covering director elections, auditor ratification, and an amendment to the 2021 Equity Incentive Plan, with no new dilutive instruments or events.']
+23:50:10  [CELU]    [2025-11-07] DEF 14A 0001493152-25-021208 — 0 mutations
+23:50:10  [CELU]  walker 0001493152-25-021212 — dedup block: 2 candidates within ±30d
+23:50:10  [CELU]  walker 0001493152-25-021212 — form=DEFA14A (3 tools)
+23:50:13  [CELU]  walker 0001493152-25-021212 — finish='REASON_TOOL_CALLS' calls=1
+23:50:13  [CELU]  walker 0001493152-25-021212 — note_no_event reasons: ['definitive additional proxy materials cover page only with no dilutive instruments or events disclosed']
+23:50:13  [CELU]    [2025-11-07] DEFA14A 0001493152-25-021212 — 0 mutations
+23:50:13  [CELU]  walker 0001493152-25-023467 — dedup block: 27 candidates (all active, periodic form)
+23:50:13  [CELU]  walker 0001493152-25-023467 — form=10-Q (17 tools)
+23:50:51  [CELU]  walker 0001493152-25-023467 — finish='REASON_TOOL_CALLS' calls=1
+23:50:51  [CELU]  walker 0001493152-25-023467 — call create_instrument:preferred date=2025-10-24 series_letter=A conv_price=1.6 stated_value=1.111111 liquidation_preference=2222222.0 known_owners=['Helena'] count=2000000.0 initial_count=2000000.0
+23:50:51  [CELU]  walker 0001493152-25-023467 — guard dropped duplicate create preferred (matches existing P-467 strike=1.6 created=2025-10-24)
+23:50:51  [CELU]  walker 0001493152-25-023467 — guards dropped 1 dup-creates (0 gap-filled via amend), 0 equity-on-shelf, 0 placeholder-finalized
+23:50:51  [CELU]    [2025-11-14] 10-Q 0001493152-25-023467 — 0 mutations
+23:50:51  [CELU]    anchor 0001493152-25-023467 as_of=2025-09-30
+23:51:31  [CELU]  [overhang-combined] 0001493152-25-023467 — output truncated at max_tokens
+23:51:31  [CELU]  overhang-combined 0001493152-25-023467 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+23:51:31  [CELU]  overhang-combined 0001493152-25-023467 — w=3 c=0 p=0 s=0 a=0 e=0
+23:51:31  [CELU]    anchor 0001493152-25-023467 — 26 diffs (missing=1 field=0 count=0 extra=25)
+23:51:31  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=115.0, outstanding_count=849999.0, maturity_or_expiry=2026-07-16
+23:51:31  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:51:31  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:51:31  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=938184, out.initial_count=938184, counterparty=Robert Hariri
+23:51:31  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:51:31  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:51:31  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:51:31  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:51:31  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-15, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:51:31  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:51:31  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=2.844, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:51:31  [CELU]      diff extra_in_ledger W-5301 [warrant] ledger=terms.strike=2.85, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=263158.0, out.initial_count=263158.0
+23:51:31  [CELU]      diff extra_in_ledger W-5302 [warrant] ledger=terms.strike=3.56, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=52500.0, out.initial_count=52500.0
+23:51:31  [CELU]      diff extra_in_ledger W-5305 [warrant] ledger=terms.strike=2.97, terms.exercisable_date=2025-06-27, terms.expiration=2029-12-27, out.count=1263157.0, out.initial_count=1263157.0
+23:51:31  [CELU]      diff extra_in_ledger W-5316 [warrant] ledger=terms.strike=2.528, terms.exercisable_date=2025-07-21, terms.expiration=2030-07-21, terms.known_owners=['Lim Kok Thay'], out.count=3700000.0, out.initial_count=3700000.0, counterparty=Lim Kok Thay
+23:51:31  [CELU]      diff extra_in_ledger W-5311 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=50000.0, out.initial_count=50000.0, counterparty=Starr
+23:51:31  [CELU]      diff extra_in_ledger W-5312 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=100000.0, out.initial_count=100000.0, counterparty=Starr
+23:51:31  [CELU]      diff extra_in_ledger W-5313 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['RWI'], out.count=500000.0, out.initial_count=500000.0, counterparty=RWI
+23:51:31  [CELU]      diff extra_in_ledger W-5314 [warrant] ledger=terms.strike=1.5, terms.exercisable_date=2025-07-30, terms.expiration=2027-07-30, out.count=1230769.0, out.initial_count=1230769.0
+23:51:31  [CELU]      diff extra_in_ledger W-5319 [warrant] ledger=terms.strike=3.0, terms.exercisable_date=2025-10-24, terms.expiration=2030-10-24, out.count=267308.0, out.initial_count=267308.0
+23:51:31  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=1.4, terms.maturity=2025-10-15, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=2152602.74, out.principal_remaining_asof=2025-03-17, out.principal_converted_to_date=1150000.0, counterparty=YA II
+23:51:31  [CELU]      diff extra_in_ledger C-1085 [convertible] ledger=terms.principal=500000.0, terms.rate=0.08, terms.conv_price=2.85, terms.maturity=2025-11-25, out.principal_remaining=0.0, out.principal_remaining_asof=2025-06-25, out.principal_converted_to_date=750000.0
+23:51:31  [CELU]      diff extra_in_ledger P-467 [preferred] ledger=terms.series_letter=A, terms.conv_price=1.6, terms.convertible_date=2025-10-24, terms.maturity=2026-10-24, terms.stated_value=1.111111, terms.liquidation_preference=2222222.0, terms.dividend_rate=0.05, out.count=2000000.0, out.initial_count=2000000.0
+23:51:31  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:51:31  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=143340064.52, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:51:31  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:51:31  [CELU]      anchor proposal close_instrument SH-2602 date=2025-09-30 reason=expired
+23:51:31  [CELU]      anchor proposal amend_instrument:atm ATM-2663 date=2025-09-30 remaining_capacity_usd=0
+23:51:31  [CELU]      anchor proposal close_instrument ATM-2663 date=2025-09-30 reason=terminated
+23:51:31  [CELU]    anchor corrections applied=3 rejected=0
+23:51:31  [CELU]  walker 0001493152-25-026383 — dedup block: 7 candidates within ±180d
+23:51:31  [CELU]  walker 0001493152-25-026383 — form=8-K (21 tools)
+23:51:33  [CELU]  walker 0001493152-25-026383 — finish='REASON_TOOL_CALLS' calls=1
+23:51:33  [CELU]  walker 0001493152-25-026383 — note_no_event reasons: ['FDA warning letter regarding marketing material for Interfyl']
+23:51:33  [CELU]    [2025-12-05] 8-K 0001493152-25-026383 — 0 mutations
+23:51:33  [CELU]    [2025-12-19] S-1 0001493152-25-028562 — skipped (fee-table=resale; 457(c)/(g) only)
+23:51:33  [CELU]    [2025-12-19] 8-K 0001493152-25-028560 — skipped (no dilutive item + no substantive exhibit (items=5.07))
+23:51:33  [CELU]  walker 0001493152-25-029033 — dedup block: 7 candidates within ±180d
+23:51:33  [CELU]  walker 0001493152-25-029033 — form=8-K (21 tools)
+23:51:57  [CELU]  walker 0001493152-25-029033 — finish='REASON_TOOL_CALLS' calls=5
+23:51:57  [CELU]  walker 0001493152-25-029033 — call create_instrument:convertible date=2025-12-19 principal=3000000.0 rate=0.08 conv_price=1.66 maturity=2026-12-31 known_owners=['Philip & Daniele Barach Family Trust'] principal_remaining=3000000.0
+23:51:57  [CELU]  walker 0001493152-25-029033 — call create_instrument:warrant date=2025-12-19 strike=2.0 exercisable_date=2026-06-19 expiration=2030-12-19 known_owners=['Philip & Daniele Barach Family Trust'] count=2448717.0 initial_count=2448717.0
+23:51:57  [CELU]  walker 0001493152-25-029033 — call create_instrument:warrant date=2025-12-19 strike=2.0 exercisable_date=2026-06-19 expiration=2030-12-19 known_owners=['Philip & Daniele Barach Family Trust'] count=1258740.0 initial_count=1258740.0
+23:51:57  [CELU]  walker 0001493152-25-029033 — call create_instrument:warrant date=2025-12-19 strike=2.0 expiration=2030-12-19 known_owners=['Odeon Capital Group'] count=70000.0 initial_count=70000.0
+23:51:57  [CELU]  walker 0001493152-25-029033 — call create_instrument:warrant date=2025-12-19 strike=2.0 expiration=2030-12-19 known_owners=['Odeon Capital Group'] count=30000.0 initial_count=30000.0
+23:51:57  [CELU]    [2025-12-23] 8-K 0001493152-25-029033 — 5 mutations
+23:51:57  [CELU]    [2025-12-30] 424B3 0001493152-25-029480 — skipped (resale, file_number outside primary set)
+23:51:57  [CELU]    [2025-12-31] S-1 0001493152-25-029802 — skipped (fee-table=resale; 457(c)/(g) only)
+23:51:57  [CELU]    [2026-01-08] 424B3 0001493152-26-000878 — skipped (resale, file_number outside primary set)
+23:51:57  [CELU]    [2026-01-21] 8-K 0001493152-26-003100 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:51:57  [CELU]    [2026-03-05] 8-K 0001493152-26-009017 — skipped (no dilutive item + no substantive exhibit (items=5.02))
+23:51:57  [CELU]  walker 0001493152-26-009471 — dedup block: 7 candidates within ±180d
+23:51:57  [CELU]  walker 0001493152-26-009471 — form=8-K (21 tools)
+23:52:03  [CELU]  walker 0001493152-26-009471 — finish='REASON_TOOL_CALLS' calls=1
+23:52:03  [CELU]  walker 0001493152-26-009471 — note_no_event reasons: ['The filing discloses an Asset Purchase and Exclusive License Agreement with NexGel, Inc. under which Celularity is licensing its biomaterials portfolio and selling related assets for cash consideration (up to $35 million). No dilutive securities (common stock, warrants, convertibles, preferred stock, or equity lines) are issued by Celularity.']
+23:52:03  [CELU]    [2026-03-10] 8-K 0001493152-26-009471 — 0 mutations
+23:52:03  [CELU]  walker 0001493152-26-018220 — dedup block: 7 candidates within ±180d
+23:52:03  [CELU]  walker 0001493152-26-018220 — form=8-K (21 tools)
+23:52:20  [CELU]  walker 0001493152-26-018220 — finish='REASON_TOOL_CALLS' calls=1
+23:52:20  [CELU]  walker 0001493152-26-018220 — call create_instrument:convertible date=2026-04-16 principal=1970502.58 rate=0.18 conv_price=1.6 conv_discount_pct=0.95 maturity=2026-10-16 known_owners=['Helena'] principal_remaining=1970502.58
+23:52:20  [CELU]    [2026-04-21] 8-K 0001493152-26-018220 — 1 mutations
+23:52:20  [CELU]  walker 0001493152-26-020424 — dedup block: 31 candidates (all active, periodic form)
+23:52:20  [CELU]  walker 0001493152-26-020424 — form=10-K (17 tools)
+23:53:00  [CELU]  walker 0001493152-26-020424 — finish='REASON_TOOL_CALLS' calls=3
+23:53:00  [CELU]  walker 0001493152-26-020424 — call record_event P-467 date=2025-12-19 preferred_shares_redeemed=267916.0 cash_paid=300000.0
+23:53:00  [CELU]  walker 0001493152-26-020424 — call record_event C-1084 date=2025-09-29 shares_issued=1525008.0 principal_converted=2000000.0
+23:53:00  [CELU]  walker 0001493152-26-020424 — call close_instrument C-1084 date=2025-09-29 reason=converted
+23:53:00  [CELU]    [2026-04-30] 10-K 0001493152-26-020424 — 3 mutations
+23:53:00  [CELU]      reject close_instrument C-1084 date=2025-09-29 reason=converted — close_with_outstanding: close_instrument(reason='converted') blocked: principal_remaining=152602.74000000022 on convertible C-1084; full conversion requires 0. Use record_event(conversion) for partial conversions.
+23:53:00  [CELU]    anchor 0001493152-26-020424 as_of=2025-12-31
+23:53:39  [CELU]  [overhang-combined] 0001493152-26-020424 — output truncated at max_tokens
+23:53:39  [CELU]  overhang-combined 0001493152-26-020424 — truncated at token cap; salvaged 3 row(s) from the valid prefix
+23:53:39  [CELU]  overhang-combined 0001493152-26-020424 — w=3 c=0 p=0 s=0 a=0 e=0
+23:53:39  [CELU]    anchor 0001493152-26-020424 — 32 diffs (missing=1 field=0 count=0 extra=31)
+23:53:39  [CELU]      diff missing_in_ledger (new) [warrant] filing=strike_or_conversion_price=115.0, outstanding_count=849999.0, maturity_or_expiry=2026-07-16
+23:53:39  [CELU]      diff extra_in_ledger W-5273 [warrant] ledger=terms.strike=82.5, terms.exercisable_date=2022-04-29, terms.expiration=2027-04-29, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=405406, out.initial_count=405406
+23:53:39  [CELU]      diff extra_in_ledger W-5280 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2023-03-17, terms.expiration=2028-03-17, terms.known_owners=['Starr'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=75000, out.initial_count=75000, counterparty=Starr
+23:53:39  [CELU]      diff extra_in_ledger W-5281 [warrant] ledger=terms.strike=30.0, terms.exercisable_date=2023-03-20, terms.expiration=2028-03-27, terms.known_owners=['Robert Hariri'], terms.issue_date=2023-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=938184, out.initial_count=938184, counterparty=Robert Hariri
+23:53:39  [CELU]      diff extra_in_ledger W-5285 [warrant] ledger=terms.strike=3.5, terms.exercisable_date=2024-01-28, terms.expiration=2029-01-28, terms.known_owners=['Armistice'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=435625, out.initial_count=923077
+23:53:39  [CELU]      diff extra_in_ledger W-5288 [warrant] ledger=terms.strike=10.0, terms.exercisable_date=2023-05-18, terms.expiration=2028-05-18, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=581394, out.initial_count=581394
+23:53:39  [CELU]      diff extra_in_ledger W-5290 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2023-06-20, terms.expiration=2028-06-20, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=300000, out.initial_count=300000, counterparty=RWI
+23:53:39  [CELU]      diff extra_in_ledger W-5293 [warrant] ledger=terms.strike=10.0, terms.expiration=2028-03-27, terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=729699, out.initial_count=729699
+23:53:39  [CELU]      diff extra_in_ledger W-5300 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2024-07-12, terms.expiration=2029-07-15, terms.known_owners=['RWI'], out.count=1350000.0, out.initial_count=1350000.0, counterparty=RWI
+23:53:39  [CELU]      diff extra_in_ledger W-5295 [warrant] ledger=terms.strike=2.4898, terms.exercisable_date=2024-01-17, terms.expiration=2029-01-16, terms.series_letter=1, terms.known_owners=['RWI'], terms.applied_splits=[{'date': '2024-02-28', 'ratio': 0.1, 'direction': 'reverse'}], out.count=1650000, out.initial_count=1650000, counterparty=RWI
+23:53:39  [CELU]      diff extra_in_ledger W-5297 [warrant] ledger=terms.strike=2.844, terms.expiration=2028-06-20, terms.known_owners=['RWI'], out.count=300000.0, out.initial_count=300000.0, counterparty=RWI
+23:53:39  [CELU]      diff extra_in_ledger W-5301 [warrant] ledger=terms.strike=2.85, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=263158.0, out.initial_count=263158.0
+23:53:39  [CELU]      diff extra_in_ledger W-5302 [warrant] ledger=terms.strike=3.56, terms.exercisable_date=2024-11-25, terms.expiration=2029-11-25, out.count=52500.0, out.initial_count=52500.0
+23:53:39  [CELU]      diff extra_in_ledger W-5305 [warrant] ledger=terms.strike=2.97, terms.exercisable_date=2025-06-27, terms.expiration=2029-12-27, out.count=1263157.0, out.initial_count=1263157.0
+23:53:39  [CELU]      diff extra_in_ledger W-5316 [warrant] ledger=terms.strike=2.528, terms.exercisable_date=2025-07-21, terms.expiration=2030-07-21, terms.known_owners=['Lim Kok Thay'], out.count=3700000.0, out.initial_count=3700000.0, counterparty=Lim Kok Thay
+23:53:39  [CELU]      diff extra_in_ledger W-5311 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=50000.0, out.initial_count=50000.0, counterparty=Starr
+23:53:39  [CELU]      diff extra_in_ledger W-5312 [warrant] ledger=terms.strike=1.692, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['Starr'], out.count=100000.0, out.initial_count=100000.0, counterparty=Starr
+23:53:39  [CELU]      diff extra_in_ledger W-5313 [warrant] ledger=terms.strike=2.844, terms.exercisable_date=2025-07-29, terms.expiration=2030-07-29, terms.known_owners=['RWI'], out.count=500000.0, out.initial_count=500000.0, counterparty=RWI
+23:53:39  [CELU]      diff extra_in_ledger W-5314 [warrant] ledger=terms.strike=1.5, terms.exercisable_date=2025-07-30, terms.expiration=2027-07-30, out.count=1230769.0, out.initial_count=1230769.0
+23:53:39  [CELU]      diff extra_in_ledger W-5319 [warrant] ledger=terms.strike=3.0, terms.exercisable_date=2025-10-24, terms.expiration=2030-10-24, out.count=267308.0, out.initial_count=267308.0
+23:53:39  [CELU]      diff extra_in_ledger W-5321 [warrant] ledger=terms.strike=2.0, terms.exercisable_date=2026-06-19, terms.expiration=2030-12-19, terms.known_owners=['Philip & Daniele Barach Family Trust'], out.count=2448717.0, out.initial_count=2448717.0, counterparty=Philip & Daniele Barach Family Trust
+23:53:39  [CELU]      diff extra_in_ledger W-5322 [warrant] ledger=terms.strike=2.0, terms.exercisable_date=2026-06-19, terms.expiration=2030-12-19, terms.known_owners=['Philip & Daniele Barach Family Trust'], out.count=1258740.0, out.initial_count=1258740.0, counterparty=Philip & Daniele Barach Family Trust
+23:53:39  [CELU]      diff extra_in_ledger W-5323 [warrant] ledger=terms.strike=2.0, terms.expiration=2030-12-19, terms.known_owners=['Odeon Capital Group'], out.count=70000.0, out.initial_count=70000.0, counterparty=Odeon Capital Group
+23:53:39  [CELU]      diff extra_in_ledger W-5324 [warrant] ledger=terms.strike=2.0, terms.expiration=2030-12-19, terms.known_owners=['Odeon Capital Group'], out.count=30000.0, out.initial_count=30000.0, counterparty=Odeon Capital Group
+23:53:39  [CELU]      diff extra_in_ledger C-1084 [convertible] ledger=terms.principal=3150000.0, terms.rate=0.08, terms.conv_price=1.4, terms.maturity=2025-10-15, terms.oid_pct=0.05, terms.known_owners=['YA II'], out.principal_remaining=152602.74000000022, out.principal_remaining_asof=2025-09-29, out.principal_converted_to_date=3150000.0, counterparty=YA II
+23:53:39  [CELU]      diff extra_in_ledger C-1085 [convertible] ledger=terms.principal=500000.0, terms.rate=0.08, terms.conv_price=2.85, terms.maturity=2025-11-25, out.principal_remaining=0.0, out.principal_remaining_asof=2025-06-25, out.principal_converted_to_date=750000.0
+23:53:39  [CELU]      diff extra_in_ledger C-1090 [convertible] ledger=terms.principal=3000000.0, terms.rate=0.08, terms.conv_price=1.66, terms.maturity=2026-12-31, terms.known_owners=['Philip & Daniele Barach Family Trust'], out.principal_remaining=3000000.0, out.principal_remaining_asof=2025-12-19, counterparty=Philip & Daniele Barach Family Trust
+23:53:39  [CELU]      diff extra_in_ledger C-1091 [convertible] ledger=terms.principal=1970502.58, terms.rate=0.18, terms.conv_price=1.6, terms.conv_discount_pct=0.95, terms.maturity=2026-10-16, terms.known_owners=['Helena'], out.principal_remaining=1970502.58, out.principal_remaining_asof=2026-04-16, counterparty=Helena
+23:53:39  [CELU]      diff extra_in_ledger P-467 [preferred] ledger=terms.series_letter=A, terms.conv_price=1.6, terms.convertible_date=2025-10-24, terms.maturity=2026-10-24, terms.stated_value=1.111111, terms.liquidation_preference=2222222.0, terms.dividend_rate=0.05, out.count=1732084.0, out.initial_count=2000000.0, out.count_redeemed_to_date=267916.0
+23:53:39  [CELU]      diff extra_in_ledger SH-2602 [shelf] ledger=terms.capacity_usd=450000000.0, terms.form=S-3, out.drawn_usd=9000000.65, out.sold_to_date=17802199.0
+23:53:39  [CELU]      diff extra_in_ledger ATM-2663 [atm] ledger=terms.capacity_usd=150000000.0, terms.agreement_date=2022-09-08, out.drawn_usd=141000.0, out.sold_to_date=1950788.0, out.remaining_capacity_usd=0, out.drawn_usd_anchor=141000.0, out.drawn_usd_asof=2023-03-31
+23:53:39  [CELU]      diff extra_in_ledger EL-200 [equity_line] ledger=terms.capacity_usd=10000000.0, terms.agreement_date=2024-03-13, terms.agreement_end_date=2027-03-13, counterparty=YA II
+23:53:39  [CELU]      anchor proposal amend_instrument:convertible C-1084 date=2025-12-31 principal_remaining=0
+23:53:39  [CELU]      anchor proposal close_instrument C-1084 date=2025-12-31 reason=redeemed
+23:53:39  [CELU]      anchor proposal close_instrument C-1085 date=2025-12-31 reason=redeemed
+23:53:39  [CELU]      anchor proposal close_instrument SH-2602 date=2025-12-31 reason=expired
+23:53:39  [CELU]      anchor proposal close_instrument ATM-2663 date=2025-12-31 reason=terminated
+23:53:39  [CELU]    anchor corrections applied=2 rejected=3
+23:53:39  [CELU]  walker 0001493152-26-025646 — dedup block: 6 candidates within ±180d
+23:53:39  [CELU]  walker 0001493152-26-025646 — form=8-K (21 tools)
+23:54:11  [CELU]  walker 0001493152-26-025646 — finish='REASON_TOOL_CALLS' calls=2
+23:54:11  [CELU]  walker 0001493152-26-025646 — call close_instrument P-467 date=2026-05-21 reason=terminated
+23:54:11  [CELU]  walker 0001493152-26-025646 — call close_instrument C-1091 date=2026-05-21 reason=redeemed
+23:54:11  [CELU]    [2026-05-28] 8-K 0001493152-26-025646 — 2 mutations
+23:54:11  [CELU]      reject close_instrument P-467 date=2026-05-21 reason=terminated — close_with_outstanding: close_instrument(reason='terminated') blocked: count=1732084.0 on preferred P-467; termination requires 0 outstanding.
+23:54:11  [CELU]  walker 0001493152-26-027132 — dedup block: 5 candidates within ±180d
+23:54:11  [CELU]  walker 0001493152-26-027132 — form=8-K (21 tools)
+23:54:15  [CELU]  walker 0001493152-26-027132 — finish='REASON_TOOL_CALLS' calls=1
+23:54:15  [CELU]  walker 0001493152-26-027132 — note_no_event reasons: ['officer appointment and shareholder letter update']
+23:54:15  [CELU]    [2026-06-03] 8-K 0001493152-26-027132 — 0 mutations
+23:54:15  [CELU]    [2026-06-12] 8-K 0001493152-26-028519 — skipped (no dilutive item + no substantive exhibit (items=3.01))
+23:54:15  [CELU]    walk done — seed=A_periodic walked=66 skipped=160 (resale=25 empty8k=28) applied=140 rejected=17 created=57 drawdowns=8 anchor_diffs=285 errors=0

@@ -1,0 +1,49 @@
+
+Filing(company='Clean Energy Technologies, Inc.', cik=1329606, form='10-Q/A', filing_date='2026-06-05', accession_no='0001493152-26-027406')
+is an amended filing and may not contain full XBRL data e.g. some statements might be missing.
+Consider using the original filing instead if available with `get_filings(form="10-K", amendments=False)`
+
+=== Eval: CETY (cik 1329606) ===
+  cards exact     : 9/16
+  cards found     : 16/16
+  fields exact    : 98/110  (89%)
+  unexpected extra: 5
+
+PASS
+  [warrant] December 2024: ✓ all 8 fields exact
+  [convertible] August 2025: ✓ all 6 fields exact
+  [convertible] April 2026: ✓ all 6 fields exact
+  [convertible] March 2026 1800 Diagonal: ✓ all 6 fields exact
+  [convertible] March 2026 Mega Sincere: ✓ all 7 fields exact
+  [convertible] March 2026 Noblebear: ✓ all 7 fields exact
+  [atm] October 2023 Roth: ✓ all 7 fields exact
+  [equity_line] December 2024 Mast Hill: ✓ all 5 fields exact
+  [shelf] October 2023: ✓ all 7 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] August 2022: 5/7 fields exact
+      ✗ total_issued: expected 2894, got 133333.0
+      ✗ exercisable_date: expected ~'2023-02-05', got '2022-08-12'
+  [warrant] March 2025: 7/8 fields exact
+      ✗ title: expected tokens of 'March 2025', got 'February 2025 Common Warrants'
+  [warrant] January 2025: 5/6 fields exact
+      ✗ remaining_outstanding: expected 672309, got 54594.0
+  [convertible] January 2025: 5/9 fields exact
+      ✗ remaining_shares_issuable: expected 282827, got 643566.6821202287
+      ✗ principal_remaining: expected 702581, got 416452.0
+      ✗ conversion_price: expected 2.86, got 0.6471
+      ✗ total_shares_issuable: expected 571719, got 2531035.898624633
+  [convertible] April 2025: 7/9 fields exact
+      ✗ remaining_shares_issuable: expected 51885, got 196314.9351129809
+      ✗ principal_remaining: expected 49835, got 188558.0
+  [convertible] April 2025: 5/6 fields exact
+      ✗ principal_remaining: expected 256000, got 149314.0
+  [convertible] July 2025: 5/6 fields exact
+      ✗ principal_remaining: expected 83572, got 120750.0
+
+EXTRA (in actual, not in fixture)
+  [warrant] August 2022 Private Placement Warrants (2022-08-23): unexpected actual card
+  [warrant] November 2022 Private Placement Warrants (2022-11-22): unexpected actual card
+  [warrant] March 2023 Common Warrants (2023-03-08): unexpected actual card
+  [convertible] May 2025 1800 Diagonal Convertible Note (2025-05-08): unexpected actual card
+  [convertible] July 2025 1800 Diagonal Convertible Note (2025-07-30): unexpected actual card

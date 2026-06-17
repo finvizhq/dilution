@@ -1,0 +1,9 @@
+=== Eval: IQST (cik 1527702) ===
+  cards exact     : 2/2
+  cards found     : 2/2
+  fields exact    : 12/12  (100%)
+  unexpected extra: 0
+
+PASS
+  [convertible_preferred] July 2025 Series D: ✓ all 8 fields exact
+  [equity_line] April 2026 M2B: ✓ all 4 fields exact

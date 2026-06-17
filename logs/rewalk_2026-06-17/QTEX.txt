@@ -1,0 +1,21 @@
+=== Eval: QTEX (cik 1837493) ===
+  cards exact     : 4/6
+  cards found     : 5/6
+  fields exact    : 33/34  (97%)
+  unexpected extra: 1
+
+PASS
+  [warrant] December 2023: ✓ all 8 fields exact
+  [warrant] February 2026: ✓ all 7 fields exact
+  [equity_line] December 2025 YA II: ✓ all 5 fields exact
+  [shelf] August 2025: ✓ all 6 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] December 2024: 7/8 fields exact
+      ✗ known_owners: expected to contain ['Avatar Investments', 'I9 Plus', 'LIA Pure Capital', 'XYLO', 'YA II'], got []
+
+MISSING (in fixture, not in actual)
+  [warrant] July 2021: NO MATCH
+
+EXTRA (in actual, not in fixture)
+  [warrant] March 2025 Warrants (2025-03-28): unexpected actual card

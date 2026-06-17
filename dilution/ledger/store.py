@@ -150,6 +150,41 @@ _PRICE_FIELDS = (
 _PRICE_DECIMALS = 6
 
 
+def _preferred_price_split_skip(terms: dict) -> set[str]:
+    """$-price fields a common-stock split must NOT adjust on a preferred.
+
+    ``stated_value`` (the per-share liquidation face) is ALWAYS fixed: a
+    common split never moves a preferred's dollar face. ``conv_price`` /
+    ``conversion_price`` are fixed ONLY when the series converts on a stated
+    SHARE RATIO (``conversion_ratio`` present) — then the dollar conv_price is
+    a derived/reference VWAP, the RATE absorbs the split, and dividing the
+    price double-counts it (IQST Series D CoD §4(f): the rate adjusts, the
+    $7.6447 VWAP is fixed; BNKK legacy NFH Series B, ratio 130). When NO
+    ``conversion_ratio`` is stored the series converts on a per-common-share
+    PRICE whose standard anti-dilution moves it proportionally with splits,
+    exactly like a warrant strike — so the price IS split-adjusted (BNKK 2025
+    Series B/C CoDs §7(a)/§6(d): $0.34 → $11.90, $0.5582 → $19.54 over the
+    1-for-35 reverse split).
+
+    Both split-handling sites (``_apply_split`` and the amend-time
+    ``_rescale_stale_unit_amend``) call this so the two passes can never drift
+    apart — the prior blanket exemption fixed only the divide and let a
+    post-split filing re-quoting the raw pre-split price clobber it back.
+
+    KNOWN GAP (tests/KNOWN_ISSUES.md): a fixed-RATIO series that stores a
+    conv_price but NOT conversion_ratio (e.g. SCNI 'EIB' P-439, conv_price
+    93.41 == $34,000 / 364) would be wrongly adjusted if it ever took a split.
+    None such carries an applied split today; the durable fix is for the
+    walker to stamp conversion_ratio on those series so this guard protects
+    them.
+    """
+    ratio = terms.get("conversion_ratio")
+    if (isinstance(ratio, (int, float)) and not isinstance(ratio, bool)
+            and ratio > 0):
+        return {"conv_price", "conversion_price", "stated_value"}
+    return {"stated_value"}
+
+
 @dataclass
 class ApplyResult:
     """Outcome of applying one filing's mutation list."""
@@ -869,6 +904,27 @@ _PREFERRED_REDISCLOSURE_WINDOW_DAYS = 365
 # agreement.
 _ATM_REDISCLOSURE_WINDOW_DAYS = 3 * 365
 
+# Closed-row resurrection guard. A periodic balance sheet (10-K/10-Q/20-F)
+# re-lists a tranche that has already been redeemed/terminated/converted/
+# expired; the LLM emits create_instrument for it, and because the active-
+# row dedup above only scans status='active', the create lands as a NEW
+# ACTIVE row — resurrecting a dead instrument (XTIA P-447 Series 9 created
+# active off a 2025 10-K balance sheet, duplicating the already-redeemed
+# P-443). We match such a create against CLOSED rows too, but ONLY within
+# a TIGHT window: a genuine re-disclosure carries the instrument's ORIGINAL
+# issue_date, so its anchor nearly coincides with the closed row's
+# created_at. The window must stay tight because series letters are NOT
+# unique within every issuer (XTIA re-uses Series 4 across 2018/2024/2025
+# and Series 5 across 2019/2025) — a wide window would collapse a genuinely
+# NEW same-letter issuance onto an old closed tranche. 31d covers the
+# pricing/closing/period-end slip without reaching a later re-issuance.
+_CLOSED_REDISCLOSURE_WINDOW_DAYS = 31
+
+# Types where re-listing a closed tranche as a new active row is the bug
+# the guard fixes. Shelves/ATMs/equity-lines/s1 have their own lifecycle
+# (rollover, supersession, expiry) handled elsewhere and are excluded.
+_RESURRECTION_GUARD_TYPES = frozenset({"warrant", "preferred", "convertible"})
+
 # A re-disclosure of an ATM / equity_line / s1_offering inside one of
 # these forms means a brand-new shelf registration is now hosting the
 # (same) underlying agreement. If the new filing's SEC file_number
@@ -1022,6 +1078,68 @@ def _create_already_recorded(
             elif not new_label and not existing_label:
                 # Both label-less rows from one filing with no
                 # discriminator — treat as duplicate.
+                return r["instrument_id"]
+
+        # Warrant split-via-misread-strike collapse. The strike key above
+        # FAILS when the LLM read a different exercise price for the SAME
+        # offering across disclosures — a 424B5 then a 10-Q re-statement of
+        # the same tranche (CELU April-2023, created off both), or two
+        # create calls from one filing (CELU March-2023). Serial-diluter
+        # warrant ladders ratchet, so the strike the LLM copies drifts per
+        # filing and can't anchor identity. A same canonical-LABEL + same
+        # INITIAL_COUNT match within the window is a strong duplicate
+        # signal instead: distinct tranches differ in issued size or
+        # series_letter (the same-strike SCNI Inducement/Series B case is
+        # already separated by initial_count), but ONE offering keeps its
+        # issued count and month-year label. Collapse to the existing row
+        # rather than spawn a phantom partial-count card (CELU 923,077 →
+        # $7.50/435,625 + $3.50/487,451; 938,184 → $30 + $1.69/75,000).
+        # series_letter must not conflict (one-sided/absent falls through).
+        if m.type == "warrant":
+            new_ic = (new_out or {}).get("initial_count")
+            old_ic = (existing_out or {}).get("initial_count")
+            old_label = (r["label"] or "").strip().lower()
+            new_sl = warrant_series_key(new_terms.get("series_letter"))
+            old_sl = warrant_series_key(existing_terms.get("series_letter"))
+            if (new_ic is not None and old_ic is not None
+                    and _close(new_ic, old_ic, _CREATE_AMOUNT_TOLERANCE)
+                    and new_label and old_label and new_label == old_label
+                    and not (new_sl and old_sl and new_sl != old_sl)):
+                return r["instrument_id"]
+
+    # Closed-row resurrection guard (see _CLOSED_REDISCLOSURE_WINDOW_DAYS).
+    # A periodic re-disclosure of an already-CLOSED tranche must collapse
+    # onto the dead row (which _append_redisclosure leaves closed), NOT
+    # spawn a new active duplicate. Strong-key match only (the same
+    # _create_keys_match the active path uses: series for preferred,
+    # strike+non-conflicting-expiration for warrant, conv_price/principal
+    # for convertible) within the TIGHT window, so a genuine new issuance
+    # that re-uses a series letter never collapses onto an old tranche.
+    if m.type in _RESURRECTION_GUARD_TYPES:
+        closed = conn.execute(
+            """SELECT instrument_id, created_at, terms_json, outstanding_json
+                 FROM dilution_ledger
+                WHERE cik=? AND type=? AND status!='active'
+                  AND status NOT LIKE 'superseded%'""",
+            (cik, m.type),
+        ).fetchall()
+        for r in closed:
+            try:
+                existing_d = _d.fromisoformat((r["created_at"] or "")[:10])
+            except (ValueError, TypeError):
+                continue
+            if abs((new_d - existing_d).days) > _CLOSED_REDISCLOSURE_WINDOW_DAYS:
+                continue
+            existing_terms = json.loads(r["terms_json"] or "{}")
+            existing_out = json.loads(r["outstanding_json"] or "{}")
+            if _create_keys_match(m.type, new_terms, new_out,
+                                  existing_terms, existing_out,
+                                  new_pa=new_pa, old_pa=""):
+                log.info(
+                    "  resurrection-guard: %s create (type=%s) matched "
+                    "CLOSED row %s — not re-creating as active",
+                    accession, m.type, r["instrument_id"],
+                )
                 return r["instrument_id"]
     return None
 
@@ -1804,10 +1922,14 @@ def _rescale_stale_unit_amend(
     if cum == 1.0 and not _echo_products:
         return {}
 
-    # Mirror _apply_split's preferred exemption: stated_value / conv_price
-    # on preferreds are fixed dollar terms a common split doesn't move.
+    # Shared preferred $-terms split policy (see _preferred_price_split_skip):
+    # stated_value always fixed; conv_price rescaled only for a price-based
+    # (no conversion_ratio) series. Keeping this byte-identical to _apply_split
+    # is what lets a post-split filing that re-quotes the raw pre-split
+    # conv_price get echo-pinned back to the split-adjusted value below instead
+    # of clobbering it (BNKK Series C: 0.5582 re-quoted vs current 19.54).
     skip_price = (
-        {"conv_price", "conversion_price", "stated_value"}
+        _preferred_price_split_skip(terms)
         if row_type == "preferred" else frozenset()
     )
 
@@ -2883,6 +3005,49 @@ def _migrate_shelf_siblings_on_supersede(
         )
 
 
+def close_converted_preferred(
+    cik: int, *, conversion_date: _d, accession: str, form: str,
+    filing_date: str,
+) -> list[str]:
+    """Deterministically close every ACTIVE preferred issued on/before
+    ``conversion_date`` as ``converted``.
+
+    Called by the walker when a periodic filing AFFIRMS that all preferred
+    stock automatically/mandatorily converted to common with NONE remaining
+    outstanding (the Nasdaq-equity-compliance pattern: KSCP's Series
+    A/B/M/S converted 2024-05-15, "no shares of Preferred Stock outstanding
+    after the Preferred Stock Conversion Date"). The overhang LLM routinely
+    re-matches the named series in the conversion narrative without flagging
+    is_terminated, so the anchor never closes them and they linger as
+    phantom-active cards. Routes through ``_apply_close(reason='converted')``
+    so the count is zeroed and ``count_converted_to_date`` is tracked.
+
+    Scoped by ``created_at <= conversion_date`` so a NEW preferred issued
+    AFTER the conversion (a later re-issuance, same issuer re-using a series
+    letter) is never swept up. Idempotent: only touches ``status='active'``
+    rows, so re-firing on a later filing that repeats the conversion note is
+    a no-op. Returns the closed instrument_ids."""
+    closed: list[str] = []
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT instrument_id FROM dilution_ledger "
+            "WHERE cik=? AND type='preferred' AND status='active' "
+            "  AND date(created_at) <= date(?) "
+            "ORDER BY instrument_id",
+            (cik, conversion_date.isoformat()),
+        ).fetchall()
+        for r in rows:
+            _apply_close(
+                conn, cik,
+                CloseInstrument(instrument_id=r["instrument_id"],
+                                reason="converted",
+                                event_date=conversion_date),
+                accession, form, filing_date,
+            )
+            closed.append(r["instrument_id"])
+    return closed
+
+
 def _find_unchanged_atm_program(
     conn: sqlite3.Connection, cik: int, m: "CreateMutation",
 ) -> str | None:
@@ -3353,15 +3518,13 @@ def _apply_split(
                 terms[f] = round(terms[f] * m.ratio)
             if f in outstanding and isinstance(outstanding[f], (int, float)):
                 outstanding[f] = round(outstanding[f] * m.ratio)
-        # A preferred's stated_value (liquidation face) is a fixed $-amount
-        # and its conv_price is a fixed reference VWAP — a common-stock split
-        # adjusts the conversion RATE (shares-per-preferred), NOT these dollar
-        # terms (IQST Series D CoD §4(f): the rate adjusts, the $7.6447 VWAP
-        # is fixed). Dividing them double-counts the split. Only the
-        # warrant/convertible strike & conv_price are genuine per-common-share
-        # prices that move with a split.
+        # Preferred $-terms split policy lives in one place, shared with the
+        # amend-time _rescale_stale_unit_amend so the two passes can't drift:
+        # stated_value is always fixed; conv_price is split-adjusted only for a
+        # price-based series (no conversion_ratio). See
+        # _preferred_price_split_skip for the full rationale + known gap.
         _skip_price = (
-            {"conv_price", "conversion_price", "stated_value"}
+            _preferred_price_split_skip(terms)
             if row["type"] == "preferred" else frozenset()
         )
         for f in _PRICE_FIELDS:

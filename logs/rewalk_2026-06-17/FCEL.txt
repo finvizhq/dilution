@@ -1,0 +1,23 @@
+=== Eval: FCEL (cik 886128) ===
+  cards exact     : 3/5
+  cards found     : 5/5
+  fields exact    : 33/36  (92%)
+  unexpected extra: 4
+
+PASS
+  [atm] December 2025: ✓ all 7 fields exact
+  [shelf] April 2025: ✓ all 7 fields exact
+  [shelf] June 2026: ✓ all 7 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [atm] April 2024: 5/7 fields exact
+      ✗ remaining_capacity: expected 1100000, got 204900000.0
+      ✗ remaining_without_baby_shelf: expected 1100000, got 204900000.0
+  [shelf] October 2023: 7/8 fields exact
+      ✗ total_amount_raised: expected 368779594.92, got 423792789.52
+
+EXTRA (in actual, not in fixture)
+  [atm] June 2020 Jefferies ATM (2020-06-16): unexpected actual card
+  [atm] June 2021 Jefferies ATM (2021-06-11): unexpected actual card
+  [atm] July 2022 Jefferies ATM (2022-07-12): unexpected actual card
+  [atm] March 2025 Jefferies ATM (2025-03-10): unexpected actual card

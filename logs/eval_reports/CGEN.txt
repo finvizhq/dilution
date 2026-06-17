@@ -1,0 +1,16 @@
+=== Eval: CGEN (cik 1119774) ===
+  cards exact     : 3/4
+  cards found     : 3/4
+  fields exact    : 22/22  (100%)
+  unexpected extra: 1
+
+PASS
+  [atm] May 2026 Leerink: ✓ all 7 fields exact
+  [atm] January 2023 SVB: ✓ all 7 fields exact
+  [shelf] March 2023: ✓ all 8 fields exact
+
+MISSING (in fixture, not in actual)
+  [shelf] May 2026: NO MATCH
+
+EXTRA (in actual, not in fixture)
+  [shelf] May 2026 Shelf (2026-06-08): unexpected actual card

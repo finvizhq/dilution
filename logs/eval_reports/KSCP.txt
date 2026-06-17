@@ -1,0 +1,35 @@
+=== Eval: KSCP (cik 1600983) ===
+  cards exact     : 2/7
+  cards found     : 7/7
+  fields exact    : 40/48  (83%)
+  unexpected extra: 9
+
+PASS
+  [atm] July 2025: ✓ all 7 fields exact
+  [atm] February 2023: ✓ all 7 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [warrant] November 2022: 7/8 fields exact
+      ✗ title: expected tokens of 'November 2022', got 'October 2022 Common Warrants'
+  [atm] November 2024: 5/7 fields exact
+      ✗ remaining_capacity: expected 3117034, got 1375000.0
+      ✗ remaining_without_baby_shelf: expected 3117034, got 1375000.0
+  [atm] June 2024: 5/7 fields exact
+      ✗ remaining_capacity: expected 1347000, got 11660000.0
+      ✗ remaining_without_baby_shelf: expected 1347000, got 11660000.0
+  [equity_line] April 2022 Riley: 4/5 fields exact
+      ✗ remaining_capacity: expected 97100000, got 98700000.0
+  [shelf] April 2025: 5/7 fields exact
+      ✗ current_raisable_amount: expected 55632814, got 68300000.0
+      ✗ total_amount_raised: expected 44367186, got 31700000.0
+
+EXTRA (in actual, not in fixture)
+  [warrant] May 2022 Warrants (2022-05-16): unexpected actual card
+  [warrant] May 2022 Warrants (2022-05-16): unexpected actual card
+  [convertible_preferred] November 2023 Series A Preferred (2023-11-13): unexpected actual card
+  [convertible_preferred] November 2023 Series B Preferred (2023-11-13): unexpected actual card
+  [convertible_preferred] November 2023 Series M Preferred (2023-11-13): unexpected actual card
+  [convertible_preferred] November 2023 Series S Preferred (2023-11-13): unexpected actual card
+  [atm] August 2023 Wainwright ATM (2023-08-18): unexpected actual card
+  [atm] April 2024 Wainwright ATM (2024-04-08): unexpected actual card
+  [atm] October 2024 Wainwright ATM (2024-10-11): unexpected actual card

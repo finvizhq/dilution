@@ -1,0 +1,26 @@
+=== Eval: KSCP (cik 1600983) ===
+  cards exact     : 5/7
+  cards found     : 7/7
+  fields exact    : 43/46  (93%)
+  unexpected extra: 5
+
+PASS
+  [warrant] October 2022: ✓ all 8 fields exact
+  [atm] July 2025: ✓ all 7 fields exact
+  [atm] November 2024: ✓ all 5 fields exact
+  [atm] February 2023: ✓ all 7 fields exact
+  [shelf] April 2025: ✓ all 7 fields exact
+
+FIELD MISMATCHES (exact-value comparison)
+  [atm] June 2024: 5/7 fields exact
+      ✗ remaining_capacity: expected 11660000, got 0.0
+      ✗ remaining_without_baby_shelf: expected 11660000, got 0.0
+  [equity_line] April 2022 Riley: 4/5 fields exact
+      ✗ remaining_capacity: expected 97100000, got 98700000.0
+
+EXTRA (in actual, not in fixture)
+  [warrant] May 2022 Warrants (2022-05-16): unexpected actual card
+  [warrant] May 2022 Warrants (2022-05-16): unexpected actual card
+  [atm] August 2023 Wainwright ATM (2023-08-18): unexpected actual card
+  [atm] April 2024 Wainwright ATM (2024-04-08): unexpected actual card
+  [atm] October 2024 Wainwright ATM (2024-10-11): unexpected actual card

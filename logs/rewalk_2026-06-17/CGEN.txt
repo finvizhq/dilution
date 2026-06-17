@@ -1,0 +1,11 @@
+=== Eval: CGEN (cik 1119774) ===
+  cards exact     : 4/4
+  cards found     : 4/4
+  fields exact    : 30/30  (100%)
+  unexpected extra: 0
+
+PASS
+  [atm] May 2026 Leerink: ✓ all 7 fields exact
+  [atm] January 2023 SVB: ✓ all 7 fields exact
+  [shelf] March 2023: ✓ all 8 fields exact
+  [shelf] May 2026: ✓ all 8 fields exact

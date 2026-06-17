@@ -11,7 +11,8 @@
     "DT 'Last Update Date' values at transcription: warrant 2025-08-15, ATM 2026-03-31, equity line 2025-08-15, shelf 2026-06-03 \u2014 the DT page is current as of this transcription; the snapshot-relative numbers above are as-of 2026-06-03/04.",
     "Equity-line title asserts 'March 2025 Riley' (not 'B Riley') \u2014 the title token matcher treats the walker's correct 'B.' as a distinct token from 'B', same brittleness documented and worked around in KSCP ('B Riley'\u2192'Riley'). The ATM placement_agent field uses the punctuation-squashing substring matcher instead, so the dual 'B Riley, Craig-Hallum' assertion there is unaffected (verified passing on the 2026-06-04 baseline).",
     "Equity-line remaining_capacity re-pinned 47,806,000 -> 46,199,535 on 2026-06-05 (round-3 A1): current = $50M - $3,800,465 drawn per FY2025 10-K 0001683168-26-002257; DT's 47.806M was the older 2025-08-15 snapshot (~$2.19M drawn). As-of skew, pinned to the consistent-latest convention.",
-    "Round-4: shelf raised re-pinned 16,660,959 -> 18,382,842.74 (4 filing-verified drawdowns incl. ATM takedowns; DT figure is a different basis/window). Riley EL remaining re-pinned to the issuer's 2025-06-30 cumulative checkpoint basis (46,254,494; +0.12% vs DT snapshot)."
+    "Round-4: shelf raised re-pinned 16,660,959 -> 18,382,842.74 (4 filing-verified drawdowns incl. ATM takedowns; DT figure is a different basis/window). Riley EL remaining re-pinned to the issuer's 2025-06-30 cumulative checkpoint basis (46,254,494; +0.12% vs DT snapshot).",
+    "CORRECTION 2026-06-11 (evals/_eval_defect_findings_2026-06-11.md): Riley EL remaining REVERTED 46,254,494 -> 46,199,535 (back to the round-3/latest-filing basis). The FY2025 10-K (acc 0001683168-26-002257) states 'during the year ended December 31, 2025, we sold 539,967 shares ... for the net proceeds of $3,800,465' => $50M - $3,800,465 = $46,199,535 (= walker). Round-4's 46,254,494 used the older 2025-06-30 checkpoint ($3,745,506 drawn); the FY2025 10-K supersedes it. NOTE: shelf Sept-2025 total_amount_raised stays 18,382,842.74 — the walker's 33,382,848.74 is a greenshoe DOUBLE-COUNT (one offering's base $15.0M + with-over-allotment $17.25M both booked), a store dedup bug, NOT a fixture error."
   ],
   "cards": {
     "warrant": [
@@ -43,7 +44,7 @@
         "agreement_start_date": "2025-03-28",
         "title_contains": "March 2025 Riley",
         "registered": "Registered",
-        "remaining_capacity": 46254494,
+        "remaining_capacity": 46199535,
         "total_capacity": 50000000,
         "agreement_end_date": "2028-03-28"
       }

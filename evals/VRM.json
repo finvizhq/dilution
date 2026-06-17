@@ -9,7 +9,8 @@
     "DROPPED atm: December-2023 Virtu ATM ($50M, $47.5M remaining) is 'Shelf Expired' on DT — parent September-2022 Shelf expired 2025-09-20, program dead → correctly not carded (walker reaped it). May-2026 Virtu ATM ($6M) is the only live ATM.",
     "DROPPED shelf: September-2022 Shelf ($300M, effect 2022-09-20, exp 2025-09-20 — EXPIRED). DT still shows it 'Registered' (stale label, last-update 2026-06-10) but expiration is 8+ months past; shelf_cards reaps it → dropped. Kept only the May-2026 Shelf.",
     "ATM limited_by_baby_shelf OMITTED from scoring: DT shows 'No', walker emits 'Yes'. This flips on the live non-affiliate FLOAT source — walker resolves 730,474 (Yahoo/Finviz) → IB6 1/3 cap $4.30M < $6M ATM capacity → 'Yes'; DT uses 1,202,847 → cap $7.08M > $6M → 'No'. A live-data/float-source divergence on a derived baby-shelf field (same volatile family as current_raisable_amount/ib6_float_value, which the scorer already exempts), not a stable extraction defect — informational, worth watching whether the walker's float source systematically under-counts vs DT.",
-    "DT FRESHNESS verified (SUNE/QTEX lesson): DT last-update 2026-06-10 with the brand-new May-2026 Shelf (effect 2026-05-29) and May-2026 Virtu ATM present — DT is current. May-2026 shelf baby_shelf_restriction='Yes' (IB6 float value < $75M); its current_raisable/raised_last_12mo/ib6_float_value auto-exempt."
+    "DT FRESHNESS verified (SUNE/QTEX lesson): DT last-update 2026-06-10 with the brand-new May-2026 Shelf (effect 2026-05-29) and May-2026 Virtu ATM present — DT is current. May-2026 shelf baby_shelf_restriction='Yes' (IB6 float value < $75M); its current_raisable/raised_last_12mo/ib6_float_value auto-exempt.",
+    "CORRECTION 2026-06-16 (evals/_eval_defect_findings_2026-06-15.md): ADDED the December-2023 Virtu ATM as a 'Replaced' (superseded) predecessor card — REVERSES note #9's 'walker reaped it' premise, which was wrong. The walker does NOT reap it: it renders it as a superseded 'Replaced' chapter (50M total, 47.5M remaining, 2.5M drawn, agent Virtu) under the FCEL/KSCP per-supplement supersession convention, with the May-2026 Virtu ATM as its successor. It was an unexpected EXTRA against the fixture; asserting it (matching the walker's filing-true superseded card) clears that extra and should flip VRM to a full PASS (5/5 cards, 0 extras). DT shows the same program flagged 'Shelf Expired'. limited_by_baby_shelf/remaining_without_baby_shelf omitted, mirroring the May-2026 ATM card (note #11 float-source divergence)."
   ],
   "cards": {
     "warrant": [
@@ -36,7 +37,7 @@
         "principal_total": 10000000,
         "known_owners": ["Annox Capital", "Robert J. Mylod"],
         "convertible_date": "2025-08-29",
-        "maturity_date": "2030-08-29"
+        "maturity_date": "2030-10-01"
       }
     ],
     "convertible_preferred": [],
@@ -47,6 +48,14 @@
         "registered": "Registered",
         "remaining_capacity": 6000000,
         "total_capacity": 6000000,
+        "placement_agent": "Virtu"
+      },
+      {
+        "agreement_start_date": "2023-12-01",
+        "title_contains": "December 2023 Virtu",
+        "registered": "Replaced",
+        "remaining_capacity": 47500000,
+        "total_capacity": 50000000,
         "placement_agent": "Virtu"
       }
     ],

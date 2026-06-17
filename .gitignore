@@ -13,4 +13,4 @@ dashboard.log*
 dilution_reports/
 __pycache__/
 *.pyc
-.log
+*.log
