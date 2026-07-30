@@ -1,6 +1,12 @@
 # Finviz Dilution Data — Ingest API Contract (DRAFT v1)
 
-Status: **draft for review** — nothing here is implemented on either side yet.
+Status: **v1 — transport live, payload draft for review.** Finviz's ingest
+endpoint accepts and stores snapshots today: write and read-back were verified
+end-to-end on 2026-07-30 for five tickers (CELU, FCEL, GCTK, SCNI, XTIA), with
+the stored document confirmed deep-equal to what was sent. The payload shape
+(§4–§8) is still under review. The unpublish and index endpoints of §3 do not
+exist yet, and §3.5 lists the server-side gaps the producer needs closed before
+the full-universe batch turns on.
 Producer: Peter's dilution pipeline. Consumer: Finviz.
 
 ---
@@ -26,7 +32,7 @@ EDGAR → walker → ledger
    float, shares outstanding)
             │
             ▼
-   card/badge/cash projection → push job ──HTTPS PUT──▶ ingest API → table → UI
+   card/badge/cash projection → push job ─HTTPS POST─▶ ingest API → table → UI
 ```
 
 Design principles the contract encodes:
@@ -56,62 +62,138 @@ it from its own systems.
 
 ## 2. Transport & authentication
 
-- HTTPS only.
-- Auth: static API key in `Authorization: Bearer <key>` (issued by Finviz,
-  one key per environment). IP allowlisting optional on top.
-- Content type: `application/json; charset=utf-8`.
-- Compression: producer sends `Content-Encoding: gzip` on bodies > 16 KB;
-  server must accept it.
+- HTTPS only. Base: `https://elite.finviz.com`.
+- Auth: static token in the **`auth=<token>` query parameter** — not an
+  `Authorization: Bearer` header. Finviz issues the token; IP allowlisting
+  optional on top. Missing or wrong token → 401.
+- Content type: `application/json; charset=utf-8` — **mandatory.** With the
+  header omitted the server attempts *form* parsing and fails with 400
+  `Failed to read the request form. Form key length limit 2048 exceeded`,
+  which reads like a body-size problem but is not one.
+- Compression: **not supported.** `Content-Encoding: gzip` is rejected with
+  400 (the gzip magic byte reaches the JSON parser), so the producer sends
+  plain JSON. Cheap to live with at current sizes — real tickers measured
+  20–30 KB compact — but it is why §10's throughput figures assume
+  uncompressed bodies, and worth adding before the full-universe daily batch.
+- Error bodies are ASP.NET problem-details JSON (`type`/`title`/`status`/
+  `errors`) carrying a `traceId`; quote that ID to Finviz infra when
+  reporting an ingest failure.
 - Two environments requested: **staging** and **production**, identical
-  contract, separate keys.
+  contract, separate tokens. Only one endpoint exists today, so the producer
+  currently has nowhere to smoke-test a payload change without touching what
+  the site serves.
 
 ---
 
 ## 3. Endpoints
 
-### 3.1 `PUT /v1/dilution/tickers/{ticker}` — publish / replace snapshot
+Two endpoints are **live** and verified. The other two are producer requests
+that do not exist yet; they are kept here because §10 and §12 depend on them.
 
-Body: the snapshot envelope (§4). Replaces the entire stored document for
-`{ticker}` atomically — readers must never observe a half-applied snapshot.
+### 3.1 `POST /api/dilution/set?auth=<token>` — publish / replace snapshot — **live**
+
+Body: the envelope of §4 — `{"ticker": ..., "data": {...}}`. The ticker comes
+from the **body**; there is no ticker in the path. Replaces the entire stored
+document for that ticker — readers must never observe a half-applied snapshot.
+
+Success: `200 {"success": true, "ticker": "CELU"}`.
 
 Responses:
 
 | Code | Meaning |
 |------|---------|
-| 200  | Stored (also for an idempotent re-send of the same `generated_at`). |
-| 400  | Body failed envelope validation. Response body lists the violations. Producer treats this as a bug, not a retry case. |
-| 401/403 | Bad/missing key. |
-| 409  | `generated_at` is **older** than the currently stored snapshot's. Stored data unchanged. Protects against out-of-order retries rolling a ticker back. Producer treats as success-of-a-stale-write and moves on. |
-| 413  | Body too large (limit: 2 MB — generous; real payloads are 10–100 KB). |
-| 429  | Rate limited; `Retry-After` honored by producer. |
-| 5xx  | Producer retries with exponential backoff + jitter (see §9). |
+| 200  | Stored. Also returned for an idempotent re-send of the same `generated_at`. |
+| 400  | Envelope validation failed — missing `ticker` (`{"Ticker":["Ticker is required"]}`), missing `data` (`{"error":"Data is required"}`), malformed JSON, or a body sent without the §2 content type. Producer treats this as a bug, not a retry case. |
+| 401  | Bad or missing `auth`. |
+| 429  | Rate limited; `Retry-After` honored by producer. Not observed to date. |
+| 5xx  | Producer retries with exponential backoff + jitter (see §10). |
 
-### 3.2 `DELETE /v1/dilution/tickers/{ticker}` — unpublish
+Two protections this contract wants are **not** in place: the 409 ordering
+guard, and a body-size ceiling (413 never observed — real payloads are 20–30 KB
+compact, so the assumed ≥2 MB limit is untested). See §3.5.
 
-Removes the ticker from the public projection immediately. Used when the
+### 3.2 Unpublish — **not implemented (requested)**
+
+No unpublish route is documented and the producer has not probed `DELETE`.
+Requested shape: `DELETE` the ticker, removing it from the public projection
+immediately, 200 even if it wasn't present (idempotent). Needed when the
 pipeline detects bad data for a ticker and wants it offline before a fix is
-re-pushed, or when a ticker leaves the covered universe. 200 even if the
-ticker wasn't present (idempotent).
+re-pushed, or when a ticker leaves the covered universe. Without it, the only
+remedy in §12 is pushing a corrected snapshot — the producer cannot take a
+page down, and cannot retire a ticker at all.
 
-### 3.3 `GET /v1/dilution/tickers/{ticker}` — read-back
+### 3.3 `GET /api/dilution/{TICKER}?auth=<token>` — read-back — **live**
 
-Returns the stored envelope verbatim. Producer uses it to verify what is
-actually live when debugging. Not a public/UI endpoint.
+Returns the stored snapshot as the **inner `data` object, unwrapped** — not
+the §4 envelope. Verified deep-equal to what was posted, which makes this a
+true round-trip check; the producer uses it to confirm what is actually live
+when debugging. Requires `auth` (401 without it). Unknown ticker → 404.
 
-### 3.4 `GET /v1/dilution/tickers` — published index
+### 3.4 Published index — **not implemented (requested)**
 
-Returns `[{ "ticker", "cik", "as_of", "generated_at", "schema_version" }]`
-for every published ticker. Producer runs a nightly reconciliation: diff
-this list against the intended universe, re-push or DELETE the drift.
+No index route exists (`/api/dilution/list` and bare `/api/dilution` both
+404). Requested shape: `[{ "ticker", "cik", "as_of", "generated_at",
+"schema_version" }]` for every published ticker — flat rows, not wrapped; the
+consumer lifts the last four out of each stored `data`. Without it the
+producer cannot run the §12 nightly reconciliation: §3.3 verifies tickers it
+already knows about, but nothing reveals drift it doesn't know to look for —
+a ticker still published under a pre-rename symbol, say.
+
+### 3.5 Server-side gaps — producer asks
+
+Verified 2026-07-30, in priority order:
+
+1. **`data` is not validated, and every accepted POST is a full replace.**
+   `{"ticker":"CELU","data":"x"}` and
+   `{"ticker":"CELU","data":{"schema_version":1}}` both return 200 and both
+   write through, so a junk body replaces a good snapshot: after those two
+   probes the stored CELU document was `{"schema_version": 1}`, and it stayed
+   that way until the real snapshot was re-pushed. A producer bug that emits a
+   truncated or wrong-shaped document therefore silently wipes good live data
+   instead of being rejected. Ask:
+   reject a non-object `data`, and reject a `data` missing `schema_version`,
+   `ticker`, `as_of`, or `generated_at`. That check is cheap, needs no
+   knowledge of the card model, and converts the worst failure mode — silent
+   data loss — into a 400 the producer can alert on.
+2. **No `generated_at` ordering guard.** Last write wins unconditionally,
+   including a stale one, so an out-of-order retry can roll a ticker back in
+   time (§10).
+3. **No gzip** (§2).
+
+Until 1 and 2 land, the producer validates its own document locally and skips
+the push on a bad build rather than emitting a partial one — because here a
+bad push is destructive, not merely rejected.
+
+Unknown top-level envelope fields are ignored (200), matching §1 principle 5.
 
 ---
 
 ## 4. Snapshot envelope
 
+The body is a thin envelope — the ticker it is about, and the snapshot
+itself under `data`:
+
 ```jsonc
 {
-  "schema_version": 1,            // int; see §10 for evolution rules
-  "ticker": "GCTK",               // upper-case; must match the URL path
+  "ticker": "GCTK",               // upper-case; the server routes on this
+  "data": { ... }                 // the snapshot; shape below
+}
+```
+
+`data` is the whole payload and is never partial: there is no shape in
+which `data` is absent, null, or a subset of the fields below. The
+wrapper exists so envelope-level metadata can be added later (batch
+grouping, per-push provenance) without touching the snapshot itself, and
+so a consumer can route on `ticker` without parsing `data`.
+
+The snapshot:
+
+```jsonc
+{
+  "schema_version": 1,            // int; see §11 for evolution rules
+  // Repeated inside `data` so a snapshot detached from its envelope
+  // (stored, logged, forwarded) is still self-describing.
+  "ticker": "GCTK",
   "cik": 1506983,                 // SEC CIK, integer
   "company_name": "GlucoTrack, Inc.",
 
@@ -120,12 +202,13 @@ this list against the intended universe, re-push or DELETE the drift.
   "as_of": "2026-06-02",
 
   // Producer-side build timestamp; strictly increasing per ticker.
-  // The server's ordering guard (409) keys on this.
+  // Intended key for the server's ordering guard — not yet enforced (§3.5).
   "generated_at": "2026-06-02T21:10:43Z",
 
   "company": { ... },             // §5 — market context + cash position/chart
   "badges":  { ... },             // §6 — dilution-risk score strip
-  "cards":   { ... }              // §7 — the seven instrument-card arrays
+  "cards":   { ... },             // §7 — the seven instrument-card arrays
+  "brief":   { ... }              // §8 — AI dilution brief; null when none cached
 }
 ```
 
@@ -277,7 +360,7 @@ derivation:
   other payload fields) — usable as tooltip body or caption; presentation
   is the consumer's.
 - Segment `key` enum: `"warrant"` \| `"convertible"` \| `"preferred"` \|
-  `"atm"` \| `"equity_line"` \| `"s1"` — additive (§10): render unknown
+  `"atm"` \| `"equity_line"` \| `"s1"` — additive (§11): render unknown
   keys with a fallback color rather than erroring.
 
 ---
@@ -335,7 +418,7 @@ Contract decisions worth calling out:
 - **`description` and `legend` are static copy but shipped anyway** — they
   are tiny, and shipping them keeps tooltip copy editable without consumer
   releases.
-- **The driver list is additive** (§10): a fifth driver appearing one day is
+- **The driver list is additive** (§11): a fifth driver appearing one day is
   not a breaking change; render whatever arrives, in order.
 - The whole `badges` block may be `null` when nothing was computable.
 
@@ -508,7 +591,54 @@ value / liquidation preference.
 
 ---
 
-## 8. Suggested consumer-side storage
+## 8. `brief` block
+
+A short generated read of the same facts the rest of the payload carries
+— one headline, a handful of bullets, and dated "watch" items. It is the
+only **non-deterministic** content in the snapshot: an LLM writes it from
+the deterministic card / badge / cash objects, so regenerating from an
+identical snapshot yields different wording. Everything it asserts is
+derived from data elsewhere in the same document.
+
+```jsonc
+"brief": {
+  "headline": "CELU faces severe dilution with under 0.5 months of cash runway and a pending $17.9M S-1",
+  "bullets": [                      // 4–6 lines, plain text, no markup
+    "Cash is estimated at $531K against a quarterly operating burn of $3.3M.",
+    "A pending S-1 offering seeks to raise $17.9M, 59% of the company's $30.1M market cap."
+  ],
+  "watch": [                        // dated forward-looking items; often []
+    "October 16, 2026: Maturity of the $1.97M Helena Convertible Note."
+  ],
+  "generated_at": "2026-06-04T14:33:01Z",   // when the prose was written
+  "stale": true,                            // a filing has landed since
+  "stale_since_filing_date": "2026-06-12"   // that filing's date; null when fresh
+}
+```
+
+Contract decisions worth calling out:
+
+- **The whole block is `null`** when no brief has been generated for the
+  ticker yet. Treat it as optional page furniture, not a required panel.
+- **It is written on the pipeline's schedule, not the push's.** The
+  producer reads a cache; it never generates prose during a push. So
+  `brief.generated_at` lags the envelope's `generated_at`, routinely by
+  days.
+- **`stale` means "a filing arrived after the prose was written"** — the
+  flag the internal dashboard renders. It does *not* catch prose that
+  drifted because the ledger was reprocessed without a new filing, so
+  treat `generated_at` as the real freshness signal and consider aging
+  out old commentary regardless of the flag.
+- **Text, not markup.** Bullets and watch items are plain sentences
+  (≤ ~140 chars) pre-formatted for direct display; the producer owns the
+  wording, the consumer owns the layout.
+- **Don't reconcile it against the cards.** When the brief and a card
+  disagree, the cards are authoritative — report it as a data-quality
+  issue (§12) rather than suppressing one or the other.
+
+---
+
+## 9. Suggested consumer-side storage
 
 The contract doesn't require any particular schema, but the natural minimum
 is one row per ticker:
@@ -519,8 +649,8 @@ CREATE TABLE dilution_snapshots (
   cik             BIGINT NOT NULL,
   schema_version  INT NOT NULL,
   as_of           DATE NOT NULL,
-  generated_at    TIMESTAMPTZ NOT NULL,   -- ordering guard (§3.1, 409)
-  payload         JSONB NOT NULL,         -- the envelope, verbatim
+  generated_at    TIMESTAMPTZ NOT NULL,   -- ordering guard (§3.5); compare before overwriting
+  payload         JSONB NOT NULL,         -- the request body's `data`, verbatim
   received_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ```
@@ -529,11 +659,11 @@ Page render = one primary-key lookup + template over `payload`. If Finviz
 later wants screener integration ("all tickers with an active ATM", "overall
 dilution risk ≥ 60"), populate a derived table from `payload` on ingest —
 that's a consumer-side projection and needs no contract change, **as long as
-it tolerates fields being absent** (see §10).
+it tolerates fields being absent** (see §11).
 
 ---
 
-## 9. Cadence, ordering, retries
+## 10. Cadence, ordering, retries
 
 **Push cadence (producer):**
 
@@ -550,19 +680,25 @@ it tolerates fields being absent** (see §10).
    exactly why §1 principle 3 exists.
 
 **Ordering:** `generated_at` is strictly increasing per ticker on the
-producer side. The server rejects regressions with 409 (§3.1). Last write
-wins; there is no merge.
+producer side. Last write wins; there is no merge. The server does **not**
+currently reject regressions (§3.5), so ordering rests entirely on the
+producer not issuing overlapping pushes for one ticker — the producer
+serializes per ticker for that reason. Two pushes for the same ticker in
+flight at once can land newest-first and leave stale data published.
 
 **Retries (producer):** 5xx and network errors → exponential backoff with
 jitter (1s base, ×2, cap 60s, give up after ~15 min and alert). 429 →
-honor `Retry-After`. 400 → no retry, page the producer. A retried PUT is
-safe by construction (idempotent full replace + ordering guard).
+honor `Retry-After`. 400 → no retry, page the producer. A retried POST is
+idempotent (full replace of the same document); it is *not* protected against
+reordering until the §3.5 guard exists, so a retry only re-sends the newest
+document the producer holds, never a queued older one.
 
 **Throughput expectations:** steady state is a trickle (filing-driven pushes
 for a handful of tickers per cycle) plus one daily burst of the full
-universe — O(few thousand) PUTs of 10–100 KB. Producer will run ≤8
-concurrent requests during the burst; if that's too hot, tell us a rate and
-we'll match it, or expose a bulk endpoint and we'll use it.
+universe — O(few thousand) POSTs of 20–30 KB uncompressed (no gzip, §2).
+Producer will run ≤8 concurrent requests during the burst; if that's too hot,
+tell us a rate and we'll match it, or expose a bulk endpoint and we'll use it.
+Observed single-push latency is ~200 ms.
 
 **Staleness (consumer):** display `as_of` ("data as of Jun 2 close") on the
 page. Recommended: flag or hide a ticker whose `as_of` is more than 3
@@ -571,7 +707,7 @@ drifting.
 
 ---
 
-## 10. Schema evolution
+## 11. Schema evolution
 
 - `schema_version` is a contract-breaking-change counter, starting at 1.
 - **Additive changes do NOT bump it**: new fields, new card-type arrays, new
@@ -588,210 +724,247 @@ drifting.
 
 ---
 
-## 11. Failure & data-quality handling
+## 12. Failure & data-quality handling
 
-- **Bad data discovered in a published ticker:** producer either pushes a
-  corrected snapshot or `DELETE`s the ticker. Both take effect on the next
-  page load. No consumer action needed.
+- **Bad data discovered in a published ticker:** producer pushes a corrected
+  snapshot, which takes effect on the next page load. No consumer action
+  needed. Taking the ticker offline instead needs §3.2, which doesn't exist
+  yet — so today a bad ticker stays visible until a corrected snapshot is
+  built, and there is no way to retire a ticker at all.
 - **Producer down:** nothing changes on Finviz; pages serve the last
-  snapshot with an aging `as_of`. The §9 staleness rule is the safety net.
+  snapshot with an aging `as_of`. The §10 staleness rule is the safety net.
 - **Consumer ingest down:** producer retries, then alerts and keeps state;
   next successful daily batch heals everything (full replace).
 - **Reconciliation:** nightly, producer GETs the published index (§3.4) and
-  diffs against its intended universe; re-push / DELETE any drift.
-- **Ticker rename (same CIK):** producer PUTs the new ticker and DELETEs the
-  old one in that order. CIK continuity is visible in the payload.
+  diffs against its intended universe; re-push / unpublish any drift. Blocked
+  until §3.4 exists; until then the producer can only read back tickers it
+  already believes are published (§3.3).
+- **Ticker rename (same CIK):** producer pushes the new ticker and unpublishes
+  the old one in that order. CIK continuity is visible in the payload. The
+  second half needs §3.2 — without it a renamed ticker stays published under
+  its old symbol indefinitely.
 - **Contact:** data-content complaints (wrong numbers on a card/badge) go to
   the producer with `ticker` + `source_ref` (or badge `key`) +
   `generated_at`; ingest/transport issues go to Finviz infra.
 
 ---
 
-## 12. Example payload (abridged)
+## 13. Example payload (abridged)
 
 ```json
 {
-  "schema_version": 1,
   "ticker": "GCTK",
-  "cik": 1506983,
-  "company_name": "GlucoTrack, Inc.",
-  "as_of": "2026-06-02",
-  "generated_at": "2026-06-02T21:10:43Z",
-  "company": {
-    "shares_outstanding": 3470000,
-    "float_shares": 2100000,
-    "highest_60_day_close": 2.18,
-    "price_to_exceed_baby_shelf": 35.71,
-    "is_baby_shelf_restricted": true,
-    "cash": {
-      "latest_period_end": "2026-03-31",
-      "latest_reported_cash_usd": 4120000,
-      "op_cf_quarterly_usd": -2210000,
-      "capital_raised_since_usd": 1200000,
-      "current_cash_est_usd": 3650000,
-      "months_of_cash": 5.6,
-      "stale_days": 63,
-      "fx_failed": false,
-      "chart": {
+  "data": {
+    "schema_version": 1,
+    "ticker": "GCTK",
+    "cik": 1506983,
+    "company_name": "GlucoTrack, Inc.",
+    "as_of": "2026-06-02",
+    "generated_at": "2026-06-02T21:10:43Z",
+    "company": {
+      "shares_outstanding": 3470000,
+      "float_shares": 2100000,
+      "highest_60_day_close": 2.18,
+      "price_to_exceed_baby_shelf": 35.71,
+      "is_baby_shelf_restricted": true,
+      "cash": {
+        "latest_period_end": "2026-03-31",
+        "latest_reported_cash_usd": 4120000,
+        "op_cf_quarterly_usd": -2210000,
+        "capital_raised_since_usd": 1200000,
+        "current_cash_est_usd": 3650000,
+        "months_of_cash": 5.6,
+        "stale_days": 63,
+        "fx_failed": false,
+        "chart": {
+          "bars": [
+            { "kind": "reported", "period_end": "2025-09-30", "fiscal": "2025 Q3", "form": "10-Q", "cash_usd": 7400000, "overlay_usd": null },
+            { "kind": "reported", "period_end": "2025-12-31", "fiscal": "2025 FY", "form": "10-K", "cash_usd": 6000000, "overlay_usd": null },
+            { "kind": "reported", "period_end": "2026-03-31", "fiscal": "2026 Q1", "form": "10-Q", "cash_usd": 4120000, "overlay_usd": null },
+            { "kind": "estimate", "period_end": null, "fiscal": null, "form": null, "cash_usd": 3650000, "overlay_usd": 1200000 }
+          ]
+        }
+      },
+      "os_chart": {
+        "ads_ratio": null,
+        "price_basis": 2.18,
         "bars": [
-          { "kind": "reported", "period_end": "2025-09-30", "fiscal": "2025 Q3", "form": "10-Q", "cash_usd": 7400000, "overlay_usd": null },
-          { "kind": "reported", "period_end": "2025-12-31", "fiscal": "2025 FY", "form": "10-K", "cash_usd": 6000000, "overlay_usd": null },
-          { "kind": "reported", "period_end": "2026-03-31", "fiscal": "2026 Q1", "form": "10-Q", "cash_usd": 4120000, "overlay_usd": null },
-          { "kind": "estimate", "period_end": null, "fiscal": null, "form": null, "cash_usd": 3650000, "overlay_usd": 1200000 }
+          { "quarter_end": "2025-12-31", "shares": 3120000, "raw_shares": 3120000, "source_date": "2026-03-30", "form": "10-K", "carried": false, "split_adjusted": false },
+          { "quarter_end": "2026-03-31", "shares": 3470000, "raw_shares": 3470000, "source_date": "2026-05-12", "form": "10-Q", "carried": false, "split_adjusted": false }
+        ],
+        "latest": {
+          "shares": 3470000,
+          "source": "10-Q XBRL, a/o 2026-05-12"
+        },
+        "fd_stack": [
+          { "key": "warrant", "label": "Warrants", "shares": 480000, "price_based": false, "capacity_usd": null,
+            "note": "Remaining outstanding across 1 warrant card (pre-funded and placement-agent warrants excluded)" },
+          { "key": "atm", "label": "ATM", "shares": 700000, "price_based": true, "capacity_usd": 1526000,
+            "note": "$1.5M remaining ATM capacity ÷ $2.18 (I.B.6-capped where applicable)" }
         ]
       }
     },
-    "os_chart": {
-      "ads_ratio": null,
-      "price_basis": 2.18,
-      "bars": [
-        { "quarter_end": "2025-12-31", "shares": 3120000, "raw_shares": 3120000, "source_date": "2026-03-30", "form": "10-K", "carried": false, "split_adjusted": false },
-        { "quarter_end": "2026-03-31", "shares": 3470000, "raw_shares": 3470000, "source_date": "2026-05-12", "form": "10-Q", "carried": false, "split_adjusted": false }
-      ],
-      "latest": {
-        "shares": 3470000,
-        "source": "10-Q XBRL, a/o 2026-05-12"
-      },
-      "fd_stack": [
-        { "key": "warrant", "label": "Warrants", "shares": 480000, "price_based": false, "capacity_usd": null,
-          "note": "Remaining outstanding across 1 warrant card (pre-funded and placement-agent warrants excluded)" },
-        { "key": "atm", "label": "ATM", "shares": 700000, "price_based": true, "capacity_usd": 1526000,
-          "note": "$1.5M remaining ATM capacity ÷ $2.18 (I.B.6-capped where applicable)" }
-      ]
-    }
-  },
-  "badges": {
-    "overall": {
-      "score": 72,
-      "band": "high",
-      "label": "High",
-      "partial": false,
-      "description": "0–100 composite of the four drivers: Offering Ability 30%, Cash Need 30%, Overhang 25%, Dilution History 15%.",
-      "detail": [
-        "Offering Ability 81 (weight 30%)",
-        "Cash Need 88 (weight 30%)",
-        "Overhang 54 (weight 25%)",
-        "Dilution History 60 (weight 15%)"
-      ],
-      "legend": [
-        { "band": "severe",   "pill": "80–100", "meaning": "Imminent, large-scale dilution likely" },
-        { "band": "high",     "pill": "60–79",  "meaning": "Strong dilution pressure" },
-        { "band": "moderate", "pill": "40–59",  "meaning": "Meaningful but manageable" },
-        { "band": "low",      "pill": "20–39",  "meaning": "Limited near-term risk" },
-        { "band": "minimal",  "pill": "0–19",   "meaning": "Little dilution capability or need" }
-      ]
-    },
-    "drivers": [
-      {
-        "key": "offering_ability",
-        "label": "Offering Ability",
-        "score": 81,
+    "badges": {
+      "overall": {
+        "score": 72,
         "band": "high",
-        "band_text": "High",
-        "description": "How much the company can raise right now through live programs and shelf capacity.",
+        "label": "High",
+        "partial": false,
+        "description": "0–100 composite of the four drivers: Offering Ability 30%, Cash Need 30%, Overhang 25%, Dilution History 15%.",
         "detail": [
-          "Active ATM: $1.5M raisable under I.B.6 cap",
-          "Baby-shelf restricted (float value $4.6M)"
+          "Offering Ability 81 (weight 30%)",
+          "Cash Need 88 (weight 30%)",
+          "Overhang 54 (weight 25%)",
+          "Dilution History 60 (weight 15%)"
         ],
         "legend": [
-          { "band": "low",    "pill": "Low",    "meaning": "Little or no live capacity" },
-          { "band": "medium", "pill": "Medium", "meaning": "Some capacity, constrained" },
-          { "band": "high",   "pill": "High",   "meaning": "Large ready-to-use capacity" }
+          { "band": "severe",   "pill": "80–100", "meaning": "Imminent, large-scale dilution likely" },
+          { "band": "high",     "pill": "60–79",  "meaning": "Strong dilution pressure" },
+          { "band": "moderate", "pill": "40–59",  "meaning": "Meaningful but manageable" },
+          { "band": "low",      "pill": "20–39",  "meaning": "Limited near-term risk" },
+          { "band": "minimal",  "pill": "0–19",   "meaning": "Little dilution capability or need" }
         ]
-      }
-    ]
-  },
-  "cards": {
-    "shelf": [
-      {
-        "source_ref": "SH-012",
-        "title": "March 2024 $100M Shelf",
-        "registered": "Registered",
-        "shelf_status": "active",
-        "edgar_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&filenum=333-279901&type=&dateb=&owner=include&count=100",
-        "total_shelf_capacity": 100000000,
-        "current_raisable_amount": 1526000,
-        "unlimited": false,
-        "is_baby_shelf_restricted": true,
-        "total_amount_raised": 11420000,
-        "raised_last_12mo_under_ib6": 980000,
-        "outstanding_shares": 3470000,
-        "float_shares": 2100000,
-        "highest_60_day_close": 2.18,
-        "price_to_exceed_baby_shelf": 35.71,
-        "ib6_float_value": 4578000,
-        "last_banker": "Dawson James",
-        "bank_tier": "boutique",
-        "investor_class": null,
-        "effect_date": "2024-04-02",
-        "expiration_date": "2027-04-02",
-        "last_update_date": "2026-05-14"
-      }
-    ],
-    "atm": [
-      {
-        "source_ref": "ATM-2183",
-        "title": "June 2024 Maxim ATM",
-        "registered": "Registered",
-        "edgar_url": "https://www.sec.gov/Archives/edgar/data/1506983/000121390024053132/ea0207908-424b5_glucotrack.htm",
-        "parent_shelf": {
+      },
+      "drivers": [
+        {
+          "key": "offering_ability",
+          "label": "Offering Ability",
+          "score": 81,
+          "band": "high",
+          "band_text": "High",
+          "description": "How much the company can raise right now through live programs and shelf capacity.",
+          "detail": [
+            "Active ATM: $1.5M raisable under I.B.6 cap",
+            "Baby-shelf restricted (float value $4.6M)"
+          ],
+          "legend": [
+            { "band": "low",    "pill": "Low",    "meaning": "Little or no live capacity" },
+            { "band": "medium", "pill": "Medium", "meaning": "Some capacity, constrained" },
+            { "band": "high",   "pill": "High",   "meaning": "Large ready-to-use capacity" }
+          ]
+        }
+      ]
+    },
+    "cards": {
+      "shelf": [
+        {
+          "source_ref": "SH-012",
           "title": "March 2024 $100M Shelf",
-          "file_number": "333-279901",
-          "accession_number": "0001213900-24-053132",
-          "edgar_url": "https://www.sec.gov/..."
-        },
-        "total_capacity": 5000000,
-        "remaining_capacity": 1526000,
-        "remaining_without_baby_shelf": 2840000,
-        "limited_by_baby_shelf": true,
-        "sales_total_usd": 2160000,
-        "used_pct": 43.2,
-        "placement_agent": "Maxim",
-        "bank_tier": "pump_trifecta",
-        "investor_class": null,
-        "agreement_start_date": "2024-06-11",
-        "agreement_end_date": null,
-        "last_update_date": "2026-05-14"
-      }
-    ],
-    "equity_line": [],
-    "warrant": [
-      {
-        "source_ref": "W-3034",
-        "title": "November 2024 Warrants",
-        "registered": "Registered",
-        "edgar_url": "https://www.sec.gov/...",
-        "parent_shelf": null,
-        "resale_registration": {
-          "form": "S-1",
-          "filing_date": "2024-12-20",
-          "file_number": "333-284001",
-          "accession_number": "0001213900-24-061002",
-          "edgar_url": "https://www.sec.gov/..."
-        },
-        "total_issued": 480000,
-        "remaining_outstanding": 480000,
-        "exercise_price": 1.20,
-        "known_owners": ["Armistice Capital"],
-        "underwriter": "Dawson James",
-        "bank_tier": "boutique",
-        "investor_class": "pipe_flipper",
-        "issue_date": "2024-11-19",
-        "exercisable_date": "2024-11-19",
-        "expiration_date": "2029-11-19",
-        "last_update_date": "2026-03-31"
-      }
-    ],
-    "convertible": [],
-    "preferred": [],
-    "s1_offering": []
+          "registered": "Registered",
+          "shelf_status": "active",
+          "edgar_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&filenum=333-279901&type=&dateb=&owner=include&count=100",
+          "total_shelf_capacity": 100000000,
+          "current_raisable_amount": 1526000,
+          "unlimited": false,
+          "is_baby_shelf_restricted": true,
+          "total_amount_raised": 11420000,
+          "raised_last_12mo_under_ib6": 980000,
+          "outstanding_shares": 3470000,
+          "float_shares": 2100000,
+          "highest_60_day_close": 2.18,
+          "price_to_exceed_baby_shelf": 35.71,
+          "ib6_float_value": 4578000,
+          "last_banker": "Dawson James",
+          "bank_tier": "boutique",
+          "investor_class": null,
+          "effect_date": "2024-04-02",
+          "expiration_date": "2027-04-02",
+          "last_update_date": "2026-05-14"
+        }
+      ],
+      "atm": [
+        {
+          "source_ref": "ATM-2183",
+          "title": "June 2024 Maxim ATM",
+          "registered": "Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1506983/000121390024053132/ea0207908-424b5_glucotrack.htm",
+          "parent_shelf": {
+            "title": "March 2024 $100M Shelf",
+            "file_number": "333-279901",
+            "accession_number": "0001213900-24-053132",
+            "edgar_url": "https://www.sec.gov/..."
+          },
+          "total_capacity": 5000000,
+          "remaining_capacity": 1526000,
+          "remaining_without_baby_shelf": 2840000,
+          "limited_by_baby_shelf": true,
+          "sales_total_usd": 2160000,
+          "used_pct": 43.2,
+          "placement_agent": "Maxim",
+          "bank_tier": "pump_trifecta",
+          "investor_class": null,
+          "agreement_start_date": "2024-06-11",
+          "agreement_end_date": null,
+          "last_update_date": "2026-05-14"
+        }
+      ],
+      "equity_line": [],
+      "warrant": [
+        {
+          "source_ref": "W-3034",
+          "title": "November 2024 Warrants",
+          "registered": "Registered",
+          "edgar_url": "https://www.sec.gov/...",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2024-12-20",
+            "file_number": "333-284001",
+            "accession_number": "0001213900-24-061002",
+            "edgar_url": "https://www.sec.gov/..."
+          },
+          "total_issued": 480000,
+          "remaining_outstanding": 480000,
+          "exercise_price": 1.20,
+          "known_owners": ["Armistice Capital"],
+          "underwriter": "Dawson James",
+          "bank_tier": "boutique",
+          "investor_class": "pipe_flipper",
+          "issue_date": "2024-11-19",
+          "exercisable_date": "2024-11-19",
+          "expiration_date": "2029-11-19",
+          "last_update_date": "2026-03-31"
+        }
+      ],
+      "convertible": [],
+      "preferred": [],
+      "s1_offering": []
+    },
+    "brief": {
+      "headline": "GCTK has 5.6 months of cash runway with $1.4M raisable under its baby-shelf cap",
+      "bullets": [
+        "Estimated cash of $3.7M against a $2.2M quarterly operating burn leaves 5.6 months of runway.",
+        "The December 2024 Dawson James ATM is fully drawn; $1.4M remains raisable under the I.B.6 cap.",
+        "480K warrants at $1.20 sit 45% below the 60-day-high close of $2.18."
+      ],
+      "watch": [
+        "November 19, 2029: Expiration of the 480,000 November 2024 warrants."
+      ],
+      "generated_at": "2026-05-28T09:14:02Z",
+      "stale": true,
+      "stale_since_filing_date": "2026-06-01"
+    }
   }
 }
 ```
 
+Real generated documents for five tickers — chosen to cover the branches
+above (unlimited shelf, FPI ADS ratio, terminated equity line, empty card
+arrays, negative cash estimate) — live in `examples/`, with consumer
+notes in `examples/README.md`. Regenerate them with
+`python scripts/dump_finviz_payload.py <TICKER…> --out examples`.
+
 ---
 
-## 13. Open questions for the Finviz team
+## 14. Open questions for the Finviz team
+
+The **blocking** asks are in §3, now that transport is live, and they are
+infra-side rather than product decisions: validate `data` and add the ordering
+guard (§3.5 — the first one is a silent-data-loss bug, and the most important
+item in this document), add an unpublish route (§3.2) and a published index
+(§3.4) so §12's remedies and reconciliation work at all, accept gzip (§2), and
+stand up a staging environment so payload changes can be smoke-tested off the
+live site. The questions below are the product ones.
 
 1. **Screener integration** — wanted at launch, or later? If at launch, we
    should agree on the ~10 query-stable fields worth extracting into typed
@@ -817,8 +990,8 @@ drifting.
    site theming and responsive layout).
 5. **Universe** — initial ticker list size and admission rule (who decides a
    ticker is covered, producer or Finviz?).
-6. **Rate limits / bulk endpoint** — is ≤8 concurrent PUTs in a nightly
-   burst acceptable, or should we define `PUT /v1/dilution/bulk`?
+6. **Rate limits / bulk endpoint** — is ≤8 concurrent POSTs in a nightly
+   burst acceptable, or should we define a bulk endpoint?
 7. **Daily batch timing** — earliest time Finviz's settled daily bars are
    final (the producer's 60-day-high basis must match Finviz's own close
    data to avoid visible discrepancies on the same site).

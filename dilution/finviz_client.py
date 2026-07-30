@@ -23,6 +23,7 @@ import logging
 import os
 import re
 import time
+from datetime import date as _dt_date
 from typing import Optional
 
 import requests
@@ -134,6 +135,15 @@ def _current_session_date() -> str:
     return _market_now().strftime("%m/%d/%Y")
 
 
+def _parse_session_date(value) -> Optional[_dt_date]:
+    """Finviz's daily-export Date column (MM/DD/YYYY) → date, or None."""
+    from datetime import datetime
+    try:
+        return datetime.strptime((value or "").strip(), "%m/%d/%Y").date()
+    except (ValueError, AttributeError):
+        return None
+
+
 class FinvizClient:
     """Minimal Finviz Elite client. Single-ticker fundamentals only."""
 
@@ -206,24 +216,17 @@ class FinvizClient:
                 out[k] = out[k] * mult
         return out
 
-    def get_daily_closes(self, ticker: str, bars: int = 60,
-                         within_calendar_days: int | None = None,
-                         ) -> list[float] | None:
-        """Fetch daily *settled* close prices for the trailing `bars` sessions.
+    def daily_bars(self, ticker: str, bars: int = 60,
+                   within_calendar_days: int | None = None,
+                   ) -> list[tuple[Optional[_dt_date], float]] | None:
+        """(session_date, settled_close) pairs, oldest-first.
 
-        Endpoint: /quote_export with r=d1. Returns oldest-first list of
-        floats, or None on any failure / empty response.
-
-        The export's last bar is the current, still-trading session, whose
-        Close column carries the *live* market price (it changes intraday
-        and is not a settled close — e.g. BJDX mid-spike returned ~6.6 live
-        vs a true 60-day high close of 2.18). We drop that bar and request
-        one extra so the caller still gets `bars` settled closes.
-
-        `within_calendar_days` additionally drops bars older than N
-        calendar days (US market time). `bars` counts trading sessions
-        (~1.45 calendar days each), so a bare bars=60 spans ~87 calendar
-        days — too wide for windows the SEC defines in calendar days.
+        The dated form of `get_daily_closes` — callers that need the
+        trading date the close belongs to (the snapshot `as_of`) use
+        this; `get_daily_closes` is the close-only projection of it, so
+        the drop-the-live-bar rule below lives in exactly one place.
+        `session_date` is None only when Finviz's Date column is
+        unparseable (the close is still returned, as before).
         """
         if not ticker:
             return None
@@ -250,12 +253,38 @@ class FinvizClient:
                 except ValueError:
                     return False
             rows = [r for r in rows if _in_window(r)]
-        out = []
+        out: list[tuple[Optional[_dt_date], float]] = []
         for r in rows[-bars:]:
             v = _parse_num(r.get("Close"))
-            if v is not None:
-                out.append(v)
+            if v is None:
+                continue
+            out.append((_parse_session_date(r.get("Date")), v))
         return out or None
+
+    def get_daily_closes(self, ticker: str, bars: int = 60,
+                         within_calendar_days: int | None = None,
+                         ) -> list[float] | None:
+        """Fetch daily *settled* close prices for the trailing `bars` sessions.
+
+        Endpoint: /quote_export with r=d1. Returns oldest-first list of
+        floats, or None on any failure / empty response.
+
+        The export's last bar is the current, still-trading session, whose
+        Close column carries the *live* market price (it changes intraday
+        and is not a settled close — e.g. BJDX mid-spike returned ~6.6 live
+        vs a true 60-day high close of 2.18). We drop that bar and request
+        one extra so the caller still gets `bars` settled closes.
+
+        `within_calendar_days` additionally drops bars older than N
+        calendar days (US market time). `bars` counts trading sessions
+        (~1.45 calendar days each), so a bare bars=60 spans ~87 calendar
+        days — too wide for windows the SEC defines in calendar days.
+        """
+        pairs = self.daily_bars(
+            ticker, bars=bars, within_calendar_days=within_calendar_days)
+        if not pairs:
+            return None
+        return [close for _, close in pairs]
 
     def highest_close(self, ticker: str, bars: int = 60,
                       within_calendar_days: int | None = 60,
@@ -320,6 +349,21 @@ def highest_close(ticker: str, bars: int = 60,
     math (see FinvizClient.highest_close)."""
     return _client().highest_close(
         ticker, bars=bars, within_calendar_days=within_calendar_days)
+
+
+def latest_settled_close(ticker: str) -> tuple[_dt_date | None, float] | None:
+    """(session_date, close) of the most recent SETTLED session.
+
+    The snapshot basis for anything pushed downstream: `as_of` (the
+    trading date the market-derived numbers reflect) and the price used
+    for $-capacity ÷ price estimates. Deliberately not the live price —
+    a pushed snapshot must not carry an intraday-varying number.
+    Returns None when the export is unavailable.
+    """
+    pairs = _client().daily_bars(ticker, bars=1, within_calendar_days=None)
+    if not pairs:
+        return None
+    return pairs[-1]
 
 
 def ib6_effective_price(ticker: str,

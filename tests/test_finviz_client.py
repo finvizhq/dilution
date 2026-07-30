@@ -14,7 +14,7 @@ them before each test.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone, timedelta
+from datetime import date, datetime, timezone, timedelta
 
 import pytest
 import requests
@@ -963,3 +963,97 @@ class TestIb6EffectivePrice:
         fc.ib6_effective_price("X", current_price=None)
         assert captured["bars"] == 60
         assert captured["ticker"] == "X"
+
+
+# ── FinvizClient.daily_bars ───────────────────────────────────────────
+
+
+class TestDailyBars:
+    """The dated form of get_daily_closes. The drop-the-live-bar and
+    window rules are covered by TestGetDailyCloses (which now delegates
+    here); these tests pin the date pairing and the parse-failure paths
+    that only the pair form can express."""
+
+    def test_pairs_dates_with_closes(self, monkeypatch):
+        c = _make_client()
+        rows = [
+            {"Date": "06/03/2026", "Close": "1.0"},
+            {"Date": "06/04/2026", "Close": "2.0"},
+            {"Date": "06/05/2026", "Close": "99.0"},  # live bar -> dropped
+        ]
+        monkeypatch.setattr(c, "_get_csv", lambda *a, **k: list(rows))
+        monkeypatch.setattr(fc, "_current_session_date", lambda: "06/05/2026")
+        assert c.daily_bars("X", bars=60) == [
+            (date(2026, 6, 3), 1.0), (date(2026, 6, 4), 2.0)]
+
+    def test_unparseable_date_still_yields_its_close(self, monkeypatch):
+        # Behaviour parity with get_daily_closes, which never parsed Date
+        # outside the window filter: a bad Date must not drop the bar.
+        c = _make_client()
+        monkeypatch.setattr(c, "_get_csv", lambda *a, **k: [
+            {"Date": "not-a-date", "Close": "3.0"}])
+        monkeypatch.setattr(fc, "_current_session_date", lambda: "06/05/2026")
+        assert c.daily_bars("X", bars=60) == [(None, 3.0)]
+
+    def test_unparseable_close_drops_the_bar(self, monkeypatch):
+        c = _make_client()
+        monkeypatch.setattr(c, "_get_csv", lambda *a, **k: [
+            {"Date": "06/03/2026", "Close": "—"},
+            {"Date": "06/04/2026", "Close": "2.0"}])
+        monkeypatch.setattr(fc, "_current_session_date", lambda: "06/05/2026")
+        assert c.daily_bars("X", bars=60) == [(date(2026, 6, 4), 2.0)]
+
+    def test_get_daily_closes_is_the_close_only_projection(self, monkeypatch):
+        c = _make_client()
+        monkeypatch.setattr(c, "daily_bars", lambda *a, **k: [
+            (date(2026, 6, 3), 1.0), (None, 2.0)])
+        assert c.get_daily_closes("X") == [1.0, 2.0]
+
+    @pytest.mark.parametrize("pairs", [None, []])
+    def test_get_daily_closes_none_when_no_bars(self, pairs, monkeypatch):
+        c = _make_client()
+        monkeypatch.setattr(c, "daily_bars", lambda *a, **k: pairs)
+        assert c.get_daily_closes("X") is None
+
+
+# ── _parse_session_date ───────────────────────────────────────────────
+
+
+class TestParseSessionDate:
+    def test_parses_finviz_format(self):
+        assert fc._parse_session_date("06/04/2026") == date(2026, 6, 4)
+
+    def test_strips_padding(self):
+        assert fc._parse_session_date("  06/04/2026 ") == date(2026, 6, 4)
+
+    @pytest.mark.parametrize("value", [None, "", "2026-06-04", "junk", 7])
+    def test_bad_input_is_none(self, value):
+        assert fc._parse_session_date(value) is None
+
+
+# ── latest_settled_close ──────────────────────────────────────────────
+
+
+class TestLatestSettledClose:
+    def test_returns_the_most_recent_settled_pair(self, monkeypatch):
+        captured = {}
+
+        class _C:
+            def daily_bars(self, ticker, bars=60, within_calendar_days=None):
+                captured["bars"] = bars
+                captured["within"] = within_calendar_days
+                return [(date(2026, 7, 24), 0.31), (date(2026, 7, 27), 0.304)]
+
+        monkeypatch.setattr(fc, "_client", lambda: _C())
+        assert fc.latest_settled_close("X") == (date(2026, 7, 27), 0.304)
+        # No calendar window: the last settled session may be days back
+        # over a holiday weekend or on a thinly-traded ticker.
+        assert captured["within"] is None
+        assert captured["bars"] == 1
+
+    @pytest.mark.parametrize("pairs", [None, []])
+    def test_none_when_export_unavailable(self, pairs, monkeypatch):
+        monkeypatch.setattr(fc, "_client",
+                            lambda: type("C", (), {
+                                "daily_bars": lambda *a, **k: pairs})())
+        assert fc.latest_settled_close("X") is None

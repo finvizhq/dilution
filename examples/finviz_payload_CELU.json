@@ -1,0 +1,1340 @@
+{
+  "ticker": "CELU",
+  "data": {
+    "schema_version": 1,
+    "ticker": "CELU",
+    "cik": 1752828,
+    "company_name": "Celularity Inc",
+    "as_of": "2026-07-27",
+    "generated_at": "2026-07-28T13:15:44Z",
+    "company": {
+      "shares_outstanding": 28945961.0,
+      "float_shares": 18869004.0,
+      "highest_60_day_close": 1.07,
+      "price_to_exceed_baby_shelf": 3.9747725953102773,
+      "is_baby_shelf_restricted": true,
+      "cash": {
+        "latest_period_end": "2025-12-31",
+        "latest_reported_cash_usd": 6175000.0,
+        "op_cf_quarterly_usd": -3277087.912087912,
+        "capital_raised_since_usd": 0.0,
+        "current_cash_est_usd": -1435126.3736263746,
+        "months_of_cash": -1.3137820029173592,
+        "stale_days": 209,
+        "fx_failed": false,
+        "chart": {
+          "bars": [
+            {
+              "kind": "reported",
+              "period_end": "2018-09-30",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 9455.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2018-12-31",
+              "fiscal": null,
+              "form": "10-K/A",
+              "cash_usd": 24707.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-03-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 18881.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-06-30",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 1169030.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-09-30",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 1024811.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-12-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 917007.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-03-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 504930.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-06-30",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 716700.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-09-30",
+              "fiscal": "2020 Q3",
+              "form": "10-Q",
+              "cash_usd": 454497.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-12-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 54311000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-03-31",
+              "fiscal": "2021 Q1",
+              "form": "10-Q",
+              "cash_usd": 28654.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-06-30",
+              "fiscal": "2021 Q2",
+              "form": "10-Q",
+              "cash_usd": 211.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-09-30",
+              "fiscal": "2021 Q3",
+              "form": "10-Q",
+              "cash_usd": 72716000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-12-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 37240000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-03-31",
+              "fiscal": "2022 Q1",
+              "form": "10-Q",
+              "cash_usd": 48039000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-06-30",
+              "fiscal": "2022 Q2",
+              "form": "10-Q",
+              "cash_usd": 37996000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-09-30",
+              "fiscal": "2022 Q3",
+              "form": "10-Q",
+              "cash_usd": 42649000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-12-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 13966000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-03-31",
+              "fiscal": "2023 Q1",
+              "form": "10-Q",
+              "cash_usd": 8532000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-06-30",
+              "fiscal": "2023 Q2",
+              "form": "10-Q",
+              "cash_usd": 3084000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-09-30",
+              "fiscal": "2023 Q3",
+              "form": "10-Q",
+              "cash_usd": 273000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-12-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 227000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-03-31",
+              "fiscal": "2024 Q1",
+              "form": "10-Q",
+              "cash_usd": 1902000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-06-30",
+              "fiscal": "2024 Q2",
+              "form": "10-Q",
+              "cash_usd": 467000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-09-30",
+              "fiscal": "2024 Q3",
+              "form": "10-Q",
+              "cash_usd": 133000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-12-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 738000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-03-31",
+              "fiscal": "2025 Q1",
+              "form": "10-Q",
+              "cash_usd": 293000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-06-30",
+              "fiscal": "2025 Q2",
+              "form": "10-Q",
+              "cash_usd": 863000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-09-30",
+              "fiscal": "2025 Q3",
+              "form": "10-Q",
+              "cash_usd": 120000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-12-31",
+              "fiscal": "2025 FY",
+              "form": "10-K",
+              "cash_usd": 6175000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "estimate",
+              "period_end": null,
+              "fiscal": null,
+              "form": null,
+              "cash_usd": -1435126.3736263746,
+              "overlay_usd": null
+            }
+          ]
+        }
+      },
+      "os_chart": {
+        "ads_ratio": null,
+        "price_basis": 0.751,
+        "bars": [
+          {
+            "quarter_end": "2019-09-30",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2019-12-31",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-03-31",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-06-30",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-09-30",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-12-31",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-03-31",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-06-30",
+            "shares": 2875000.0,
+            "raw_shares": 28750000.0,
+            "source_date": "2019-08-07",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-09-30",
+            "shares": 12346411.3,
+            "raw_shares": 123464113.0,
+            "source_date": "2021-08-11",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-12-31",
+            "shares": 12346411.3,
+            "raw_shares": 123464113.0,
+            "source_date": "2021-11-09",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-03-31",
+            "shares": 13772052.600000001,
+            "raw_shares": 137720526.0,
+            "source_date": "2022-03-25",
+            "form": "10-K/A",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-06-30",
+            "shares": 13831107.4,
+            "raw_shares": 138311074.0,
+            "source_date": "2022-05-12",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-09-30",
+            "shares": 14242418.700000001,
+            "raw_shares": 142424187.0,
+            "source_date": "2022-08-04",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-12-31",
+            "shares": 14501331.3,
+            "raw_shares": 145013313.0,
+            "source_date": "2022-11-04",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-03-31",
+            "shares": 16502887.9,
+            "raw_shares": 165028879.0,
+            "source_date": "2023-03-27",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-06-30",
+            "shares": 18053027.2,
+            "raw_shares": 180530272.0,
+            "source_date": "2023-05-18",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-09-30",
+            "shares": 19094819.0,
+            "raw_shares": 190948190.0,
+            "source_date": "2023-08-10",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-12-31",
+            "shares": 19378164.1,
+            "raw_shares": 193781641.0,
+            "source_date": "2023-12-31",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2024-03-31",
+            "shares": 19378164.1,
+            "raw_shares": 193781641.0,
+            "source_date": "2023-12-31",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2024-06-30",
+            "shares": 19378164.1,
+            "raw_shares": 193781641.0,
+            "source_date": "2023-12-31",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2024-09-30",
+            "shares": 21984614.0,
+            "raw_shares": 21984614.0,
+            "source_date": "2024-07-22",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2024-12-31",
+            "shares": 22484239.0,
+            "raw_shares": 22484239.0,
+            "source_date": "2024-12-02",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-03-31",
+            "shares": 22484239.0,
+            "raw_shares": 22484239.0,
+            "source_date": "2024-12-02",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-06-30",
+            "shares": 23949229.0,
+            "raw_shares": 23949229.0,
+            "source_date": "2025-05-06",
+            "form": "10-K/A",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-09-30",
+            "shares": 26691477.0,
+            "raw_shares": 26691477.0,
+            "source_date": "2025-08-30",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-12-31",
+            "shares": 28328880.0,
+            "raw_shares": 28328880.0,
+            "source_date": "2025-11-14",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2026-03-31",
+            "shares": 28328880.0,
+            "raw_shares": 28328880.0,
+            "source_date": "2025-11-14",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2026-06-30",
+            "shares": 28945961.0,
+            "raw_shares": 28945961.0,
+            "source_date": "2026-04-28",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2026-09-30",
+            "shares": 28945961.0,
+            "raw_shares": 28945961.0,
+            "source_date": "2026-04-28",
+            "form": "10-K",
+            "carried": true,
+            "split_adjusted": false
+          }
+        ],
+        "latest": {
+          "shares": 28945961.0,
+          "source": "10-K XBRL, a/o 2026-04-28"
+        },
+        "fd_stack": [
+          {
+            "key": "warrant",
+            "label": "Warrants",
+            "shares": 17847157.0,
+            "price_based": false,
+            "capacity_usd": null,
+            "note": "Remaining outstanding across 20 warrant cards, in or out of the money (pre-funded and placement-agent warrants excluded)"
+          },
+          {
+            "key": "convertible",
+            "label": "Convertible Notes",
+            "shares": 1807228.9156626507,
+            "price_based": false,
+            "capacity_usd": null,
+            "note": "Shares issuable from remaining principal at stated conversion prices (1 note card)"
+          },
+          {
+            "key": "preferred",
+            "label": "Convertible Preferred",
+            "shares": 1388888.75,
+            "price_based": false,
+            "capacity_usd": null,
+            "note": "Shares issuable from remaining principal at stated conversion prices (1 preferred card)"
+          },
+          {
+            "key": "equity_line",
+            "label": "Equity Line",
+            "shares": 13315579.227696404,
+            "price_based": true,
+            "capacity_usd": 10000000.0,
+            "note": "$10,000,000 remaining equity-line capacity ÷ $0.75"
+          }
+        ]
+      }
+    },
+    "badges": {
+      "overall": {
+        "score": 68,
+        "band": "high",
+        "label": "High",
+        "partial": false,
+        "description": "0–100 composite of the four drivers: Offering Ability 30%, Cash Need 30%, Overhang 25%, Dilution History 15% — plus a +15 bump when the company both needs cash (under 6 months) and can raise at will, the exact setup behind surprise discounted offerings. Higher = higher probability the share count grows soon.",
+        "detail": [
+          "Offering Ability: Medium (34) · weight 30%",
+          "Overhang: High (82) · weight 25%",
+          "Dilution History: Medium (48) · weight 15%",
+          "Cash Need: High (100) · weight 30%"
+        ],
+        "legend": [
+          {
+            "band": "minimal",
+            "pill": "Minimal",
+            "meaning": "0–19 — no meaningful dilution setup"
+          },
+          {
+            "band": "low",
+            "pill": "Low",
+            "meaning": "20–39"
+          },
+          {
+            "band": "moderate",
+            "pill": "Moderate",
+            "meaning": "40–59"
+          },
+          {
+            "band": "high",
+            "pill": "High",
+            "meaning": "60–79"
+          },
+          {
+            "band": "severe",
+            "pill": "Severe",
+            "meaning": "80–100 — needs cash and can print it"
+          }
+        ]
+      },
+      "drivers": [
+        {
+          "key": "offering_ability",
+          "label": "Offering Ability",
+          "score": 34,
+          "band": "medium",
+          "band_text": "Medium",
+          "description": "Ability to sell new shares at will via an effective shelf or a pending S-1, sized against market cap — a $20M shelf is fatal for a $40M company and trivial for a $2B one. A live ATM or equity line escalates one level (at-will selling is already running; its dollar capacity is not re-added — it usually draws down the same shelf). Higher = a discounted offering can hit at any time.",
+          "detail": [
+            "No active shelf or pending S-1 on file",
+            "Live ATM/equity line, $10.0M remaining — escalated one level"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "No shelf / pending S-1, capacity under $1M, or under 5% of market cap"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "Capacity 5–25% of market cap"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Capacity over 25% of market cap, a WKSI automatic shelf, or escalated by a live ATM"
+            }
+          ]
+        },
+        {
+          "key": "overhang",
+          "label": "Overhang",
+          "score": 82,
+          "band": "high",
+          "band_text": "High",
+          "description": "Investor-held securities that convert into the float — warrants, convertible notes, convertible preferred — as % of shares outstanding. If everything converts, this is how much your slice shrinks. Shelf / ATM / equity-line capacity is counted under Offering Ability instead (an ATM is usually a takedown of the same shelf — summing both would double-count). Pre-funded warrants are excluded.",
+          "detail": [
+            "warrants 17.8M + convertibles 1.8M + preferred 1.4M = 21.0M potential new shares",
+            "= 73% of 28.9M shares outstanding"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "Under 20% of shares outstanding"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "20–50% of shares outstanding"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Over 50% of shares outstanding"
+            }
+          ]
+        },
+        {
+          "key": "history",
+          "label": "Dilution History",
+          "score": 48,
+          "band": "medium",
+          "band_text": "Medium",
+          "description": "Split-adjusted growth in shares outstanding over the past 3 years. Reverse splits are normalized out — a 1-for-10 reverse split followed by re-dilution back to the old count is +900%, not 0%. Past dilution is the best predictor of future dilution.",
+          "detail": [
+            "O/S Jul 2023: 18.1M (split-adj) → May 2026: 28.9M (+60%)",
+            "Normalized for 1 split in the window"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "Under 30% O/S growth over the past 3 years"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "30–100% O/S growth"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Over 100% O/S growth"
+            }
+          ]
+        },
+        {
+          "key": "cash_need",
+          "label": "Cash Need",
+          "score": 100,
+          "band": "high",
+          "band_text": "High",
+          "description": "Months of cash left at the current operating burn — estimated current cash (latest balance sheet, bridged with burn and capital raised since) divided by monthly burn. Companies that need cash and have the means to raise it, will.",
+          "detail": [
+            "Est. current cash -$1.4M",
+            "Operating burn $3.3M/quarter",
+            "≈ -1.3 months of runway",
+            "Balance sheet as of 2025-12-31, bridged with burn + raises since"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "Operating cash-flow positive, or over 24 months of runway"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "6–24 months of runway"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Under 6 months of runway"
+            }
+          ]
+        }
+      ]
+    },
+    "cards": {
+      "shelf": [],
+      "atm": [],
+      "equity_line": [
+        {
+          "source_ref": "EL-200",
+          "title": "March 2024 YA II ELOC",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315224010134/form8-k.htm",
+          "parent_shelf": null,
+          "total_capacity": 10000000.0,
+          "remaining_capacity": 10000000.0,
+          "sales_total_usd": 0,
+          "used_pct": 0.0,
+          "counterparty": "YA II",
+          "agreement_start_date": "2024-03-13",
+          "agreement_end_date": "2027-03-13",
+          "terminated": false,
+          "last_update_date": "2024-03-15",
+          "bank_tier": null,
+          "investor_class": "eloc_funder"
+        }
+      ],
+      "warrant": [
+        {
+          "source_ref": "W-5275",
+          "title": "May 2022 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312522156126/d349292d8k.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2022-05-25",
+            "file_number": "333-265191",
+            "accession_number": "0001193125-22-158801",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312522158801/d350406ds1.htm"
+          },
+          "total_issued": 405406.0,
+          "remaining_outstanding": 405406.0,
+          "exercise_price": 3.5,
+          "known_owners": [
+            "Armistice"
+          ],
+          "underwriter": "AGP",
+          "issue_date": "2022-05-18",
+          "exercisable_date": "2022-05-20",
+          "expiration_date": "2028-10-10",
+          "last_update_date": "2024-02-26",
+          "bank_tier": "boutique",
+          "investor_class": "pipe_flipper"
+        },
+        {
+          "source_ref": "W-5280",
+          "title": "March 2023 Private Placement Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000095017023009338/celu-20230317.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-3",
+            "filing_date": "2023-05-25",
+            "file_number": "333-272198",
+            "accession_number": "0001193125-23-154204",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312523154204/d434199ds3.htm"
+          },
+          "total_issued": 75000.0,
+          "remaining_outstanding": 75000.0,
+          "exercise_price": 1.692,
+          "known_owners": [
+            "Starr"
+          ],
+          "underwriter": null,
+          "issue_date": "2023-03-17",
+          "exercisable_date": "2023-03-17",
+          "expiration_date": "2028-03-17",
+          "last_update_date": "2025-07-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5281",
+          "title": "March 2023 Private Placement Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000095017023009338/celu-20230317.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-3",
+            "filing_date": "2023-05-25",
+            "file_number": "333-272198",
+            "accession_number": "0001193125-23-154204",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312523154204/d434199ds3.htm"
+          },
+          "total_issued": 938184.0,
+          "remaining_outstanding": 938184.0,
+          "exercise_price": 30.0,
+          "known_owners": [
+            "Robert Hariri"
+          ],
+          "underwriter": null,
+          "issue_date": "2023-03-27",
+          "exercisable_date": "2023-03-20",
+          "expiration_date": "2028-03-27",
+          "last_update_date": "2025-05-21",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5285",
+          "title": "April 2023 Common Warrants",
+          "registered": "Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312523094340/d483942d424b5.htm",
+          "parent_shelf": {
+            "title": "August 2022 Shelf",
+            "file_number": "333-266786",
+            "accession_number": "0001193125-22-218588",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312522218588/d365928ds3.htm"
+          },
+          "resale_registration": {
+            "form": "S-3",
+            "filing_date": "2023-05-25",
+            "file_number": "333-272198",
+            "accession_number": "0001193125-23-154204",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312523154204/d434199ds3.htm"
+          },
+          "total_issued": 923077.0,
+          "remaining_outstanding": 435625.0,
+          "exercise_price": 3.5,
+          "known_owners": [
+            "Armistice"
+          ],
+          "underwriter": "AGP",
+          "issue_date": "2023-04-04",
+          "exercisable_date": "2024-01-28",
+          "expiration_date": "2029-01-28",
+          "last_update_date": "2024-02-26",
+          "bank_tier": "boutique",
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5288",
+          "title": "May 2023 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000095017023023264/celu-20230516.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-3",
+            "filing_date": "2023-05-25",
+            "file_number": "333-272198",
+            "accession_number": "0001193125-23-154204",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000119312523154204/d434199ds3.htm"
+          },
+          "total_issued": 581394.0,
+          "remaining_outstanding": 581394.0,
+          "exercise_price": 10.0,
+          "known_owners": [],
+          "underwriter": null,
+          "issue_date": "2023-05-17",
+          "exercisable_date": "2023-05-18",
+          "expiration_date": "2028-05-18",
+          "last_update_date": "2024-02-26",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5290",
+          "title": "June 2023 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000095017023029159/celu-20230620.htm",
+          "parent_shelf": null,
+          "resale_registration": null,
+          "total_issued": 300000.0,
+          "remaining_outstanding": 300000.0,
+          "exercise_price": 2.844,
+          "known_owners": [
+            "RWI"
+          ],
+          "underwriter": null,
+          "issue_date": "2023-06-20",
+          "exercisable_date": "2023-06-20",
+          "expiration_date": "2028-06-20",
+          "last_update_date": "2025-07-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5293",
+          "title": "September 2023 Inducement Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000095017024000474/celu-20230930.htm",
+          "parent_shelf": null,
+          "resale_registration": null,
+          "total_issued": 729699.0,
+          "remaining_outstanding": 729699.0,
+          "exercise_price": 10.0,
+          "known_owners": [],
+          "underwriter": null,
+          "issue_date": "2023-09-14",
+          "exercisable_date": "2023-09-14",
+          "expiration_date": "2028-03-27",
+          "last_update_date": "2024-02-26",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5300",
+          "title": "January 2024 Private Placement Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000095017024115082/celu-20240331.htm",
+          "parent_shelf": null,
+          "resale_registration": null,
+          "total_issued": 1350000.0,
+          "remaining_outstanding": 1350000.0,
+          "exercise_price": 2.844,
+          "known_owners": [
+            "RWI"
+          ],
+          "underwriter": null,
+          "issue_date": "2024-01-12",
+          "exercisable_date": "2024-07-12",
+          "expiration_date": "2029-07-15",
+          "last_update_date": "2025-07-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5295",
+          "title": "January 2024 Series 1 Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000095017024005029/celu-20240112.htm",
+          "parent_shelf": null,
+          "resale_registration": null,
+          "total_issued": 1650000.0,
+          "remaining_outstanding": 1650000.0,
+          "exercise_price": 2.4898,
+          "known_owners": [
+            "RWI"
+          ],
+          "underwriter": null,
+          "issue_date": "2024-01-17",
+          "exercisable_date": "2024-01-17",
+          "expiration_date": "2029-01-16",
+          "last_update_date": "2024-02-26",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5297",
+          "title": "March 2024 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315224010134/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": null,
+          "total_issued": 300000.0,
+          "remaining_outstanding": 300000.0,
+          "exercise_price": 2.844,
+          "known_owners": [
+            "RWI"
+          ],
+          "underwriter": null,
+          "issue_date": "2024-03-13",
+          "exercisable_date": "2024-03-13",
+          "expiration_date": "2028-06-20",
+          "last_update_date": "2025-07-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5301",
+          "title": "November 2024 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315224048330/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": null,
+          "total_issued": 263158.0,
+          "remaining_outstanding": 263158.0,
+          "exercise_price": 2.85,
+          "known_owners": [],
+          "underwriter": "Madison Global Partners",
+          "issue_date": "2024-11-25",
+          "exercisable_date": "2024-11-25",
+          "expiration_date": "2029-11-25",
+          "last_update_date": "2024-12-06",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5305",
+          "title": "December 2024 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225000294/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": null,
+          "total_issued": 1263157.0,
+          "remaining_outstanding": 1263157.0,
+          "exercise_price": 2.97,
+          "known_owners": [],
+          "underwriter": null,
+          "issue_date": "2024-12-27",
+          "exercisable_date": "2025-06-27",
+          "expiration_date": "2029-12-27",
+          "last_update_date": "2025-01-03",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5316",
+          "title": "July 2025 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000164117225021831/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-19",
+            "file_number": "333-292288",
+            "accession_number": "0001493152-25-028562",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225028562/forms-1.htm"
+          },
+          "total_issued": 3700000.0,
+          "remaining_outstanding": 3700000.0,
+          "exercise_price": 2.528,
+          "known_owners": [
+            "Lim Kok Thay"
+          ],
+          "underwriter": null,
+          "issue_date": "2025-07-21",
+          "exercisable_date": "2025-07-21",
+          "expiration_date": "2030-07-21",
+          "last_update_date": "2025-08-01",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5311",
+          "title": "July 2025 Starr Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000164117225021378/form8-ka.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-19",
+            "file_number": "333-292288",
+            "accession_number": "0001493152-25-028562",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225028562/forms-1.htm"
+          },
+          "total_issued": 50000.0,
+          "remaining_outstanding": 50000.0,
+          "exercise_price": 1.692,
+          "known_owners": [
+            "Starr"
+          ],
+          "underwriter": null,
+          "issue_date": "2025-07-29",
+          "exercisable_date": "2025-07-29",
+          "expiration_date": "2030-07-29",
+          "last_update_date": "2025-07-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5312",
+          "title": "July 2025 Starr Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000164117225021378/form8-ka.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-19",
+            "file_number": "333-292288",
+            "accession_number": "0001493152-25-028562",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225028562/forms-1.htm"
+          },
+          "total_issued": 100000.0,
+          "remaining_outstanding": 100000.0,
+          "exercise_price": 1.692,
+          "known_owners": [
+            "Starr"
+          ],
+          "underwriter": null,
+          "issue_date": "2025-07-29",
+          "exercisable_date": "2025-07-29",
+          "expiration_date": "2030-07-29",
+          "last_update_date": "2025-07-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5313",
+          "title": "July 2025 RWI Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000164117225021378/form8-ka.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-19",
+            "file_number": "333-292288",
+            "accession_number": "0001493152-25-028562",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225028562/forms-1.htm"
+          },
+          "total_issued": 500000.0,
+          "remaining_outstanding": 500000.0,
+          "exercise_price": 2.844,
+          "known_owners": [
+            "RWI"
+          ],
+          "underwriter": null,
+          "issue_date": "2025-07-29",
+          "exercisable_date": "2025-07-29",
+          "expiration_date": "2030-07-29",
+          "last_update_date": "2025-07-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5314",
+          "title": "July 2025 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000164117225021556/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-19",
+            "file_number": "333-292288",
+            "accession_number": "0001493152-25-028562",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225028562/forms-1.htm"
+          },
+          "total_issued": 1230769.0,
+          "remaining_outstanding": 1230769.0,
+          "exercise_price": 1.5,
+          "known_owners": [],
+          "underwriter": null,
+          "issue_date": "2025-07-30",
+          "exercisable_date": "2025-07-30",
+          "expiration_date": "2027-07-30",
+          "last_update_date": "2025-07-30",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5319",
+          "title": "October 2025 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225019839/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-19",
+            "file_number": "333-292288",
+            "accession_number": "0001493152-25-028562",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225028562/forms-1.htm"
+          },
+          "total_issued": 267308.0,
+          "remaining_outstanding": 267308.0,
+          "exercise_price": 3.0,
+          "known_owners": [],
+          "underwriter": "Craft Capital",
+          "issue_date": "2025-10-24",
+          "exercisable_date": "2025-10-24",
+          "expiration_date": "2030-10-24",
+          "last_update_date": "2025-10-28",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5321",
+          "title": "December 2025 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225029033/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-31",
+            "file_number": "333-292515",
+            "accession_number": "0001493152-25-029802",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225029802/forms-1.htm"
+          },
+          "total_issued": 2448717.0,
+          "remaining_outstanding": 2448717.0,
+          "exercise_price": 2.0,
+          "known_owners": [
+            "Philip & Daniele Barach Family Trust"
+          ],
+          "underwriter": null,
+          "issue_date": "2025-12-19",
+          "exercisable_date": "2026-06-19",
+          "expiration_date": "2030-12-19",
+          "last_update_date": "2025-12-23",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "W-5322",
+          "title": "December 2025 Common Warrants",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225029033/form8-k.htm",
+          "parent_shelf": null,
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-31",
+            "file_number": "333-292515",
+            "accession_number": "0001493152-25-029802",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225029802/forms-1.htm"
+          },
+          "total_issued": 1258740.0,
+          "remaining_outstanding": 1258740.0,
+          "exercise_price": 2.0,
+          "known_owners": [
+            "Philip & Daniele Barach Family Trust"
+          ],
+          "underwriter": null,
+          "issue_date": "2025-12-19",
+          "exercisable_date": "2026-06-19",
+          "expiration_date": "2030-12-19",
+          "last_update_date": "2025-12-23",
+          "bank_tier": null,
+          "investor_class": null
+        }
+      ],
+      "convertible": [
+        {
+          "source_ref": "C-1090",
+          "title": "December 2025 Philip & Daniele Barach Family Trust Convertible Note",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225029033/form8-k.htm",
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-31",
+            "file_number": "333-292515",
+            "accession_number": "0001493152-25-029802",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225029802/forms-1.htm"
+          },
+          "principal_total": 3000000.0,
+          "principal_remaining": 3000000.0,
+          "conversion_price": 1.66,
+          "total_shares_issuable": 1807228.9156626507,
+          "remaining_shares_issuable": 1807228.9156626507,
+          "known_owners": [
+            "Philip & Daniele Barach Family Trust"
+          ],
+          "underwriter": null,
+          "issue_date": "2025-12-19",
+          "convertible_date": "2025-12-19",
+          "maturity_date": "2026-12-31",
+          "last_update_date": "2025-12-23",
+          "bank_tier": null,
+          "investor_class": null
+        }
+      ],
+      "preferred": [
+        {
+          "source_ref": "P-467",
+          "title": "October 2025 Series A Preferred",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225019839/form8-k.htm",
+          "resale_registration": {
+            "form": "S-1",
+            "filing_date": "2025-12-19",
+            "file_number": "333-292288",
+            "accession_number": "0001493152-25-028562",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/1752828/000149315225028562/forms-1.htm"
+          },
+          "principal_total": 2222222.0,
+          "principal_remaining": 2222222.0,
+          "conversion_price": 1.6,
+          "total_shares_issuable": 1388888.75,
+          "remaining_shares_issuable": 1388888.75,
+          "known_owners": [],
+          "underwriter": "Craft Capital",
+          "issue_date": "2025-10-24",
+          "convertible_date": "2025-10-24",
+          "maturity_date": "2026-10-24",
+          "last_update_date": "2026-04-30",
+          "bank_tier": null,
+          "investor_class": null
+        }
+      ],
+      "s1_offering": []
+    },
+    "brief": {
+      "headline": "CELU has negative cash runway of -1.3 months and 21.0M shares of total overhang",
+      "bullets": [
+        "Estimated current cash is -$1.4M with a quarterly operating burn of $3.3M, leaving -1.3 months of runway.",
+        "Total overhang of 21.0M potential shares represents 73% of the 28.9M shares outstanding.",
+        "The 21.0M share overhang consists of 17.8M warrants, 1.8M convertibles, and 1.4M preferred shares.",
+        "CELU has $10.0M in remaining capacity under its March 2024 YA II equity line of credit.",
+        "Shares outstanding grew 60% from 18.1M in July 2023 to 28.9M in May 2026."
+      ],
+      "watch": [
+        "Maturity of the $3.0M Barach Family Trust convertible note on December 31, 2026.",
+        "Expiration of 1.2M July 2025 Common Warrants on July 30, 2027."
+      ],
+      "generated_at": "2026-07-28T13:06:39Z",
+      "stale": false,
+      "stale_since_filing_date": null
+    }
+  }
+}

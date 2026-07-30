@@ -1,0 +1,1148 @@
+{
+  "ticker": "FCEL",
+  "data": {
+    "schema_version": 1,
+    "ticker": "FCEL",
+    "cik": 886128,
+    "company_name": "FUELCELL ENERGY INC",
+    "as_of": "2026-07-27",
+    "generated_at": "2026-07-28T13:16:45Z",
+    "company": {
+      "shares_outstanding": 67608173.0,
+      "float_shares": 64379883.0,
+      "highest_60_day_close": 36.01,
+      "price_to_exceed_baby_shelf": 1.164960178632198,
+      "is_baby_shelf_restricted": false,
+      "cash": {
+        "latest_period_end": "2026-04-30",
+        "latest_reported_cash_usd": 373167000.0,
+        "op_cf_quarterly_usd": -30616500.0,
+        "capital_raised_since_usd": 54571000.0,
+        "current_cash_est_usd": 397461683.3333333,
+        "months_of_cash": 38.94583149608871,
+        "stale_days": 89,
+        "fx_failed": false,
+        "chart": {
+          "bars": [
+            {
+              "kind": "reported",
+              "period_end": "2016-07-31",
+              "fiscal": "2016 Q3",
+              "form": "10-Q",
+              "cash_usd": 94150000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2016-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 84187000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2017-01-31",
+              "fiscal": "2017 Q1",
+              "form": "10-Q",
+              "cash_usd": 57646000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2017-04-30",
+              "fiscal": "2017 Q2",
+              "form": "10-Q",
+              "cash_usd": 46454000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2017-07-31",
+              "fiscal": "2017 Q3",
+              "form": "10-Q",
+              "cash_usd": 35683000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2017-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 49294000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2018-01-31",
+              "fiscal": "2018 Q1",
+              "form": "10-Q",
+              "cash_usd": 76776000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2018-04-30",
+              "fiscal": "2018 Q2",
+              "form": "10-Q",
+              "cash_usd": 66973000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2018-07-31",
+              "fiscal": "2018 Q3",
+              "form": "10-Q",
+              "cash_usd": 48663000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2018-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 39291000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-01-31",
+              "fiscal": "2019 Q1",
+              "form": "10-Q",
+              "cash_usd": 27750000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-04-30",
+              "fiscal": "2019 Q2",
+              "form": "10-Q",
+              "cash_usd": 14889000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-07-31",
+              "fiscal": "2019 Q3",
+              "form": "10-Q",
+              "cash_usd": 16018000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2019-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 9434000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-01-31",
+              "fiscal": "2020 Q1",
+              "form": "10-Q",
+              "cash_usd": 38254000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-04-30",
+              "fiscal": "2020 Q2",
+              "form": "10-Q",
+              "cash_usd": 29100000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-07-31",
+              "fiscal": "2020 Q3",
+              "form": "10-Q",
+              "cash_usd": 66300000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2020-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 149867000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-01-31",
+              "fiscal": "2021 Q1",
+              "form": "10-Q",
+              "cash_usd": 178570000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-04-30",
+              "fiscal": "2021 Q2",
+              "form": "10-Q",
+              "cash_usd": 139086000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-07-31",
+              "fiscal": "2021 Q3",
+              "form": "10-Q",
+              "cash_usd": 468565000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2021-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 432213000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-01-31",
+              "fiscal": "2022 Q1",
+              "form": "10-Q",
+              "cash_usd": 376963000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-04-30",
+              "fiscal": "2022 Q2",
+              "form": "10-Q",
+              "cash_usd": 467774000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-07-31",
+              "fiscal": "2022 Q3",
+              "form": "10-Q",
+              "cash_usd": 456479000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2022-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 458055000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-01-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 315168000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-04-30",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 246844000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-07-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 303679000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2023-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 249952000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-01-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 297466000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-04-30",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 158790000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-07-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 159347000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2024-10-31",
+              "fiscal": null,
+              "form": "10-K",
+              "cash_usd": 148133000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-01-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 98070000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-04-30",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 116061000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-07-31",
+              "fiscal": "2025 Q3",
+              "form": "10-Q",
+              "cash_usd": 174662000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2025-10-31",
+              "fiscal": null,
+              "form": "10-Q",
+              "cash_usd": 278099000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2026-01-31",
+              "fiscal": "2026 Q1",
+              "form": "10-Q",
+              "cash_usd": 311778000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "reported",
+              "period_end": "2026-04-30",
+              "fiscal": "2026 Q2",
+              "form": "10-Q",
+              "cash_usd": 373167000.0,
+              "overlay_usd": null
+            },
+            {
+              "kind": "estimate",
+              "period_end": null,
+              "fiscal": null,
+              "form": null,
+              "cash_usd": 397461683.3333333,
+              "overlay_usd": 54571000.0
+            }
+          ]
+        }
+      },
+      "os_chart": {
+        "ads_ratio": null,
+        "price_basis": 21.49,
+        "bars": [
+          {
+            "quarter_end": "2016-09-30",
+            "shares": 93167.67777777776,
+            "raw_shares": 33540364.0,
+            "source_date": "2016-09-06",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2016-12-31",
+            "shares": 93167.67777777776,
+            "raw_shares": 33540364.0,
+            "source_date": "2016-09-06",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2017-03-31",
+            "shares": 117993.2361111111,
+            "raw_shares": 42477565.0,
+            "source_date": "2017-03-06",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2017-06-30",
+            "shares": 165480.03333333333,
+            "raw_shares": 59572812.0,
+            "source_date": "2017-06-06",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2017-09-30",
+            "shares": 170793.72499999998,
+            "raw_shares": 61485741.0,
+            "source_date": "2017-09-06",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2017-12-31",
+            "shares": 170793.72499999998,
+            "raw_shares": 61485741.0,
+            "source_date": "2017-09-06",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2018-03-31",
+            "shares": 226757.9583333333,
+            "raw_shares": 81632865.0,
+            "source_date": "2018-03-02",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2018-06-30",
+            "shares": 238790.8611111111,
+            "raw_shares": 85964710.0,
+            "source_date": "2018-06-01",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2018-09-30",
+            "shares": 259285.55277777775,
+            "raw_shares": 93342799.0,
+            "source_date": "2018-09-04",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2018-12-31",
+            "shares": 259285.55277777775,
+            "raw_shares": 93342799.0,
+            "source_date": "2018-09-04",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2019-03-31",
+            "shares": 359715.0555555555,
+            "raw_shares": 129497420.0,
+            "source_date": "2019-03-04",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2019-06-30",
+            "shares": 914141.2999999999,
+            "raw_shares": 27424239.0,
+            "source_date": "2019-06-13",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2019-09-30",
+            "shares": 4197141.333333333,
+            "raw_shares": 125914240.0,
+            "source_date": "2019-09-06",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2019-12-31",
+            "shares": 4197141.333333333,
+            "raw_shares": 125914240.0,
+            "source_date": "2019-09-06",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-03-31",
+            "shares": 7032295.066666666,
+            "raw_shares": 210968852.0,
+            "source_date": "2020-03-11",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-06-30",
+            "shares": 7035269.5,
+            "raw_shares": 211058085.0,
+            "source_date": "2020-06-05",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-09-30",
+            "shares": 7979134.7,
+            "raw_shares": 239374041.0,
+            "source_date": "2020-09-03",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2020-12-31",
+            "shares": 7979134.7,
+            "raw_shares": 239374041.0,
+            "source_date": "2020-09-03",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-03-31",
+            "shares": 10747637.433333334,
+            "raw_shares": 322429123.0,
+            "source_date": "2021-03-12",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-06-30",
+            "shares": 10749760.133333333,
+            "raw_shares": 322492804.0,
+            "source_date": "2021-06-04",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-09-30",
+            "shares": 12220457.166666666,
+            "raw_shares": 366613715.0,
+            "source_date": "2021-09-10",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2021-12-31",
+            "shares": 12222429.8,
+            "raw_shares": 366672894.0,
+            "source_date": "2021-12-23",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-03-31",
+            "shares": 12222925.5,
+            "raw_shares": 366687765.0,
+            "source_date": "2022-03-08",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-06-30",
+            "shares": 12886979.833333334,
+            "raw_shares": 386609395.0,
+            "source_date": "2022-06-07",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-09-30",
+            "shares": 13518766.266666666,
+            "raw_shares": 405562988.0,
+            "source_date": "2022-09-02",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2022-12-31",
+            "shares": 13524102.799999999,
+            "raw_shares": 405723084.0,
+            "source_date": "2022-12-14",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-03-31",
+            "shares": 13524401.766666666,
+            "raw_shares": 405732053.0,
+            "source_date": "2023-03-03",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-06-30",
+            "shares": 13558687.633333333,
+            "raw_shares": 406760629.0,
+            "source_date": "2023-06-02",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-09-30",
+            "shares": 15020877.766666666,
+            "raw_shares": 450626333.0,
+            "source_date": "2023-09-05",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2023-12-31",
+            "shares": 15060142.933333334,
+            "raw_shares": 451804288.0,
+            "source_date": "2023-12-14",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2024-03-31",
+            "shares": 15062068.466666667,
+            "raw_shares": 451862054.0,
+            "source_date": "2024-03-01",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2024-06-30",
+            "shares": 16568222.666666666,
+            "raw_shares": 497046680.0,
+            "source_date": "2024-06-05",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2024-09-30",
+            "shares": 18533651.633333333,
+            "raw_shares": 556009549.0,
+            "source_date": "2024-09-03",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": true
+          },
+          {
+            "quarter_end": "2024-12-31",
+            "shares": 20449715.0,
+            "raw_shares": 20449715.0,
+            "source_date": "2024-12-23",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-03-31",
+            "shares": 21143772.0,
+            "raw_shares": 21143772.0,
+            "source_date": "2025-03-05",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-06-30",
+            "shares": 22790931.0,
+            "raw_shares": 22790931.0,
+            "source_date": "2025-06-02",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-09-30",
+            "shares": 32295476.0,
+            "raw_shares": 32295476.0,
+            "source_date": "2025-09-05",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2025-12-31",
+            "shares": 47736734.0,
+            "raw_shares": 47736734.0,
+            "source_date": "2025-12-15",
+            "form": "10-K",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2026-03-31",
+            "shares": 52977866.0,
+            "raw_shares": 52977866.0,
+            "source_date": "2026-03-04",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2026-06-30",
+            "shares": 67608173.0,
+            "raw_shares": 67608173.0,
+            "source_date": "2026-06-04",
+            "form": "10-Q",
+            "carried": false,
+            "split_adjusted": false
+          },
+          {
+            "quarter_end": "2026-09-30",
+            "shares": 67608173.0,
+            "raw_shares": 67608173.0,
+            "source_date": "2026-06-04",
+            "form": "10-Q",
+            "carried": true,
+            "split_adjusted": false
+          }
+        ],
+        "latest": {
+          "shares": 67608173.0,
+          "source": "10-Q XBRL, a/o 2026-06-04"
+        },
+        "fd_stack": [
+          {
+            "key": "atm",
+            "label": "ATM",
+            "shares": 20361833.072126575,
+            "price_based": true,
+            "capacity_usd": 437575792.7200001,
+            "note": "$437,575,793 remaining ATM capacity ÷ $21.49 (I.B.6-capped where applicable)"
+          }
+        ]
+      }
+    },
+    "badges": {
+      "overall": {
+        "score": 45,
+        "band": "moderate",
+        "label": "Moderate",
+        "partial": false,
+        "description": "0–100 composite of the four drivers: Offering Ability 30%, Cash Need 30%, Overhang 25%, Dilution History 15% — plus a +15 bump when the company both needs cash (under 6 months) and can raise at will, the exact setup behind surprise discounted offerings. Higher = higher probability the share count grows soon.",
+        "detail": [
+          "Offering Ability: High (100) · weight 30%",
+          "Overhang: Low (0) · weight 25%",
+          "Dilution History: High (100) · weight 15%",
+          "Cash Need: Low (0) · weight 30%"
+        ],
+        "legend": [
+          {
+            "band": "minimal",
+            "pill": "Minimal",
+            "meaning": "0–19 — no meaningful dilution setup"
+          },
+          {
+            "band": "low",
+            "pill": "Low",
+            "meaning": "20–39"
+          },
+          {
+            "band": "moderate",
+            "pill": "Moderate",
+            "meaning": "40–59"
+          },
+          {
+            "band": "high",
+            "pill": "High",
+            "meaning": "60–79"
+          },
+          {
+            "band": "severe",
+            "pill": "Severe",
+            "meaning": "80–100 — needs cash and can print it"
+          }
+        ]
+      },
+      "drivers": [
+        {
+          "key": "offering_ability",
+          "label": "Offering Ability",
+          "score": 100,
+          "band": "high",
+          "band_text": "High",
+          "description": "Ability to sell new shares at will via an effective shelf or a pending S-1, sized against market cap — a $20M shelf is fatal for a $40M company and trivial for a $2B one. A live ATM or equity line escalates one level (at-will selling is already running; its dollar capacity is not re-added — it usually draws down the same shelf). Higher = a discounted offering can hit at any time.",
+          "detail": [
+            "WKSI automatic shelf (S-3ASR/F-3ASR) — effectively unlimited capacity",
+            "3 active shelves: $200.0M raisable now",
+            "Live ATM/equity line, $437.6M remaining — escalated one level"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "No shelf / pending S-1, capacity under $1M, or under 5% of market cap"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "Capacity 5–25% of market cap"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Capacity over 25% of market cap, a WKSI automatic shelf, or escalated by a live ATM"
+            }
+          ]
+        },
+        {
+          "key": "overhang",
+          "label": "Overhang",
+          "score": 0,
+          "band": "low",
+          "band_text": "Low",
+          "description": "Investor-held securities that convert into the float — warrants, convertible notes, convertible preferred — as % of shares outstanding. If everything converts, this is how much your slice shrinks. Shelf / ATM / equity-line capacity is counted under Offering Ability instead (an ATM is usually a takedown of the same shelf — summing both would double-count). Pre-funded warrants are excluded.",
+          "detail": [
+            "No warrants, convertible notes, or convertible preferred outstanding"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "Under 20% of shares outstanding"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "20–50% of shares outstanding"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Over 50% of shares outstanding"
+            }
+          ]
+        },
+        {
+          "key": "history",
+          "label": "Dilution History",
+          "score": 100,
+          "band": "high",
+          "band_text": "High",
+          "description": "Split-adjusted growth in shares outstanding over the past 3 years. Reverse splits are normalized out — a 1-for-10 reverse split followed by re-dilution back to the old count is +900%, not 0%. Past dilution is the best predictor of future dilution.",
+          "detail": [
+            "O/S Jul 2023: 13.6M (split-adj) → Jul 2026: 80.0M (+490%)",
+            "Normalized for 1 split in the window",
+            "$507.5M raised in the last 24 months"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "Under 30% O/S growth over the past 3 years"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "30–100% O/S growth"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Over 100% O/S growth"
+            }
+          ]
+        },
+        {
+          "key": "cash_need",
+          "label": "Cash Need",
+          "score": 0,
+          "band": "low",
+          "band_text": "Low",
+          "description": "Months of cash left at the current operating burn — estimated current cash (latest balance sheet, bridged with burn and capital raised since) divided by monthly burn. Companies that need cash and have the means to raise it, will.",
+          "detail": [
+            "Est. current cash $397.5M",
+            "Operating burn $30.6M/quarter",
+            "≈ 38.9 months of runway",
+            "Balance sheet as of 2026-04-30, bridged with burn + raises since"
+          ],
+          "legend": [
+            {
+              "band": "low",
+              "pill": "Low",
+              "meaning": "Operating cash-flow positive, or over 24 months of runway"
+            },
+            {
+              "band": "medium",
+              "pill": "Medium",
+              "meaning": "6–24 months of runway"
+            },
+            {
+              "band": "high",
+              "pill": "High",
+              "meaning": "Under 6 months of runway"
+            }
+          ]
+        }
+      ]
+    },
+    "cards": {
+      "shelf": [
+        {
+          "source_ref": "SH-2604",
+          "title": "October 2023 Shelf",
+          "registered": "Registered",
+          "edgar_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&filenum=333-274971&type=&dateb=&owner=include&count=100",
+          "shelf_status": "active",
+          "total_shelf_capacity": 405000000.0,
+          "current_raisable_amount": null,
+          "unlimited": true,
+          "is_baby_shelf_restricted": false,
+          "total_amount_raised": 423792789.52,
+          "raised_last_12mo_under_ib6": 403002106.791,
+          "outstanding_shares": 67608173.0,
+          "float_shares": 64379883.0,
+          "highest_60_day_close": 36.01,
+          "price_to_exceed_baby_shelf": 1.164960178632198,
+          "ib6_float_value": 2318319586.83,
+          "last_banker": "Jefferies",
+          "effect_date": "2023-10-13",
+          "expiration_date": "2026-10-13",
+          "last_update_date": "2024-12-27",
+          "bank_tier": "middle_market",
+          "investor_class": null
+        },
+        {
+          "source_ref": "SH-2606",
+          "title": "April 2025 Shelf",
+          "registered": "Registered",
+          "edgar_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&filenum=333-286842&type=&dateb=&owner=include&count=100",
+          "shelf_status": "active",
+          "total_shelf_capacity": 200000000.0,
+          "current_raisable_amount": 200000000.0,
+          "unlimited": false,
+          "is_baby_shelf_restricted": false,
+          "total_amount_raised": 0.0,
+          "raised_last_12mo_under_ib6": 403002106.791,
+          "outstanding_shares": 67608173.0,
+          "float_shares": 64379883.0,
+          "highest_60_day_close": 36.01,
+          "price_to_exceed_baby_shelf": 1.164960178632198,
+          "ib6_float_value": 2318319586.83,
+          "last_banker": null,
+          "effect_date": "2025-05-08",
+          "expiration_date": "2028-05-08",
+          "last_update_date": "2025-04-29",
+          "bank_tier": null,
+          "investor_class": null
+        },
+        {
+          "source_ref": "SH-2607",
+          "title": "June 2026 Shelf",
+          "registered": "Registered",
+          "edgar_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&filenum=333-296607&type=&dateb=&owner=include&count=100",
+          "shelf_status": "active",
+          "total_shelf_capacity": null,
+          "current_raisable_amount": null,
+          "unlimited": true,
+          "is_baby_shelf_restricted": false,
+          "total_amount_raised": 0.0,
+          "raised_last_12mo_under_ib6": 403002106.791,
+          "outstanding_shares": 67608173.0,
+          "float_shares": 64379883.0,
+          "highest_60_day_close": 36.01,
+          "price_to_exceed_baby_shelf": 1.164960178632198,
+          "ib6_float_value": 2318319586.83,
+          "last_banker": null,
+          "effect_date": "2026-06-08",
+          "expiration_date": "2029-06-08",
+          "last_update_date": "2026-06-08",
+          "bank_tier": null,
+          "investor_class": null
+        }
+      ],
+      "atm": [
+        {
+          "source_ref": "ATM-2656",
+          "title": "June 2020 Jefferies ATM",
+          "registered": "Replaced",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000156459020043042/fcel-10q_20200731.htm",
+          "parent_shelf": null,
+          "total_capacity": 75000000.0,
+          "remaining_capacity": 2700000.0,
+          "remaining_without_baby_shelf": 2700000.0,
+          "limited_by_baby_shelf": false,
+          "sales_total_usd": 72300000.0,
+          "used_pct": 96.39999999999999,
+          "placement_agent": "Jefferies",
+          "agreement_start_date": "2020-06-16",
+          "agreement_end_date": "2021-06-11",
+          "last_update_date": "2020-09-10",
+          "bank_tier": "middle_market",
+          "investor_class": null
+        },
+        {
+          "source_ref": "ATM-2659",
+          "title": "June 2021 Jefferies ATM",
+          "registered": "Replaced",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000110465921080219/tm2119336-1_424b5.htm",
+          "parent_shelf": {
+            "title": "December 2020 Shelf",
+            "file_number": "333-251054",
+            "accession_number": "0001104659-20-131097",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000110465920131097/tm2037248-1_s3asr.htm"
+          },
+          "total_capacity": 500000000.0,
+          "remaining_capacity": 2025792.7200000286,
+          "remaining_without_baby_shelf": 2025792.7200000286,
+          "limited_by_baby_shelf": false,
+          "sales_total_usd": 497974207.28,
+          "used_pct": 99.594841456,
+          "placement_agent": "Jefferies",
+          "agreement_start_date": "2021-06-11",
+          "agreement_end_date": "2022-07-12",
+          "last_update_date": "2022-06-09",
+          "bank_tier": "middle_market",
+          "investor_class": null
+        },
+        {
+          "source_ref": "ATM-2662",
+          "title": "July 2022 Jefferies ATM",
+          "registered": "Replaced",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000110465922079245/tm2219090-1_424b5.htm",
+          "parent_shelf": {
+            "title": "December 2020 Shelf",
+            "file_number": "333-251054",
+            "accession_number": "0001104659-20-131097",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000110465920131097/tm2037248-1_s3asr.htm"
+          },
+          "total_capacity": 394250000.0,
+          "remaining_capacity": 227450000.0,
+          "remaining_without_baby_shelf": 227450000.0,
+          "limited_by_baby_shelf": false,
+          "sales_total_usd": 166800000.0,
+          "used_pct": 42.30818008877616,
+          "placement_agent": "Jefferies",
+          "agreement_start_date": "2022-07-12",
+          "agreement_end_date": "2024-04-10",
+          "last_update_date": "2023-12-19",
+          "bank_tier": "middle_market",
+          "investor_class": null
+        },
+        {
+          "source_ref": "ATM-2669",
+          "title": "April 2024 Jefferies ATM",
+          "registered": "Replaced",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000110465924045891/tm248398-1_424b5.htm",
+          "parent_shelf": {
+            "title": "October 2023 Shelf",
+            "file_number": "333-274971",
+            "accession_number": "0001558370-23-016438",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000155837023016438/tmb-20231013xs3asr.htm"
+          },
+          "total_capacity": 300000000.0,
+          "remaining_capacity": 204900000.0,
+          "remaining_without_baby_shelf": 204900000.0,
+          "limited_by_baby_shelf": false,
+          "sales_total_usd": 95100000.0,
+          "used_pct": 31.7,
+          "placement_agent": "Jefferies",
+          "agreement_start_date": "2024-04-10",
+          "agreement_end_date": "2025-03-10",
+          "last_update_date": "2024-12-27",
+          "bank_tier": "middle_market",
+          "investor_class": null
+        },
+        {
+          "source_ref": "ATM-2673",
+          "title": "March 2025 Jefferies ATM",
+          "registered": "Replaced",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000110465925022217/tm257751-7_424b5.htm",
+          "parent_shelf": {
+            "title": "October 2023 Shelf",
+            "file_number": "333-274971",
+            "accession_number": "0001558370-23-016438",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000155837023016438/tmb-20231013xs3asr.htm"
+          },
+          "total_capacity": 204922876.65,
+          "remaining_capacity": 0.0,
+          "remaining_without_baby_shelf": 0.0,
+          "limited_by_baby_shelf": false,
+          "sales_total_usd": 328692789.52,
+          "used_pct": 160.39828978264538,
+          "placement_agent": "Jefferies",
+          "agreement_start_date": "2025-03-10",
+          "agreement_end_date": "2025-12-30",
+          "last_update_date": "2025-12-30",
+          "bank_tier": "middle_market",
+          "investor_class": null
+        },
+        {
+          "source_ref": "atm-fcel-2025-12-30",
+          "title": "December 2025 Jefferies ATM",
+          "registered": "Not Registered",
+          "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000110465925125274/tm2534391d1_8k.htm",
+          "parent_shelf": {
+            "title": "October 2023 Shelf",
+            "file_number": "333-274971",
+            "accession_number": "0001558370-23-016438",
+            "edgar_url": "https://www.sec.gov/Archives/edgar/data/886128/000155837023016438/tmb-20231013xs3asr.htm"
+          },
+          "total_capacity": 200000000.0,
+          "remaining_capacity": 500000.0,
+          "remaining_without_baby_shelf": 500000.0,
+          "limited_by_baby_shelf": false,
+          "sales_total_usd": 199500000.0,
+          "used_pct": 99.75,
+          "placement_agent": "Jefferies",
+          "agreement_start_date": "2025-12-30",
+          "agreement_end_date": null,
+          "last_update_date": "2026-06-08",
+          "bank_tier": "middle_market",
+          "investor_class": null
+        }
+      ],
+      "equity_line": [],
+      "warrant": [],
+      "convertible": [],
+      "preferred": [],
+      "s1_offering": []
+    },
+    "brief": {
+      "headline": "FCEL shows moderate dilution risk with 38.9 months of cash runway",
+      "bullets": [
+        "Estimated cash of $397.5M against a quarterly operating burn of $30.6M leaves 38.9 months of runway.",
+        "An unlimited (WKSI) shelf is on file — shelf capacity is not a constraint on new issuance.",
+        "$437.6M of at-will selling capacity remains across live ATM / equity-line programs.",
+        "Composite dilution-risk score is 45/100 (Moderate).",
+        "Placeholder brief, templated from this snapshot's own numbers — real briefs are model-written prose."
+      ],
+      "watch": [],
+      "generated_at": "2026-07-28T13:16:45Z",
+      "stale": false,
+      "stale_since_filing_date": null
+    }
+  }
+}
