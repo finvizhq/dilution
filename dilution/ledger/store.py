@@ -2501,10 +2501,28 @@ def _apply_record_event(
                     - principal,
                 )
                 outstanding["principal_remaining_asof"] = _conv_iso
-            outstanding["principal_converted_to_date"] = (
+            # Cumulative converted can never exceed the note's face — the
+            # issuer cannot convert more principal than it issued. Clamp
+            # and record the raw figure (same marker style as
+            # `count_decrement_skipped` above). The overflow signature is
+            # an aggregate multi-note conversion figure attributed to EACH
+            # note separately (NUAI C-123/C-124: $6,119,409 and $6,118,243
+            # booked against a combined $10M of face, summing to $12.2M).
+            # Unlike `principal_remaining` this field has no anchor to
+            # reconcile it — nothing downstream ever corrects it — so the
+            # clamp is the only guard, and `close_retired_debt` reads it
+            # as a full-retirement signal.
+            _conv_td = (
                 float(outstanding.get("principal_converted_to_date") or 0)
                 + principal
             )
+            _face = float(terms.get("principal") or 0)
+            if _face > 0 and _conv_td > _face:
+                fields["converted_to_date_clamped"] = {
+                    "raw": _conv_td, "kept": _face,
+                }
+                _conv_td = _face
+            outstanding["principal_converted_to_date"] = _conv_td
         if "principal_remaining" in fields:
             # An explicitly stated post-conversion balance is an as-of
             # statement at the event date — same latest-as-of-wins gate
@@ -2547,6 +2565,23 @@ def _apply_record_event(
                 0.0, float(outstanding.get("principal_remaining") or 0)
                 - amount,
             )
+            # Mirror principal_converted_to_date for the CASH-repayment
+            # leg. Without this a note repaid in cash reaches
+            # principal_remaining=0 with no flow record anywhere, so
+            # `close_retired_debt` cannot tell "fully repaid" from
+            # "balance is wrong" and has to leave it active. Clamped at
+            # face for the same reason as the conversion accumulator.
+            _red_td = (
+                float(outstanding.get("principal_redeemed_to_date") or 0)
+                + amount
+            )
+            _red_face = float(terms.get("principal") or 0)
+            if _red_face > 0 and _red_td > _red_face:
+                fields["redeemed_to_date_clamped"] = {
+                    "raw": _red_td, "kept": _red_face,
+                }
+                _red_td = _red_face
+            outstanding["principal_redeemed_to_date"] = _red_td
         # Preferred series: preferred_shares_redeemed decrements `count`.
         # validate.py gates that this field is set when target is preferred,
         # so we just trust the value here. `count_redeemed_to_date` mirrors
@@ -3045,6 +3080,93 @@ def close_converted_preferred(
                 accession, form, filing_date,
             )
             closed.append(r["instrument_id"])
+    return closed
+
+
+# Balance below which a debt instrument counts as retired. Mirrors
+# cards._CONVERTIBLE_DUST_ABS_USD / _CONVERTIBLE_DUST_REL — deliberately
+# duplicated rather than imported, because store must not depend on the
+# projection layer, and the two answer different questions that happen to
+# share a number (cards: "should this render?", store: "is this retired?").
+_RETIRED_DUST_ABS_USD = 1_000.0
+_RETIRED_DUST_REL = 0.005
+# Slack on the retired-flow corroboration. Conversion / redemption figures
+# are filing-rounded and accrued interest is converted alongside principal,
+# so require 99% of face retired rather than an exact match.
+_RETIRED_FLOW_TOLERANCE = 0.01
+
+
+def close_retired_debt(
+    cik: int, *, accession: str, form: str, filing_date: str,
+) -> list[str]:
+    """Close every ACTIVE convertible whose balance has reached dust AND
+    whose retired-to-date flow corroborates full retirement.
+
+    A row sitting at ``principal_remaining=0`` while still ``active`` is a
+    lifecycle lie: the cap table says the note is live, the balance says it
+    is gone. Today only the projection layer notices — ``cards.
+    _convertible_dead`` drops dust rows — so the state stays wrong and
+    every non-card reader (anchor, badges, the Finviz payload's card
+    absence) inherits it.
+
+    Corroboration is REQUIRED, and that is the whole design. Closing on a
+    zero balance alone would close rows the anchor believes are live, and
+    the anchor wins the next round: CETY C-1143 already oscillates
+    ``closed redeemed → reopened "overhang re-lists as outstanding
+    (anchor-corroborated)" → amended back up`` five times over. When the
+    flow does NOT account for the face, the balance is the thing in doubt,
+    not the status — so we log and leave the row alone rather than pick a
+    fight we lose.
+
+    Reads the two clamped accumulators (`principal_converted_to_date`,
+    `principal_redeemed_to_date`); the clamps are what make them safe to
+    compare against face. Idempotent — active rows only. Returns the closed
+    instrument_ids."""
+    closed: list[str] = []
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT instrument_id, terms_json, outstanding_json "
+            "FROM dilution_ledger "
+            "WHERE cik=? AND type='convertible' AND status='active' "
+            "ORDER BY instrument_id",
+            (cik,),
+        ).fetchall()
+        for r in rows:
+            try:
+                terms = json.loads(r["terms_json"] or "{}")
+                out = json.loads(r["outstanding_json"] or "{}")
+            except (TypeError, ValueError):
+                continue
+            remaining = out.get("principal_remaining")
+            face = terms.get("principal")
+            if not isinstance(remaining, (int, float)):
+                continue
+            if not isinstance(face, (int, float)) or face <= 0:
+                continue
+            is_dust = (remaining < _RETIRED_DUST_ABS_USD
+                       or remaining / face < _RETIRED_DUST_REL)
+            if not is_dust:
+                continue
+            converted = float(out.get("principal_converted_to_date") or 0)
+            redeemed = float(out.get("principal_redeemed_to_date") or 0)
+            if converted + redeemed < face * (1 - _RETIRED_FLOW_TOLERANCE):
+                log.warning(
+                    "  %s zero-balance but flow unaccounted — leaving "
+                    "active: remaining=%.2f face=%.0f converted=%.0f "
+                    "redeemed=%.0f (balance is the suspect, not the status)",
+                    r["instrument_id"], remaining, face, converted, redeemed,
+                )
+                continue
+            reason = "converted" if converted >= redeemed else "redeemed"
+            _apply_close(
+                conn, cik,
+                CloseInstrument(instrument_id=r["instrument_id"],
+                                reason=reason,
+                                event_date=_d.fromisoformat(
+                                    filing_date[:10])),
+                accession, form, filing_date,
+            )
+            closed.append(f"{r['instrument_id']}:{reason}")
     return closed
 
 

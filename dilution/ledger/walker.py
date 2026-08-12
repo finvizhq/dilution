@@ -44,6 +44,7 @@ from .seed import seed_ledger
 from .store import (
     apply_mutations,
     close_converted_preferred,
+    close_retired_debt,
     ensure_walk_tables,
     get_drawdowns_by_instrument,
     get_open_instruments,
@@ -1141,6 +1142,24 @@ async def _walk_one(
                     filing_date, accession, conv_date,
                     len(closed_pfd), ", ".join(closed_pfd),
                 )
+        # Deterministic retired-debt close: a convertible whose balance has
+        # reached dust with its retired flow accounting for the face is
+        # finished, but the walker only emits close_instrument when the
+        # filing says so in prose — otherwise the row lingers `active` at
+        # zero and only the card layer's dust filter hides it. Runs BEFORE
+        # the anchor for the same reason as the preferred sweep above, so
+        # reconciliation sees the closed state. Rows whose flow does NOT
+        # account for the face are left active by design (see
+        # store.close_retired_debt).
+        closed_debt = close_retired_debt(
+            cik, accession=accession, form=form, filing_date=filing_date,
+        )
+        if closed_debt:
+            log.info(
+                "  [%s] %s — closed %d retired convertible(s): %s",
+                filing_date, accession, len(closed_debt),
+                ", ".join(closed_debt),
+            )
         await _anchor_one(
             cik=cik, ticker=ticker, filing=filing, client=client,
             unit_ctx=unit_ctx, summary=summary,

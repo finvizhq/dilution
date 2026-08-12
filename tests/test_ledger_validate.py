@@ -993,6 +993,51 @@ class TestValidateOneAmend:
         r = _validate_one(m, snap, {"P1"}, {})
         assert r.accepted
 
+    # ── rule 9: stated-balance face ceiling ──────────────────────────
+    def test_principal_remaining_above_face_ceiling_rejected(self):
+        # IPW C-119: $1,815,976 face, balance amended to $6,686,603 = 3.68x.
+        snap = {"C1": _convertible_row(principal_remaining=1_815_976.0,
+                                       terms={"principal": 1_815_976.0})}
+        m = AmendConvertible(instrument_id="C1", event_date=D,
+                             principal_remaining=6_686_603.0)
+        r = _validate_one(m, snap, {"C1"}, {})
+        assert r.error_kind == "principal_remaining_above_face"
+        assert "3.68x" in r.message
+
+    def test_principal_remaining_at_default_premium_accepted(self):
+        # An exact 150%-of-face default premium is a real contractual
+        # balance (CETY C-1152: 256,000 face -> 384,000) and must survive.
+        snap = {"C1": _convertible_row(principal_remaining=256_000.0,
+                                       terms={"principal": 256_000.0})}
+        m = AmendConvertible(instrument_id="C1", event_date=D,
+                             principal_remaining=384_000.0)
+        r = _validate_one(m, snap, {"C1"}, {})
+        assert r.accepted
+
+    def test_principal_remaining_at_ceiling_boundary_accepted(self):
+        # Exactly 2.0x is allowed; the reject is strictly above.
+        snap = {"C1": _convertible_row(principal_remaining=100_000.0,
+                                       terms={"principal": 100_000.0})}
+        m = AmendConvertible(instrument_id="C1", event_date=D,
+                             principal_remaining=200_000.0)
+        r = _validate_one(m, snap, {"C1"}, {})
+        assert r.accepted
+
+    def test_principal_remaining_ceiling_skipped_without_face(self):
+        snap = {"C1": _convertible_row(principal_remaining=1000.0, terms={})}
+        m = AmendConvertible(instrument_id="C1", event_date=D,
+                             principal_remaining=9_999_999.0)
+        r = _validate_one(m, snap, {"C1"}, {})
+        assert r.accepted
+
+    def test_principal_remaining_ordinary_paydown_accepted(self):
+        snap = {"C1": _convertible_row(principal_remaining=1_000_000.0,
+                                       terms={"principal": 1_000_000.0})}
+        m = AmendConvertible(instrument_id="C1", event_date=D,
+                             principal_remaining=250_000.0)
+        r = _validate_one(m, snap, {"C1"}, {})
+        assert r.accepted
+
 
 class TestValidateOneClose:
     def test_close_sales_program_from_posam_rejected(self):

@@ -50,6 +50,13 @@ Validation rules:
      `exercised` / `terminated` on a warrant requires count=0;
      `terminated` on a convertible / preferred requires
      principal_remaining=0. Partial movements use `record_event`.
+
+  9. stated-balance face ceiling — `amend_instrument` is rejected when
+     the stated `principal_remaining` exceeds
+     `PRINCIPAL_REMAINING_CEILING` × the row's face `principal`. A
+     balance only moves down, so a figure that far above face is a
+     cumulative-to-date or multi-note aggregate misread as a period-end
+     balance.
 """
 
 from __future__ import annotations
@@ -214,6 +221,20 @@ _SUPERSEDED_PREFIX = "superseded"
 # Drawdown overflow tolerance. Filings round capacity figures (e.g.
 # "approximately $25M remaining") so allow 5% slack before rejecting.
 DRAWDOWN_TOLERANCE = 0.05
+
+# Ceiling on a stated `principal_remaining`, as a multiple of the
+# instrument's face `principal`. Conversions and redemptions only move a
+# balance DOWN, so a period-end balance above face has to come from a
+# contractual accrual — and every such mechanism is bounded: PIK /
+# default-interest on a 1-3y microcap note, and the conventional
+# 150%-of-principal default premium. 2x admits both with headroom.
+# Above it the figure is an accumulation artifact — a cumulative-to-date
+# or multi-note aggregate read as a period-end balance, ratcheted higher
+# by each successive amend (IPW C-119: a $1,815,976 note amended
+# 1.82M → 3.82M → 5.18M → 6.69M = 3.68x face). Empirical basis: of the
+# 31 convertibles carrying both figures, 29 sit at <= 1.000x and the
+# only rows above are that defect plus one exact 1.500x default premium.
+PRINCIPAL_REMAINING_CEILING = 2.0
 
 # Filing forms that may legitimately produce a `create_instrument(shelf)`.
 # A new shelf row is born from a BASE shelf registration filing and
@@ -817,6 +838,30 @@ def _validate_one(
         # shares' → amend liq_pref 34M→29M on SCNI EIB, where 1,000 ×
         # $34,000 stated = $34M). Reject an amend that breaks the
         # identity unless stated_value / count move in the same call.
+        # Face-value ceiling on a stated balance. See
+        # PRINCIPAL_REMAINING_CEILING for why 2x and what the failure mode
+        # looks like. Rejecting leaves the prior (credible) balance in
+        # place; the alternative — clamping to face — would invent a
+        # number the filing never stated. No-ops when the row carries no
+        # face (`terms.principal` absent, e.g. most preferred series,
+        # whose aggregate is guarded by the liq-pref identity below).
+        pr_new = _coerce_num(getattr(m, "principal_remaining", None))
+        if pr_new is not None and pr_new > 0:
+            face = _coerce_num(
+                _from_json_field(target, "terms_json").get("principal"))
+            if face and face > 0 and pr_new > face * PRINCIPAL_REMAINING_CEILING:
+                return _reject(
+                    m, "principal_remaining_above_face",
+                    f"principal_remaining={pr_new:,.0f} is "
+                    f"{pr_new / face:.2f}x the ${face:,.0f} face of "
+                    f"{target_id} (ceiling "
+                    f"{PRINCIPAL_REMAINING_CEILING:g}x). Conversions and "
+                    "redemptions only reduce a balance, so this is a "
+                    "cumulative-to-date or multi-note aggregate read as a "
+                    "period-end balance. Leave the balance unchanged, or "
+                    "amend `principal` in the same call if the note itself "
+                    "was restated.",
+                )
         lp_new = getattr(m, "liquidation_preference", None)
         if (lp_new is not None and target_type == "preferred"
                 and getattr(m, "stated_value", None) is None
@@ -1045,6 +1090,7 @@ def _from_json_field(row: dict, key: str) -> dict:
 __all__ = [
     "DRAWDOWN_TOLERANCE",
     "MUTATION_APPLY_ORDER",
+    "PRINCIPAL_REMAINING_CEILING",
     "ValidationReport",
     "ValidationResult",
     "sort_mutations",

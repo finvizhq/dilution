@@ -37,6 +37,9 @@ from dilution.ledger.cards import (  # noqa: E402
     s1_offering_cards, shelf_cards, warrant_cards,
 )
 from dilution.llm_provider import require_api_key  # noqa: E402
+from dilution.observability import (  # noqa: E402
+    flush_observability, pipeline_session, setup_observability,
+)
 from dilution.share_counts import fetch_implied_outstanding_cached  # noqa: E402
 
 
@@ -81,10 +84,21 @@ def _generate_one(cik: int, ticker: str, name: str) -> None:
     print(f"  {brief['headline']}")
 
 
+def _generate_traced(cik: int, ticker: str, name: str) -> None:
+    """Same as _generate_one, wrapped in a Langfuse span so the brief's
+    LLM call lands under this ticker's session alongside its walks."""
+    with pipeline_session(
+        ticker, name="dilution-brief",
+        metadata={"cik": cik, "llm_model": config.LLM_MODEL},
+    ):
+        _generate_one(cik, ticker, name)
+
+
 def main() -> int:
     force = "--force" in sys.argv
     only = {a.upper() for a in sys.argv[1:] if not a.startswith("-")}
     require_api_key()
+    setup_observability()
 
     with get_conn() as conn:
         rows = conn.execute(
@@ -98,19 +112,22 @@ def main() -> int:
 
     done = skipped = failed = 0
     t0 = time.time()
-    for i, r in enumerate(rows, 1):
-        tag = f"[{i}/{len(rows)}] {r['ticker']}"
-        if not force and _is_fresh(r["cik"]):
-            print(f"{tag}: fresh — skipped")
-            skipped += 1
-            continue
-        print(f"{tag}: generating…")
-        try:
-            _generate_one(r["cik"], r["ticker"], r["name"])
-            done += 1
-        except Exception as e:  # keep the batch going
-            print(f"  FAILED: {e}")
-            failed += 1
+    try:
+        for i, r in enumerate(rows, 1):
+            tag = f"[{i}/{len(rows)}] {r['ticker']}"
+            if not force and _is_fresh(r["cik"]):
+                print(f"{tag}: fresh — skipped")
+                skipped += 1
+                continue
+            print(f"{tag}: generating…")
+            try:
+                _generate_traced(r["cik"], r["ticker"], r["name"])
+                done += 1
+            except Exception as e:  # keep the batch going
+                print(f"  FAILED: {e}")
+                failed += 1
+    finally:
+        flush_observability()
     print(f"\n{done} generated, {skipped} fresh-skipped, {failed} failed "
           f"in {time.time() - t0:.0f}s "
           f"(model={config.LLM_MODEL})")
