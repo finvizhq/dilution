@@ -122,7 +122,7 @@ def _pick_qualifier(m: Any) -> str | None:
 def build_label(m: Any) -> str | None:
     """Return the assembled card label, or None when no date is
     available (caller falls back to the LLM-emitted label or the
-    dashboard's mechanical template).
+    card layer's mechanical template).
 
     Date preference order: terms.issue_date (set on relabel via
     amend_warrant when a closing filing confirms the actual issuance

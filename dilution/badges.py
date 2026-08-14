@@ -12,7 +12,7 @@ Overall Dilution Risk score plus the four drivers it blends:
   Dilution History   split-adjusted O/S growth over the past 3 years
   Cash Need          months of runway at the current operating burn
 
-Everything is computed from data the dashboard already fetches (the
+Everything is computed from data the payload build already fetches (the
 card projections, finviz fundamentals, CashHistory) plus one yfinance
 share-count series for the history badge. No LLM involvement — pure
 arithmetic, every number traceable to a card rendered below the strip.

@@ -6,16 +6,16 @@ Usage:
     python3 scripts/run_brief_all.py AACG CETY    # just these tickers
 
 Skip rule (without --force): a ticker is skipped when its cached brief
-is newer than its latest filing — the same staleness test the dashboard
-shows, so a nightly run only pays for tickers that actually changed.
+is newer than its latest filing — the same staleness test the payload's
+§8 block reports, so a nightly run only pays for tickers that changed.
 
 Sequential by design: each ticker is one facts build (cached fetchers —
 XBRL / finviz may go to network on a cold cache) plus one LLM call on
 the flex tier. 65 tickers ≈ 15-25 min cold, much less warm. Failures
 are logged and skipped — one bad ticker doesn't abort the batch.
 
-Results land in dilution_ticker_brief (read by the dashboard panel) —
-nothing else is written.
+Results land in dilution_ticker_brief (read at push time by
+dilution/finviz_payload.py) — nothing else is written.
 """
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ from dilution.share_counts import fetch_implied_outstanding_cached  # noqa: E402
 
 def _is_fresh(cik: int) -> bool:
     """True when the cached brief postdates the ticker's latest filing
-    — the dashboard's staleness rule, inverted."""
+    — the payload's staleness rule, inverted."""
     cached = ticker_brief.get_cached(cik)
     if not cached:
         return False

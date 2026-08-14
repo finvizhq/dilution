@@ -2,16 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>{% block title %}Dilution Dashboard{% endblock %}</title>
+<title>{% block title %}Dilution Inspector{% endblock %}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="topbar">
-  <span class="title"><a href="/">dilution</a></span>
+  <span class="title"><a href="/inspect">dilution</a></span>
   <span class="subtitle">{% block subtitle %}{% endblock %}</span>
   <span class="topbar-nav">
-    <a href="/pending-s1">Pending S-1s</a>
     <a href="/inspect">Inspect</a>
   </span>
 </div>

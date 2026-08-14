@@ -1,25 +1,26 @@
-"""Smoke test: dump cash-position bridge + render SVG for sample tickers.
+"""Smoke test: dump the cash-position bridge for sample tickers.
 
 Usage:
     python3 scripts/smoke_cash.py
 
-Picks one US issuer and one FPI from the tracked-companies table. For
-each: prints the historical series, the bridge components (latest cash,
-prorated OpCF, capital raised, current cash estimate, months of cash),
-and writes the rendered SVG to /tmp for visual inspection.
+Picks one US issuer and one FPI from the tracked-companies table and
+prints the historical series plus the bridge components (latest cash,
+prorated OpCF, capital raised, current cash estimate, months of cash).
 
-Eyeball-compare the bars against DilutionTracker's "Cash Position" card
-on the same ticker.
+Compare the numbers against DilutionTracker's "Cash Position" card on the
+same ticker. This used to also write a rendered SVG for eyeballing; the
+chart renderer went with the dashboard, since the Finviz contract ships
+chart POINTS and Finviz draws its own (§5.1). To see the shipped shape:
+
+    python scripts/dump_finviz_payload.py <TICKER> --stdout | jq .data.company.cash
 """
 from __future__ import annotations
 
 import sys
-from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from dashboard._cash_chart import render as render_cash_chart  # noqa: E402
 from db import get_conn  # noqa: E402
 from dilution.capital_raised import capital_raised_since  # noqa: E402
 from dilution.cash_history import fetch_cash_history  # noqa: E402
@@ -71,20 +72,6 @@ def _dump(target: dict) -> None:
           "months of cash:   n/a (positive operating CF or no OpCF data)")
     print(f"stale days:       {h.stale_days}")
     print(f"fx_failed:        {h.fx_failed}")
-
-    if h.series:
-        svg = render_cash_chart(h)
-        out = Path(f"/tmp/cash_{ticker}.svg")
-        full = (
-            f"<!DOCTYPE html><html><head><meta charset='utf-8'>"
-            f"<title>{ticker} cash</title>"
-            f"<style>body{{font-family:sans-serif;padding:20px}}"
-            f"svg.cash-chart{{border:1px solid #ddd;background:#fff;"
-            f"max-width:920px;width:100%}}</style></head>"
-            f"<body><h2>{ticker} — Cash Position</h2>{svg}</body></html>"
-        )
-        out.write_text(full)
-        print(f"wrote {out}")
 
 
 def main() -> int:

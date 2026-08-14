@@ -1,0 +1,52 @@
+[Unit]
+Description=Dilution pipeline nightly run (walk EDGAR, refresh briefs, publish to Finviz)
+Documentation=file:///opt/dilution/DEPLOY.md
+# EDGAR and Finviz are both remote, and the timer's Persistent=true can
+# fire a catch-up run at boot — before DNS is necessarily up.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+
+# REQUIRED before enabling: the account that owns /opt/dilution. Left
+# unset the unit runs as root and litters root-owned files through the
+# working tree, which then breaks an rsync deploy from your laptop.
+User=CHANGEME
+WorkingDirectory=/opt/dilution
+
+# .env carries FINVIZ_INGEST_TOKEN, FINVIZ_API_KEY and the walker's LLM
+# key. Not in git — place it by hand, chmod 600. The dash prefix lets the
+# unit start and fail visibly in the log if it is missing, instead of
+# refusing with an opaque systemd error.
+EnvironmentFile=-/opt/dilution/.env
+
+# No shell profile runs here, so the venv interpreter must be absolute.
+# nightly.sh forwards $PYTHON to every child process it spawns.
+Environment=PYTHON=/opt/dilution/.venv/bin/python
+
+# Keep the advisory lock inside the app dir rather than /tmp, so it stays
+# meaningful regardless of any private-tmp sandboxing.
+Environment=LOCK_FILE=/opt/dilution/.nightly.lock
+
+ExecStart=/opt/dilution/scripts/nightly.sh
+
+# A cold walk over the full universe is hours of LLM calls. nightly.sh's
+# flock guards overlap; this is the outer bound on a hung run.
+TimeoutStartSec=8h
+
+# Exit 2 is the blast-radius gate declining to publish because an
+# implausible share of the universe changed — the guard working as
+# designed, needing a human to look rather than a crash alert. Without
+# this, every pipeline release would page.
+SuccessExitStatus=2
+
+NoNewPrivileges=true
+
+# Deliberately NOT hardened with ProtectSystem/ProtectHome: edgartools
+# maintains its own cache and this pipeline has never been verified under
+# a filesystem sandbox. Tighten it once you have confirmed where that
+# cache lives — an unverified sandbox turns into a 1am failure.
+
+[Install]
+WantedBy=multi-user.target

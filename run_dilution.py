@@ -24,6 +24,8 @@ from config import PIPELINE_LOG_PATH, set_log_ticker, setup_logging
 from dilution.company import ensure_company, get_unit_context
 from dilution.fetch_raw import fetch_extractable_for_cik
 from dilution.filings import pull_filing_index
+from dilution.finviz_payload import build_payload
+from dilution.finviz_push import push_snapshot
 from dilution.ledger.walker import walk_ticker
 from dilution.observability import (
     flush_observability,
@@ -41,7 +43,27 @@ def _since(years: int) -> str:
     return (date.today() - timedelta(days=365 * years + 1)).isoformat()
 
 
-def main():
+def _publish(ticker: str, *, dry_run: bool) -> bool:
+    """Build and publish this ticker's snapshot. Returns False on failure.
+
+    Deliberately swallows its own exceptions: the walk has already
+    committed the ledger, which is the expensive part of this run, and a
+    publish problem must not present as a failed walk. The caller turns a
+    False into a non-zero exit so a nightly job still notices.
+
+    A skipped push still pays for one build — you cannot know whether
+    content changed without building it — but that is cheap next to a walk.
+    """
+    try:
+        result = push_snapshot(build_payload(ticker), dry_run=dry_run)
+    except Exception:
+        log.exception("  push — FAILED to publish %s", ticker)
+        return False
+    log.info("  push — %s: %s", result.status, result.reason)
+    return result.ok
+
+
+def main() -> int:
     ap = argparse.ArgumentParser(description="Single-ticker SEC dilution tracker")
     ap.add_argument("ticker", help="e.g. MULN")
     ap.add_argument("--years", type=int, default=6,
@@ -50,6 +72,13 @@ def main():
                     help=f"max concurrent LLM calls (default {config.LLM_CONCURRENCY})")
     ap.add_argument("--force", action="store_true",
                     help="drop ledger and re-walk every filing from scratch")
+    ap.add_argument("--no-push", action="store_true",
+                    help="skip publishing the snapshot to Finviz after the "
+                         "walk (the nightly job uses this, then publishes in "
+                         "one pass after briefs are refreshed)")
+    ap.add_argument("--dry-run-push", action="store_true",
+                    help="build and validate the snapshot, report whether it "
+                         "changed, but send no POST")
     args = ap.parse_args()
 
     set_log_ticker(args.ticker)
@@ -59,6 +88,10 @@ def main():
              "llm_provider=%s llm_model=%s llm_model_periodic=%s",
              args.ticker, since, config.LLM_PROVIDER,
              config.LLM_MODEL, config.LLM_MODEL_PERIODIC)
+
+    # Stays True when --no-push suppresses the publish: nothing was
+    # attempted, so nothing failed.
+    published = True
 
     try:
         with pipeline_session(
@@ -107,9 +140,18 @@ def main():
                 summary.instruments_created, summary.drawdowns_recorded,
                 summary.anchor_diffs, summary.errors,
             )
+
+            if not args.no_push:
+                published = _publish(company["ticker"],
+                                     dry_run=args.dry_run_push)
     finally:
         flush_observability()
 
+    # Non-zero on a publish failure only — the walk itself succeeded and
+    # its ledger writes stand, but a nightly job needs to see that the
+    # snapshot did not reach Finviz.
+    return 0 if published else 1
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

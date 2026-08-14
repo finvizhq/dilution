@@ -21,10 +21,10 @@ import pytest
 import dilution.schema as schema
 
 
-# The 12 dilution_* tables the SCHEMA literal creates. (The module
+# The 13 dilution_* tables the SCHEMA literal creates. (The module
 # docstring header only enumerates 8 of these, and the survey slice
 # enumerated 12 while calling them "11" — the authoritative list is the
-# set of CREATE TABLE statements in SCHEMA, which is these 12.)
+# set of CREATE TABLE statements in SCHEMA, which is these 13.)
 EXPECTED_TABLES = {
     "dilution_company",
     "dilution_filings",
@@ -38,6 +38,7 @@ EXPECTED_TABLES = {
     "dilution_ledger_drawdowns",
     "dilution_ledger_narrative",
     "dilution_ticker_brief",
+    "dilution_mutations",
 }
 
 # Named indexes declared in SCHEMA (every "CREATE INDEX ... idx_...").
@@ -56,6 +57,7 @@ EXPECTED_INDEXES = {
     "idx_dilution_walk_errors_cik_acc",
     "idx_dilution_ledger_drawdowns_cik_date",
     "idx_dilution_ledger_drawdowns_instrument",
+    "idx_dilution_mutations_cik",
 }
 
 
@@ -86,13 +88,13 @@ class TestInitDilutionDb:
         missing = EXPECTED_TABLES - present
         assert not missing, f"missing tables: {sorted(missing)}"
 
-    def test_exactly_twelve_dilution_tables(self, temp_db):
+    def test_exactly_thirteen_dilution_tables(self, temp_db):
         dilution_tables = {t for t in _tables(temp_db)
                            if t.startswith("dilution_")}
         assert dilution_tables == EXPECTED_TABLES
 
     def test_no_unexpected_user_tables(self, temp_db):
-        # Every non-internal table must be one of the 12 declared ones.
+        # Every non-internal table must be one of the 13 declared ones.
         # SQLite's own bookkeeping table (sqlite_sequence, created
         # because several tables use AUTOINCREMENT) is the only allowed
         # non-dilution_ table; anything else is accidental creep.
@@ -105,16 +107,16 @@ class TestInitDilutionDb:
         missing = EXPECTED_INDEXES - present
         assert not missing, f"missing indexes: {sorted(missing)}"
 
-    def test_exactly_fourteen_named_indexes(self, temp_db):
+    def test_exactly_fifteen_named_indexes(self, temp_db):
         # The subset check above tolerates stray/extra indexes; pin the
         # full named-index set so a renamed or dropped index is caught.
         # (SQLite also creates internal sqlite_autoindex_* entries for
-        # composite/AUTOINCREMENT PKs; exclude those — only the 14
+        # composite/AUTOINCREMENT PKs; exclude those — only the 15
         # explicitly-declared idx_dilution_* indexes are the contract.)
         present = {i for i in _indexes(temp_db)
                    if i.startswith("idx_dilution_")}
         assert present == EXPECTED_INDEXES
-        assert len(EXPECTED_INDEXES) == 14
+        assert len(EXPECTED_INDEXES) == 15
 
     def test_idempotent_double_call_does_not_raise(self, temp_db):
         # SCHEMA uses CREATE TABLE/INDEX IF NOT EXISTS, so re-running is a
@@ -561,4 +563,4 @@ class TestSchemaConstant:
             r"CREATE TABLE IF NOT EXISTS (\w+)", schema.SCHEMA
         )
         assert set(names) == EXPECTED_TABLES
-        assert len(names) == 12
+        assert len(names) == 13

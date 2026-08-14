@@ -1,7 +1,7 @@
 """Historical shares outstanding + the potential-dilution stack.
 
 Powers the DilutionTracker-style "Historical O/S & Potential Dilution"
-chart on the ticker dashboard:
+chart. Ships as data points in payload §5.2; Finviz draws it:
 
   dark-blue bars   split-adjusted cover-page shares outstanding, one
                    bar per calendar quarter (dei XBRL facts from each
@@ -59,7 +59,7 @@ _IDENTITY_SET = False
 @dataclass(frozen=True)
 class OsPoint:
     quarter_end: date        # calendar-quarter bucket the bar sits in
-    shares: float            # split-adjusted, dashboard units (ADS for FPI)
+    shares: float            # split-adjusted, payload units (ADS for FPI)
     raw_shares: float        # as-reported on the cover page
     source_date: date        # the fact's instant date (cover date)
     form: str
@@ -187,7 +187,7 @@ def fetch_os_history(cik: int, *, as_of: date | None = None) -> OsHistory:
     facts, so multi-class issuers (Up-C) surface only the undimensioned
     class here — the FD bar's base (share_counts) handles classes
     properly, the history may understate. Single-class microcaps (the
-    universe this dashboard targets) are unaffected.
+    universe this pipeline targets) are unaffected.
     """
     _ensure_identity()
     as_of = as_of or date.today()

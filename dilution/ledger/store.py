@@ -66,6 +66,7 @@ from .mutations import (
     RestateAtm,
     extract_series_letter,
     mutation_to_dict,
+    mutation_to_record,
     warrant_series_key,
 )
 from .validate import (
@@ -116,7 +117,7 @@ log = logging.getLogger(__name__)
 
 # ─── ID allocator ────────────────────────────────────────────────────
 # One prefix per instrument type. Mirrors the human-readable ids on
-# the dashboard; the walker emits these by handing the type to
+# the cards; the walker emits these by handing the type to
 # next_instrument_id and letting the store maintain the sequence.
 _TYPE_PREFIX = {
     "warrant": "W",
@@ -329,6 +330,41 @@ def reset_walk_state(cik: int) -> None:
         conn.execute("DELETE FROM dilution_walk_state WHERE cik=?", (cik,))
         ensure_walk_tables_conn(conn)
         conn.execute("DELETE FROM dilution_walked WHERE cik=?", (cik,))
+        conn.execute("DELETE FROM dilution_anchor_diffs WHERE cik=?", (cik,))
+        conn.execute("DELETE FROM dilution_walk_errors WHERE cik=?", (cik,))
+        # The mutation log is a projection source, not history to preserve
+        # across a --force: the re-walk is about to re-derive it from the
+        # same filings, and stale rows would replay into a ledger that
+        # mixes two extraction runs.
+        ensure_mutation_log_conn(conn)
+        conn.execute("DELETE FROM dilution_mutations WHERE cik=?", (cik,))
+
+
+def reset_ledger_projection(cik: int) -> None:
+    """Clear only what a mutation-log replay re-derives.
+
+    The narrow counterpart to reset_walk_state, for
+    scripts/rebuild_ledger.py. Two things it must NOT touch:
+
+      * `dilution_walked` — the resume set. Clearing it would make the
+        next incremental walk re-extract every filing at full LLM cost,
+        which is the exact expense replay exists to avoid.
+      * `dilution_mutations` — the log being replayed FROM.
+
+    It does clear `dilution_walk_state`, because that holds
+    `next_id_seq_json`: without resetting the id sequence the replayed
+    creates allocate fresh ids (W-002 instead of W-001) and every logged
+    amend/close then references an instrument that doesn't exist.
+    """
+    with get_conn() as conn:
+        conn.execute("DELETE FROM dilution_ledger_drawdowns WHERE cik=?",
+                     (cik,))
+        conn.execute("DELETE FROM dilution_ledger_narrative "
+                     "WHERE instrument_id IN "
+                     "(SELECT instrument_id FROM dilution_ledger WHERE cik=?)",
+                     (cik,))
+        conn.execute("DELETE FROM dilution_ledger WHERE cik=?", (cik,))
+        conn.execute("DELETE FROM dilution_walk_state WHERE cik=?", (cik,))
         conn.execute("DELETE FROM dilution_anchor_diffs WHERE cik=?", (cik,))
         conn.execute("DELETE FROM dilution_walk_errors WHERE cik=?", (cik,))
 
@@ -595,6 +631,7 @@ def apply_mutations(
     *, cik: int, ticker: str, accession: str, form: str,
     filing_date: str, mutations: list[Mutation],
     pre_validated_report: ValidationReport | None = None,
+    log_mutations: bool = True,
 ) -> ApplyResult:
     """Apply a filing's mutation list against the ledger.
 
@@ -604,7 +641,14 @@ def apply_mutations(
     mutations or none of them.
 
     Rejected mutations land in dilution_walk_errors; accepted ones
-    mutate the ledger.
+    mutate the ledger and are appended to dilution_mutations.
+
+    `log_mutations=False` suppresses that append — for replay
+    (scripts/rebuild_ledger.py), which is re-applying rows that are
+    already IN the log. Leaving it on there would double the log on every
+    rebuild, and the next replay would apply each create twice and
+    allocate different instrument ids, so the ledger would drift further
+    the more you tried to recover it.
     """
     result = ApplyResult()
 
@@ -644,7 +688,12 @@ def apply_mutations(
         id_remap: dict[str, str] = {}
         suppressed_closes = _mass_closure_suppressions(
             conn, accepted, filing_date)
-        for m in accepted:
+        # Applied mutations are logged as they land, in the same
+        # transaction, so the log and the ledger can never disagree.
+        if log_mutations:
+            ensure_mutation_log_conn(conn)
+        pipeline_stamp = _pipeline_version() if log_mutations else None
+        for seq, m in enumerate(accepted):
             try:
                 # Mass-closure sweep: drop this close, leave the row active.
                 if (isinstance(m, CloseInstrument)
@@ -848,6 +897,21 @@ def apply_mutations(
                         conn, cik, m, accession, form, filing_date,
                     )
                 result.accepted += 1
+                # Creates report the id the store actually allocated
+                # (which may differ from the LLM's proposed_id after
+                # dedup / collision); everything else is already
+                # id_remap-resolved by this point.
+                if log_mutations:
+                    _log_applied_mutation(
+                        conn, cik=cik, accession=accession,
+                        filing_date=filing_date, form=form, seq=seq,
+                        mutation=m,
+                        instrument_id=(
+                            new_id
+                            if isinstance(m, (CreateMutation, RestateAtm))
+                            else getattr(m, "instrument_id", None)),
+                        pipeline_version=pipeline_stamp,
+                    )
             except Exception as exc:  # apply-time failure
                 conn.execute(
                     """INSERT INTO dilution_walk_errors
@@ -3812,6 +3876,92 @@ def _dump_mutation(m: Mutation) -> dict:
     return mutation_to_dict(m)
 
 
+# ─── applied-mutation log ────────────────────────────────────────────
+# The ledger is a deterministic fold of the mutations the walker applies,
+# but the extraction that produces them is an LLM call: it costs money and
+# re-running it yields different output. That makes the mutation stream
+# source data and the ledger a projection of it. Recording the stream is
+# what turns "the ledger got corrupted" from a full re-walk into a replay
+# (scripts/rebuild_ledger.py).
+
+
+def _pipeline_version() -> str | None:
+    """The walker's version stamp, for replay provenance.
+
+    Imported inside the function on purpose: walker_llm drags in the
+    prompt and tool modules, several of which import this one, so a
+    module-scope import would risk a cycle over a value that is only
+    metadata. Absence is not an error — a store used outside a walk
+    (tests, replay) has no walker version.
+    """
+    try:
+        from .walker_llm import pipeline_version
+        return pipeline_version()
+    except Exception:
+        return None
+
+
+def ensure_mutation_log_conn(conn: sqlite3.Connection) -> None:
+    """Idempotently create dilution_mutations on an existing connection.
+
+    Mirrors ensure_walk_tables_conn: `init_dilution_db()` runs only on a
+    fresh DB, so a live DB predating this table needs it created in place
+    rather than failing the walk. Keep in sync with schema.py.
+    """
+    conn.execute(
+        """CREATE TABLE IF NOT EXISTS dilution_mutations (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               cik INTEGER NOT NULL,
+               accession_number TEXT NOT NULL,
+               seq INTEGER NOT NULL,
+               filing_date TEXT,
+               form TEXT,
+               kind TEXT NOT NULL,
+               instrument_id TEXT,
+               mutation_json TEXT NOT NULL,
+               pipeline_version TEXT,
+               applied_at TEXT NOT NULL
+           )"""
+    )
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_dilution_mutations_cik "
+        "ON dilution_mutations(cik, id)"
+    )
+
+
+def _log_applied_mutation(
+    conn: sqlite3.Connection, *, cik: int, accession: str,
+    filing_date: str, form: str, seq: int, mutation: Mutation,
+    instrument_id: str | None, pipeline_version: str | None,
+) -> None:
+    """Record one mutation that HAS been applied.
+
+    Called after the apply succeeded, never before — a log entry for a
+    mutation the ledger didn't take would make a replay diverge, which is
+    worse than no log at all.
+
+    Plain INSERT — the table's autoincrement `id` is the application
+    order, and that is what replay sorts on. One accession can pass
+    through here in several separate apply_mutations calls (walk, then
+    anchor corrections and pins), each with its own seq starting at 0, so
+    (accession, seq) is NOT unique and must not be treated as a key.
+    A --force re-walk clears the CIK first rather than overwriting rows.
+
+    Note the codec: `mutation_to_record`, NOT the `mutation_to_dict` used
+    for walk_errors. The latter is a flattened human-readable view with
+    derived fields and is not invertible; this row exists to be replayed.
+    """
+    conn.execute(
+        """INSERT INTO dilution_mutations
+             (cik, accession_number, seq, filing_date, form, kind,
+              instrument_id, mutation_json, pipeline_version, applied_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (cik, accession, seq, filing_date, form, mutation.kind,
+         instrument_id, _to_json(mutation_to_record(mutation)),
+         pipeline_version, now_iso()),
+    )
+
+
 __all__ = [
     "ApplyResult",
     "apply_mutations",
@@ -3821,8 +3971,10 @@ __all__ = [
     "get_walk_state",
     "get_walked_accessions",
     "ensure_walk_tables",
+    "ensure_mutation_log_conn",
     "seed_walked_from_positional",
     "mark_walked",
     "record_anchor_diffs",
+    "reset_ledger_projection",
     "reset_walk_state",
 ]

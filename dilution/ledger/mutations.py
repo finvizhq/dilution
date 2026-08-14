@@ -37,7 +37,7 @@ are trusted — they don't go through the JSON-Schema boundary.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields as dataclass_fields
 from datetime import date, datetime
 from typing import Any, ClassVar, Union
 
@@ -1719,6 +1719,87 @@ def mutation_to_dict(m: Mutation) -> dict:
     return out
 
 
+# ─── Mutation ⇄ replay record (dilution_mutations) ───────────────────
+# `mutation_to_dict` above is a *view*: it flattens typed mutations into
+# the generic terms/outstanding/fields shape, and some of that view is
+# derived rather than stored — RecordDrawdown.fields computes
+# `drawdown_amount_usd` from shares × price and never emits
+# `price_per_share` at all. Good for showing a human what the walker did;
+# not invertible.
+#
+# The applied-mutation log needs the opposite property: exact
+# reconstruction, because it is replayed to rebuild the ledger. So it
+# serializes each dataclass's own constructor fields verbatim, tagging the
+# class by name. That round-trips by construction and keeps working when a
+# mutation gains a field, with no per-kind inverse to maintain.
+#
+# Non-JSON values carry a self-describing marker rather than relying on
+# type introspection (`from __future__ import annotations` makes declared
+# types strings, so they can't be trusted to tell a date from a str).
+
+_MUTATION_CLASSES: tuple = (
+    *CreateMutation, RestateAtm, *AmendMutation, *RecordMutation,
+    CloseInstrument, ApplySplit, NoteNoEvent,
+)
+_MUTATION_BY_CLASS_NAME = {c.__name__: c for c in _MUTATION_CLASSES}
+
+
+def _encode_value(v):
+    if isinstance(v, date):
+        return {"__date__": v.isoformat()}
+    if isinstance(v, tuple):
+        return {"__tuple__": [_encode_value(x) for x in v]}
+    if isinstance(v, list):
+        return [_encode_value(x) for x in v]
+    if isinstance(v, dict):
+        return {k: _encode_value(x) for k, x in v.items()}
+    return v
+
+
+def _decode_value(v):
+    if isinstance(v, dict):
+        if "__date__" in v and len(v) == 1:
+            return date.fromisoformat(v["__date__"])
+        if "__tuple__" in v and len(v) == 1:
+            return tuple(_decode_value(x) for x in v["__tuple__"])
+        return {k: _decode_value(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_decode_value(x) for x in v]
+    return v
+
+
+def mutation_to_record(m: Mutation) -> dict:
+    """Serialize a mutation for the replay log — losslessly.
+
+    Shape: `{"class": "<DataclassName>", "fields": {...}}`. Use
+    `mutation_to_dict` instead for anything a human reads.
+    """
+    return {
+        "class": type(m).__name__,
+        "fields": {f.name: _encode_value(getattr(m, f.name))
+                   for f in dataclass_fields(m)},
+    }
+
+
+def mutation_from_record(record: dict) -> Mutation:
+    """Rebuild the typed mutation `mutation_to_record` wrote.
+
+    Raises KeyError for an unknown class — a log row written by a
+    pipeline that had a mutation type this one doesn't. That must fail
+    loudly: silently skipping it would produce a ledger that replays
+    *most* of history and looks fine.
+    """
+    name = record.get("class")
+    cls = _MUTATION_BY_CLASS_NAME.get(name)
+    if cls is None:
+        raise KeyError(f"unknown mutation class in replay log: {name!r}")
+    known = {f.name for f in dataclass_fields(cls)}
+    kwargs = {k: _decode_value(v)
+              for k, v in (record.get("fields") or {}).items()
+              if k in known}
+    return cls(**kwargs)
+
+
 __all__ = [
     # utility helpers preserved across the rewrite
     "extract_series_letter",
@@ -1751,4 +1832,7 @@ __all__ = [
     "mutation_to_dict",
     "create_from_dict",
     "amend_from_dict",
+    # Lossless replay-log codec (dilution_mutations)
+    "mutation_to_record",
+    "mutation_from_record",
 ]

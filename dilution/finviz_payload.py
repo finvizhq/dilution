@@ -1,12 +1,13 @@
 """Producer for the Finviz ingest payload — the wire format defined in
 FINVIZ_API_CONTRACT.md.
 
-One JSON-serializable document per ticker: the same projection the
-internal dashboard renders (`/t/<TICKER>`), translated into the
-contract's public vocabulary. Nothing here computes business math — it
-reads the card / badge / chart objects the rest of the package already
-produces and reshapes them. Every deviation between an internal field
-name and its contract name is deliberate and commented.
+One JSON-serializable document per ticker — the canonical public
+projection of the ledger, and the only one: the internal Flask dashboard
+this module once mirrored is gone, so what ships to Finviz is defined
+here. Nothing computes business math — it reads the card / badge / chart
+objects the rest of the package already produces and reshapes them into
+the contract's public vocabulary. Every deviation between an internal
+field name and its contract name is deliberate and commented.
 
 What this layer is responsible for (§4 conventions):
 
@@ -17,11 +18,11 @@ What this layer is responsible for (§4 conventions):
     (`raisable_capped`, duplicate `status`, sub-object `instrument_id`s)
     never reach the consumer
   * producer-side filtering the contract promises: expired / withdrawn
-    shelves are dropped here (the dashboard renders them; Finviz never
-    sees them). Pre-funded / placement-agent warrants and withdrawn /
-    lapsed S-1s are already filtered by the card layer.
-  * the cached AI brief read (never generated) at push time, with the
-    staleness flag the dashboard shows
+    shelves are dropped here, so the consumer's card list is live paper
+    only. Pre-funded / placement-agent warrants and withdrawn / lapsed
+    S-1s are already filtered by the card layer.
+  * the cached AI brief read (never generated) at push time, with a
+    staleness flag
   * a SETTLED market basis: `as_of` and the price behind the price-based
     O/S-chart segments are the last settled close, never the live price
     (contract §5.2 + open question #3 — a pushed snapshot must not carry
@@ -74,8 +75,9 @@ log = logging.getLogger(__name__)
 SCHEMA_VERSION = 1
 
 # Contract §7.1: expired / withdrawn shelves are filtered producer-side
-# and never pushed. The dashboard shows them (an expired shelf is useful
-# history internally); the consumer's card list is live paper only.
+# and never pushed. They stay in the ledger (an expired shelf is useful
+# history internally, and run_inspect.py shows it); the consumer's card
+# list is live paper only.
 _DROPPED_SHELF_STATUSES = ("expired", "withdrawn")
 
 
@@ -495,8 +497,9 @@ def _brief_block(cik: int) -> dict | None:
     (scripts/run_brief_all.py), so a push never blocks on an LLM call
     and never mints text mid-request.
 
-    `stale` is the dashboard's rule: a filing arrived after the brief
-    was generated, so the prose may not mention it. It does NOT catch
+    `stale` means a filing arrived after the brief was generated, so the
+    prose may not mention it — the same test scripts/run_brief_all.py
+    inverts to decide what to regenerate. It does NOT catch
     prose that went stale because the LEDGER changed under it (a re-walk
     with no new filing), which is why `generated_at` ships too — a
     consumer that wants to suppress old commentary can age it out.
@@ -540,9 +543,46 @@ def _company_row(ticker: str) -> dict | None:
     return dict(row) if row else None
 
 
+def all_tracked_tickers() -> list[str]:
+    """Every ticker with a ledger, alphabetically — the push universe.
+
+    Shared by `scripts/dump_finviz_payload.py --all` and
+    `scripts/push_finviz.py --all` so "the universe" has one definition.
+    """
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT ticker FROM dilution_company "
+            "WHERE ticker IS NOT NULL ORDER BY ticker",
+        ).fetchall()
+    return [r["ticker"] for r in rows]
+
+
+def payload_summary(doc: dict) -> str:
+    """One-line shape summary of a payload, for CLI output.
+
+    Accepts either the envelope or a bare snapshot, so the same formatter
+    describes a locally-built document and one read back from Finviz
+    (§3.3 returns the inner `data` unwrapped) — which is what makes
+    build-vs-live output directly comparable.
+    """
+    snapshot = doc.get("data") if "data" in doc else doc
+    snapshot = snapshot or {}
+    cards = snapshot.get("cards") or {}
+    counts = " ".join(f"{k}={len(v)}" for k, v in cards.items() if v)
+    company = snapshot.get("company") or {}
+    overall = ((snapshot.get("badges") or {}).get("overall") or {}).get("score")
+    brief = snapshot.get("brief") or {}
+    return (f"as_of={snapshot.get('as_of')} "
+            f"badge={overall if overall is not None else '—'} "
+            f"cash={'y' if company.get('cash') else 'n'} "
+            f"os_chart={'y' if company.get('os_chart') else 'n'} "
+            f"brief={'stale' if brief.get('stale') else 'y' if brief else 'n'} "
+            f"{counts or 'no cards'}")
+
+
 def _internal_cards(cik: int, fund: dict | None, latest_os) -> dict:
-    """The same seven arrays the dashboard renders, internal keys — see
-    dashboard.app._cards_for."""
+    """The seven card arrays, internal keys — the raw card-layer output
+    before `_cards_block` whitelists it into contract shape."""
     return {
         "s1_offering": s1_offering_cards(cik),
         "warrant": warrant_cards(cik),
@@ -555,8 +595,8 @@ def _internal_cards(cik: int, fund: dict | None, latest_os) -> dict:
 
 
 def _cash_and_raised(cik: int):
-    """Two-phase cash fetch (probe for the latest period end, price the
-    raises since it, then bridge) — dashboard.app._cash_for."""
+    """Two-phase cash fetch: probe for the latest period end, price the
+    raises since it, then bridge."""
     try:
         probe = fetch_cash_history_cached(cik)
         raised = (capital_raised_since(cik, probe.latest_period_end)
@@ -572,8 +612,13 @@ def build_snapshot(ticker: str, *, generated_at: datetime | None = None) -> dict
 
     Raises LookupError when the ticker isn't tracked. Sub-blocks that
     depend on external data (cash, O/S history, badges, brief) degrade to
-    null/omitted rather than failing the whole document — same fail-soft
-    posture as the dashboard route.
+    null/omitted rather than failing the whole document.
+
+    That fail-soft posture is why finviz_push.validate_snapshot exists: a
+    document can come back structurally valid but hollow if every fetcher
+    failed at once, and pushing it would REPLACE good live data (§3.5).
+    Degrade-in-place is right here; deciding such a document is unfit to
+    publish belongs at the push boundary.
     """
     ticker = ticker.upper()
     row = _company_row(ticker)

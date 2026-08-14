@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Run the full dilution pipeline against the Open Access ticker set.
+# Run the full dilution pipeline over a set of tickers, in parallel.
 # Runs $PARALLEL tickers concurrently (default 4), interleaving their output
 # with a [TICKER] prefix on each line and capturing each ticker's full
 # stdout/stderr to logs/open_access_<TICKER>.log so failures are debuggable
@@ -8,9 +8,17 @@
 # filing count (from dilution.db) so the slowest ticker starts in the first
 # wave and the makespan is shortest.
 #
+# Ticker selection:
+#   scripts/run_open_access.sh                  # the Open Access sample set
+#   TICKERS="CELU GCTK" scripts/run_open_access.sh
+#   ALL_TRACKED=1 scripts/run_open_access.sh    # every ticker in the ledger
+#
+# ALL_TRACKED is what scripts/nightly.sh uses — the nightly service walks
+# the whole tracked universe, not a hardcoded sample.
+#
 # Override parallelism with: PARALLEL=3 scripts/run_open_access.sh
 #
-# Extra args (e.g. --years 3) are forwarded to run_dilution.py:
+# Extra args (e.g. --years 3, --no-push) are forwarded to run_dilution.py:
 #   scripts/run_open_access.sh --years 3
 #
 # SEC's hard limit is 10 req/s globally; edgartools' throttle is per-process,
@@ -24,7 +32,27 @@ cd "$(dirname "$0")/.."
 PARALLEL="${PARALLEL:-4}"
 export EDGAR_RATE_LIMIT_PER_SEC="${EDGAR_RATE_LIMIT_PER_SEC:-2}"
 
-TICKERS=(SMX DJT ARBE BYND AMC GNS GME QUBT MSTR)
+# Interpreter for every child process. Override with an absolute venv
+# path when there is no activated venv — e.g. the systemd nightly unit,
+# which runs with no shell profile.
+PYTHON="${PYTHON:-python3}"
+
+# Default sample set, overridable by $TICKERS or replaced wholesale by
+# $ALL_TRACKED. Reading the universe from dilution_company (the same query
+# behind `--all` in the payload CLIs) keeps one definition of "every
+# tracked ticker" instead of a list that drifts.
+if [[ "${ALL_TRACKED:-0}" == "1" ]]; then
+    read -r -a TICKERS <<< "$("$PYTHON" -c '
+import sys
+sys.path.insert(0, ".")
+from dilution.finviz_payload import all_tracked_tickers
+print(" ".join(all_tracked_tickers()))
+')" || { echo "Failed to read tracked tickers from dilution.db" >&2; exit 1; }
+elif [[ -n "${TICKERS:-}" ]]; then
+    read -r -a TICKERS <<< "$TICKERS"
+else
+    TICKERS=(SMX DJT ARBE BYND AMC GNS GME QUBT MSTR)
+fi
 
 mkdir -p logs
 
@@ -79,7 +107,7 @@ for t in ranked:
     print(f"{t}\t{w}\t{src}")
 PY
 
-ranking=$(TICKERS="${TICKERS[*]}" python3 -c "$_ORDER_PY") || {
+ranking=$(TICKERS="${TICKERS[*]}" "$PYTHON" -c "$_ORDER_PY") || {
     log "${RED}Failed to compute ticker ordering${RESET}"
     exit 1
 }
@@ -113,7 +141,7 @@ run_one() {
     # log file (so post-mortems don't depend on terminal scrollback);
     # sed -u prefixes each live line with [TICKER]. pipefail makes the
     # pipeline's exit code = python's, since tee/sed never fail.
-    if python3 -u run_dilution.py "$t" "${extra_args[@]}" 2>&1 \
+    if "$PYTHON" -u run_dilution.py "$t" "${extra_args[@]}" 2>&1 \
             | tee "$logfile" \
             | sed -u "s/^/${BLUE}[$t]${RESET} /"; then
         rc=0

@@ -1,7 +1,7 @@
 """Historical cash position + bridge to current cash estimate.
 
-Powers the DilutionTracker-style "Cash Position" chart on the ticker
-dashboard:
+Powers the DilutionTracker-style "Cash Position" chart. Ships as data
+points in payload §5.1; Finviz draws it:
 
   blue bars     historical cash & equivalents per fiscal period
   maroon bar    prorated operating cash flow since latest period end

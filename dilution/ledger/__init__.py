@@ -15,7 +15,7 @@ Modules:
   walker       — chronological filing walker (the orchestrator)
   walker_prompt, walker_llm — the LLM call layer
   anchor       — periodic-filing reconciliation
-  cards        — projection from ledger rows to dashboard cards
+  cards        — projection from ledger rows to product cards
 
 The walker is the only thing that owns chronological ordering and
 mutation application. Everything else operates on the ledger as

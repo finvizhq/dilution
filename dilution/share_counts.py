@@ -10,7 +10,7 @@ line.
 Why not Finviz: Finviz reports the SEC cover-page number for a single
 class (Class A only on Up-C tickers). For GENK that's ~5M instead of
 the ~33M implied by Class A + Class B → every %-dilution number on the
-dashboard was 6.6× overstated and the Baby Shelf classification was
+count was 6.6× overstated and the Baby Shelf classification was
 wrong.
 
 Why not edgartools' high-level Company.get_facts(): it silently drops
@@ -77,7 +77,7 @@ class ClassCount:
 
 @dataclass(frozen=True)
 class ImpliedOutstanding:
-    total: float | None              # dashboard units (ADS for FPI, common else)
+    total: float | None              # payload units (ADS for FPI, common else)
     native_total: float | None       # issuer-reported units (ordinary for FPI)
     classes: tuple[ClassCount, ...] = ()
     as_of: date | None = None
@@ -98,7 +98,7 @@ class ImpliedFloat:
     ADRs — AACG shows 8.84M on Finviz vs 15.04M on DilutionTracker /
     Yahoo). Yahoo reports for the listed instrument, so for FPIs the
     value is already in ADS units — matches how `cards.py` consumes
-    float (price × float in dashboard currency).
+    float (price × float in payload currency).
 
     Returns shares=None on any failure; callers fall through to Finviz.
     """

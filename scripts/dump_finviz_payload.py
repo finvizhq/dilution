@@ -7,13 +7,23 @@ included: `{"ticker": ..., "data": {...}}`.
     python scripts/dump_finviz_payload.py GCTK FCEL KSCP --out examples
     python scripts/dump_finviz_payload.py --all --out examples
     python scripts/dump_finviz_payload.py GCTK --dummy-brief   # placeholder §8
+    python scripts/dump_finviz_payload.py GCTK --live          # what's published
 
 Writes examples/finviz_payload_<TICKER>.json (pretty-printed, UTF-8) and
 prints a one-line shape summary per ticker. With --stdout, prints the
 document instead of writing a file.
 
+`--live` reads the published snapshot back from Finviz (§3.3) instead of
+building one, in the same output shape — so the two are directly
+comparable, which is how you check what is actually live:
+
+    python scripts/dump_finviz_payload.py CELU --stdout > local.json
+    python scripts/dump_finviz_payload.py CELU --live --stdout > live.json
+    diff <(jq -S .data local.json) <(jq -S .data live.json)
+
 Needs a walked ledger (dilution.db) plus network: Finviz Elite for
 market data and SEC XBRL for the cash / shares-outstanding history.
+`--live` needs only FINVIZ_INGEST_TOKEN.
 """
 import argparse
 import json
@@ -24,9 +34,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from db import get_conn                              # noqa: E402
 from dilution.badges import _sh, _usd                # noqa: E402
-from dilution.finviz_payload import build_payload    # noqa: E402
+from dilution.finviz_payload import (                # noqa: E402
+    all_tracked_tickers,
+    build_payload,
+    payload_summary,
+)
+from dilution.finviz_push import fetch_snapshot      # noqa: E402
 
 
 # ── --dummy-brief ────────────────────────────────────────────────────
@@ -139,29 +153,9 @@ def _dummy_brief(snapshot: dict) -> dict:
     }
 
 
-def _all_tickers() -> list[str]:
-    with get_conn() as conn:
-        rows = conn.execute(
-            "SELECT ticker FROM dilution_company "
-            "WHERE ticker IS NOT NULL ORDER BY ticker",
-        ).fetchall()
-    return [r["ticker"] for r in rows]
-
-
-def _summary(doc: dict) -> str:
-    snapshot = doc.get("data") or {}
-    cards = snapshot.get("cards") or {}
-    counts = " ".join(f"{k}={len(v)}" for k, v in cards.items() if v)
-    company = snapshot.get("company") or {}
-    badges = snapshot.get("badges") or {}
-    overall = (badges.get("overall") or {}).get("score")
-    brief = snapshot.get("brief") or {}
-    return (f"as_of={snapshot.get('as_of')} "
-            f"badge={overall if overall is not None else '—'} "
-            f"cash={'y' if company.get('cash') else 'n'} "
-            f"os_chart={'y' if company.get('os_chart') else 'n'} "
-            f"brief={'stale' if brief.get('stale') else 'y' if brief else 'n'} "
-            f"{counts or 'no cards'}")
+# `_all_tickers` / `_summary` moved to dilution.finviz_payload as
+# `all_tracked_tickers` / `payload_summary` so scripts/push_finviz.py
+# shares one definition of "the universe" and one output format.
 
 
 def main() -> int:
@@ -179,6 +173,10 @@ def main() -> int:
                          "from the snapshot itself (testing aid — the real "
                          "generator is an LLM call and 503s in streaks); "
                          "omit it for tickers whose cached prose is current")
+    ap.add_argument("--live", action="store_true",
+                    help="show the snapshot Finviz currently holds (read-back "
+                         "GET, §3.3) instead of building one locally — the "
+                         "way to answer 'what is actually published'")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args()
 
@@ -186,9 +184,13 @@ def main() -> int:
         level=logging.INFO if args.verbose else logging.ERROR,
         format="%(levelname)s %(name)s: %(message)s")
 
+    if args.live and args.dummy_brief:
+        ap.error("--live shows what is published; --dummy-brief rewrites a "
+                 "local build. Pick one.")
+
     tickers = [t.upper() for t in args.tickers]
     if args.all:
-        tickers = _all_tickers()
+        tickers = all_tracked_tickers()
     if not tickers:
         ap.error("pass one or more tickers, or --all")
 
@@ -199,7 +201,17 @@ def main() -> int:
     failed = 0
     for ticker in tickers:
         try:
-            doc = build_payload(ticker)
+            if args.live:
+                # §3.3 hands back the inner `data` unwrapped, so wrap it to
+                # keep this script's output shape identical either way —
+                # that is what makes build-vs-live diffable.
+                snapshot = fetch_snapshot(ticker)
+                if snapshot is None:
+                    print(f"{ticker}: not published", file=sys.stderr)
+                    continue
+                doc = {"ticker": ticker, "data": snapshot}
+            else:
+                doc = build_payload(ticker)
         except Exception as exc:
             failed += 1
             print(f"{ticker}: FAILED — {exc}", file=sys.stderr)
@@ -215,9 +227,11 @@ def main() -> int:
         if args.stdout:
             print(text)
             continue
-        path = out_dir / f"finviz_payload_{ticker}.json"
+        suffix = "_live" if args.live else ""
+        path = out_dir / f"finviz_payload_{ticker}{suffix}.json"
         path.write_text(text + "\n", encoding="utf-8")
-        print(f"{ticker}: {len(text):>8,} bytes → {path}  {_summary(doc)}")
+        print(f"{ticker}: {len(text):>8,} bytes → {path}  "
+              f"{payload_summary(doc)}")
     return 1 if failed else 0
 
 

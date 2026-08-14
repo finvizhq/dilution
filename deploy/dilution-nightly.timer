@@ -1,0 +1,28 @@
+[Unit]
+Description=Nightly dilution pipeline run
+Documentation=file:///opt/dilution/DEPLOY.md
+
+[Timer]
+# 23:15 UTC. This must land AFTER the US settled close is available, and
+# that is a correctness requirement rather than a scheduling preference:
+# `as_of` and every market-derived field (highest_60_day_close, badge
+# scores, baby-shelf status) come from latest_settled_close, and the
+# Finviz daily export's last bar carries the LIVE price until the session
+# settles. Running early publishes an intraday price as a settled one.
+#
+# 23:15 UTC = 18:15 ET in winter (EST) / 19:15 ET in summer (EDT), so it
+# clears the 16:00 ET close with margin either way. Stated in UTC on
+# purpose: OnCalendar follows the system timezone, and a UTC host plus an
+# ET market means the DST shift moves the gap, not the deadline.
+OnCalendar=*-*-* 23:15:00 UTC
+
+# Survive downtime: if the box was off at 23:15, run once on next boot
+# rather than skipping a day of published data.
+Persistent=true
+
+# Stagger against every other cron-like job that fires on the hour, and
+# against Finviz's own end-of-day processing.
+RandomizedDelaySec=15m
+
+[Install]
+WantedBy=timers.target

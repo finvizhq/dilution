@@ -21,6 +21,8 @@ class _TickerFilter(logging.Filter):
 BASE_DIR = Path(__file__).parent
 DB_PATH = BASE_DIR / "dilution.db"
 PIPELINE_LOG_PATH = BASE_DIR / "dilution.log"
+# run_inspect.py (the walker debug view) logs here, keeping its request
+# noise out of the pipeline log.
 DASHBOARD_LOG_PATH = BASE_DIR / "dashboard.log"
 
 _env_file = BASE_DIR / ".env"
@@ -101,6 +103,13 @@ LLM_CONCURRENCY = int(os.environ.get("LLM_CONCURRENCY", "3"))
 
 FINVIZ_API_KEY = os.environ.get("FINVIZ_API_KEY", "")
 FINVIZ_BASE_URL = os.environ.get("FINVIZ_BASE_URL", "https://elite.finviz.com")
+
+# Ingest credential for POST /api/dilution/set (FINVIZ_API_CONTRACT.md §2).
+# Deliberately NOT defaulted to FINVIZ_API_KEY: that one is the Elite
+# /export *read* key, and silently reusing it would surface as a 401 on
+# a push instead of a clear "token not configured". dilution/finviz_push.py
+# raises when this is empty.
+FINVIZ_INGEST_TOKEN = os.environ.get("FINVIZ_INGEST_TOKEN", "")
 
 
 def setup_logging(log_path: Path, level: int = logging.INFO) -> None:

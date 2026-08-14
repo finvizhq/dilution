@@ -6,7 +6,7 @@ Real generated output of the producer — the exact JSON document
 front-end against these files; the §13 example in the contract is
 abridged and hand-written, these are not.
 
-Everything the internal dashboard renders is in here — cards, badge
+Everything the producer ships is in here — cards, badge
 strip, cash chart, O/S & potential-dilution chart, AI brief — except the
 page header (live price, market cap, exchange, sector), which §1 leaves
 to Finviz's own quote data.

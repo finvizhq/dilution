@@ -17,9 +17,8 @@ The dilution pipeline extracts dilution instruments (shelves, ATMs, equity
 lines, warrants, convertibles, preferreds, S-1 offerings) from SEC filings
 into a ledger, then projects them into display-ready "cards", a dilution-risk
 badge strip, and two charts (historical cash position; historical shares
-outstanding + potential-dilution stack) — the same elements the internal
-dashboard renders today. This contract defines how that data gets into
-Finviz.
+outstanding + potential-dilution stack). This contract defines how that data
+gets into Finviz.
 
 **Model: push, full-replace per ticker.**
 
@@ -625,7 +624,7 @@ Contract decisions worth calling out:
   `brief.generated_at` lags the envelope's `generated_at`, routinely by
   days.
 - **`stale` means "a filing arrived after the prose was written"** — the
-  flag the internal dashboard renders. It does *not* catch prose that
+  producer's own regeneration trigger. It does *not* catch prose that
   drifted because the ledger was reprocessed without a new filing, so
   treat `generated_at` as the real freshness signal and consider aging
   out old commentary regardless of the flag.

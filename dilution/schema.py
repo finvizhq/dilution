@@ -236,6 +236,60 @@ CREATE TABLE IF NOT EXISTS dilution_walk_errors (
 CREATE INDEX IF NOT EXISTS idx_dilution_walk_errors_cik_acc
     ON dilution_walk_errors(cik, accession_number);
 
+-- Mutations the walker APPLIED, in apply order. The counterpart to
+-- dilution_walk_errors above, which records only the ones we threw away.
+--
+-- Why this table exists: LLM extraction is the one step in this pipeline
+-- that costs money and is NOT reproducible — re-running it yields
+-- different output. Everything downstream (dilution_ledger, the cards,
+-- the Finviz payload) is a deterministic fold of these mutations, so the
+-- mutations are source data and the ledger is a projection. Without this
+-- table the ledger is the only surviving copy of the expensive work, and
+-- any corruption of it means re-walking at full extraction cost. With it,
+-- recovery is a replay: scripts/rebuild_ledger.py.
+--
+-- Written inside apply_mutations' per-filing transaction, only after a
+-- mutation actually applies, so the log can never claim a mutation the
+-- ledger didn't take.
+--
+-- Strictly append-only: rows are never updated. `id` IS the application
+-- order, which is what replay sorts on — deliberately NOT
+-- (accession, seq), because ONE accession receives up to four separate
+-- apply_mutations calls (the walk itself, then anchor corrections, note
+-- balance pins, ATM drawn pins), each restarting seq at 0. Only the
+-- insertion sequence captures the true order those landed in.
+--
+-- A --force re-walk clears the CIK first (reset_walk_state), so rows
+-- never accumulate across extraction runs.
+CREATE TABLE IF NOT EXISTS dilution_mutations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,       -- application order == replay order
+    cik INTEGER NOT NULL,
+    accession_number TEXT NOT NULL,
+    -- Index within its own apply_mutations call. Diagnostic only; not
+    -- unique per accession (see above).
+    seq INTEGER NOT NULL,
+    filing_date TEXT,
+    form TEXT,                                  -- includes EXTERNAL_SPLIT for synthetic split mutations
+    kind TEXT NOT NULL,                         -- create_instrument|amend_instrument|record_event|close_instrument|apply_split
+    -- The instrument the mutation resolved to AFTER id_remap (creates
+    -- report the id actually allocated). mutation_json still holds the
+    -- LLM's original proposed_id, so the pair shows what the store
+    -- decided vs what the model asked for.
+    instrument_id TEXT,
+    -- mutation_to_record() form — the LOSSLESS codec, not the flattened
+    -- mutation_to_dict() view stored in dilution_walk_errors. This row
+    -- exists to be replayed, so it must reconstruct exactly.
+    mutation_json TEXT NOT NULL,
+    -- Provenance for reasoning about a replay: store semantics change
+    -- over time, so a rebuilt ledger legitimately differs from one folded
+    -- by an older pipeline.
+    pipeline_version TEXT,
+    applied_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_dilution_mutations_cik
+    ON dilution_mutations(cik, id);
+
 -- Auxiliary index of drawdowns against shelf / ATM / equity-line
 -- instruments. Populated synchronously by apply_mutations every time a
 -- record_event(drawdown) lands on an eligible ledger row. Powers IB6
@@ -266,7 +320,7 @@ CREATE INDEX IF NOT EXISTS idx_dilution_ledger_drawdowns_cik_date
 CREATE INDEX IF NOT EXISTS idx_dilution_ledger_drawdowns_instrument
     ON dilution_ledger_drawdowns(instrument_id);
 
--- Per-instrument narrative cache for the dashboard. Generated lazily
+-- Per-instrument narrative cache. Generated lazily
 -- by the project stage; key is a hash of the ledger row's terms +
 -- status so the LLM only re-runs when the underlying state changes.
 CREATE TABLE IF NOT EXISTS dilution_ledger_narrative (
@@ -280,11 +334,11 @@ CREATE TABLE IF NOT EXISTS dilution_ledger_narrative (
 );
 
 -- Per-ticker AI dilution brief cache (headline + bullets + watch
--- items) for the dashboard. dilution/ticker_brief.py owns the working
+-- items) for payload §8. dilution/ticker_brief.py owns the working
 -- copy of this DDL (keep in sync) and self-bootstraps on first use;
 -- the copy here only exists so reset_db.py produces a complete
 -- schema. Keyed by a hash of the deterministic facts block so the
--- dashboard can flag a cached brief as stale without an LLM call.
+-- payload can flag a cached brief as stale without an LLM call.
 CREATE TABLE IF NOT EXISTS dilution_ticker_brief (
     cik INTEGER PRIMARY KEY,
     facts_hash TEXT NOT NULL,

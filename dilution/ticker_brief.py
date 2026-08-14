@@ -7,7 +7,7 @@ number is computed deterministically by the existing projections
 model only writes prose around them and is instructed to use no
 outside numbers.
 
-Caching: one row per cik in `dilution_ticker_brief`. The dashboard is
+Caching: one row per cik in `dilution_ticker_brief`. The payload is
 display-only — it shows the cached brief and marks it stale when a
 filing arrived after generation (NOT via the stored facts_hash — that
 embeds live-price-derived numbers and flips intraday). The cache is

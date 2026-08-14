@@ -1,11 +1,11 @@
-"""Card projection — ledger rows → DT-style dashboard cards.
+"""Card projection — ledger rows → DT-style cards.
 
 Replaces the ~2650-line clustering machinery in dilution/instrument_cards.py.
 Each projector is a thin SELECT + per-type field mapping; the heavy
 lifting (instrument identity, amendment tracking, lifecycle) lives in
 the ledger now.
 
-Public surface (matches dashboard/app.py imports):
+Public surface (consumed by dilution/finviz_payload.py):
 
   warrant_cards(cik, finviz=None, latest_os=None)
   convertible_note_cards(cik)
@@ -899,7 +899,7 @@ def _select_narrative(instrument_id: str) -> dict:
 
     Card render path is best-effort: when no narrative exists, the
     deterministic fallback renders without a headline. The project
-    stage warms this cache; the dashboard only reads it.
+    stage warms this cache; the payload build only reads it.
     """
     with get_conn() as conn:
         row = conn.execute(
