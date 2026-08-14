@@ -1,8 +1,8 @@
 """Primitives for declaring walker tools.
 
 `Tool` and `ToolArg` are plain dataclasses — no Pydantic, no runtime
-validation. The build_provider_schema() function produces the
-provider-specific Tool/function object that the LLM sees.
+validation. The build_tool_schema() function produces the function
+object that the LLM sees.
 
 What the JSON Schema enforces at decode time:
   - required: every arg with required=True must appear
@@ -132,36 +132,31 @@ def _tool_to_parameters_schema(t: Tool) -> dict:
     return schema
 
 
-def build_provider_schema(t: Tool, *, provider: str) -> Any:
-    """Produce a provider-specific tool object suitable for passing as
-    one element of the `tools=` list on the chat factory.
+def build_tool_schema(t: Tool) -> dict[str, Any]:
+    """Produce the tool object for one element of a `tools=` list.
 
-    - "xai":     returns an xai_sdk.chat.Tool protobuf
-    - "openai" / "moonshot" / "gemini": returns a dict in the OpenAI
-      function-calling shape ({"type": "function", "function": {...}})
+    This is the /v1/responses shape — name/description/parameters FLAT on
+    the object, not nested under a "function" key the way chat
+    completions wants them.
+
+    `strict` is False for the same reason the structured-output path
+    omits it (see openai_client._text_format): strict mode demands that
+    every property appear in `required`, and optional tool args are the
+    norm here. The JSON Schema still enforces required args, types,
+    bounds, patterns, enums and additionalProperties=false at decode
+    time — that enforcement is why the walker uses tools at all.
     """
-    params = _tool_to_parameters_schema(t)
-    if provider == "xai":
-        from xai_sdk.chat import tool as _xai_tool
-        return _xai_tool(
-            name=t.name,
-            description=t.description,
-            parameters=params,
-        )
-    if provider in ("openai", "moonshot", "gemini"):
-        return {
-            "type": "function",
-            "function": {
-                "name": t.name,
-                "description": t.description,
-                "parameters": params,
-            },
-        }
-    raise ValueError(f"unknown provider {provider!r}")
+    return {
+        "type": "function",
+        "name": t.name,
+        "description": t.description,
+        "parameters": _tool_to_parameters_schema(t),
+        "strict": False,
+    }
 
 
 __all__ = [
     "Tool", "ToolArg",
     "ISO_DATE_PATTERN", "PROPOSED_ID_PATTERN",
-    "build_provider_schema",
+    "build_tool_schema",
 ]

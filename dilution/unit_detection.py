@@ -23,8 +23,10 @@ from edgar import get_by_accession_number, set_identity
 import config
 from db import get_conn, now_iso
 
-from .ledger._llm_utils import make_chat, normalize_filing_text
-from .llm_provider import make_async_client, system, user
+from .ledger._llm_utils import normalize_filing_text
+from .openai_client import (
+    acomplete, make_async_client, output_text, system, user,
+)
 
 log = logging.getLogger(__name__)
 
@@ -208,24 +210,29 @@ async def _llm_ads_ratio(filing: dict) -> float | None:
     )
     client = make_async_client()
     try:
-        # Route through make_chat so the ADS-ratio call gets the same
-        # pinned temperature (EXTRACT_TEMPERATURE) as every other
-        # extractor. Calling client.chat.create directly bypassed that
-        # and left this call at the provider default — and its output
+        # Routed through the shared acomplete() so this call gets the
+        # same request parameters as every other extractor. Its output
         # feeds unit_preamble() into every downstream walker/overhang
-        # prompt, so its variance cascades issuer-wide.
-        chat = make_chat(client, max_tokens=1024)
-        chat.append(system(
-            "You extract the ADS-to-ordinary share ratio from the cover "
-            "page or Description of Securities of a Form 20-F/40-F. "
-            "Output strict JSON only — no fences, no prose."
-        ))
-        chat.append(user(prompt))
-        resp = await chat.sample()
+        # prompt, so variance here cascades issuer-wide.
+        resp = await acomplete(
+            client,
+            name="ads-ratio",
+            messages=[
+                system(
+                    "You extract the ADS-to-ordinary share ratio from the "
+                    "cover page or Description of Securities of a Form "
+                    "20-F/40-F. Output strict JSON only — no fences, no "
+                    "prose."
+                ),
+                user(prompt),
+            ],
+            max_output_tokens=1024,
+            cache_key="ads-ratio",
+        )
     finally:
         await client.close()
 
-    raw = (resp.content or "").strip()
+    raw = (output_text(resp) or "").strip()
     # Tolerate accidental code fences.
     if raw.startswith("```"):
         raw = re.sub(r"^```[a-zA-Z]*\n|\n```$", "", raw).strip()

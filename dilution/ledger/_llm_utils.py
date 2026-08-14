@@ -12,8 +12,6 @@ from __future__ import annotations
 import logging
 import re
 
-import config
-
 log = logging.getLogger(__name__)
 
 
@@ -32,14 +30,14 @@ def normalize_filing_text(text: str) -> str:
     Cell boundaries are pipe-delimited, so intra-cell padding carries no
     meaning; a DEF 14A proxy shrinks ~60% in chars (~15% in tokens).
 
-    This is also a hard requirement on Gemini: payloads where long runs
-    of ZWSP/space-padded table rows straddle an internal request-
-    processing boundary are rejected with an opaque 400 INVALID_ARGUMENT
-    (FCEL DEF 14A 0001104659-22-025374 — byte-exact and alignment-
-    dependent: appending one space to a 570 KB prefix flips accept→
-    reject, prepending 1 KB of prose flips it back). Collapsing the pads
-    removes the fragile byte patterns entirely. Repro + bisection
-    harness: scripts/debug_fcel_def14a_400.py.
+    Kept vendor-independent: it earned its place on Gemini, where
+    ZWSP/space-padded table rows straddling an internal request boundary
+    drew an opaque 400 INVALID_ARGUMENT (FCEL DEF 14A
+    0001104659-22-025374 — byte-exact and alignment-dependent: appending
+    one space to a 570 KB prefix flipped accept→reject, prepending 1 KB
+    of prose flipped it back; repro harness
+    scripts/debug_fcel_def14a_400.py). That specific server bug is
+    behind us, but the token savings stand on their own.
     """
     return _SPACE_RUN.sub("  ", text.replace("\u200b", ""))
 
@@ -92,89 +90,40 @@ def unit_preamble(unit_ctx: dict | None) -> str:
     )
 
 
-# ─── Chat creation ──────────────────────────────────────────────────
-EXTRACT_TEMPERATURE = 0.0
-EXTRACT_SEED = 42
+# ─── Response checks ────────────────────────────────────────────────
+# There is deliberately no temperature/seed constant here any more. The
+# gpt-5.6 family rejects temperature and top_p in reasoning mode and
+# /v1/responses has no seed parameter, so the old EXTRACT_TEMPERATURE=0.0
+# + EXTRACT_SEED=42 pin is unsendable — see the DETERMINISM NOTE in
+# config.py and the docstring on openai_client.request_kwargs. Chat
+# construction lives in openai_client.request_kwargs.
 DEFAULT_MAX_TOKENS = 32_000
-
-
-def make_chat(client, *, response_format=None,
-              tools=None, tool_choice=None,
-              max_tokens: int = DEFAULT_MAX_TOKENS,
-              temperature: float = EXTRACT_TEMPERATURE,
-              seed: int = EXTRACT_SEED,
-              model: str | None = None):
-    """Build a chat with our standard extraction params.
-
-    Two mutually-meaningful constraint modes:
-      - `response_format` (Pydantic class): structured-output path used
-        by callers that emit a single typed JSON value (e.g. the
-        overhang extractor's typed event list). xAI binds the Pydantic
-        class natively; Moonshot falls back to json_object; Gemini
-        translates to json_schema. Constrains shape + Literal enums at
-        decode time but cannot enforce required dict keys — the walker
-        uses tool calls for that reason.
-      - `tools` + `tool_choice`: function-calling path. Each tool's
-        JSON-Schema parameters block IS the contract — required args,
-        types, minLength, enum, additionalProperties=false enforced at
-        decode time. `tool_choice="required"` forces ≥1 call.
-
-    Both can be passed simultaneously; providers handle the combination.
-    """
-    kwargs = {
-        "model": model if model is not None else config.LLM_MODEL,
-        "max_tokens": max_tokens,
-        # Temperature is sent to every provider that accepts it. Gemini's
-        # adapter forwards it (llm_provider._gemini_request_kwargs); xAI
-        # binds it natively; Moonshot enforces a fixed temperature and
-        # silently drops this via **_dropped. This MUST stay out of the
-        # xai-only gate below: gating it there is what left the active
-        # Gemini provider running at the API default (1.0) instead of
-        # EXTRACT_TEMPERATURE=0.0, the dominant source of run-to-run
-        # walker non-determinism.
-        "temperature": temperature,
-    }
-    if config.LLM_PROVIDER == "xai":
-        # Seed stays xai-only: Gemini's OpenAI-compat endpoint 400s on
-        # seed (INVALID_ARGUMENT), and Moonshot enforces a fixed seed.
-        kwargs["seed"] = seed
-    if response_format is not None:
-        kwargs["response_format"] = response_format
-    if tools is not None:
-        kwargs["tools"] = tools
-    if tool_choice is not None:
-        kwargs["tool_choice"] = tool_choice
-    return client.chat.create(**kwargs)
 
 
 def check_response(response, accession: str | None = None,
                    handler: str | None = None):
-    """Log WARNING on truncation / context overflow / timeout. Returns
-    the response unchanged so callers can chain."""
-    fr = getattr(response, "finish_reason", None)
+    """Log WARNING when a generation did not complete. Returns the
+    response unchanged so callers can chain.
+
+    Context overflow is absent by design: OpenAI rejects an oversized
+    input with a 400 rather than reporting it on the response, and the
+    pre-flight MAX_INPUT_CHARS cap is what keeps us under the ceiling.
+    """
     tag = f"[{handler}] {accession}" if handler else (accession or "?")
-    if fr == "REASON_MAX_LEN":
-        log.warning("%s — output truncated at max_tokens", tag)
-    elif fr == "REASON_MAX_CONTEXT":
-        log.warning("%s — input exceeded model context window", tag)
-    elif fr == "REASON_TIME_LIMIT":
-        log.warning("%s — generation hit time limit", tag)
+    if getattr(response, "status", None) != "incomplete":
+        return response
+    reason = getattr(
+        getattr(response, "incomplete_details", None), "reason", None)
+    if reason == "max_output_tokens":
+        log.warning("%s — output truncated at max_output_tokens", tag)
+    else:
+        log.warning("%s — generation incomplete (reason=%r)", tag, reason)
     return response
-
-
-async def asample_and_check(chat, accession: str | None = None,
-                            handler: str | None = None):
-    """Async helper: await chat.sample() then check_response."""
-    return check_response(await chat.sample(), accession=accession,
-                          handler=handler)
 
 
 __all__ = [
     "DEFAULT_MAX_TOKENS",
-    "EXTRACT_SEED",
-    "EXTRACT_TEMPERATURE",
-    "asample_and_check",
     "check_response",
-    "make_chat",
+    "normalize_filing_text",
     "unit_preamble",
 ]

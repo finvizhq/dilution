@@ -21,39 +21,14 @@ import asyncio
 import pytest
 
 import dilution.unit_detection as ud
+from conftest import response_stub
 
 
 # ── tiny fakes for the async LLM seam ───────────────────────────────────
-
-
-class _FakeResp:
-    def __init__(self, content):
-        self.content = content
-
-
-class _FakeChat:
-    """Mimics make_chat(...)'s return: .append() no-ops, async .sample()."""
-
-    def __init__(self, content):
-        self._content = content
-        self.appended = []
-
-    def append(self, msg):
-        self.appended.append(msg)
-
-    async def sample(self):
-        return _FakeResp(self._content)
-
-
-class _RaisingChat:
-    def __init__(self):
-        self.appended = []
-
-    def append(self, msg):
-        self.appended.append(msg)
-
-    async def sample(self):
-        raise RuntimeError("boom")
+#
+# The seam is ud.acomplete (one awaited /v1/responses call). Response
+# objects come from conftest.response_stub so this file cannot drift from
+# the shape the SDK actually returns.
 
 
 class _FakeClient:
@@ -64,12 +39,20 @@ class _FakeClient:
         self.closed = True
 
 
-def _patch_llm(monkeypatch, *, content=None, chat=None, text="some filing text"):
+def _patch_llm(monkeypatch, *, content=None, raises=None,
+               text="some filing text", captured=None):
     """Wire the LLM seam. Returns the FakeClient so close() can be asserted."""
     client = _FakeClient()
     monkeypatch.setattr(ud, "make_async_client", lambda: client)
-    the_chat = chat if chat is not None else _FakeChat(content)
-    monkeypatch.setattr(ud, "make_chat", lambda c, **k: the_chat)
+
+    async def _acomplete(_client, **kw):
+        if captured is not None:
+            captured.append(kw)
+        if raises is not None:
+            raise raises
+        return response_stub(text=content)
+
+    monkeypatch.setattr(ud, "acomplete", _acomplete)
     monkeypatch.setattr(ud, "_load_text_for", lambda acc: text)
     return client
 
@@ -619,17 +602,15 @@ class TestLlmAdsRatio:
         _patch_llm(monkeypatch, content='{"ads_ratio": 0.001}')
         assert asyncio.run(ud._llm_ads_ratio(_filing())) == pytest.approx(0.001)
 
-    def test_client_closed_even_when_sample_raises(self, monkeypatch):
-        client = _FakeClient()
-        monkeypatch.setattr(ud, "make_async_client", lambda: client)
-        monkeypatch.setattr(ud, "make_chat", lambda c, **k: _RaisingChat())
-        monkeypatch.setattr(ud, "_load_text_for", lambda acc: "text")
+    def test_client_closed_even_when_call_raises(self, monkeypatch):
+        client = _patch_llm(monkeypatch, raises=RuntimeError("boom"),
+                            text="text")
         with pytest.raises(RuntimeError, match="boom"):
             asyncio.run(ud._llm_ads_ratio(_filing()))
         assert client.closed is True  # finally awaited close()
 
     def test_empty_response_content(self, monkeypatch):
-        # resp.content None -> "" -> not JSON -> None.
+        # No message item -> output_text "" -> not JSON -> None.
         _patch_llm(monkeypatch, content=None)
         assert asyncio.run(ud._llm_ads_ratio(_filing())) is None
 
@@ -656,22 +637,22 @@ class TestLlmAdsRatio:
         assert asyncio.run(ud._llm_ads_ratio(_filing())) is None
 
     def test_loaded_text_actually_flows_into_prompt(self, monkeypatch):
-        # Defeats the over-mock trap: _FakeChat.append no-ops, so a valid-JSON
-        # test alone can't prove the function ever USED the loaded text. Here
-        # we capture the appended user message and assert the _load_text_for
-        # text + the filing form/date are interpolated into ADS_RATIO_PROMPT.
-        chat = _FakeChat('{"ads_ratio": 7}')
-        _patch_llm(monkeypatch, chat=chat, text="UNIQUE-FILING-BODY-XYZ")
+        # Defeats the over-mock trap: a valid-JSON test alone can't prove the
+        # function ever USED the loaded text. Here we capture the request
+        # kwargs and assert the _load_text_for text + the filing form/date
+        # are interpolated into ADS_RATIO_PROMPT.
+        captured = []
+        _patch_llm(monkeypatch, content='{"ads_ratio": 7}',
+                   text="UNIQUE-FILING-BODY-XYZ", captured=captured)
         out = asyncio.run(
             ud._llm_ads_ratio(_filing(form="40-F", filing_date="2023-09-09"))
         )
         assert out == 7.0
-        # append() got the system message then the user prompt.
-        assert len(chat.appended) == 2
-        kind, sys_msg = chat.appended[0]
-        assert kind == "system"
-        user_kind, user_msg = chat.appended[1]
-        assert user_kind == "user"
+        assert len(captured) == 1
+        messages = captured[0]["messages"]
+        # system message then the user prompt.
+        assert [m["role"] for m in messages] == ["system", "user"]
+        user_msg = messages[1]["content"]
         assert "UNIQUE-FILING-BODY-XYZ" in user_msg
         assert "40-F" in user_msg
         assert "2023-09-09" in user_msg

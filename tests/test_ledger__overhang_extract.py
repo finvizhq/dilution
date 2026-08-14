@@ -22,6 +22,7 @@ import types
 import pytest
 from pydantic import ValidationError
 
+from conftest import response_stub
 from dilution.ledger import _overhang_extract as m
 
 
@@ -775,8 +776,14 @@ class TestBuildCombinedPrompt:
 # _parse_overhang_response (io_mockable — fake response object)
 # ════════════════════════════════════════════════════════════════════
 class TestParseOverhangResponse:
-    def _resp(self, content, finish_reason=None):
-        return types.SimpleNamespace(content=content, finish_reason=finish_reason)
+    def _resp(self, content, truncated=False):
+        # Truncation is status="incomplete" + incomplete_details.reason on
+        # /v1/responses, not a finish_reason string.
+        return response_stub(
+            text=content,
+            status="incomplete" if truncated else "completed",
+            incomplete_reason="max_output_tokens" if truncated else None,
+        )
 
     def test_valid_json(self):
         resp = self._resp('{"warrants": [{"outstanding_count": 5}]}')
@@ -786,7 +793,7 @@ class TestParseOverhangResponse:
         assert parsed.warrants[0].outstanding_count == 5.0
 
     def test_invalid_json_not_truncated_returns_none(self, caplog):
-        resp = self._resp("{bad json", finish_reason=None)
+        resp = self._resp("{bad json")
         with caplog.at_level("WARNING"):
             parsed = m._parse_overhang_response(
                 resp, m.CombinedOverhangList, accession="ACC1", handler="h")
@@ -797,7 +804,7 @@ class TestParseOverhangResponse:
         # Valid prefix (one warrant + start of a convertible) at the cap.
         content = ('{"warrants": [{"outstanding_count": 5}], '
                    '"convertibles": [{"principal_amount": 999')
-        resp = self._resp(content, finish_reason="REASON_MAX_LEN")
+        resp = self._resp(content, truncated=True)
         parsed = m._parse_overhang_response(
             resp, m.CombinedOverhangList, accession="A", handler="h")
         assert parsed is not None
@@ -805,8 +812,7 @@ class TestParseOverhangResponse:
         assert parsed.convertibles == []  # the truncated row was dropped
 
     def test_truncated_unsalvageable_returns_none(self, caplog):
-        resp = self._resp('{"warrants": [{"outstanding',
-                          finish_reason="REASON_MAX_LEN")
+        resp = self._resp('{"warrants": [{"outstanding', truncated=True)
         with caplog.at_level("WARNING"):
             parsed = m._parse_overhang_response(
                 resp, m.CombinedOverhangList, accession="A", handler="h")
@@ -818,18 +824,18 @@ class TestParseOverhangResponse:
         # (extra='forbid'); the warrants row was mid-write and dropped.
         content = ('{"bogus_key": [{"x": 1}], '
                    '"warrants": [{"outstanding_count": 5')
-        resp = self._resp(content, finish_reason="REASON_MAX_LEN")
+        resp = self._resp(content, truncated=True)
         with caplog.at_level("WARNING"):
             parsed = m._parse_overhang_response(
                 resp, m.CombinedOverhangList, accession="A", handler="h")
         assert parsed is None
         assert "salvaged prefix" in caplog.text
 
-    def test_missing_finish_reason_attr_treated_not_truncated(self):
-        class NoFinish:
-            content = "{bad"
+    def test_missing_status_attr_treated_not_truncated(self):
+        class NoStatus:
+            output_text = "{bad"
         parsed = m._parse_overhang_response(
-            NoFinish(), m.CombinedOverhangList, accession="A", handler="h")
+            NoStatus(), m.CombinedOverhangList, accession="A", handler="h")
         assert parsed is None
 
     def test_per_type_list_model_accepted(self):
@@ -847,7 +853,7 @@ class TestParseOverhangResponse:
         content = ('{"warrants": [{"outstanding_count": 5}, '
                    '{"outstanding_count": 6}], '
                    '"convertibles": [{"principal_amount": 999')
-        resp = self._resp(content, finish_reason="REASON_MAX_LEN")
+        resp = self._resp(content, truncated=True)
         with caplog.at_level("INFO"):
             parsed = m._parse_overhang_response(
                 resp, m.CombinedOverhangList, accession="ACC9", handler="h")
@@ -990,26 +996,35 @@ class TestCombinedOverhangList:
 # ════════════════════════════════════════════════════════════════════
 # extract_overhang_rows (async orchestration — LLM seam monkeypatched,
 # NO network). Drives the full merge->clean and merge-fail->fallback
-# wiring that the pure helper tests cannot reach. The seams patched are
-# exactly the three module-level names the function calls: make_chat
-# (chat builder), asample_and_check (the single async network entry),
-# and _load_filing_text (the DB read). temp_db autouse guarantees no
-# real DB is touched even though we also patch the loader.
+# wiring that the pure helper tests cannot reach. Two module-level seams
+# are patched: acomplete (the single async network entry) and
+# _load_filing_text (the DB read). temp_db autouse guarantees no real DB
+# is touched even though we also patch the loader.
 # ════════════════════════════════════════════════════════════════════
 import asyncio
 
 
-def _resp(content, finish_reason="STOP"):
-    return types.SimpleNamespace(content=content, finish_reason=finish_reason)
+def _resp(content, truncated=False):
+    return response_stub(
+        text=content,
+        status="incomplete" if truncated else "completed",
+        incomplete_reason="max_output_tokens" if truncated else None,
+    )
 
 
 class TestExtractOverhangRowsOrchestration:
     def _patch_seam(self, monkeypatch, *, body="FILING BODY", asample):
-        """Wire the three module seams: a no-op chat builder (returns a
-        plain list so chat.append works), the supplied async sampler, and
-        a fixed filing body. Returns nothing — patches in place."""
-        monkeypatch.setattr(m, "make_chat", lambda client, **kw: [])
-        monkeypatch.setattr(m, "asample_and_check", asample)
+        """Wire the two module seams: the supplied async call stub and a
+        fixed filing body. Returns nothing — patches in place.
+
+        The stub is called as acomplete(client, name=..., messages=...,
+        ...), so it receives the request kwargs the production code built.
+        """
+        async def _acomplete(client, *, name=None, **kw):
+            return await asample(kw, accession=kw.get("accession"),
+                                 handler=name)
+
+        monkeypatch.setattr(m, "acomplete", _acomplete)
         monkeypatch.setattr(m, "_load_filing_text", lambda acc: body)
 
     def _run(self, **kw):
@@ -1057,7 +1072,7 @@ class TestExtractOverhangRowsOrchestration:
         async def asample(chat, accession=None, handler=None):
             seen.append(handler)
             if handler == "overhang-combined":
-                return _resp("{NOT JSON", finish_reason="STOP")
+                return _resp("{NOT JSON")
             payloads = {
                 "overhang-warrant": '{"warrants": [{"outstanding_count": 7}]}',
                 "overhang-convertible": '{"convertibles": []}',
@@ -1128,21 +1143,15 @@ class TestExtractOverhangRowsOrchestration:
 
     def test_oversize_text_truncated_to_cap(self, monkeypatch):
         # Body longer than MAX_INPUT_CHARS must be truncated before it
-        # reaches the prompt; capture what make_chat/asample actually sees.
+        # reaches the prompt; capture the request the seam actually sees.
         captured = {}
         big = "Z" * (m.MAX_INPUT_CHARS + 50)
 
-        async def asample(chat, accession=None, handler=None):
-            # chat is [system, user]; user tuple is (role, text).
-            captured["user_text"] = chat[-1][1]
+        async def asample(kw, accession=None, handler=None):
+            captured["user_text"] = kw["messages"][-1]["content"]
             return _resp("{}")
 
-        def fake_make_chat(client, **kw):
-            return []
-
-        monkeypatch.setattr(m, "make_chat", fake_make_chat)
-        monkeypatch.setattr(m, "asample_and_check", asample)
-        monkeypatch.setattr(m, "_load_filing_text", lambda acc: big)
+        self._patch_seam(monkeypatch, body=big, asample=asample)
         self._run()
         # The Z-run in the assembled prompt is capped at MAX_INPUT_CHARS.
         assert captured["user_text"].count("Z") == m.MAX_INPUT_CHARS

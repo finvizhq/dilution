@@ -105,7 +105,7 @@ It needs:
 |---|---|
 | `FINVIZ_INGEST_TOKEN` | **write** credential for `POST /api/dilution/set` |
 | `FINVIZ_API_KEY` | Elite `/export` **read** key (market data) |
-| `GEMINI_API_KEY` | the walker's LLM |
+| `OPENAI_API_KEY` | the walker's LLM |
 | `LANGFUSE_*` | optional tracing |
 
 The two Finviz values are different credentials and there is no fallback

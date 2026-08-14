@@ -268,3 +268,56 @@ def temp_db(_schema_template, tmp_path, monkeypatch):
     # so this one patch reroutes every consumer of get_conn().
     monkeypatch.setattr(db, "DB_PATH", db_file, raising=False)
     yield DBHelper(str(db_file))
+
+
+# ─── /v1/responses stubs ─────────────────────────────────────────────
+#
+# The Responses payload is nested enough that hand-rolling it per test
+# file guarantees drift: `output` is a LIST of typed items (reasoning /
+# function_call / message), truncation lives in
+# `incomplete_details.reason` rather than a finish_reason string, and text
+# hangs off `message.content[].text`. Build them here so every test that
+# fakes an LLM call fakes the same shape the SDK really returns.
+
+def response_stub(*, text: str | None = None, calls: list | None = None,
+                  status: str = "completed", incomplete_reason: str | None = None,
+                  model: str = "stub-model", service_tier: str = "flex",
+                  reasoning_item: bool = True, usage: Any = None):
+    """Build a duck-typed openai Responses object.
+
+    `calls` takes (name, arguments_json) tuples. A leading `reasoning`
+    item is included by default because the real API interleaves one
+    whenever reasoning is on — anything that reads `output` positionally
+    must break here, not in production.
+    """
+    from types import SimpleNamespace
+
+    output: list[Any] = []
+    if reasoning_item:
+        output.append(SimpleNamespace(type="reasoning", summary=[]))
+    for name, arguments in (calls or []):
+        output.append(SimpleNamespace(
+            type="function_call", name=name, arguments=arguments,
+            call_id=f"call_{name}", id=f"fc_{name}",
+        ))
+    if text is not None:
+        output.append(SimpleNamespace(
+            type="message",
+            content=[SimpleNamespace(type="output_text", text=text)],
+        ))
+    return SimpleNamespace(
+        output=output,
+        output_text=text or "",
+        status=status,
+        incomplete_details=(SimpleNamespace(reason=incomplete_reason)
+                            if incomplete_reason else None),
+        model=model,
+        service_tier=service_tier,
+        usage=usage,
+    )
+
+
+@pytest.fixture
+def response_stub_factory():
+    """Fixture wrapper around :func:`response_stub`."""
+    return response_stub

@@ -36,7 +36,7 @@ from dilution.ledger.cards import (  # noqa: E402
     atm_cards, convertible_note_cards, equity_line_cards, preferred_cards,
     s1_offering_cards, shelf_cards, warrant_cards,
 )
-from dilution.llm_provider import require_api_key  # noqa: E402
+from dilution.openai_client import require_api_key  # noqa: E402
 from dilution.observability import (  # noqa: E402
     flush_observability, pipeline_session, setup_observability,
 )

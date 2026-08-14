@@ -1,8 +1,8 @@
 """Walker LLM call layer.
 
-Wraps the project's llm_provider abstraction with the walker-specific
-system prompt + tool-call surface. The walker proper (walker.py) calls
-into here once per filing.
+Wraps dilution.openai_client with the walker-specific system prompt +
+tool-call surface. The walker proper (walker.py) calls into here once per
+filing.
 
 The model is forced to emit tool calls (`tool_choice="required"`) from
 a form-specific subset of the canonical tools defined in
@@ -17,13 +17,17 @@ import logging
 from datetime import date, datetime
 
 import config
-from dilution.llm_provider import system, user
+from dilution.openai_client import (
+    acomplete,
+    max_input_chars,
+    system,
+    tool_calls,
+    user,
+)
 
 from ._llm_utils import (
     DEFAULT_MAX_TOKENS,
-    EXTRACT_SEED,
-    asample_and_check,
-    make_chat,
+    check_response,
 )
 from .mutations import (
     AmendConvertible,
@@ -44,7 +48,7 @@ from .mutations import (
     warrant_series_key,
 )
 from .tools import (
-    RetryableFailure, TOOLS_FOR_FORM, build_provider_schema,
+    RetryableFailure, TOOLS_FOR_FORM, build_tool_schema,
     parse_tool_calls, tools_for_form,
 )
 from .walker_prompt import SYSTEM_PROMPT, build_user_prompt
@@ -52,30 +56,31 @@ from .walker_prompt import SYSTEM_PROMPT, build_user_prompt
 log = logging.getLogger(__name__)
 
 
-WALKER_VERSION = "ledger-walker-v7"
+WALKER_VERSION = "ledger-walker-v8"
 
 
-# Filing-text input cap, sized to the Gemini input window
-# (config.GEMINI_INPUT_TOKEN_LIMIT = 1,048,576 tokens, verified). SEC text
-# tokenizes at ~3.5-4 chars/token, so 3M chars is ~750-860K tokens, leaving
-# ~190-300K of the window for the system prompt, ledger view, and tool
-# schemas. (Output is a separate 65,536-token budget that does not consume
-# the input window.) This is an outlier guard — real filings top out ~1M+
-# chars (S-1/F-1), well under — so it rarely fires; over-cap text is
-# truncated with a logged warning. Heads-up: at the densest tokenization
-# (~3 chars/token) a full 3M-char filing approaches the whole window, so
-# ~2.8M is the guaranteed-no-overflow ceiling if margin ever matters.
-MAX_INPUT_CHARS = 3_000_000
+# Filing-text input cap, derived from the model input ceiling
+# (config.OPENAI_MAX_INPUT_TOKENS = 922,000, verified) at the 3-chars/token
+# floor, so even the densest SEC markdown lands inside the window. Both
+# model tiers share that ceiling, so one cap covers the whole pipeline.
+# This is an outlier guard — real filings top out ~1M+ chars (S-1/F-1),
+# well under — so it rarely fires; over-cap text is truncated with a
+# logged warning. Measured against the cached corpus: 3 of 9,203 filings
+# exceed it. Output is a separate 128,000-token budget that does not
+# consume the input window.
+MAX_INPUT_CHARS = max_input_chars()
 
-# Max tokens for the walker output (tool calls). Measured across 1,090
-# eval filings: mean 1.4 calls/response, max 15 in any single response;
-# 15 heavy create_instrument calls serialize to ~3.2K tokens, so 8K leaves
-# ~2.5× headroom over the worst case observed (and the walker has never hit
-# the old 192K cap). Break-even where 8K would truncate is ~40+ heavy calls
-# in one response — never seen. Unlike the overhang path there's no salvage,
-# but a truncation is logged (asample_and_check → check_response →
-# REASON_MAX_LEN); if a future mega-diluter filing emits dozens, raise this.
-WALKER_MAX_TOKENS = 8_000
+# Max tokens for the walker output (tool calls AND reasoning tokens —
+# reasoning bills from this same budget on /v1/responses). Measured across
+# 1,090 eval filings: mean 1.4 calls/response, max 15 in any single
+# response; 15 heavy create_instrument calls serialize to ~3.2K tokens.
+# Reasoning at effort="low" measured 198-235 tokens on real CELU filings,
+# but it is not formally bounded, so this sits at 16K rather than the 8K
+# the tool calls alone justified. Unlike the overhang path there is no
+# salvage here — a truncation just loses the calls — though it is logged
+# (check_response → status="incomplete"). Break-even where 16K truncates
+# is ~70+ heavy calls in one response; never seen.
+WALKER_MAX_TOKENS = 16_000
 
 
 async def walk_filing(
@@ -164,43 +169,40 @@ async def walk_filing(
         filing_text=filing_text, active_rows=active_rows,
     )
 
-    provider_tools = [
-        build_provider_schema(t, provider=config.LLM_PROVIDER)
-        for t in tool_set
-    ]
+    wire_tools = [build_tool_schema(t) for t in tool_set]
     log.info(
         "walker %s — form=%s (%d tools)",
         accession, form, len(tool_set),
     )
 
-    chat = make_chat(
-        client,
-        tools=provider_tools,
-        tool_choice="required",
-        max_tokens=WALKER_MAX_TOKENS,
-        seed=EXTRACT_SEED,
+    response = check_response(
+        await acomplete(
+            client,
+            name="walker",
+            messages=[system(SYSTEM_PROMPT), user(user_prompt)],
+            tools=wire_tools,
+            tool_choice="required",
+            max_output_tokens=WALKER_MAX_TOKENS,
+            cache_key=WALKER_VERSION,
+        ),
+        accession=accession, handler="ledger-walker",
     )
-    chat.append(system(SYSTEM_PROMPT))
-    chat.append(user(user_prompt))
-    response = await asample_and_check(
-        chat, accession=accession, handler="ledger-walker",
-    )
+    calls = tool_calls(response)
     log.info(
-        "walker %s — finish=%r calls=%d",
-        accession, response.finish_reason,
-        len(response.tool_calls or []),
+        "walker %s — status=%r calls=%d",
+        accession, response.status, len(calls),
     )
 
-    if not response.tool_calls:
+    if not calls:
         log.warning(
-            "walker %s — 0 tool calls returned (finish_reason=%r); "
-            "treating as no-op", accession, response.finish_reason,
+            "walker %s — 0 tool calls returned (status=%r); "
+            "treating as no-op", accession, response.status,
         )
         return MutationList(mutations=[])
 
     failures: list[RetryableFailure] = []
     typed = parse_tool_calls(
-        response.tool_calls, accession=accession,
+        calls, accession=accession,
         empty_amends=failures,
     )
 
@@ -216,7 +218,7 @@ async def walk_filing(
     if failures:
         retry_calls = await _retry_failed_calls(
             client=client, accession=accession,
-            provider_tools=provider_tools,
+            wire_tools=wire_tools,
             user_prompt=user_prompt, failures=failures,
         )
         if retry_calls:
@@ -261,10 +263,7 @@ async def walk_filing(
         if not any(_covers_expected_class(cls, m) for m in real)
     }
     if (must_record and not real) or missing_cls:
-        mr_tools = [
-            build_provider_schema(t, provider=config.LLM_PROVIDER)
-            for t in full_tool_set
-        ]
+        mr_tools = [build_tool_schema(t) for t in full_tool_set]
         if missing_cls:
             instruction = _build_expected_class_instruction(
                 missing_cls, real)
@@ -275,7 +274,7 @@ async def walk_filing(
             instruction = None  # _retry_must_record builds the classic one
             trigger = must_record_reason
         recovered = await _retry_must_record(
-            client=client, accession=accession, provider_tools=mr_tools,
+            client=client, accession=accession, wire_tools=mr_tools,
             user_prompt=user_prompt, reason=trigger,
             instruction=instruction,
         )
@@ -540,17 +539,18 @@ def _build_retry_instruction(failures: list[RetryableFailure]) -> str:
 
 async def _retry_failed_calls(
     *, client, accession: str,
-    provider_tools,
+    wire_tools,
     user_prompt: str, failures: list[RetryableFailure],
 ):
     """One follow-up LLM call covering all retryable failures from the
-    first pass. Returns the retry's tool_calls (provider-normalized)
-    or [] if the retry produced nothing usable.
+    first pass. Returns the retry's normalized tool calls or [] if the
+    retry produced nothing usable.
 
-    Stateless re-prompt: we don't carry the previous chat over because
-    the provider wrappers don't support assistant/tool message roles
-    cleanly across xai/moonshot/gemini. Instead we send the original
-    user prompt plus a concise retry instruction in one new turn.
+    Stateless re-prompt: we deliberately don't carry the previous turn
+    over. Replaying the original prompt plus a concise retry instruction
+    keeps the request a pure function of (filing, ledger, instruction),
+    which is the only reproducibility this model family still offers —
+    it has no temperature or seed to pin.
     """
     retry_instruction = _build_retry_instruction(failures)
     kinds = sorted({f.kind for f in failures})
@@ -558,24 +558,25 @@ async def _retry_failed_calls(
         "walker %s — retrying %d call(s) (kinds=%s)",
         accession, len(failures), kinds,
     )
-    chat = make_chat(
-        client,
-        tools=provider_tools,
-        tool_choice="required",
-        max_tokens=WALKER_MAX_TOKENS,
-        seed=EXTRACT_SEED,
+    response = check_response(
+        await acomplete(
+            client,
+            name="walker-retry",
+            messages=[system(SYSTEM_PROMPT),
+                      user(user_prompt + "\n\n" + retry_instruction)],
+            tools=wire_tools,
+            tool_choice="required",
+            max_output_tokens=WALKER_MAX_TOKENS,
+            cache_key=WALKER_VERSION,
+        ),
+        accession=accession, handler="ledger-walker-retry",
     )
-    chat.append(system(SYSTEM_PROMPT))
-    chat.append(user(user_prompt + "\n\n" + retry_instruction))
-    response = await asample_and_check(
-        chat, accession=accession, handler="ledger-walker-retry",
-    )
-    n_calls = len(response.tool_calls or [])
+    calls = tool_calls(response)
     log.info(
-        "walker %s — retry finish=%r calls=%d",
-        accession, response.finish_reason, n_calls,
+        "walker %s — retry status=%r calls=%d",
+        accession, response.status, len(calls),
     )
-    return response.tool_calls or []
+    return calls
 
 
 def _build_must_record_instruction(reason: str) -> str:
@@ -673,7 +674,7 @@ def _build_expected_class_instruction(
 
 
 async def _retry_must_record(
-    *, client, accession: str, provider_tools,
+    *, client, accession: str, wire_tools,
     user_prompt: str, reason: str,
     instruction: str | None = None,
 ):
@@ -681,30 +682,32 @@ async def _retry_must_record(
     content-expectation gap). Stateless re-prompt (mirrors
     _retry_failed_calls). `instruction` overrides the classic silent-8-K
     text when the content path built a gap-specific one. Returns the
-    retry's tool_calls (provider-normalized) or []."""
+    retry's normalized tool calls or []."""
     if instruction is None:
         instruction = _build_must_record_instruction(reason)
     log.info(
         "walker %s — must_record net fired (%s); re-asking",
         accession, reason,
     )
-    chat = make_chat(
-        client,
-        tools=provider_tools,
-        tool_choice="required",
-        max_tokens=WALKER_MAX_TOKENS,
-        seed=EXTRACT_SEED,
+    response = check_response(
+        await acomplete(
+            client,
+            name="walker-must-record",
+            messages=[system(SYSTEM_PROMPT),
+                      user(user_prompt + "\n\n" + instruction)],
+            tools=wire_tools,
+            tool_choice="required",
+            max_output_tokens=WALKER_MAX_TOKENS,
+            cache_key=WALKER_VERSION,
+        ),
+        accession=accession, handler="ledger-walker-mustrecord",
     )
-    chat.append(system(SYSTEM_PROMPT))
-    chat.append(user(user_prompt + "\n\n" + instruction))
-    response = await asample_and_check(
-        chat, accession=accession, handler="ledger-walker-mustrecord",
-    )
+    calls = tool_calls(response)
     log.info(
-        "walker %s — must_record retry finish=%r calls=%d",
-        accession, response.finish_reason, len(response.tool_calls or []),
+        "walker %s — must_record retry status=%r calls=%d",
+        accession, response.status, len(calls),
     )
-    return response.tool_calls or []
+    return calls
 
 
 # ─── Post-parse guards ──────────────────────────────────────────────
@@ -1461,9 +1464,11 @@ def _build_dedup_candidates_block(
 
 def pipeline_version() -> str:
     """Stamp recorded in dilution_walk_state.pipeline_version. Drift in
-    EITHER the model OR the walker prompt triggers re-walks under
-    --force semantics."""
-    return f"{config.LLM_MODEL}/{WALKER_VERSION}"
+    the model pair, the reasoning effort, OR the walker prompt triggers
+    re-walks under --force semantics. Effort belongs in the stamp because
+    it changes extraction, not just cost."""
+    return (f"{config.LLM_MODEL}+{config.LLM_MODEL_PERIODIC}"
+            f"@{config.OPENAI_REASONING_EFFORT}/{WALKER_VERSION}")
 
 
 __all__ = [

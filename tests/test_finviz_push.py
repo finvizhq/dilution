@@ -507,15 +507,32 @@ class TestPushSnapshotTransport:
         assert fp.push_snapshot(_envelope()).status == "pushed"
         assert len(recorder.calls) == 2
 
-    def test_retries_exhaust_to_failed(self, monkeypatch, no_get):
+    def test_retries_exhaust_to_failed(self, monkeypatch, no_get,
+                                       no_real_sleep):
         """Never raises on transport failure — a batch over 66 tickers
-        must not abort on one bad ticker."""
-        monkeypatch.setattr(fp.requests, "post",
-                            lambda *a, **k: _FakeResponse(500))
-        monkeypatch.setattr(fp, "_backoff_seconds", lambda attempt: 600.0)
+        must not abort on one bad ticker.
+
+        The delay sequence must CROSS RETRY_CEILING_SECONDS, not sit under
+        it. `_sleep` is neutralized suite-wide (autouse `no_real_sleep`),
+        so nothing advances the loop's `elapsed`; a constant sub-ceiling
+        delay leaves `elapsed + delay > RETRY_CEILING_SECONDS` permanently
+        false and `while True` spins at CPU speed, emitting a log.warning
+        per iteration that pytest's log capture retains — ~32 GB in two
+        minutes, which the kernel OOM killer ends. Here the first delay
+        fits the budget (so a real retry happens) and the second blows it,
+        pinning the exhaust path at exactly two POSTs.
+        """
+        recorder = _Recorder(_FakeResponse(500), _FakeResponse(500))
+        monkeypatch.setattr(fp.requests, "post", recorder)
+        delays = iter([600.0, fp.RETRY_CEILING_SECONDS + 100.0])
+        monkeypatch.setattr(fp, "_backoff_seconds",
+                            lambda attempt: next(delays))
         result = fp.push_snapshot(_envelope())
         assert result.status == "failed"
         assert "exhausted" in result.reason
+        assert result.http_status == 500
+        assert len(recorder.calls) == 2      # one retry, then gave up
+        assert no_real_sleep == [600.0]      # only the in-budget delay slept
 
     def test_429_honors_retry_after(self, monkeypatch, no_get,
                                     no_real_sleep):

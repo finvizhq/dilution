@@ -128,63 +128,87 @@ def install_fake_langfuse(client=None, *, record_propagate=None,
     return client
 
 
-# ─── _xai_usage ──────────────────────────────────────────────────────
+# ─── _openai_usage ───────────────────────────────────────────────────
+#
+# The /v1/responses usage shape: input_tokens / output_tokens /
+# total_tokens at the top level, with cached and reasoning counts nested
+# one level down in input_tokens_details / output_tokens_details. Reading
+# chat completions' prompt_tokens / completion_tokens here would silently
+# report zero, so the field names are pinned deliberately.
 
-class TestXaiUsage:
+def resp_usage(*, cached=None, reasoning=None, **kw):
+    """Responses-shaped usage object, with optional nested detail blocks."""
+    u = types.SimpleNamespace(**kw)
+    if cached is not None:
+        u.input_tokens_details = types.SimpleNamespace(cached_tokens=cached)
+    if reasoning is not None:
+        u.output_tokens_details = types.SimpleNamespace(
+            reasoning_tokens=reasoning)
+    return response_with(u)
+
+
+class TestOpenaiUsage:
     def test_none_when_no_usage_attr(self):
         # object() has no .usage -> getattr default None -> returns None.
-        assert o._xai_usage(object()) is None
+        assert o._openai_usage(object()) is None
 
     def test_none_when_usage_is_none(self):
-        assert o._xai_usage(response_with(None)) is None
+        assert o._openai_usage(response_with(None)) is None
 
     def test_missing_token_attrs_default_to_zero(self):
-        # usage present but no token attrs at all.
-        r = response_with(usage())
-        assert o._xai_usage(r) == {"input": 0, "output": 0, "total": 0}
+        assert o._openai_usage(resp_usage()) == {
+            "input": 0, "output": 0, "total": 0}
 
     def test_none_token_values_coalesce_to_zero(self):
-        r = response_with(usage(prompt_tokens=None, completion_tokens=None,
-                                total_tokens=None))
-        out = o._xai_usage(r)
+        out = o._openai_usage(resp_usage(
+            input_tokens=None, output_tokens=None, total_tokens=None))
         assert out == {"input": 0, "output": 0, "total": 0}
         # Specifically 0 (int), not None.
         assert out["input"] == 0 and out["input"] is not None
 
+    def test_base_tokens_read_from_responses_field_names(self):
+        out = o._openai_usage(resp_usage(
+            input_tokens=7, output_tokens=3, total_tokens=10))
+        assert out == {"input": 7, "output": 3, "total": 10}
+
+    def test_chat_completions_field_names_are_ignored(self):
+        # Regression guard for a blind port: prompt_tokens /
+        # completion_tokens are the chat-completions names and must NOT be
+        # picked up, because silently reporting 0 looks like a free call.
+        out = o._openai_usage(resp_usage(
+            prompt_tokens=99, completion_tokens=88, total_tokens=187))
+        assert out == {"input": 0, "output": 0, "total": 187}
+
+    def test_details_absent_yields_exactly_three_keys(self):
+        out = o._openai_usage(resp_usage(
+            input_tokens=10, output_tokens=5, total_tokens=15))
+        assert set(out) == {"input", "output", "total"}
+
     def test_cache_key_absent_when_zero(self):
-        r = response_with(usage(prompt_tokens=10, completion_tokens=5,
-                                total_tokens=15, cached_prompt_text_tokens=0))
-        out = o._xai_usage(r)
+        out = o._openai_usage(resp_usage(
+            input_tokens=10, output_tokens=5, total_tokens=15, cached=0))
         assert "cache_read_input_tokens" not in out
 
     def test_cache_key_present_when_positive(self):
-        r = response_with(usage(prompt_tokens=10, completion_tokens=5,
-                                total_tokens=15, cached_prompt_text_tokens=4))
-        out = o._xai_usage(r)
+        out = o._openai_usage(resp_usage(
+            input_tokens=10, output_tokens=5, total_tokens=15, cached=4))
         assert out["cache_read_input_tokens"] == 4
 
     def test_reasoning_key_absent_when_zero(self):
-        r = response_with(usage(prompt_tokens=10, completion_tokens=5,
-                                total_tokens=15, reasoning_tokens=0))
-        assert "reasoning" not in o._xai_usage(r)
+        out = o._openai_usage(resp_usage(
+            input_tokens=10, output_tokens=5, total_tokens=15, reasoning=0))
+        assert "reasoning" not in out
 
     def test_reasoning_key_present_when_positive(self):
-        r = response_with(usage(prompt_tokens=10, completion_tokens=5,
-                                total_tokens=15, reasoning_tokens=7))
-        assert o._xai_usage(r)["reasoning"] == 7
-
-    def test_both_zero_yields_exactly_three_keys(self):
-        r = response_with(usage(prompt_tokens=10, completion_tokens=5,
-                                total_tokens=15, cached_prompt_text_tokens=0,
-                                reasoning_tokens=0))
-        out = o._xai_usage(r)
-        assert set(out) == {"input", "output", "total"}
+        out = o._openai_usage(resp_usage(
+            input_tokens=10, output_tokens=5, total_tokens=15, reasoning=7))
+        assert out["reasoning"] == 7
 
     def test_fully_populated_exact_equality(self):
-        r = response_with(usage(prompt_tokens=10, completion_tokens=5,
-                                total_tokens=15, cached_prompt_text_tokens=3,
-                                reasoning_tokens=2))
-        assert o._xai_usage(r) == {
+        out = o._openai_usage(resp_usage(
+            input_tokens=10, output_tokens=5, total_tokens=15,
+            cached=3, reasoning=2))
+        assert out == {
             "input": 10, "output": 5, "total": 15,
             "cache_read_input_tokens": 3, "reasoning": 2,
         }
@@ -197,75 +221,41 @@ class TestXaiUsage:
     ])
     def test_conditional_key_boundary_sweep(self, cached, reasoning,
                                             expect_cache, expect_reason):
-        r = response_with(usage(prompt_tokens=1, completion_tokens=1,
-                                total_tokens=2,
-                                cached_prompt_text_tokens=cached,
-                                reasoning_tokens=reasoning))
-        out = o._xai_usage(r)
+        out = o._openai_usage(resp_usage(
+            input_tokens=1, output_tokens=1, total_tokens=2,
+            cached=cached, reasoning=reasoning))
         assert ("cache_read_input_tokens" in out) is expect_cache
         assert ("reasoning" in out) is expect_reason
 
-    def test_none_cached_does_not_add_key(self):
-        # cached_prompt_text_tokens present but None -> `or 0` -> 0 -> absent.
-        r = response_with(usage(prompt_tokens=2, completion_tokens=1,
-                                total_tokens=3, cached_prompt_text_tokens=None,
-                                reasoning_tokens=None))
-        out = o._xai_usage(r)
+    def test_none_detail_values_do_not_add_keys(self):
+        # Detail blocks present but their counts None -> `or 0` -> absent.
+        out = o._openai_usage(response_with(types.SimpleNamespace(
+            input_tokens=2, output_tokens=1, total_tokens=3,
+            input_tokens_details=types.SimpleNamespace(cached_tokens=None),
+            output_tokens_details=types.SimpleNamespace(reasoning_tokens=None),
+        )))
         assert out == {"input": 2, "output": 1, "total": 3}
 
     def test_conditional_keys_present_even_when_base_tokens_missing(self):
-        # Base token attrs absent (default 0) but a positive cached value is
+        # Base token attrs absent (default 0) but positive detail counts are
         # still surfaced — the conditional gate is independent of the base.
-        r = response_with(usage(cached_prompt_text_tokens=4, reasoning_tokens=6))
-        assert o._xai_usage(r) == {
+        assert o._openai_usage(resp_usage(cached=4, reasoning=6)) == {
             "input": 0, "output": 0, "total": 0,
             "cache_read_input_tokens": 4, "reasoning": 6,
         }
 
-    def test_negative_cached_is_truthy_and_included(self):
+    def test_negative_detail_counts_are_truthy_and_included(self):
         # The gate is `if cached:` (truthiness), so a negative int is truthy
         # and the key IS emitted with the raw (negative) value verbatim.
-        r = response_with(usage(prompt_tokens=1, completion_tokens=1,
-                                total_tokens=2, cached_prompt_text_tokens=-3,
-                                reasoning_tokens=-1))
-        out = o._xai_usage(r)
+        out = o._openai_usage(resp_usage(
+            input_tokens=1, output_tokens=1, total_tokens=2,
+            cached=-3, reasoning=-1))
         assert out["cache_read_input_tokens"] == -3
         assert out["reasoning"] == -1
 
-
-# ─── _openai_usage ───────────────────────────────────────────────────
-
-class TestOpenaiUsage:
-    def test_none_when_no_usage_attr(self):
-        assert o._openai_usage(object()) is None
-
-    def test_none_when_usage_is_none(self):
-        assert o._openai_usage(response_with(None)) is None
-
-    def test_missing_token_attrs_default_to_zero(self):
-        assert o._openai_usage(response_with(usage())) == {
-            "input": 0, "output": 0, "total": 0}
-
-    def test_none_token_values_coalesce_to_zero(self):
-        out = o._openai_usage(response_with(
-            usage(prompt_tokens=None, completion_tokens=None,
-                  total_tokens=None)))
-        assert out == {"input": 0, "output": 0, "total": 0}
-
-    def test_fully_populated_exact_equality(self):
-        out = o._openai_usage(response_with(
-            usage(prompt_tokens=7, completion_tokens=3, total_tokens=10)))
-        assert out == {"input": 7, "output": 3, "total": 10}
-
-    def test_never_emits_cache_or_reasoning_keys(self):
-        # Even when the usage object carries xAI-style attrs, the OpenAI
-        # translator ignores them and returns exactly the 3 base keys.
-        out = o._openai_usage(response_with(
-            usage(prompt_tokens=7, completion_tokens=3, total_tokens=10,
-                  cached_prompt_text_tokens=99, reasoning_tokens=42)))
-        assert set(out) == {"input", "output", "total"}
-        assert "cache_read_input_tokens" not in out
-        assert "reasoning" not in out
+    def test_xai_translator_is_gone(self):
+        # The xAI usage shape left with the provider abstraction.
+        assert not hasattr(o, "_xai_usage")
 
 
 # ─── setup_observability ─────────────────────────────────────────────

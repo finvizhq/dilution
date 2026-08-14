@@ -85,9 +85,10 @@ def main() -> int:
     setup_observability()
     since = _since(args.years)
     log.info("Dilution tracker — ticker=%s since=%s "
-             "llm_provider=%s llm_model=%s llm_model_periodic=%s",
-             args.ticker, since, config.LLM_PROVIDER,
-             config.LLM_MODEL, config.LLM_MODEL_PERIODIC)
+             "llm_model=%s llm_model_periodic=%s reasoning=%s tier=%s",
+             args.ticker, since,
+             config.LLM_MODEL, config.LLM_MODEL_PERIODIC,
+             config.OPENAI_REASONING_EFFORT, config.OPENAI_SERVICE_TIER)
 
     # Stays True when --no-push suppresses the publish: nothing was
     # attempted, so nothing failed.
@@ -100,9 +101,10 @@ def main() -> int:
                 "years": args.years,
                 "concurrency": args.concurrency,
                 "force": args.force,
-                "llm_provider": config.LLM_PROVIDER,
                 "llm_model": config.LLM_MODEL,
                 "llm_model_periodic": config.LLM_MODEL_PERIODIC,
+                "reasoning_effort": config.OPENAI_REASONING_EFFORT,
+                "service_tier": config.OPENAI_SERVICE_TIER,
             },
         ):
             company = ensure_company(args.ticker)

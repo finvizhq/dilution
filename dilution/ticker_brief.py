@@ -29,14 +29,14 @@ from pydantic import BaseModel
 import config
 from db import get_conn, now_iso
 
-from .ledger._llm_utils import make_chat
-from .llm_provider import make_sync_client, system, user
+from .openai_client import complete, make_sync_client, output_text, system, user
 
 log = logging.getLogger(__name__)
 
-# Thinking models (gemini-3.5-flash) spend reasoning tokens from the
-# same budget as content — a tight cap truncates the JSON mid-emission
-# (the overhang-specialist REASON_MAX_LEN lesson). Keep headroom.
+# Reasoning tokens bill from the same budget as content, so a tight cap
+# truncates the JSON mid-emission (the overhang-specialist lesson).
+# Measured draw at effort="low" is ~200 tokens against a brief that
+# serializes to well under 1K, so this keeps ample headroom.
 MAX_OUTPUT_TOKENS = 8_192
 
 _DDL = """
@@ -223,20 +223,28 @@ def generate(cik: int, ticker: str, facts: dict) -> dict:
     are written) — the caller surfaces the message.
     """
     client = make_sync_client()
-    chat = make_chat(client, response_format=TickerBrief,
-                     max_tokens=MAX_OUTPUT_TOKENS)
-    chat.append(system(SYSTEM_PROMPT))
-    chat.append(user(PROMPT.format(
-        ticker=ticker,
-        facts=json.dumps(facts, indent=1, ensure_ascii=False, default=str),
-    )))
-    resp = chat.sample()
+    resp = complete(
+        client,
+        name="ticker-brief",
+        messages=[system(SYSTEM_PROMPT), user(PROMPT.format(
+            ticker=ticker,
+            facts=json.dumps(facts, indent=1, ensure_ascii=False,
+                             default=str),
+        ))],
+        response_format=TickerBrief,
+        max_output_tokens=MAX_OUTPUT_TOKENS,
+        cache_key="ticker-brief",
+    )
     try:
-        brief = TickerBrief.model_validate_json(resp.content or "")
+        brief = TickerBrief.model_validate_json(output_text(resp) or "")
     except Exception as e:
         raise RuntimeError(
             f"brief generation returned non-conforming JSON: {e}"
         ) from e
+    # Record what actually answered, not what config nominates — the
+    # aliases float, so a stored "gpt-5.6-luna" tells you less than the
+    # resolved model the API echoes back.
+    model_used = getattr(resp, "model", None) or config.LLM_MODEL
     fhash = facts_hash(facts)
     with get_conn() as conn:
         _ensure_table(conn)
@@ -255,7 +263,7 @@ def generate(cik: int, ticker: str, facts: dict) -> dict:
             (int(cik), fhash, brief.headline,
              json.dumps(brief.bullets, ensure_ascii=False),
              json.dumps(brief.watch, ensure_ascii=False),
-             now_iso(), config.LLM_MODEL),
+             now_iso(), model_used),
         )
     log.info("ticker brief generated for cik=%s (%s)", cik, ticker)
     return {
@@ -264,5 +272,5 @@ def generate(cik: int, ticker: str, facts: dict) -> dict:
         "watch": brief.watch,
         "facts_hash": fhash,
         "generated_at": now_iso(),
-        "model": config.LLM_MODEL,
+        "model": model_used,
     }

@@ -54,7 +54,7 @@ if [ ! -f .env ]; then
 else
     check_env FINVIZ_INGEST_TOKEN "write credential for POST /api/dilution/set"
     check_env FINVIZ_API_KEY      "Elite /export read key (market data)"
-    check_env GEMINI_API_KEY      "walker LLM key"
+    check_env OPENAI_API_KEY      "walker LLM key"
 fi
 
 if [ ! -f dilution.db ]; then

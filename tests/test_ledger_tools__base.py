@@ -1,11 +1,9 @@
 """Unit tests for dilution/ledger/tools/_base.py.
 
 This module is pure, deterministic schema codegen: plain frozen+slots
-dataclasses (Tool / ToolArg) plus three functions that translate them to
-provider-specific JSON-Schema tool objects. No DB, no network, no LLM at
-runtime. The only I/O seam is a *lazy* ``from xai_sdk.chat import tool``
-inside ``build_provider_schema`` for provider='xai', which we monkeypatch
-for hermeticity.
+dataclasses (Tool / ToolArg) plus the functions that translate them into
+the JSON-Schema tool objects OpenAI receives. No DB, no network, no LLM,
+no I/O seam at all.
 """
 
 from __future__ import annotations
@@ -19,7 +17,7 @@ from dilution.ledger.tools._base import (
     ToolArg,
     _arg_to_json_schema_property,
     _tool_to_parameters_schema,
-    build_provider_schema,
+    build_tool_schema,
 )
 from dilution.ledger.tools import ALL_TOOLS
 
@@ -426,120 +424,55 @@ class TestToolToParametersSchema:
         assert "mutated" not in s2["properties"]["a"]
 
 
-# ── build_provider_schema ───────────────────────────────────────────────
+# ── build_tool_schema ───────────────────────────────────────────────────
 
-class TestBuildProviderSchema:
+class TestBuildToolSchema:
 
-    @pytest.mark.parametrize("provider", ["openai", "moonshot", "gemini"])
-    def test_openai_compat_shape(self, provider):
+    def test_responses_shape(self):
         arg = make_arg(name="amt", type="number", required=True, min_value=0.0)
         t = make_tool(name="record_drawdown", description="record it",
                       args=(arg,))
-        out = build_provider_schema(t, provider=provider)
-        assert out == {
+        assert build_tool_schema(t) == {
             "type": "function",
-            "function": {
-                "name": "record_drawdown",
-                "description": "record it",
-                "parameters": _tool_to_parameters_schema(t),
-            },
+            "name": "record_drawdown",
+            "description": "record it",
+            "parameters": _tool_to_parameters_schema(t),
+            "strict": False,
         }
 
-    def test_openai_inner_parameters_exact(self):
+    def test_fields_are_flat_not_nested_under_function(self):
+        # /v1/responses wants name/description/parameters on the object
+        # itself; the nested {"function": {...}} form is chat-completions
+        # only and is silently rejected as an unknown tool shape.
+        out = build_tool_schema(make_tool(args=()))
+        assert "function" not in out
+        assert {"type", "name", "description", "parameters", "strict"} == set(out)
+
+    def test_strict_is_false(self):
+        # Strict mode demands every property appear in `required`, which
+        # optional tool args violate by construction.
+        assert build_tool_schema(make_tool(args=()))["strict"] is False
+
+    def test_parameters_exact(self):
         arg = make_arg(name="x", type="string", required=True)
         t = make_tool(args=(arg,))
-        out = build_provider_schema(t, provider="openai")
-        assert out["function"]["parameters"] == _tool_to_parameters_schema(t)
+        assert build_tool_schema(t)["parameters"] == _tool_to_parameters_schema(t)
 
     def test_name_description_passthrough_verbatim(self):
         # no escaping / trimming of name or description.
         t = make_tool(name="  spaced name  ",
                       description="line1\nline2 with <tags> & symbols")
-        out = build_provider_schema(t, provider="openai")
-        assert out["function"]["name"] == "  spaced name  "
-        assert out["function"]["description"] == "line1\nline2 with <tags> & symbols"
+        out = build_tool_schema(t)
+        assert out["name"] == "  spaced name  "
+        assert out["description"] == "line1\nline2 with <tags> & symbols"
 
-    @pytest.mark.parametrize("provider", ["anthropic", "", "XAI", "OpenAI",
-                                          "Xai", "openai "])
-    def test_unknown_provider_raises_value_error(self, provider):
-        t = make_tool(args=())
-        with pytest.raises(ValueError) as exc:
-            build_provider_schema(t, provider=provider)
-        assert repr(provider) in str(exc.value)
-
-    def test_provider_matching_is_case_sensitive(self):
-        t = make_tool(args=())
-        # exact-case 'openai' works...
-        assert build_provider_schema(t, provider="openai")["type"] == "function"
-        # ...but 'OpenAI' does not.
-        with pytest.raises(ValueError):
-            build_provider_schema(t, provider="OpenAI")
-
-    def test_xai_calls_sdk_with_kwargs(self, monkeypatch):
-        captured = {}
-
-        def fake_tool(**kw):
-            captured.update(kw)
-            return ("XAI_TOOL_OBJ", kw)
-
-        monkeypatch.setattr("xai_sdk.chat.tool", fake_tool)
-
-        arg = make_arg(name="amt", type="number", required=True, min_value=0.0)
-        t = make_tool(name="record_drawdown", description="desc", args=(arg,))
-        out = build_provider_schema(t, provider="xai")
-
-        # returns whatever the sdk returns verbatim (docstring claims a
-        # protobuf, but the function literally returns the stub's value).
-        assert out == ("XAI_TOOL_OBJ", captured)
-        assert captured["name"] == "record_drawdown"
-        assert captured["description"] == "desc"
-        assert captured["parameters"] == _tool_to_parameters_schema(t)
-        # called by keyword (name/description/parameters); no positional args.
-        assert set(captured) == {"name", "description", "parameters"}
-
-    def test_xai_and_openai_share_identical_parameters(self, monkeypatch):
-        # cross-provider parity: the params handed to the xai SDK must be
-        # structurally identical to the params embedded in the openai dict,
-        # since both come from the single _tool_to_parameters_schema source.
-        captured = {}
-        monkeypatch.setattr(
-            "xai_sdk.chat.tool",
-            lambda **kw: captured.update(kw) or ("XAI", kw),
-        )
-        arg = make_arg(name="amt", type="number", required=True, min_value=0.0)
-        t = make_tool(name="record_drawdown", description="desc", args=(arg,))
-
-        build_provider_schema(t, provider="xai")
-        openai_out = build_provider_schema(t, provider="openai")
-
-        assert captured["parameters"] == openai_out["function"]["parameters"]
-
-    def test_xai_import_is_lazy_non_xai_path_unaffected(self, monkeypatch):
-        # Break the xai import entirely; the openai path must still work
-        # because the import lives inside the xai branch only.
-        import sys
-        import builtins
-
-        real_import = builtins.__import__
-
-        def blocking_import(name, *args, **kwargs):
-            if name.startswith("xai_sdk"):
-                raise ImportError("xai_sdk is unavailable in this test")
-            return real_import(name, *args, **kwargs)
-
-        # ensure a fresh import attempt would go through our blocker
-        monkeypatch.delitem(sys.modules, "xai_sdk", raising=False)
-        monkeypatch.delitem(sys.modules, "xai_sdk.chat", raising=False)
-        monkeypatch.setattr(builtins, "__import__", blocking_import)
-
-        t = make_tool(args=(make_arg(name="x", type="string"),))
-        # openai path: no xai import triggered.
-        out = build_provider_schema(t, provider="openai")
-        assert out["type"] == "function"
-
-        # and the xai path indeed tries (and fails) to import -> proves lazy.
-        with pytest.raises(ImportError):
-            build_provider_schema(t, provider="xai")
+    def test_parameters_not_shared_between_calls(self):
+        # Each call regenerates the schema, so a caller mutating one tool
+        # object cannot poison another's.
+        t = make_tool(args=(make_arg(name="a", type="string"),))
+        first = build_tool_schema(t)
+        first["parameters"]["properties"]["a"]["mutated"] = True
+        assert "mutated" not in build_tool_schema(t)["parameters"]["properties"]["a"]
 
 
 # ── realistic round-trip over the real production tool registry ──────────
@@ -560,15 +493,14 @@ class TestRealToolRegistry:
         assert all(isinstance(t, Tool) for t in ALL_TOOLS.values())
 
     @pytest.mark.parametrize("tool_name", sorted(ALL_TOOLS))
-    def test_openai_schema_wellformed_for_every_tool(self, tool_name):
+    def test_schema_wellformed_for_every_tool(self, tool_name):
         t = ALL_TOOLS[tool_name]
-        out = build_provider_schema(t, provider="openai")
+        out = build_tool_schema(t)
         assert out["type"] == "function"
-        fn = out["function"]
         # name/description copied verbatim from the Tool dataclass.
-        assert fn["name"] == t.name
-        assert fn["description"] == t.description
-        params = fn["parameters"]
+        assert out["name"] == t.name
+        assert out["description"] == t.description
+        params = out["parameters"]
         assert params["type"] == "object"
         # the docstring's central guarantee: nesting pathology is blocked.
         assert params["additionalProperties"] is False
@@ -613,17 +545,10 @@ class TestRealToolRegistry:
                 assert prop["pattern"] == ISO_DATE_PATTERN
 
     @pytest.mark.parametrize("tool_name", sorted(ALL_TOOLS))
-    def test_xai_and_openai_params_identical_for_every_tool(self, tool_name,
-                                                            monkeypatch):
-        # cross-provider parity on real tools: the params handed to the xai
-        # SDK must equal the params embedded in the openai dict.
-        captured = {}
-        monkeypatch.setattr(
-            "xai_sdk.chat.tool",
-            lambda **kw: captured.update(kw) or ("XAI", kw),
-        )
+    def test_wire_params_match_standalone_builder_for_every_tool(self, tool_name):
+        # The tool object the model receives must embed exactly what the
+        # standalone parameters builder produces — one source of truth.
         t = ALL_TOOLS[tool_name]
-        build_provider_schema(t, provider="xai")
-        openai_out = build_provider_schema(t, provider="openai")
-        assert captured["parameters"] == openai_out["function"]["parameters"]
-        assert captured["name"] == t.name == openai_out["function"]["name"]
+        out = build_tool_schema(t)
+        assert out["parameters"] == _tool_to_parameters_schema(t)
+        assert out["name"] == t.name

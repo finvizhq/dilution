@@ -4,10 +4,11 @@ Idempotent. Safe when Langfuse credentials are missing — every helper
 becomes a no-op so callers can wrap unconditionally without branching.
 
 Tracing surface:
-  * Every LLM ``sample()`` in ``dilution.llm_provider`` emits a
-    Langfuse generation observation (model, input messages, output
-    content, token usage, finish reason). xAI proto and OpenAI usage
-    shapes are both translated to Langfuse's ``usage_details``.
+  * Every call in ``dilution.openai_client`` emits a Langfuse generation
+    observation (model, input messages, output text, token usage,
+    completion status). The Responses ``usage`` shape — including cached
+    and reasoning token counts — is translated to Langfuse's
+    ``usage_details``.
   * ``run_dilution.py`` wraps each pipeline run in a top-level span and
     propagates the ticker as ``session_id`` so every run for the same
     issuer groups together in the Sessions view.
@@ -133,41 +134,40 @@ def stage(name: str, *, input: Any = None,
         yield span
 
 
-# ─── LLM-call instrumentation helpers (used by llm_provider) ─────────
+# ─── LLM-call instrumentation helpers (used by openai_client) ────────
 
-def _xai_usage(response) -> dict[str, int] | None:
-    """Translate xai_sdk Response.usage proto → Langfuse usage_details.
+def _openai_usage(response) -> dict[str, int] | None:
+    """Translate an openai Responses `usage` → Langfuse usage_details.
 
-    Maps ``cached_prompt_text_tokens`` to ``cache_read_input_tokens``
-    so the cache-hit savings show up in the Langfuse cost view.
+    Note the field names: /v1/responses reports ``input_tokens`` /
+    ``output_tokens``, NOT chat completions' ``prompt_tokens`` /
+    ``completion_tokens``. Reading the wrong ones yields a silent zero.
+
+    Both nested detail counts are surfaced because both are decisions we
+    watch: ``cached_tokens`` is the prompt-cache hit (cached input bills
+    10× cheaper, and the walker's system prompt + tool schemas are a big
+    stable prefix), and ``reasoning_tokens`` is the reasoning draw on the
+    output budget — the first number to check if either cost or
+    truncation moves.
     """
     usage = getattr(response, "usage", None)
     if usage is None:
         return None
     out = {
-        "input": getattr(usage, "prompt_tokens", 0) or 0,
-        "output": getattr(usage, "completion_tokens", 0) or 0,
+        "input": getattr(usage, "input_tokens", 0) or 0,
+        "output": getattr(usage, "output_tokens", 0) or 0,
         "total": getattr(usage, "total_tokens", 0) or 0,
     }
-    cached = getattr(usage, "cached_prompt_text_tokens", 0) or 0
+    cached = getattr(
+        getattr(usage, "input_tokens_details", None), "cached_tokens", 0) or 0
     if cached:
         out["cache_read_input_tokens"] = cached
-    reasoning = getattr(usage, "reasoning_tokens", 0) or 0
+    reasoning = getattr(
+        getattr(usage, "output_tokens_details", None),
+        "reasoning_tokens", 0) or 0
     if reasoning:
         out["reasoning"] = reasoning
     return out
-
-
-def _openai_usage(response) -> dict[str, int] | None:
-    """Translate openai ChatCompletion.usage → Langfuse usage_details."""
-    usage = getattr(response, "usage", None)
-    if usage is None:
-        return None
-    return {
-        "input": getattr(usage, "prompt_tokens", 0) or 0,
-        "output": getattr(usage, "completion_tokens", 0) or 0,
-        "total": getattr(usage, "total_tokens", 0) or 0,
-    }
 
 
 @contextlib.contextmanager

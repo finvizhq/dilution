@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from db import get_conn, now_iso
-from dilution.llm_provider import make_async_client
+from dilution.openai_client import make_async_client
 
 from .anchor import (
     corroborate_closes,
@@ -1344,7 +1344,7 @@ def walk_ticker(
     `dilution_walked` set — robust to filings back-filled out of date
     order (unlike the old positional last_processed_accession marker).
     """
-    from dilution.llm_provider import require_api_key
+    from dilution.openai_client import require_api_key
     require_api_key()
     return asyncio.run(_walk_async(
         cik=cik, ticker=ticker, since_date=since_date,

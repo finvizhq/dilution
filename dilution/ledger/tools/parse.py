@@ -1,8 +1,8 @@
 """Tool-call → mutation dispatch.
 
-The LLM returns provider-normalized ToolCall objects (id, name,
-arguments dict). This module dispatches each to the appropriate
-typed dataclass in mutations.py.
+The LLM returns normalized ToolCall objects (id, name, arguments
+dict). This module dispatches each to the appropriate typed dataclass in
+mutations.py.
 
 The decoder already enforced types + required fields + patterns at
 sample time. The builders here:
@@ -808,8 +808,8 @@ def parse_tool_calls(
     tool_calls, *, accession: str,
     empty_amends: list[RetryableFailure] | None = None,
 ) -> list[ToolMutation]:
-    """Convert a list of provider-normalized ToolCall objects (from
-    llm_provider.ToolCall) into typed mutation dataclasses.
+    """Convert a list of normalized ToolCall objects (from
+    openai_client.ToolCall) into typed mutation dataclasses.
 
     Malformed args or unknown tool names are logged + dropped — the
     walker keeps moving rather than failing the whole filing.

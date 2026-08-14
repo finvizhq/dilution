@@ -1,6 +1,5 @@
 edgartools
-xai-sdk
-openai>=1.0
+openai>=2.33
 pandas
 python-dateutil
 openpyxl

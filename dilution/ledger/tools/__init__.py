@@ -1,21 +1,20 @@
 """Tool-calling surface for the ledger walker.
 
 Each Tool defines one mutation the walker can emit, with required
-arguments enforced at LLM decode time (xAI strict tools; OpenAI strict
-function calling; Gemini json_schema function calling). The Tool
-definitions are the source of truth — provider-specific schemas, the
-in-memory mutation dataclasses, and the parse-and-validate logic are
-all derived from them.
+arguments enforced at LLM decode time by the JSON Schema OpenAI receives.
+The Tool definitions are the source of truth — the wire schemas, the
+in-memory mutation dataclasses, and the parse-and-validate logic are all
+derived from them.
 
 Public surface:
-  - Tool, ToolArg               — definitions (re-exported from ._base)
-  - build_provider_schema(tool) — provider-specific Tool / function spec
-  - ALL_TOOLS                   — registry of every defined tool
-  - tools_for_form(form)        — tool subset for a given filing form
-  - parse_tool_calls(calls)     — provider tool calls → list[Mutation]
+  - Tool, ToolArg            — definitions (re-exported from ._base)
+  - build_tool_schema(tool)  — /v1/responses function spec
+  - ALL_TOOLS                — registry of every defined tool
+  - tools_for_form(form)     — tool subset for a given filing form
+  - parse_tool_calls(calls)  — normalized tool calls → list[Mutation]
 """
 
-from ._base import Tool, ToolArg, build_provider_schema
+from ._base import Tool, ToolArg, build_tool_schema
 from . import create as _create
 from . import amend as _amend
 from . import record as _record
@@ -126,7 +125,7 @@ TOOLS_FOR_FORM: dict[str, list[Tool]] = {
 
 __all__ = [
     "Tool", "ToolArg",
-    "build_provider_schema",
+    "build_tool_schema",
     "ALL_TOOLS", "TOOLS_FOR_FORM", "tools_for_form",
     "parse_tool_calls", "RetryableFailure", "EmptyAmendFailure",
 ]

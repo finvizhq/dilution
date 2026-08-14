@@ -508,7 +508,7 @@ _CACHED_BRIEF = {
     "watch": ["October 16, 2026: Maturity of the Helena note."],
     "facts_hash": "abc123",
     "generated_at": "2026-06-04T14:33:01Z",
-    "model": "gemini-3.5-flash",
+    "model": "gpt-5.6-luna",
 }
 
 

@@ -56,37 +56,40 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 import config
 from db import get_conn
-from dilution.llm_provider import system, user
+from dilution.openai_client import (
+    acomplete, max_input_chars, output_text, system, truncated, user,
+)
 
 from ._llm_utils import (
-    asample_and_check, make_chat, normalize_filing_text, unit_preamble,
+    check_response, normalize_filing_text, unit_preamble,
 )
 
 log = logging.getLogger(__name__)
 
 
-# Cap matches walker_llm.MAX_INPUT_CHARS — sized to the Gemini input
-# window (config.GEMINI_INPUT_TOKEN_LIMIT = 1,048,576 tokens): at ~3.5-4
-# chars/token, 3M chars is ~750-860K tokens, leaving the rest of the window
-# for prompt + schema scaffolding. Periodic filings can be large (S-1/F-1
-# can hit 1M+ chars) but rarely exceed this guard; over-cap text is
-# truncated with a logged warning.
-MAX_INPUT_CHARS = 3_000_000
+# Cap matches walker_llm.MAX_INPUT_CHARS — derived from the model input
+# ceiling (config.OPENAI_MAX_INPUT_TOKENS = 922,000) at the 3-chars/token
+# floor. Periodic filings can be large (S-1/F-1 can hit 1M+ chars) but
+# rarely exceed this guard; over-cap text is truncated with a logged
+# warning.
+MAX_INPUT_CHARS = max_input_chars()
 
-# Output cap for the overhang call. A legitimate combined response is
-# tiny: across 202 real eval responses the mean was 2.7 instrument rows,
-# and a maxed-out 17-row worst case (the densest ever observed) serializes
-# to ~5.5K chars ≈ ~1.4-1.9K tokens. 8K leaves ~4-6× headroom over that —
-# ~1/8 of the model's hard outputTokenLimit
-# (config.GEMINI_OUTPUT_TOKEN_LIMIT = 65,536). Keeping it low tightly bounds
-# the blast radius of a degenerate numeric repetition loop: the model
-# occasionally death-spirals on a numeric field (e.g. a preferred's
-# common_shares_issuable) and emits digits until it hits this ceiling. The
-# old 384K cap let that run ~5 min/filing (and again on the per-specialist
-# fallback); 8K cuts a runaway to ~6s. Truncated output is salvaged (see
+# Output cap for the overhang call, shared by reasoning and content
+# tokens (on /v1/responses reasoning bills from this budget). A
+# legitimate combined response is tiny: across 202 real eval responses
+# the mean was 2.7 instrument rows, and a maxed-out 17-row worst case
+# (the densest ever observed) serializes to ~5.5K chars ≈ ~1.4-1.9K
+# tokens; reasoning at effort="low" measured ~200 tokens on real
+# filings. 16K leaves several times that headroom while staying ~1/8 of
+# the model's hard 128,000-token output limit. Keeping it low tightly
+# bounds the blast radius of a degenerate numeric repetition loop: the
+# model occasionally death-spirals on a numeric field (e.g. a
+# preferred's common_shares_issuable) and emits digits until it hits
+# this ceiling. The old 384K cap let that run ~5 min/filing (and again
+# on the per-specialist fallback). Truncated output is salvaged (see
 # _salvage_truncated_json), so even a rare legitimate over-cap response
 # still yields its completed rows rather than nothing.
-OVERHANG_MAX_TOKENS = 8_000
+OVERHANG_MAX_TOKENS = 16_000
 
 # Stamped into provenance / version tracking. Bump when the prompt
 # or schema changes. v3 = shelf-family specialists added (shelf / atm /
@@ -1227,18 +1230,17 @@ def _parse_overhang_response(response, model, *, accession: str, handler: str):
     """Parse a structured overhang response into `model`.
 
     Fast path: json.loads + model_validate. On failure, if the model
-    truncated the output at the token cap (REASON_MAX_LEN) — the signature
-    of a numeric repetition loop running to the ceiling — salvage the
-    largest valid prefix and validate that instead, recovering every row
-    emitted before the poisoned one. Returns the parsed model, or None if
-    even salvage yields nothing usable.
+    truncated the output at the token cap — the signature of a numeric
+    repetition loop running to the ceiling — salvage the largest valid
+    prefix and validate that instead, recovering every row emitted before
+    the poisoned one. Returns the parsed model, or None if even salvage
+    yields nothing usable.
     """
-    raw = response.content
+    raw = output_text(response)
     try:
         return model.model_validate(json.loads(raw))
     except (ValueError, ValidationError) as exc:
-        truncated = getattr(response, "finish_reason", None) == "REASON_MAX_LEN"
-        if not truncated:
+        if not truncated(response):
             log.warning("%s %s — parse failed (%s)", handler, accession, exc)
             return None
         salvaged = _salvage_truncated_json(raw)
@@ -1287,14 +1289,19 @@ async def _extract_per_specialist_lists(
         *, prompt: str, response_model: type[BaseModel],
         list_attr: str, handler_label: str, sys_msg: str,
     ):
-        chat = make_chat(client, response_format=response_model,
-                         max_tokens=OVERHANG_MAX_TOKENS,
-                         model=config.LLM_MODEL_PERIODIC)
-        chat.append(system(sys_msg))
-        chat.append(user(preamble + "\n" + prompt))
         try:
-            response = await asample_and_check(
-                chat, accession=accession, handler=handler_label,
+            response = check_response(
+                await acomplete(
+                    client,
+                    name=handler_label,
+                    messages=[system(sys_msg),
+                              user(preamble + "\n" + prompt)],
+                    response_format=response_model,
+                    max_output_tokens=OVERHANG_MAX_TOKENS,
+                    model=config.LLM_MODEL_PERIODIC,
+                    cache_key=f"overhang-{list_attr}",
+                ),
+                accession=accession, handler=handler_label,
             )
         except Exception as exc:
             # One specialist's transport error must not cancel its siblings
@@ -1400,11 +1407,6 @@ async def extract_overhang_rows(
     prompt = _build_combined_prompt(
         form=form, cik=cik, as_of=as_of, family=family, text=text,
     )
-    chat = make_chat(client, response_format=CombinedOverhangList,
-                     max_tokens=OVERHANG_MAX_TOKENS,
-                     model=config.LLM_MODEL_PERIODIC)
-    chat.append(system(_COMBINED_SYS_MSG))
-    chat.append(user(preamble + "\n" + prompt))
     # Parse with stdlib json (not pydantic's jiter) because LLMs
     # occasionally emit runaway-decimal floats like 0.0505050505...
     # repeated for thousands of chars (per-share dividend ratios on
@@ -1415,8 +1417,18 @@ async def extract_overhang_rows(
     # its completed rows instead of falling all the way back.
     parsed = None
     try:
-        response = await asample_and_check(
-            chat, accession=accession, handler="overhang-combined",
+        response = check_response(
+            await acomplete(
+                client,
+                name="overhang-combined",
+                messages=[system(_COMBINED_SYS_MSG),
+                          user(preamble + "\n" + prompt)],
+                response_format=CombinedOverhangList,
+                max_output_tokens=OVERHANG_MAX_TOKENS,
+                model=config.LLM_MODEL_PERIODIC,
+                cache_key="overhang-combined",
+            ),
+            accession=accession, handler="overhang-combined",
         )
     except Exception as exc:
         response = None

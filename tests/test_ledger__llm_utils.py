@@ -1,18 +1,17 @@
 """Unit tests for dilution/ledger/_llm_utils.py.
 
 Covers the shared LLM-call helpers: filing-text whitespace normalization,
-the per-issuer unit preamble, chat-kwargs assembly (make_chat), the
-finish_reason truncation warnings (check_response), and the thin async
-wrapper (asample_and_check).
+the per-issuer unit preamble, and the incomplete-generation warnings
+(check_response).
 
-No DB, no network, no real LLM. The only seam touched is the module-level
-`config` symbol (monkeypatched per test for make_chat) — config.py only
-reads os.environ, so importing the target is side-effect-free.
+Request assembly lives in dilution/openai_client.py now (see
+tests/test_openai_client.py) — this module no longer builds chats.
+
+No DB, no network, no real LLM.
 """
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import types
 
@@ -245,261 +244,104 @@ class TestUnitPreamble:
 
 
 # ════════════════════════════════════════════════════════════════════
-# make_chat
-# ════════════════════════════════════════════════════════════════════
-def _fake_client():
-    """A client whose chat.create returns the exact kwargs dict it got."""
-    return types.SimpleNamespace(
-        chat=types.SimpleNamespace(create=lambda **kw: kw)
-    )
-
-
-@pytest.fixture
-def patch_config(monkeypatch):
-    """Helper to set config.LLM_PROVIDER / LLM_MODEL on the module's
-    `config` symbol. make_chat reads these at CALL time."""
-    def _set(provider="gemini", model="cfg-model"):
-        monkeypatch.setattr(m.config, "LLM_PROVIDER", provider, raising=False)
-        monkeypatch.setattr(m.config, "LLM_MODEL", model, raising=False)
-    return _set
-
-
-class TestMakeChat:
-    def test_base_keys_default_flow(self, patch_config):
-        patch_config(provider="gemini", model="cfg-model")
-        kw = m.make_chat(_fake_client())
-        # model from config, plus the two always-present keys.
-        assert kw["model"] == "cfg-model"
-        assert kw["max_tokens"] == m.DEFAULT_MAX_TOKENS == 32_000
-        assert kw["temperature"] == m.EXTRACT_TEMPERATURE == 0.0
-        # No optional keys, and (non-xai) no seed.
-        assert set(kw) == {"model", "max_tokens", "temperature"}
-
-    def test_temperature_always_present_for_gemini(self, patch_config):
-        # Regression guard for the gemini temp-1.0 determinism bug: the
-        # temperature key must NOT be gated behind the xai provider.
-        patch_config(provider="gemini")
-        kw = m.make_chat(_fake_client())
-        assert "temperature" in kw
-        assert kw["temperature"] == 0.0
-
-    def test_temperature_present_for_all_providers(self, patch_config):
-        for provider in ("xai", "gemini", "moonshot", "whatever"):
-            patch_config(provider=provider)
-            kw = m.make_chat(_fake_client())
-            assert "temperature" in kw, provider
-
-    def test_seed_present_only_for_xai(self, patch_config):
-        patch_config(provider="xai")
-        kw = m.make_chat(_fake_client())
-        assert "seed" in kw
-        assert kw["seed"] == m.EXTRACT_SEED == 42
-
-    @pytest.mark.parametrize("provider", ["gemini", "moonshot", "other", ""])
-    def test_seed_absent_for_non_xai(self, patch_config, provider):
-        patch_config(provider=provider)
-        kw = m.make_chat(_fake_client())
-        assert "seed" not in kw
-
-    def test_model_none_uses_config(self, patch_config):
-        patch_config(model="sentinel-config-model")
-        kw = m.make_chat(_fake_client(), model=None)
-        assert kw["model"] == "sentinel-config-model"
-
-    def test_explicit_model_overrides_config(self, patch_config):
-        patch_config(model="cfg-model")
-        kw = m.make_chat(_fake_client(), model="explicit-foo")
-        assert kw["model"] == "explicit-foo"
-
-    def test_empty_string_model_forwarded_not_replaced(self, patch_config):
-        # Code uses `model is not None`, so an empty-string model is a
-        # legitimate explicit value and must NOT fall back to config.
-        patch_config(model="cfg-model")
-        kw = m.make_chat(_fake_client(), model="")
-        assert kw["model"] == ""
-
-    def test_optional_keys_absent_when_none(self, patch_config):
-        patch_config(provider="gemini")
-        kw = m.make_chat(_fake_client(),
-                         response_format=None, tools=None, tool_choice=None)
-        assert "response_format" not in kw
-        assert "tools" not in kw
-        assert "tool_choice" not in kw
-
-    def test_response_format_identity_pass_through(self, patch_config):
-        patch_config()
-        sentinel = type("MyModel", (), {})  # a class object
-        kw = m.make_chat(_fake_client(), response_format=sentinel)
-        assert kw["response_format"] is sentinel
-
-    def test_tools_and_tool_choice_both_present(self, patch_config):
-        patch_config()
-        tools = [{"type": "function", "function": {"name": "x"}}]
-        kw = m.make_chat(_fake_client(), tools=tools, tool_choice="required")
-        assert kw["tools"] is tools
-        assert kw["tool_choice"] == "required"
-
-    def test_tools_alone_without_tool_choice(self, patch_config):
-        # tools provided but tool_choice left None: tools key present,
-        # tool_choice key ABSENT (each optional key is gated independently).
-        patch_config(provider="gemini")
-        tools = [{"type": "function", "function": {"name": "y"}}]
-        kw = m.make_chat(_fake_client(), tools=tools)
-        assert kw["tools"] is tools
-        assert "tool_choice" not in kw
-        assert "response_format" not in kw
-
-    def test_response_format_alone_without_tools(self, patch_config):
-        # Mirror: response_format alone leaves tools/tool_choice absent.
-        patch_config(provider="gemini")
-        sentinel = type("OnlyModel", (), {})
-        kw = m.make_chat(_fake_client(), response_format=sentinel)
-        assert kw["response_format"] is sentinel
-        assert "tools" not in kw
-        assert "tool_choice" not in kw
-
-    def test_seed_added_for_xai_even_when_zero(self, patch_config):
-        # The seed gate is provider=='xai', NOT truthiness of seed: a
-        # falsy seed=0 must still be forwarded for xai. Guards against a
-        # naive `if seed:` regression.
-        patch_config(provider="xai")
-        kw = m.make_chat(_fake_client(), seed=0)
-        assert "seed" in kw
-        assert kw["seed"] == 0
-
-    def test_response_format_and_tools_combined(self, patch_config):
-        patch_config()
-        sentinel = type("MyModel", (), {})
-        tools = [{"type": "function"}]
-        kw = m.make_chat(_fake_client(), response_format=sentinel,
-                         tools=tools, tool_choice="auto")
-        assert kw["response_format"] is sentinel
-        assert kw["tools"] is tools
-        assert kw["tool_choice"] == "auto"
-
-    def test_defaults_flow_through(self, patch_config):
-        patch_config(provider="xai")
-        kw = m.make_chat(_fake_client())
-        assert kw["max_tokens"] == 32_000
-        assert kw["temperature"] == 0.0
-        assert kw["seed"] == 42
-
-    def test_explicit_max_tokens_and_temperature_override(self, patch_config):
-        patch_config(provider="xai")
-        kw = m.make_chat(_fake_client(), max_tokens=512,
-                         temperature=0.7, seed=99)
-        assert kw["max_tokens"] == 512
-        assert kw["temperature"] == 0.7
-        assert kw["seed"] == 99
-
-    def test_seed_override_ignored_for_non_xai(self, patch_config):
-        # Even an explicit seed arg is dropped when provider isn't xai.
-        patch_config(provider="gemini")
-        kw = m.make_chat(_fake_client(), seed=99)
-        assert "seed" not in kw
-
-    def test_return_value_is_pass_through(self, patch_config):
-        patch_config()
-        sentinel = object()
-        client = types.SimpleNamespace(
-            chat=types.SimpleNamespace(create=lambda **kw: sentinel)
-        )
-        assert m.make_chat(client) is sentinel
-
-    def test_create_called_with_keyword_args(self, patch_config):
-        # Verify create receives **kwargs (keyword), not positional.
-        patch_config(provider="xai", model="cfg-model")
-        captured = {}
-
-        def create(*args, **kwargs):
-            captured["args"] = args
-            captured["kwargs"] = kwargs
-            return kwargs
-
-        client = types.SimpleNamespace(
-            chat=types.SimpleNamespace(create=create)
-        )
-        m.make_chat(client, tools=[1], tool_choice="required")
-        assert captured["args"] == ()  # nothing positional
-        assert captured["kwargs"]["model"] == "cfg-model"
-        assert captured["kwargs"]["tools"] == [1]
-        assert captured["kwargs"]["tool_choice"] == "required"
-
-
-# ════════════════════════════════════════════════════════════════════
 # Module constants
 # ════════════════════════════════════════════════════════════════════
 class TestConstants:
     def test_constant_values(self):
-        assert m.EXTRACT_TEMPERATURE == 0.0
-        assert m.EXTRACT_SEED == 42
         assert m.DEFAULT_MAX_TOKENS == 32_000
+
+    def test_no_sampling_constants_survive(self):
+        # The gpt-5.6 family rejects temperature/top_p in reasoning mode
+        # and /v1/responses has no seed parameter, so these constants were
+        # deleted rather than left lying around to be "helpfully" re-wired
+        # into a request — which would 400 every call in the pipeline.
+        assert not hasattr(m, "EXTRACT_TEMPERATURE")
+        assert not hasattr(m, "EXTRACT_SEED")
+
+    def test_chat_builders_are_gone(self):
+        # make_chat / asample_and_check belonged to the chat-completions
+        # era; request assembly is openai_client.request_kwargs.
+        assert not hasattr(m, "make_chat")
+        assert not hasattr(m, "asample_and_check")
 
 
 # ════════════════════════════════════════════════════════════════════
 # check_response
 # ════════════════════════════════════════════════════════════════════
+def _resp(status=None, reason=None, **extra):
+    """Minimal Responses-shaped stub: status + incomplete_details.reason."""
+    ns = types.SimpleNamespace(status=status, **extra)
+    if reason is not None:
+        ns.incomplete_details = types.SimpleNamespace(reason=reason)
+    return ns
+
+
 class TestCheckResponse:
-    def test_no_finish_reason_attr_no_warning(self, caplog):
+    def test_no_status_attr_no_warning(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = object()  # no finish_reason attribute at all
+        resp = object()  # no status attribute at all
         out = m.check_response(resp)
         assert out is resp
         assert [r for r in caplog.records if r.levelno >= logging.WARNING] == []
 
-    def test_finish_reason_none_no_warning(self, caplog):
+    def test_status_none_no_warning(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason=None)
+        resp = _resp(status=None)
         out = m.check_response(resp)
         assert out is resp
         assert not [r for r in caplog.records if r.levelno >= logging.WARNING]
 
-    @pytest.mark.parametrize("reason", ["stop", "STOP", "reason_max_len",
-                                        "length", "tool_calls", ""])
-    def test_unrecognized_reason_no_warning(self, caplog, reason):
-        # Match is exact and case-sensitive; lowercase variant must NOT fire.
+    @pytest.mark.parametrize("status", ["completed", "COMPLETED", "in_progress",
+                                        "queued", "failed", "INCOMPLETE", ""])
+    def test_non_incomplete_status_no_warning(self, caplog, status):
+        # Match is exact and case-sensitive — only the literal "incomplete"
+        # means the generation stopped early with usable partial output.
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason=reason)
+        resp = _resp(status=status, reason="max_output_tokens")
         out = m.check_response(resp)
         assert out is resp
         assert not [r for r in caplog.records if r.levelno >= logging.WARNING]
 
-    def test_reason_max_len_warning(self, caplog):
+    def test_max_output_tokens_warning(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_MAX_LEN")
+        resp = _resp(status="incomplete", reason="max_output_tokens")
         out = m.check_response(resp)
         assert out is resp
         warns = [r for r in caplog.records if r.levelno >= logging.WARNING]
         assert len(warns) == 1
-        assert "output truncated at max_tokens" in warns[0].getMessage()
+        assert "output truncated at max_output_tokens" in warns[0].getMessage()
 
-    def test_reason_max_context_warning(self, caplog):
+    def test_other_incomplete_reason_warns_generically(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_MAX_CONTEXT")
+        resp = _resp(status="incomplete", reason="content_filter")
         out = m.check_response(resp)
         assert out is resp
         warns = [r for r in caplog.records if r.levelno >= logging.WARNING]
         assert len(warns) == 1
-        assert "input exceeded model context window" in warns[0].getMessage()
+        msg = warns[0].getMessage()
+        assert "generation incomplete" in msg
+        assert "content_filter" in msg
 
-    def test_reason_time_limit_warning(self, caplog):
+    def test_incomplete_without_details_still_warns(self, caplog):
+        # An incomplete response missing incomplete_details must not blow
+        # up on the attribute walk — reason falls through as None.
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_TIME_LIMIT")
+        resp = _resp(status="incomplete")
         out = m.check_response(resp)
         assert out is resp
         warns = [r for r in caplog.records if r.levelno >= logging.WARNING]
         assert len(warns) == 1
-        assert "generation hit time limit" in warns[0].getMessage()
+        assert "reason=None" in warns[0].getMessage()
 
     def test_returns_same_object_identity_for_warning_branch(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_MAX_LEN", payload=1)
+        resp = _resp(status="incomplete", reason="max_output_tokens", payload=1)
         assert m.check_response(resp) is resp
 
     # ── tag formatting ─────────────────────────────────────────────
     def test_tag_with_handler_and_accession(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_MAX_LEN")
+        resp = _resp(status="incomplete", reason="max_output_tokens")
         m.check_response(resp, accession="0001104659-22-025374",
                          handler="walker")
         msg = caplog.records[-1].getMessage()
@@ -507,7 +349,7 @@ class TestCheckResponse:
 
     def test_tag_accession_only(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_MAX_CONTEXT")
+        resp = _resp(status="incomplete", reason="max_output_tokens")
         m.check_response(resp, accession="acc-123", handler=None)
         msg = caplog.records[-1].getMessage()
         assert "acc-123" in msg
@@ -515,7 +357,7 @@ class TestCheckResponse:
 
     def test_tag_question_mark_when_both_none(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_TIME_LIMIT")
+        resp = _resp(status="incomplete", reason="max_output_tokens")
         m.check_response(resp, accession=None, handler=None)
         msg = caplog.records[-1].getMessage()
         assert msg.startswith("? ")
@@ -523,88 +365,14 @@ class TestCheckResponse:
     def test_handler_set_accession_none(self, caplog):
         # handler is truthy so tag is "[handler] None".
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_MAX_LEN")
+        resp = _resp(status="incomplete", reason="max_output_tokens")
         m.check_response(resp, accession=None, handler="seed")
         msg = caplog.records[-1].getMessage()
         assert "[seed] None" in msg
 
     def test_default_args_no_warning_when_clean(self, caplog):
         caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="stop")
+        resp = _resp(status="completed")
         out = m.check_response(resp)
         assert out is resp
-        assert not [r for r in caplog.records if r.levelno >= logging.WARNING]
-
-
-# ════════════════════════════════════════════════════════════════════
-# asample_and_check
-# ════════════════════════════════════════════════════════════════════
-class _FakeChat:
-    def __init__(self, response, *, record):
-        self._response = response
-        self._record = record
-
-    async def sample(self):
-        self._record["calls"] += 1
-        return self._response
-
-
-class TestAsampleAndCheck:
-    def test_awaits_sample_once_and_passes_through(self):
-        resp = types.SimpleNamespace(finish_reason="stop")
-        record = {"calls": 0}
-        chat = _FakeChat(resp, record=record)
-        out = asyncio.run(m.asample_and_check(chat))
-        assert out is resp
-        assert record["calls"] == 1
-
-    def test_return_value_equals_response(self):
-        resp = object()
-        record = {"calls": 0}
-        # object() has no finish_reason -> no warning, plain pass-through.
-        chat = types.SimpleNamespace()
-
-        async def sample():
-            record["calls"] += 1
-            return resp
-
-        chat.sample = sample
-        out = asyncio.run(m.asample_and_check(chat))
-        assert out is resp
-        assert record["calls"] == 1
-
-    def test_forwards_accession_and_handler_to_check_response(self, caplog):
-        caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="REASON_MAX_LEN")
-        record = {"calls": 0}
-        chat = _FakeChat(resp, record=record)
-        out = asyncio.run(
-            m.asample_and_check(chat, accession="acc-xyz", handler="overhang")
-        )
-        assert out is resp
-        warns = [r for r in caplog.records if r.levelno >= logging.WARNING]
-        assert len(warns) == 1
-        msg = warns[0].getMessage()
-        assert "[overhang] acc-xyz" in msg
-        assert "output truncated at max_tokens" in msg
-
-    def test_no_warning_for_clean_finish(self, caplog):
-        caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-        resp = types.SimpleNamespace(finish_reason="stop")
-        chat = _FakeChat(resp, record={"calls": 0})
-        out = asyncio.run(m.asample_and_check(chat, accession="a", handler="h"))
-        assert out is resp
-        assert not [r for r in caplog.records if r.levelno >= logging.WARNING]
-
-    def test_sample_exception_propagates_and_skips_check(self, caplog):
-        # If chat.sample() raises, the exception bubbles out and
-        # check_response is never reached (no warning emitted).
-        caplog.set_level(logging.WARNING, logger=LOGGER_NAME)
-
-        class _Boom:
-            async def sample(self):
-                raise RuntimeError("sample blew up")
-
-        with pytest.raises(RuntimeError, match="sample blew up"):
-            asyncio.run(m.asample_and_check(_Boom(), accession="a"))
         assert not [r for r in caplog.records if r.levelno >= logging.WARNING]
