@@ -89,6 +89,30 @@ _FORM_PRIORITY: dict[str, int] = {
 # Forms the walker explicitly skips — no body to process.
 _SKIPPED_FORMS = frozenset({"EFFECT", "RW"})
 
+# Proxy statements. Their entire tool set is amend_warrant + apply_split +
+# note_no_event, and neither lever earns the LLM round-trip:
+#   * apply_split is redundant — every one of the 94 splits in the DB came
+#     from market data via fetch_and_persist_splits ('finviz',
+#     'finviz+yfinance', 'yfinance'); none was minted by a proxy.
+#   * amend_warrant never fired: across the corpus ZERO ledger rows were
+#     created by a proxy and ZERO drawdowns were booked from one. A proxy
+#     seeking approval of an increase in authorized shares is a
+#     re-disclosure, which walker_prompt already tells the model to treat
+#     as note_no_event.
+# Measured yield before this skip: 205 walked proxies, 93-100% of them
+# producing nothing. Five ledger rows carried a proxy as their
+# `last_seen_accession`; each had a non-proxy filing within ~1 month, so
+# no staleness reaper depends on the refresh.
+#
+# Deliberately NOT extended to DEFM14A-style merger proxies below: those
+# route through apply_split only today, but merger-consideration share
+# issuance is real dilution and a broader extraction there is a known
+# open scope. Keep them in the LLM path.
+_PROXY_SKIP_FORMS = frozenset({
+    "DEF 14A", "DEFA14A", "DEFR14A", "DEFC14A",
+    "PRE 14A", "PRER14A", "PREC14A",
+})
+
 # Periodic forms that trigger anchor reconciliation after the walker.
 # 6-K is included because FPIs disclose their interim outstanding-
 # instruments tables there (there is no 10-Q analog for an FPI), and
@@ -933,6 +957,15 @@ async def _walk_one(
             summary.skipped_resale += 1
             return False
 
+    # Proxy pre-screen. Nothing a proxy can emit is reachable only from a
+    # proxy — see _PROXY_SKIP_FORMS for the measured basis.
+    if form_upper in _PROXY_SKIP_FORMS:
+        log.info("  [%s] %s %s — skipped (proxy: splits come from market "
+                 "data, re-disclosures are note_no_event)",
+                 filing_date, form, accession)
+        summary.skipped_no_dilution += 1
+        return False
+
     # 8-K item-code pre-screen. An 8-K whose EDGAR item codes carry no
     # dilution-relevant item AND attaches no substantive exhibit cannot
     # hold a cap-table event — skip the LLM round-trip (mirrors the
@@ -1047,6 +1080,18 @@ async def _walk_one(
 
     form_base = (form or "").upper().split("/")[0]
     is_periodic = form_base in _PERIODIC_FORMS
+
+    # Cost instrumentation, not logic. A periodic filing pays for its text
+    # TWICE — once here at the per-filing tier and again in _anchor_one at
+    # the periodic tier — and the anchor is the primary mechanism for
+    # periodics. This line records what the walker pass actually
+    # contributed so the question "can it be skipped for periodics?" can be
+    # answered from a real walk instead of guessed. `dilution_mutations` is
+    # empty, so there is no retroactive provenance to mine.
+    if is_periodic:
+        log.info("  periodic-walker-yield %s %s — %d mutation(s)%s",
+                 form, accession, n_mutations,
+                 "" if n_mutations else " (anchor-only candidate)")
     # 6-K is heterogeneous — only the interim-financials variant carries
     # an outstanding-instruments table worth anchor-reconciling. Gate on
     # financial-statement markers so press-release furnishings don't fire

@@ -8,7 +8,7 @@
 # Ordering is deliberate and is the reason this wrapper exists rather than
 # just enabling per-walk auto-push:
 #
-#   1. walk every tracked ticker      (run_dilution.py --no-push)
+#   1. walk every tracked ticker      (run_dilution.py --dry-run)
 #   2. refresh stale briefs           (scripts/run_brief_all.py)
 #   3. publish what changed           (scripts/push_finviz.py --all)
 #
@@ -17,7 +17,9 @@
 # run_brief_all.py regenerates exactly the briefs whose ticker just
 # received new filings, so a per-walk push would ship the OLD brief
 # alongside the NEW cards and the fresh prose would wait a full day for
-# the next run. Hence --no-push in step 1 and one publish pass at the end.
+# the next run. Hence --dry-run in step 1 and one publish pass at the end:
+# step 1 builds and validates each snapshot but sends nothing, so a
+# malformed payload still surfaces in the log the night it appears.
 #
 # Step 3 is cheap despite covering the whole universe: push_finviz.py
 # digest-compares each build against what Finviz already holds and POSTs
@@ -70,9 +72,9 @@ log "=== nightly start (parallel=$PARALLEL dry_run=${DRY_RUN:-no}) ==="
 
 # ── 1. walk ──────────────────────────────────────────────────────────
 # ALL_TRACKED reads the universe from dilution_company rather than a
-# hardcoded list. --no-push: publishing happens in step 3.
+# hardcoded list. --dry-run: publishing happens in step 3.
 log "step 1/3 — walking all tracked tickers"
-if ALL_TRACKED=1 scripts/run_open_access.sh --no-push >>"$LOG_FILE" 2>&1; then
+if ALL_TRACKED=1 scripts/run_open_access.sh --dry-run >>"$LOG_FILE" 2>&1; then
     log "step 1/3 — walk OK"
 else
     # Non-fatal by design: run_open_access.sh already continues past a

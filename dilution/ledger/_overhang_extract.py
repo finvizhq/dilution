@@ -1076,6 +1076,20 @@ _COMBINED_SYS_MSG = (
     "of the six lists."
 )
 
+_SPECIALIST_SYS_MSG = (
+    "You extract outstanding dilutive instruments from SEC periodic "
+    "filings. Each request names ONE instrument class and its schema; "
+    "emit rows only for that class and conform strictly to the schema "
+    "named in the request."
+)
+
+# Shared by the six specialists: everything from the templates' trailing
+# "Filing text:" marker onward is dropped, because the body now travels
+# as its own message ahead of the instruction.
+def _instruction_only(rendered: str) -> str:
+    return rendered.partition("\nFiling text:")[0].rstrip()
+
+
 _COMBINED_INTRO = """\
 You are extracting EVERY outstanding dilutive instrument from one SEC
 periodic filing, sorting each into the correct one of six lists:
@@ -1282,24 +1296,27 @@ async def _extract_per_specialist_lists(
             section_anchor=_SECTION_ANCHORS[(family, category)],
             global_rules=_GLOBAL_RULES,
             dollar_scale_rule=_DOLLAR_SCALE_RULE,
-            text=text,
+            text="",
         )
+
+    text_message = user("Filing text:\n" + text)
 
     async def run_one(
         *, prompt: str, response_model: type[BaseModel],
-        list_attr: str, handler_label: str, sys_msg: str,
+        list_attr: str, handler_label: str,
     ):
         try:
             response = check_response(
                 await acomplete(
                     client,
                     name=handler_label,
-                    messages=[system(sys_msg),
+                    messages=[system(_SPECIALIST_SYS_MSG),
+                              text_message,
                               user(preamble + "\n" + prompt)],
                     response_format=response_model,
                     max_output_tokens=OVERHANG_MAX_TOKENS,
                     model=config.LLM_MODEL_PERIODIC,
-                    cache_key=f"overhang-{list_attr}",
+                    cache_key="overhang-specialist",
                 ),
                 accession=accession, handler=handler_label,
             )
@@ -1321,58 +1338,31 @@ async def _extract_per_specialist_lists(
             return []
         return getattr(parsed, list_attr, [])
 
-    return await asyncio.gather(
-        run_one(
-            prompt=_WARRANT_PROMPT.format(**_fmt_args("warrant")),
-            response_model=WarrantOverhangList, list_attr="warrants",
-            handler_label="overhang-warrant",
-            sys_msg=("You extract outstanding WARRANTS from SEC periodic "
-                     "filings. Output strictly conforms to the "
-                     "WarrantOverhangList schema."),
-        ),
-        run_one(
-            prompt=_CONVERTIBLE_PROMPT.format(**_fmt_args("convertible")),
-            response_model=ConvertibleOverhangList, list_attr="convertibles",
-            handler_label="overhang-convertible",
-            sys_msg=("You extract outstanding CONVERTIBLE NOTES from SEC "
-                     "periodic filings. Output strictly conforms to the "
-                     "ConvertibleOverhangList schema."),
-        ),
-        run_one(
-            prompt=_PREFERRED_PROMPT.format(**_fmt_args("preferred")),
-            response_model=PreferredOverhangList, list_attr="preferreds",
-            handler_label="overhang-preferred",
-            sys_msg=("You extract outstanding PREFERRED STOCK from SEC "
-                     "periodic filings. Output strictly conforms to the "
-                     "PreferredOverhangList schema."),
-        ),
-        run_one(
-            prompt=_SHELF_PROMPT.format(**_fmt_args("shelf")),
-            response_model=ShelfOverhangList, list_attr="shelves",
-            handler_label="overhang-shelf",
-            sys_msg=("You extract ACTIVE SHELF REGISTRATIONS from SEC "
-                     "periodic filings. Output strictly conforms to the "
-                     "ShelfOverhangList schema."),
-        ),
-        run_one(
-            prompt=_ATM_PROMPT.format(**_fmt_args("atm")),
-            response_model=ATMOverhangList, list_attr="atms",
-            handler_label="overhang-atm",
-            sys_msg=("You extract AT-THE-MARKET (ATM) SALES PROGRAMS "
-                     "from SEC periodic filings. Output strictly conforms "
-                     "to the ATMOverhangList schema."),
-        ),
-        run_one(
-            prompt=_EQUITY_LINE_PROMPT.format(**_fmt_args("equity_line")),
-            response_model=EquityLineOverhangList, list_attr="equity_lines",
-            handler_label="overhang-equity-line",
-            sys_msg=("You extract EQUITY-LINE / STANDBY EQUITY PURCHASE "
-                     "facilities from SEC periodic filings. Output "
-                     "strictly conforms to the EquityLineOverhangList "
-                     "schema."),
-        ),
-        return_exceptions=False,
+    specs = (
+        (_WARRANT_PROMPT, "warrant", WarrantOverhangList, "warrants",
+         "overhang-warrant"),
+        (_CONVERTIBLE_PROMPT, "convertible", ConvertibleOverhangList,
+         "convertibles", "overhang-convertible"),
+        (_PREFERRED_PROMPT, "preferred", PreferredOverhangList, "preferreds",
+         "overhang-preferred"),
+        (_SHELF_PROMPT, "shelf", ShelfOverhangList, "shelves",
+         "overhang-shelf"),
+        (_ATM_PROMPT, "atm", ATMOverhangList, "atms", "overhang-atm"),
+        (_EQUITY_LINE_PROMPT, "equity_line", EquityLineOverhangList,
+         "equity_lines", "overhang-equity-line"),
     )
+
+    def _call(spec):
+        template, category, model, list_attr, label = spec
+        return run_one(
+            prompt=_instruction_only(template.format(**_fmt_args(category))),
+            response_model=model, list_attr=list_attr, handler_label=label,
+        )
+
+    first = await _call(specs[0])
+    rest = await asyncio.gather(*(_call(s) for s in specs[1:]),
+                               return_exceptions=False)
+    return (first, *rest)
 
 
 # ─── Public entry point ─────────────────────────────────────────────

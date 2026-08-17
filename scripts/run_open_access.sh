@@ -18,8 +18,8 @@
 #
 # Override parallelism with: PARALLEL=3 scripts/run_open_access.sh
 #
-# Extra args (e.g. --years 3, --no-push) are forwarded to run_dilution.py:
-#   scripts/run_open_access.sh --years 3
+# Extra args (e.g. --dry-run, --force) are forwarded to run_dilution.py:
+#   scripts/run_open_access.sh --dry-run
 #
 # SEC's hard limit is 10 req/s globally; edgartools' throttle is per-process,
 # so we cap each child at EDGAR_RATE_LIMIT_PER_SEC=2 → 4 procs * 2 = 8 req/s

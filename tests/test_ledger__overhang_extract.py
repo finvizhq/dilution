@@ -1155,3 +1155,104 @@ class TestExtractOverhangRowsOrchestration:
         self._run()
         # The Z-run in the assembled prompt is capped at MAX_INPUT_CHARS.
         assert captured["user_text"].count("Z") == m.MAX_INPUT_CHARS
+
+
+# ════════════════════════════════════════════════════════════════════
+# Specialist fallback: shared cacheable prefix
+# ════════════════════════════════════════════════════════════════════
+class TestSpecialistPrefixSharing:
+    """The six specialists read the same filing body, so [system + text]
+    must be a byte-identical prefix across all six calls and land in one
+    prompt-cache bucket. Measured effect on a 164K-char 10-K: 90% of the
+    fallback's input tokens served from cache instead of billed fresh.
+    """
+
+    def _capture(self, monkeypatch, body="THE FILING BODY"):
+        seen = []
+
+        async def _acomplete(client, *, name=None, **kw):
+            seen.append({"name": name, **kw})
+            return _resp('{"warrants": []}')
+
+        monkeypatch.setattr(m, "acomplete", _acomplete)
+        asyncio.run(m._extract_per_specialist_lists(
+            client=object(), accession="A", preamble="PRE", form="10-K",
+            cik=1, as_of="2025-01-01", family=m._form_family("10-K"),
+            text=body))
+        return seen
+
+    def test_all_six_specialists_run(self, monkeypatch):
+        assert len(self._capture(monkeypatch)) == 6
+
+    def test_system_message_is_identical_across_specialists(self, monkeypatch):
+        systems = {c["messages"][0]["content"] for c in self._capture(monkeypatch)}
+        assert len(systems) == 1, "a per-specialist system message breaks the prefix"
+
+    def test_filing_text_is_the_second_message_and_identical(self, monkeypatch):
+        seen = self._capture(monkeypatch, body="UNIQUE-BODY-XYZ")
+        texts = {c["messages"][1]["content"] for c in seen}
+        assert len(texts) == 1
+        assert "UNIQUE-BODY-XYZ" in texts.pop()
+
+    def test_instruction_comes_after_the_text(self, monkeypatch):
+        # Document first, instructions last — both the cache prefix and
+        # instruction-following depend on this order.
+        for c in self._capture(monkeypatch):
+            assert len(c["messages"]) == 3
+            assert c["messages"][1]["content"].startswith("Filing text:")
+            assert "PRE" in c["messages"][2]["content"]
+
+    def test_body_is_not_duplicated_into_the_instruction(self, monkeypatch):
+        # _fmt_args now passes text="" and _instruction_only strips the
+        # trailer; a regression here would send the document twice.
+        for c in self._capture(monkeypatch, body="UNIQUE-BODY-XYZ"):
+            assert "UNIQUE-BODY-XYZ" not in c["messages"][2]["content"]
+            assert "Filing text:" not in c["messages"][2]["content"]
+
+    def test_one_shared_cache_key(self, monkeypatch):
+        keys = {c["cache_key"] for c in self._capture(monkeypatch)}
+        assert keys == {"overhang-specialist"}, "per-specialist keys defeat sharing"
+
+    def test_first_call_is_awaited_before_the_others_fan_out(self, monkeypatch):
+        # A prefix only caches once a request carrying it COMPLETES, so
+        # firing all six at once yields six misses. Assert the first call
+        # finishes before the second starts.
+        order = []
+
+        async def _acomplete(client, *, name=None, **kw):
+            order.append(("start", name))
+            await asyncio.sleep(0)
+            order.append(("end", name))
+            return _resp('{"warrants": []}')
+
+        monkeypatch.setattr(m, "acomplete", _acomplete)
+        asyncio.run(m._extract_per_specialist_lists(
+            client=object(), accession="A", preamble="", form="10-K", cik=1,
+            as_of="2025-01-01", family=m._form_family("10-K"), text="B"))
+        assert order[0][0] == "start" and order[1][0] == "end", (
+            "the warm-up call must complete before the fan-out")
+        assert order[1][1] == order[0][1]
+
+    def test_results_keep_positional_order(self, monkeypatch):
+        # Caller unpacks (warrants, convertibles, preferreds, shelves,
+        # atms, equity_lines); the warm-up call must not reshuffle that.
+        payloads = {
+            "overhang-warrant": '{"warrants": [{"outstanding_count": 1}]}',
+            "overhang-convertible": '{"convertibles": [{"principal_amount": 2}]}',
+            "overhang-preferred": '{"preferreds": [{"outstanding_count": 3}]}',
+            "overhang-shelf": '{"shelves": [{"drawn_to_date_usd": 4}]}',
+            "overhang-atm": '{"atms": [{"remaining_capacity_usd": 5}]}',
+            "overhang-equity-line": '{"equity_lines": [{"drawn_to_date_usd": 6}]}',
+        }
+
+        async def _acomplete(client, *, name=None, **kw):
+            return _resp(payloads[name])
+
+        monkeypatch.setattr(m, "acomplete", _acomplete)
+        w, c, p, s, a, e = asyncio.run(m._extract_per_specialist_lists(
+            client=object(), accession="A", preamble="", form="10-K", cik=1,
+            as_of="2025-01-01", family=m._form_family("10-K"), text="B"))
+        assert [len(x) for x in (w, c, p, s, a, e)] == [1, 1, 1, 1, 1, 1]
+        assert w[0].outstanding_count == 1.0
+        assert c[0].principal_amount == 2.0
+        assert p[0].outstanding_count == 3.0

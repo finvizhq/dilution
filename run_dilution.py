@@ -6,9 +6,9 @@ unit context (FPI / ADS ratio), pull split history, fetch filing text,
 walk the event stream with the LLM extractor.
 
 Usage:
-    python run_dilution.py MULN              # 6-year default window
-    python run_dilution.py MULN --years 3
+    python run_dilution.py MULN              # config.HISTORY_YEARS window
     python run_dilution.py MULN --force      # re-walk from scratch
+    python run_dilution.py MULN --dry-run    # walk + build, send nothing
 """
 
 import argparse
@@ -27,6 +27,7 @@ from dilution.filings import pull_filing_index
 from dilution.finviz_payload import build_payload
 from dilution.finviz_push import push_snapshot
 from dilution.ledger.walker import walk_ticker
+from dilution.openai_client import cache_stats
 from dilution.observability import (
     flush_observability,
     pipeline_session,
@@ -39,8 +40,13 @@ setup_logging(PIPELINE_LOG_PATH)
 log = logging.getLogger("run_dilution")
 
 
-def _since(years: int) -> str:
-    return (date.today() - timedelta(days=365 * years + 1)).isoformat()
+def _since() -> str:
+    """Start of the filing-history window. Length is a pipeline-wide
+    constant (config.HISTORY_YEARS), not a per-run choice: the window
+    determines which filings the seed anchors on, so varying it between
+    walks of the same ticker makes two ledgers that cannot be compared."""
+    return (date.today()
+            - timedelta(days=365 * config.HISTORY_YEARS + 1)).isoformat()
 
 
 def _publish(ticker: str, *, dry_run: bool) -> bool:
@@ -66,39 +72,45 @@ def _publish(ticker: str, *, dry_run: bool) -> bool:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Single-ticker SEC dilution tracker")
     ap.add_argument("ticker", help="e.g. MULN")
-    ap.add_argument("--years", type=int, default=6,
-                    help="history window in years (default 6)")
     ap.add_argument("--concurrency", type=int, default=config.LLM_CONCURRENCY,
                     help=f"max concurrent LLM calls (default {config.LLM_CONCURRENCY})")
     ap.add_argument("--force", action="store_true",
                     help="drop ledger and re-walk every filing from scratch")
-    ap.add_argument("--no-push", action="store_true",
-                    help="skip publishing the snapshot to Finviz after the "
-                         "walk (the nightly job uses this, then publishes in "
-                         "one pass after briefs are refreshed)")
-    ap.add_argument("--dry-run-push", action="store_true",
-                    help="build and validate the snapshot, report whether it "
-                         "changed, but send no POST")
+    ap.add_argument("--fresh-llm", action="store_true",
+                    help="bypass the local LLM response cache and re-sample "
+                         "every call. Required when measuring walk-to-walk "
+                         "drift — a cache hit replays the previous answer, "
+                         "which is exactly what a drift check must not do")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="do everything except the POST: build the snapshot, "
+                         "validate the envelope, read back what Finviz "
+                         "currently holds and report whether the content "
+                         "changed. Nothing is sent. The nightly job runs this "
+                         "way and publishes in one pass at the end, after "
+                         "briefs are refreshed")
     args = ap.parse_args()
 
     set_log_ticker(args.ticker)
+    if args.fresh_llm:
+        config.LLM_CACHE_ENABLED = False
     setup_observability()
-    since = _since(args.years)
+    since = _since()
     log.info("Dilution tracker — ticker=%s since=%s "
-             "llm_model=%s llm_model_periodic=%s reasoning=%s tier=%s",
+             "llm_model=%s llm_model_periodic=%s reasoning=%s tier=%s cache=%s",
              args.ticker, since,
              config.LLM_MODEL, config.LLM_MODEL_PERIODIC,
-             config.OPENAI_REASONING_EFFORT, config.OPENAI_SERVICE_TIER)
+             config.OPENAI_REASONING_EFFORT, config.OPENAI_SERVICE_TIER,
+             "on" if config.LLM_CACHE_ENABLED else "off")
 
-    # Stays True when --no-push suppresses the publish: nothing was
-    # attempted, so nothing failed.
+    # A dry run still sets this from the build+validate result, so a
+    # malformed payload is reported even when nothing is sent.
     published = True
 
     try:
         with pipeline_session(
             args.ticker,
             metadata={
-                "years": args.years,
+                "years": config.HISTORY_YEARS,
                 "concurrency": args.concurrency,
                 "force": args.force,
                 "llm_model": config.LLM_MODEL,
@@ -143,9 +155,14 @@ def main() -> int:
                 summary.anchor_diffs, summary.errors,
             )
 
-            if not args.no_push:
-                published = _publish(company["ticker"],
-                                     dry_run=args.dry_run_push)
+            stats = cache_stats()
+            if stats["hit"] or stats["miss"]:
+                total = stats["hit"] + stats["miss"]
+                log.info("  llm cache — %d hit / %d miss (%.0f%% replayed)",
+                         stats["hit"], stats["miss"],
+                         stats["hit"] / total * 100)
+
+            published = _publish(company["ticker"], dry_run=args.dry_run)
     finally:
         flush_observability()
 

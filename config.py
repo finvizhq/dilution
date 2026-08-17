@@ -41,8 +41,23 @@ OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "")  # "" = SDK default
 OPENAI_SERVICE_TIER = os.environ.get("OPENAI_SERVICE_TIER", "flex")
 OPENAI_REASONING_EFFORT = os.environ.get("OPENAI_REASONING_EFFORT", "low")
 
+HISTORY_YEARS = 4
+
 LLM_MODEL = "gpt-5.6-luna"  # per-filing walker (8-K/6-K/424B/S-1)
 LLM_MODEL_PERIODIC = "gpt-5.6-terra"
+
+# Local response cache (dilution_llm_cache). A hit replays the response
+# the model already returned for a byte-identical request, so a repeated
+# or resumed walk costs nothing: the interrupted run, the second half of
+# a drift comparison, and code changes that leave the prompts untouched.
+#
+# It also FREEZES model output, which cuts both ways. Reproducibility is
+# welcome now that the 5.6 family offers no temperature/seed to pin (see
+# the DETERMINISM NOTE above) — but a drift measurement has to see fresh
+# samples, so bypass the cache for that: LLM_CACHE=off, or
+# run_dilution.py --fresh-llm.
+LLM_CACHE_ENABLED = os.environ.get("LLM_CACHE", "on").lower() not in (
+    "off", "0", "false", "no")
 
 OPENAI_MAX_INPUT_TOKENS = 922_000
 OPENAI_MAX_OUTPUT_TOKENS = 128_000

@@ -25,10 +25,17 @@ Shape differences from the chat-completions world, all load-bearing:
     not `finish_reason="length"`
   - usage: `input_tokens` / `output_tokens` with cached and reasoning
     counts nested in `*_tokens_details`
+
+Two caches are in play and they are not the same thing: OpenAI's own
+prefix cache (steered by `prompt_cache_key`, discounts the repeated
+system-prompt + tool-schema prefix 10×) and our local response cache
+(`dilution_llm_cache`, replays a whole response for a byte-identical
+request and costs nothing at all).
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 from dataclasses import dataclass
@@ -36,6 +43,7 @@ from dataclasses import dataclass
 import httpx
 
 import config
+from db import get_conn, now_iso
 
 from .observability import _openai_usage, llm_generation
 
@@ -201,6 +209,107 @@ def request_kwargs(*, messages: list[dict], model: str | None = None,
     return kwargs
 
 
+# ─── Local response cache ─────────────────────────────────────────────
+# Keyed on the request, so a hit is by construction the response this
+# exact payload already produced. Excluded from the key:
+#   * prompt_cache_key — a routing hint for OpenAI's own prefix cache; it
+#     cannot change what the model returns.
+#   * store — a retention flag, not an input.
+#   * service_tier — flex/default change queueing and price, not output.
+# Included implicitly: model, input, tools, tool_choice, text, reasoning,
+# max_output_tokens. NOTE the model name is an unversioned alias, so a
+# checkpoint rotation behind `gpt-5.6-luna` will still hit this cache.
+# That is the reproducibility we want, and the reason the bypass exists.
+_CACHE_SKIP_KEYS = ("prompt_cache_key", "store", "service_tier")
+_cache_stats = {"hit": 0, "miss": 0}
+
+
+def _cache_key(payload: dict) -> str:
+    material = {k: v for k, v in payload.items() if k not in _CACHE_SKIP_KEYS}
+    blob = json.dumps(material, sort_keys=True, separators=(",", ":"),
+                      default=str)
+    return hashlib.sha256(blob.encode()).hexdigest()
+
+
+def _ensure_cache_table(conn) -> None:
+    conn.execute(
+        """CREATE TABLE IF NOT EXISTS dilution_llm_cache (
+               prompt_sha   TEXT PRIMARY KEY,
+               model        TEXT NOT NULL,
+               response_json TEXT NOT NULL,
+               created_at   TEXT NOT NULL
+           )"""
+    )
+
+
+def _cache_get(sha: str):
+    """Reconstructed Response, or None on miss / unusable row."""
+    if not config.LLM_CACHE_ENABLED:
+        return None
+    try:
+        with get_conn() as conn:
+            _ensure_cache_table(conn)
+            row = conn.execute(
+                "SELECT response_json FROM dilution_llm_cache WHERE prompt_sha=?",
+                (sha,),
+            ).fetchone()
+    except Exception as exc:            # a cache is never load-bearing
+        log.debug("llm cache read failed: %s", exc)
+        return None
+    if row is None:
+        return None
+    from openai.types.responses import Response
+    try:
+        return Response.model_validate_json(row["response_json"])
+    except Exception as exc:
+        # Shape drifted (SDK upgrade, hand-edited row) — treat as a miss
+        # rather than failing the walk.
+        log.warning("llm cache row %s… unusable (%s); re-calling", sha[:12], exc)
+        return None
+
+
+def _cache_put(sha: str, model: str, resp) -> None:
+    if not config.LLM_CACHE_ENABLED:
+        return
+    try:
+        # Drop the request echo before storing. Nothing reads it back —
+        # the caller already has the payload it sent — and it is both huge
+        # and, for `text`, not even round-trippable:
+        #   * `tools` is ~77 KB of schemas against ~3 KB of actual answer
+        #     on a walker call: 99% of the row, 180 MB per walk in a DB
+        #     already 1.2 GB.
+        #   * `text` breaks reads outright on the structured-output path.
+        #     The API echoes text.format as a json_schema config but omits
+        #     the schema itself, and Response.model_validate_json REQUIRES
+        #     that field, so every overhang row failed with "text.format
+        #     .ResponseFormatTextJSONSchemaConfig.schema Field required".
+        #     openai-python tolerates the gap when parsing a live HTTP
+        #     response; strict validation of stored JSON does not.
+        payload = resp.model_dump(mode="json")
+        payload["tools"] = []
+        payload.pop("instructions", None)
+        payload.pop("text", None)
+        blob = json.dumps(payload, separators=(",", ":"))
+    except Exception as exc:
+        log.debug("llm cache: response not serializable (%s)", exc)
+        return
+    try:
+        with get_conn() as conn:
+            _ensure_cache_table(conn)
+            conn.execute(
+                "INSERT OR REPLACE INTO dilution_llm_cache "
+                "(prompt_sha, model, response_json, created_at) VALUES (?,?,?,?)",
+                (sha, model, blob, now_iso()),
+            )
+    except Exception as exc:
+        log.debug("llm cache write failed: %s", exc)
+
+
+def cache_stats() -> dict[str, int]:
+    """Hit/miss counters for this process (walk summary logging)."""
+    return dict(_cache_stats)
+
+
 # ─── Calls ────────────────────────────────────────────────────────────
 def _check_tier(resp) -> None:
     """Warn when a response did not run on the tier we asked for."""
@@ -211,9 +320,31 @@ def _check_tier(resp) -> None:
                     want, got)
 
 
+def _replay(name: str, payload: dict, resp):
+    """Trace a cache hit without attributing token cost to it.
+
+    The span is still emitted so a cached walk isn't a hole in the
+    Langfuse timeline, but `usage_details` is omitted — replaying a
+    stored response spends nothing, and booking the original's tokens
+    again would inflate the cost view.
+    """
+    with llm_generation(name=name, model=payload["model"],
+                        messages=payload["input"]) as gen:
+        if gen is not None:
+            gen.update(output=output_text(resp),
+                       metadata={"status": resp.status, "llm_cache": "hit"})
+    return resp
+
+
 def complete(client, *, name: str, **kwargs):
     """Sync /v1/responses call wrapped in a Langfuse generation span."""
     payload = request_kwargs(**kwargs)
+    sha = _cache_key(payload)
+    cached = _cache_get(sha)
+    if cached is not None:
+        _cache_stats["hit"] += 1
+        return _replay(name, payload, cached)
+    _cache_stats["miss"] += 1
     with llm_generation(name=name, model=payload["model"],
                         messages=payload["input"]) as gen:
         resp = client.responses.create(**payload)
@@ -222,12 +353,19 @@ def complete(client, *, name: str, **kwargs):
                        usage_details=_openai_usage(resp),
                        metadata={"status": resp.status})
     _check_tier(resp)
+    _cache_put(sha, payload["model"], resp)
     return resp
 
 
 async def acomplete(client, *, name: str, **kwargs):
     """Async /v1/responses call wrapped in a Langfuse generation span."""
     payload = request_kwargs(**kwargs)
+    sha = _cache_key(payload)
+    cached = _cache_get(sha)
+    if cached is not None:
+        _cache_stats["hit"] += 1
+        return _replay(name, payload, cached)
+    _cache_stats["miss"] += 1
     with llm_generation(name=name, model=payload["model"],
                         messages=payload["input"]) as gen:
         resp = await client.responses.create(**payload)
@@ -236,6 +374,7 @@ async def acomplete(client, *, name: str, **kwargs):
                        usage_details=_openai_usage(resp),
                        metadata={"status": resp.status})
     _check_tier(resp)
+    _cache_put(sha, payload["model"], resp)
     return resp
 
 
@@ -298,6 +437,7 @@ def truncated(resp) -> bool:
 __all__ = [
     "ToolCall",
     "acomplete",
+    "cache_stats",
     "complete",
     "make_async_client",
     "make_sync_client",

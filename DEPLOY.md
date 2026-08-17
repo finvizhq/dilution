@@ -7,7 +7,7 @@ loopback-only debug view you reach over an SSH tunnel.
 
 **Nightly shape** — one systemd timer runs `scripts/nightly.sh`:
 
-1. walk every tracked ticker (`--no-push`)
+1. walk every tracked ticker (`--dry-run`)
 2. refresh briefs whose ticker got new filings
 3. publish the snapshots whose content changed
 

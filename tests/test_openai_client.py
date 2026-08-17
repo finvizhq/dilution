@@ -23,6 +23,7 @@ No network: every test either builds a payload or reads a stub response.
 
 from __future__ import annotations
 
+import json
 import types
 
 import pytest
@@ -433,3 +434,175 @@ class TestComplete:
             oc.complete(client, name="brief", messages=_msgs(),
                         max_output_tokens=32)
         assert "service_tier downgrade" not in caplog.text
+
+
+# ════════════════════════════════════════════════════════════════════
+# response cache
+# ════════════════════════════════════════════════════════════════════
+class TestCacheKey:
+    def test_identical_payloads_share_a_key(self):
+        assert oc._cache_key(_kwargs()) == oc._cache_key(_kwargs())
+
+    @pytest.mark.parametrize("skipped,value", [
+        ("prompt_cache_key", "some-other-bucket"),
+        ("store", True),
+        ("service_tier", "default"),
+    ])
+    def test_routing_and_retention_fields_excluded(self, skipped, value):
+        # These change price, queueing or retention — never the answer —
+        # so they must not fragment the cache.
+        a = _kwargs()
+        b = dict(a, **{skipped: value})
+        assert oc._cache_key(a) == oc._cache_key(b)
+
+    @pytest.mark.parametrize("field,value", [
+        ("model", "gpt-5.6-terra"),
+        ("max_output_tokens", 999),
+        ("reasoning", {"effort": "high"}),
+        ("tool_choice", "auto"),
+    ])
+    def test_answer_affecting_fields_included(self, field, value):
+        a = _kwargs()
+        b = dict(a, **{field: value})
+        assert oc._cache_key(a) != oc._cache_key(b), field
+
+    def test_different_input_changes_key(self):
+        a = _kwargs(messages=[oc.system("s"), oc.user("filing A")])
+        b = _kwargs(messages=[oc.system("s"), oc.user("filing B")])
+        assert oc._cache_key(a) != oc._cache_key(b)
+
+    def test_different_tools_changes_key(self):
+        a = _kwargs(tools=[{"type": "function", "name": "x"}])
+        b = _kwargs(tools=[{"type": "function", "name": "y"}])
+        assert oc._cache_key(a) != oc._cache_key(b)
+
+    def test_key_is_a_sha256_hex_digest(self):
+        k = oc._cache_key(_kwargs())
+        assert len(k) == 64 and all(c in "0123456789abcdef" for c in k)
+
+
+class TestCacheRoundTrip:
+    """Exercises the real SQLite path — temp_db (autouse) reroutes it."""
+
+    def _real_response(self):
+        from openai.types.responses import Response
+        return Response.model_validate({
+            "id": "resp_1", "created_at": 0, "model": "gpt-5.6-luna",
+            "object": "response", "status": "completed",
+            "parallel_tool_calls": False, "tool_choice": "required",
+            "tools": [], "output": [
+                {"type": "function_call", "call_id": "call_1", "name": "note_no_event",
+                 "arguments": '{"reason":"nothing here"}', "status": "completed"},
+            ],
+        })
+
+    def test_put_then_get_returns_equivalent_response(self, monkeypatch):
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", True)
+        resp = self._real_response()
+        oc._cache_put("sha-a", "gpt-5.6-luna", resp)
+        got = oc._cache_get("sha-a")
+        assert got is not None
+        assert oc.tool_calls(got)[0].name == "note_no_event"
+        assert oc.tool_calls(got)[0].arguments == {"reason": "nothing here"}
+        assert got.status == "completed"
+
+    def test_miss_returns_none(self, monkeypatch):
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", True)
+        assert oc._cache_get("sha-never-stored") is None
+
+    def test_stored_row_drops_the_tools_echo(self, monkeypatch):
+        # 99% of an untrimmed row is the echoed tool schemas.
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", True)
+        from db import get_conn
+        from openai.types.responses import Response
+        # Build the echo through validation so it lands as the SDK's typed
+        # tool object, exactly as a real response carries it.
+        resp = Response.model_validate({
+            "id": "resp_2", "created_at": 0, "model": "gpt-5.6-luna",
+            "object": "response", "status": "completed",
+            "parallel_tool_calls": False, "tool_choice": "required",
+            "output": [],
+            "tools": [{"type": "function", "name": "x", "parameters": {},
+                       "strict": False, "description": "y" * 5000}],
+        })
+        oc._cache_put("sha-trim", "gpt-5.6-luna", resp)
+        with get_conn() as conn:
+            blob = conn.execute(
+                "SELECT response_json FROM dilution_llm_cache WHERE prompt_sha=?",
+                ("sha-trim",)).fetchone()["response_json"]
+        assert "y" * 5000 not in blob
+        assert json.loads(blob)["tools"] == []
+        assert oc._cache_get("sha-trim") is not None      # still usable
+
+    def test_structured_output_response_round_trips(self, monkeypatch):
+        # REGRESSION: every overhang row was unreadable. The API echoes
+        # text.format as a json_schema config but omits the schema itself,
+        # and Response.model_validate_json requires that field, so reads
+        # failed with "text.format...schema Field required" and the cache
+        # silently degraded to 0 hits. The stored row must drop `text`.
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", True)
+        from openai.types.responses import Response
+        resp = Response.model_validate({
+            "id": "resp_3", "created_at": 0, "model": "gpt-5.6-terra",
+            "object": "response", "status": "completed",
+            "parallel_tool_calls": False, "tool_choice": "none", "tools": [],
+            "text": {"format": {"type": "json_schema", "name": "Overhang",
+                                "schema": {"type": "object"}, "strict": False}},
+            "output": [
+                {"type": "reasoning", "id": "rs_1", "summary": []},
+                {"type": "message", "id": "msg_1", "role": "assistant",
+                 "status": "completed",
+                 "content": [{"type": "output_text",
+                              "text": '{"warrants": []}', "annotations": []}]},
+            ],
+        })
+        oc._cache_put("sha-structured", "gpt-5.6-terra", resp)
+        got = oc._cache_get("sha-structured")
+        assert got is not None, "structured-output response failed to round-trip"
+        assert oc.output_text(got) == '{"warrants": []}'
+
+    def test_disabled_neither_reads_nor_writes(self, monkeypatch):
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", False)
+        oc._cache_put("sha-off", "gpt-5.6-luna", self._real_response())
+        assert oc._cache_get("sha-off") is None
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", True)
+        assert oc._cache_get("sha-off") is None            # nothing was written
+
+    def test_corrupt_row_degrades_to_a_miss(self, monkeypatch):
+        # An SDK upgrade or hand-edited row must not fail the walk.
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", True)
+        from db import get_conn
+        with get_conn() as conn:
+            oc._ensure_cache_table(conn)
+            conn.execute("INSERT INTO dilution_llm_cache VALUES (?,?,?,?)",
+                         ("sha-bad", "gpt-5.6-luna", "{not json", "now"))
+        assert oc._cache_get("sha-bad") is None
+
+
+class TestCompleteUsesCache:
+    def test_second_identical_call_makes_no_request(self, monkeypatch):
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", True)
+        monkeypatch.setattr(oc, "_cache_stats", {"hit": 0, "miss": 0})
+        from openai.types.responses import Response
+        resp = Response.model_validate({
+            "id": "r", "created_at": 0, "model": "gpt-5.6-luna",
+            "object": "response", "status": "completed",
+            "parallel_tool_calls": False, "tool_choice": "none",
+            "tools": [], "output": [],
+        })
+        client, responses = _fake_client(resp)
+        kw = dict(name="walker", messages=_msgs(), max_output_tokens=32)
+        oc.complete(client, **kw)
+        oc.complete(client, **kw)
+        assert len(responses.calls) == 1          # second served from cache
+        assert oc.cache_stats() == {"hit": 1, "miss": 1}
+
+    def test_bypass_calls_every_time(self, monkeypatch):
+        monkeypatch.setattr(config, "LLM_CACHE_ENABLED", False)
+        monkeypatch.setattr(oc, "_cache_stats", {"hit": 0, "miss": 0})
+        client, responses = _fake_client(response_stub(text="ok"))
+        kw = dict(name="walker", messages=_msgs(), max_output_tokens=32)
+        oc.complete(client, **kw)
+        oc.complete(client, **kw)
+        assert len(responses.calls) == 2
+        assert oc.cache_stats()["hit"] == 0

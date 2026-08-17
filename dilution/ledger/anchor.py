@@ -331,8 +331,29 @@ def reconcile_against_periodic(
     # below — see comment there.
     last_drawdown_date = _load_max_drawdown_date(cik)
 
+    # Tranche matching is decided GLOBALLY, before the loop. Matching each
+    # overhang row in turn against whatever is still unclaimed is
+    # first-fit, and first-fit strands rows: a mediocre early pairing takes
+    # a candidate that a later line matches better, the later line finds
+    # nothing, and the reconciler synthesizes a DUPLICATE. See
+    # _assign_matches for the CELU case that motivated this. Shelf / ATM /
+    # equity-line keep their own identity matchers (file_number, agreement
+    # party) and stay per-row.
+    tranche_assignment: dict[str, dict[int, dict]] = {}
+    overs_by_type: dict[str, list[tuple[int, dict]]] = {}
+    for idx, over in enumerate(filing_overhang or []):
+        t = _CATEGORY_TO_TYPE.get((over.get("category") or "").lower())
+        if t in _TRANCHE_TYPES:
+            overs_by_type.setdefault(t, []).append((idx, over))
+    for t, indexed in overs_by_type.items():
+        assigned = _assign_matches([o for _, o in indexed],
+                                   by_type.get(t, []))
+        tranche_assignment[t] = {
+            indexed[local_i][0]: row for local_i, row in assigned.items()
+        }
+
     used_ledger_ids: set[str] = set()
-    for over in filing_overhang or []:
+    for over_index, over in enumerate(filing_overhang or []):
         cat = (over.get("category") or "").lower()
         target_type = _CATEGORY_TO_TYPE.get(cat)
         if not target_type:
@@ -340,7 +361,13 @@ def reconcile_against_periodic(
         candidates = [c for c in by_type.get(target_type, [])
                       if c.get("instrument_id") not in used_ledger_ids]
         if target_type in _TRANCHE_TYPES:
-            match = _best_match(over, candidates)
+            match = tranche_assignment.get(target_type, {}).get(over_index)
+            # Defensive: the global pass cannot hand out the same row
+            # twice, but a row consumed by the closed-family path below
+            # would still be off-limits.
+            if match is not None and match.get(
+                    "instrument_id") in used_ledger_ids:
+                match = None
         elif target_type == "shelf":
             match = _match_shelf(over, candidates, shelf_file_numbers)
         elif target_type in ("atm", "equity_line"):
@@ -382,8 +409,17 @@ def reconcile_against_periodic(
         # N-1 spurious create_instrument synths after the first row
         # claims the matching ledger id.
         if match is None and target_type in _TRANCHE_TYPES:
+            # Pool = rows consumed so far PLUS every row the global pass
+            # has promised to another overhang line. Without the second
+            # half this would be order-dependent all over again: a
+            # sub-tranche line appearing BEFORE its bound sibling would
+            # see an empty pool and synthesize anyway.
+            claimed = set(used_ledger_ids) | {
+                r.get("instrument_id")
+                for r in tranche_assignment.get(target_type, {}).values()
+            }
             used_pool = [r for r in by_type.get(target_type, [])
-                         if r.get("instrument_id") in used_ledger_ids]
+                         if r.get("instrument_id") in claimed]
             shadow = _subsumed_by_used_tranche(over, used_pool)
             if shadow is not None:
                 log.debug(
@@ -841,42 +877,10 @@ def _best_match(over: dict, candidates: list[dict]) -> dict | None:
             return None
 
     def score(r: dict) -> int:
-        s = 0
-        # Issue date is the strongest signal — split-invariant, carried
-        # verbatim across re-disclosures.
-        if over_issue and _date_close(over_issue, r.get("created_at"),
-                                       ISSUE_DATE_TOLERANCE_DAYS):
-            s += 4
-        r_cp = _real_cp(
-            r.get("counterparty_canonical") or r.get("counterparty")
-        )
-        if over_cp and r_cp and over_cp == r_cp:
-            s += 2
-        if _strike_match(over_strike, _row_strike(r)) is True:
-            s += 2
-        # Warrants store their term-end under terms.expiration, NOT
-        # terms.maturity (only convertibles/preferreds use 'maturity').
-        # Reading only 'maturity' silently disabled this axis for every
-        # warrant, so same-letter ladders (GCTK July-A vs November-A)
-        # were judged on strike+issue-date alone. Use a tolerance test,
-        # not exact equality (GCTK Nov-A is stored 2029-11-15 vs the
-        # periodic's 2029-11-14 — 1-day drift). Additive scoring only
-        # (+1), never an exclusion, so it cannot drop or mis-bind a row.
-        r_maturity = _normalize_date(
-            _terms_dict(r).get("maturity")
-            or _terms_dict(r).get("expiration")
-        )
-        if (over_maturity and r_maturity
-                and _date_close(over_maturity, r_maturity, 30)):
-            s += 1
-        if over_series:
-            r_series = (
-                extract_series_letter(_terms_dict(r).get("series_letter"))
-                or extract_series_letter(r.get("label"))
-            )
-            if r_series and r_series == over_series:
-                s += 5  # strong identity for preferred tranches
-        return s
+        return _score_axes(r, over_issue=over_issue, over_cp=over_cp,
+                           over_strike=over_strike,
+                           over_maturity=over_maturity,
+                           over_series=over_series)
 
     scored = [(score(r), r.get("created_at") or "9999-99-99", r)
               for r in candidates]
@@ -885,6 +889,133 @@ def _best_match(over: dict, candidates: list[dict]) -> dict | None:
     if best_score == 0:
         return None
     return best_row
+
+
+def _over_signals(over: dict) -> dict:
+    """The five identity signals _best_match reads off an overhang row."""
+    return {
+        "over_strike": _to_float(
+            over.get("strike_or_conversion_price")
+            or over.get("conversion_price")),
+        "over_cp": _real_cp(_extract_cp_from_name(over.get("instrument_name"))),
+        "over_issue": (_normalize_date(over.get("issue_date"))
+                       or _extract_date_from_name(over.get("instrument_name"))),
+        "over_maturity": _normalize_date(over.get("maturity_or_expiry")),
+        "over_series": (extract_series_letter(over.get("series_letter"))
+                        or extract_series_letter(over.get("instrument_name"))),
+    }
+
+
+def _score_axes(r: dict, *, over_issue, over_cp, over_strike,
+                over_maturity, over_series) -> int:
+    """Additive match score for one ledger row. Exclusions live in
+    _best_match; this is only the evidence tally, kept module-level so the
+    single-winner path and the global assignment score identically."""
+    s = 0
+    # Issue date is the strongest signal — split-invariant, carried
+    # verbatim across re-disclosures.
+    if over_issue and _date_close(over_issue, r.get("created_at"),
+                                  ISSUE_DATE_TOLERANCE_DAYS):
+        s += 4
+    r_cp = _real_cp(
+        r.get("counterparty_canonical") or r.get("counterparty")
+    )
+    if over_cp and r_cp and over_cp == r_cp:
+        s += 2
+    if _strike_match(over_strike, _row_strike(r)) is True:
+        s += 2
+    # Warrants store their term-end under terms.expiration, NOT
+    # terms.maturity (only convertibles/preferreds use 'maturity').
+    # Reading only 'maturity' silently disabled this axis for every
+    # warrant, so same-letter ladders (GCTK July-A vs November-A)
+    # were judged on strike+issue-date alone. Use a tolerance test,
+    # not exact equality (GCTK Nov-A is stored 2029-11-15 vs the
+    # periodic's 2029-11-14 — 1-day drift). Additive scoring only
+    # (+1), never an exclusion, so it cannot drop or mis-bind a row.
+    r_maturity = _normalize_date(
+        _terms_dict(r).get("maturity")
+        or _terms_dict(r).get("expiration")
+    )
+    if (over_maturity and r_maturity
+            and _date_close(over_maturity, r_maturity, 30)):
+        s += 1
+    if over_series:
+        r_series = (
+            extract_series_letter(_terms_dict(r).get("series_letter"))
+            or extract_series_letter(r.get("label"))
+        )
+        if r_series and r_series == over_series:
+            s += 5  # strong identity for preferred tranches
+    return s
+
+
+def _match_scores(over: dict, candidates: list[dict]) -> dict[str, int]:
+    """Every eligible candidate's match score for one overhang row.
+
+    Same exclusions and same additive axes as :func:`_best_match` — this
+    is that function stopped one step earlier, before it collapses the
+    ranking to a single winner. Rows scoring 0 are omitted: a zero score
+    means "no positive evidence", which _best_match treats as no match.
+    """
+    signals = _over_signals(over)
+    out: dict[str, int] = {}
+    for row in candidates:
+        iid = row.get("instrument_id")
+        if not iid:
+            continue
+        # _best_match on a single-candidate pool applies the exclusion
+        # rules (series letter, pre-funded vs ordinary, comp-role,
+        # foreign-issuance) and returns None when this pair is ineligible
+        # or scores zero — so the rules stay defined in exactly one place.
+        if _best_match(over, [row]) is None:
+            continue
+        out[iid] = _score_axes(row, **signals)
+    return out
+
+
+def _assign_matches(
+    overs: list[dict], candidates: list[dict],
+) -> dict[int, dict]:
+    """Globally assign overhang rows to ledger rows, best pairs first.
+
+    Returns {index in `overs`: matched ledger row}. Each ledger row is
+    claimed at most once, as before — what changes is the ORDER in which
+    claims are granted.
+
+    Why this exists: matching used to be greedy in overhang-row order,
+    first-fit. Whoever came first claimed its best candidate, so a
+    mediocre early pairing could take a row that a later line matched far
+    better, stranding that later line with no candidate at all — which
+    the reconciler then reported as `missing_in_ledger` and synthesized
+    into a DUPLICATE instrument. Measured on CELU's Aug-2025 10-Q: 19
+    overhang warrants against ~20 ledger rows produced 4 phantom creates,
+    including a "March 2024 RWI Forbearance Warrants" line that shared
+    both issue date and counterparty with an existing March-2024 RWI row.
+
+    Sorting all (score, over, row) pairs descending and granting in that
+    order lets the strongest evidence bind first, so a weak pairing can no
+    longer strand a strong one. Ties break deterministically: higher
+    score, then earliest-created ledger row (unchanged from _best_match),
+    then overhang order.
+    """
+    pairs: list[tuple[int, str, int, dict]] = []
+    for i, over in enumerate(overs):
+        for iid, sc in _match_scores(over, candidates).items():
+            pairs.append((sc, iid, i, over))
+    by_id = {c.get("instrument_id"): c for c in candidates}
+    # -score first (descending), then the candidate's created_at, then
+    # overhang order — a total order, so the result cannot vary run to run.
+    pairs.sort(key=lambda p: (
+        -p[0], (by_id[p[1]].get("created_at") or "9999-99-99"), p[2]))
+
+    assigned: dict[int, dict] = {}
+    used: set[str] = set()
+    for sc, iid, i, _over in pairs:
+        if i in assigned or iid in used:
+            continue
+        assigned[i] = by_id[iid]
+        used.add(iid)
+    return assigned
 
 
 def _subsumed_by_used_tranche(
@@ -908,22 +1039,85 @@ def _subsumed_by_used_tranche(
     distinct same-strike tranches (e.g. Series A and Series B both
     struck at $0.65 but with different maturities) keep their right
     to be synthesized.
-    """
+
+    Two name-marked classes are additionally recognized WITHOUT the
+    strike agreement, because for them a differing strike is the point
+    rather than evidence of a different instrument:
+
+      * repricing markers ("(modified)", "as amended", "repriced") — the
+        filing is re-stating an existing tranche at its NEW strike, so
+        requiring the old strike to match guarantees a phantom. CELU's
+        "March 2023 PIPE Warrants (modified)" @ $1.00 and "April 2023
+        Registered Direct Warrants (modified)" @ $0.35 both minted
+        duplicates of rows still carrying the pre-amendment strike.
+      * sub-tranche ordinals ("Tranche #2", "Tranche 2") — an explicitly
+        numbered slice of a financing whose sibling is already bound.
+        CELU's "January 2024 Bridge Loan - Tranche #2 Warrants" @ $3.076
+        and "Faithstone Strategic Advisory Warrants — Tranche 2" @ $5.00.
+
+    Both still require the issue dates to agree, so an unrelated later
+    financing cannot be swallowed. Matching here suppresses the synthetic
+    create only — no field is written back, deliberately: re-pointing a
+    strike from an overhang line is how the conv_price ping-pong class of
+    bug starts, and the walker's own amend path already owns repricing.
+    """  # noqa: D205
     over_strike = _to_float(
         over.get("strike_or_conversion_price")
         or over.get("conversion_price")
     )
-    if over_strike is None:
-        return None
     over_maturity = _normalize_date(over.get("maturity_or_expiry"))
+    name = over.get("instrument_name")
+    relaxed = _reprice_marker(name) or _tranche_ordinal(name) is not None
+    over_issue = _normalize_date(over.get("issue_date")) or \
+        _extract_date_from_name(name)
+
+    if over_strike is None and not relaxed:
+        return None
     for r in used_rows:
-        if _strike_match(over_strike, _row_strike(r)) is not True:
+        if relaxed:
+            # Strike is allowed to differ; identity rests on the issue
+            # date instead, which a repricing/sub-tranche re-disclosure
+            # carries unchanged.
+            if not (over_issue and _date_close(
+                    over_issue, r.get("created_at"),
+                    ISSUE_DATE_TOLERANCE_DAYS)):
+                continue
+        elif _strike_match(over_strike, _row_strike(r)) is not True:
             continue
         r_maturity = _normalize_date(_terms_dict(r).get("maturity"))
         if over_maturity and r_maturity and over_maturity != r_maturity:
             continue
         return r
     return None
+
+
+# Names that mark a re-statement of an existing tranche rather than a new
+# one. Deliberately narrow: only wording that explicitly says "this is the
+# same instrument, changed". "new"/"inducement"/"replacement" warrants are
+# NOT here — those are genuinely separate issuances.
+_REPRICE_MARKER_RE = re.compile(
+    r"(?i)\((?:as\s+)?(?:modified|amended|repriced)\)"
+    r"|\bas\s+(?:modified|amended|repriced)\b"
+    r"|\brepriced\b"
+    r"|\bamendment\s+to\b"
+)
+
+# "Tranche 2", "Tranche #2", "Tranche No. 2" — an explicitly numbered
+# slice. Tranche 1 counts too: it is still a slice of a financing whose
+# siblings share the issue date.
+_TRANCHE_ORDINAL_RE = re.compile(
+    r"(?i)\btranche\s*(?:#|no\.?\s*)?(\d{1,2})\b")
+
+
+def _reprice_marker(name: str | None) -> bool:
+    return bool(name) and bool(_REPRICE_MARKER_RE.search(name))
+
+
+def _tranche_ordinal(name: str | None) -> int | None:
+    if not name:
+        return None
+    m = _TRANCHE_ORDINAL_RE.search(name)
+    return int(m.group(1)) if m else None
 
 
 def _load_closed_shelf_family(cik: int) -> list[dict]:

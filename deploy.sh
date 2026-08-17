@@ -59,7 +59,8 @@ fi
 
 if [ ! -f dilution.db ]; then
     echo "  MISSING dilution.db — the pipeline has no ledger to build from."
-    echo "          A cold start would re-walk every ticker over six years of"
+    echo "          A cold start would re-walk every ticker over the whole"
+    echo "          config.HISTORY_YEARS window of"
     echo "          filings and re-pay the entire historical LLM cost. Seed it"
     echo "          once from a machine that already has one (DEPLOY.md step 3)."
     fail=1
