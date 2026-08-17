@@ -253,22 +253,28 @@ class AnchorResult:
     correction_mutations: list[Mutation] = field(default_factory=list)
 
 
-def reconcile_against_periodic(
-    *, cik: int, accession: str, filing_date: str, as_of_date: str,
-    filing_overhang: list[dict],
-    ledger_open: list[dict],
-    stated_note_balances: list[dict] | None = None,
-) -> AnchorResult:
-    """Diff the filing's overhang table against the open ledger.
+@dataclass
+class _ReconcileCtx:
+    """Everything the reconcile pass needs that is derived once, up front.
 
-    `filing_overhang` is a list of OverhangRow-shaped dicts (category,
-    instrument_name, outstanding_count, strike_or_conversion_price,
-    principal_amount, maturity_or_expiry, issue_date, …).
-
-    `ledger_open` is a list of dicts as returned by
-    `store.get_open_instruments(cik)` — one row per active instrument.
+    Building this is pure setup — no diffs are produced here — so keeping
+    it out of the reconcile body leaves that body about the matching
+    itself. `used_ledger_ids` is the one mutable member: the matching
+    loop claims rows into it and the extra-in-ledger sweep reads it back.
     """
-    result = AnchorResult()
+    by_type: dict
+    by_type_closed: dict
+    shelf_file_numbers: dict
+    post_asof_drawn: dict
+    last_drawdown_date: dict
+    tranche_assignment: dict
+    used_ledger_ids: set
+
+
+def _load_reconcile_context(cik: int, filing_date: str, as_of_date: str,
+                            ledger_open: list[dict],
+                            filing_overhang: list[dict]) -> "_ReconcileCtx":
+    """Bucket the ledger, pre-fetch identity lookups, assign tranches."""
     # Filter out instruments minted AFTER the filing being reconciled.
     # The filing's overhang table can't describe an instrument that
     # didn't exist yet. Without this guard, incremental re-walks where
@@ -351,8 +357,212 @@ def reconcile_against_periodic(
         tranche_assignment[t] = {
             indexed[local_i][0]: row for local_i, row in assigned.items()
         }
+    return _ReconcileCtx(
+        by_type=by_type, by_type_closed=by_type_closed,
+        shelf_file_numbers=shelf_file_numbers,
+        post_asof_drawn=post_asof_drawn,
+        last_drawdown_date=last_drawdown_date,
+        tranche_assignment=tranche_assignment,
+        used_ledger_ids=set(),
+    )
 
-    used_ledger_ids: set[str] = set()
+
+def _close_extra_ledger_rows(result: AnchorResult, by_type: dict, used_ledger_ids: set,
+                            as_of_date: str, last_drawdown_date: dict) -> None:
+    """Auto-close unmatched ledger rows an independent signal proves dead."""
+    # extra_in_ledger: any unmatched candidate of any reconciled type.
+    # We auto-close ONLY when an independent signal confirms the row is
+    # dead — expiration/maturity past as_of_date, outstanding zero,
+    # shelf past Rule 415 3-year window, ATM/ELOC past 3y. Anything
+    # else stays in the ledger as kept_ledger.
+    #
+    # We do NOT close rows just because the filing's overhang table
+    # didn't itemize them. ~64% of periodic filings show at least one
+    # extra_in_ledger warrant, and the vast majority of those are
+    # benign — aggregate-summary tables ("Outstanding Warrants: 36M @
+    # $1.81 weighted-avg") and partial-itemization disclosures that
+    # silently drop small tranches are common in microcap 10-K/10-Q
+    # narratives. Closing on filing silence was destroying live cards
+    # (XTIA Q1 2026: anchor closed 15 itemized warrants because the
+    # 10-Q only printed a single weighted-avg line). True terminations
+    # have an explicit narrative footprint (exchange / repurchase /
+    # redemption / inducement) that the walker catches from event
+    # filings — that's the only place we'll accept a 'terminated'
+    # reason for a warrant/convertible/preferred going forward.
+    for t in ("warrant", "convertible", "preferred",
+              "shelf", "atm", "equity_line"):
+        for row in by_type.get(t, []):
+            if row.get("instrument_id") in used_ledger_ids:
+                continue
+            close_reason = _confident_close_reason(row, as_of_date)
+            result.diffs.append(AnchorDiff(
+                diff_kind="extra_in_ledger",
+                instrument_id=row["instrument_id"],
+                category=t,
+                ledger_value={"terms": row.get("terms"),
+                              "outstanding": row.get("outstanding"),
+                              "counterparty": row.get("counterparty_canonical")},
+                filing_value=None,
+                resolution=(f"closed:{close_reason}:tier1"
+                            if close_reason else "kept_ledger"),
+            ))
+            if close_reason:
+                # When the relevant outstanding field is still non-zero,
+                # prepend a zeroing AmendInstrument. validate.py's
+                # close_with_outstanding guard rejects close(redeemed)
+                # while principal_remaining > 0, and walker filings rarely
+                # state an explicit "principal repaid" event for an
+                # instrument that matured uneventfully — without this
+                # amend the close was rejected every quarter and the same
+                # zombie row re-flagged forever (IQST C-003: 16 quarters
+                # of "closed:redeemed" resolution with status still
+                # active). effects_overlay in validate.py picks up the
+                # amend so the close that follows it sees the zeroed state.
+                zeroing = _zero_outstanding_for_close(row, t)
+                if zeroing:
+                    result.correction_mutations.append(amend_from_dict(
+                        type_=t,
+                        instrument_id=row["instrument_id"],
+                        outstanding_updates=zeroing,
+                        event_date=as_of_date,
+                    ))
+                result.correction_mutations.append(CloseInstrument(
+                    instrument_id=row["instrument_id"],
+                    reason=close_reason,
+                    event_date=_as_date(as_of_date),
+                ))
+
+def _reap_stale_s1_offerings(result: AnchorResult, by_type: dict, used_ledger_ids: set,
+                            as_of_date: str) -> None:
+    """Close S-1 takedowns the age gate proves stale."""
+    # s1_offering staleness reaper. S-1 takedowns are not an overhang
+    # category, so the matching loop above never touches them and the
+    # extra_in_ledger loop's type list excludes them — without this they
+    # accumulate as permanent 'active' rows. Close only when the age gate
+    # in _confident_close_reason fires; stay silent otherwise (no
+    # kept_ledger diff) so we don't write one row per S-1 per periodic.
+    # No zeroing amend needed: S-1 rows carry drawn_usd/sold_to_date, not
+    # principal_remaining, which is the field validate.py's terminated
+    # guard checks for this type.
+    for row in by_type.get("s1_offering", []):
+        if row.get("instrument_id") in used_ledger_ids:
+            continue
+        close_reason = _confident_close_reason(row, as_of_date)
+        if not close_reason:
+            continue
+        result.diffs.append(AnchorDiff(
+            diff_kind="extra_in_ledger",
+            instrument_id=row["instrument_id"],
+            category="s1_offering",
+            ledger_value={"terms": row.get("terms"),
+                          "outstanding": row.get("outstanding"),
+                          "last_seen_date": row.get("last_seen_date")},
+            filing_value=None,
+            resolution=f"closed:{close_reason}:tier1",
+        ))
+        result.correction_mutations.append(CloseInstrument(
+            instrument_id=row["instrument_id"],
+            reason=close_reason,
+            event_date=_as_date(as_of_date),
+        ))
+
+def _apply_stated_balances(result: AnchorResult, by_type: dict, used_ledger_ids: set,
+                           stated_note_balances, as_of_date: str,
+                           ledger_open: list[dict], accession: str) -> None:
+    """Deterministic backstop: reconcile against stated note balances."""
+    # ── Stated-balance reconciliation (deterministic backstop) ──────
+    # The filing's own prose is ground truth for note balances. For
+    # every note the text states a balance for: (a) a POSITIVE stated
+    # balance VETOES any close / zeroing proposal this pass generated
+    # for that note (the overhang the proposals came from is the lossy
+    # LLM read; the sentence is the issuer's own number — CETY Coventry
+    # was zero+closed 'redeemed' while its 10-Q stated $10,120); (b) the
+    # ledger's principal_remaining is pinned to the stated balance when
+    # they disagree, recovering balance updates the truncated overhang
+    # dropped (CETY C-605: walked the 10-Q stating $61,597 yet stayed at
+    # face $131,610).
+    stated_map = _map_stated_balances(
+        stated_note_balances or [], ledger_open)
+    if stated_map:
+        protected = {iid for iid, bal in stated_map.items() if bal > 0}
+        if protected:
+            kept: list[Mutation] = []
+            for m in result.correction_mutations:
+                iid = getattr(m, "instrument_id", None)
+                if iid in protected:
+                    if isinstance(m, CloseInstrument):
+                        log.info(
+                            "  anchor %s — veto close(%s) on %s: filing "
+                            "states positive note balance $%.0f",
+                            accession, m.reason, iid, stated_map[iid])
+                        continue
+                    upd = getattr(m, "outstanding_updates", None) or {}
+                    if _to_float(upd.get("principal_remaining")) == 0:
+                        log.info(
+                            "  anchor %s — veto zeroing amend on %s: "
+                            "filing states positive note balance $%.0f",
+                            accession, iid, stated_map[iid])
+                        continue
+                kept.append(m)
+            result.correction_mutations = kept
+        by_id = {r.get("instrument_id"): r for r in ledger_open}
+        for iid, bal in stated_map.items():
+            row = by_id.get(iid)
+            if row is None:
+                continue
+            cur = _to_float(_outstanding_dict(row).get(
+                "principal_remaining"))
+            # DECREASE-ONLY: stated 'balance of this note' figures
+            # sometimes include accrued interest / default premiums and
+            # EXCEED face (CETY C-603: $345,000 note, stated balance
+            # $436,654) — principal_remaining is face-denominated, so
+            # only a balance BELOW the ledger value is a safe principal
+            # update (amortization / conversions the overhang missed).
+            if cur is None or bal >= cur - max(1.0, bal * 0.001):
+                continue
+            result.correction_mutations.append(amend_from_dict(
+                type_="convertible",
+                instrument_id=iid,
+                outstanding_updates={"principal_remaining": bal},
+                event_date=as_of_date,
+            ))
+            result.diffs.append(AnchorDiff(
+                diff_kind="field_mismatch",
+                instrument_id=iid,
+                category="convertible",
+                ledger_value={"principal_remaining": cur},
+                filing_value={"principal_remaining": bal},
+                resolution="stated_balance_pin",
+            ))
+
+
+def reconcile_against_periodic(
+    *, cik: int, accession: str, filing_date: str, as_of_date: str,
+    filing_overhang: list[dict],
+    ledger_open: list[dict],
+    stated_note_balances: list[dict] | None = None,
+) -> AnchorResult:
+    """Diff the filing's overhang table against the open ledger.
+
+    `filing_overhang` is a list of OverhangRow-shaped dicts (category,
+    instrument_name, outstanding_count, strike_or_conversion_price,
+    principal_amount, maturity_or_expiry, issue_date, …).
+
+    `ledger_open` is a list of dicts as returned by
+    `store.get_open_instruments(cik)` — one row per active instrument.
+    """
+    result = AnchorResult()
+    ctx = _load_reconcile_context(cik, filing_date, as_of_date,
+                                  ledger_open, filing_overhang)
+    # Unpacked to locals: the matching body below reads these by bare
+    # name, and the names are the vocabulary of the reconcile itself.
+    by_type = ctx.by_type
+    by_type_closed = ctx.by_type_closed
+    shelf_file_numbers = ctx.shelf_file_numbers
+    post_asof_drawn = ctx.post_asof_drawn
+    last_drawdown_date = ctx.last_drawdown_date
+    tranche_assignment = ctx.tranche_assignment
+    used_ledger_ids = ctx.used_ledger_ids
     for over_index, over in enumerate(filing_overhang or []):
         cat = (over.get("category") or "").lower()
         target_type = _CATEGORY_TO_TYPE.get(cat)
@@ -477,7 +687,6 @@ def reconcile_against_periodic(
                     filing_value=_overhang_to_value(over),
                     resolution="suppressed:phantom_equity_line"))
                 continue
-
         if match is None:
             # Filing lists an instrument we don't have on the ledger.
             # Emit a synthetic create_instrument and record the diff.
@@ -597,163 +806,12 @@ def reconcile_against_periodic(
                 resolution=f"closed:{close_reason}",
             ))
 
-    # extra_in_ledger: any unmatched candidate of any reconciled type.
-    # We auto-close ONLY when an independent signal confirms the row is
-    # dead — expiration/maturity past as_of_date, outstanding zero,
-    # shelf past Rule 415 3-year window, ATM/ELOC past 3y. Anything
-    # else stays in the ledger as kept_ledger.
-    #
-    # We do NOT close rows just because the filing's overhang table
-    # didn't itemize them. ~64% of periodic filings show at least one
-    # extra_in_ledger warrant, and the vast majority of those are
-    # benign — aggregate-summary tables ("Outstanding Warrants: 36M @
-    # $1.81 weighted-avg") and partial-itemization disclosures that
-    # silently drop small tranches are common in microcap 10-K/10-Q
-    # narratives. Closing on filing silence was destroying live cards
-    # (XTIA Q1 2026: anchor closed 15 itemized warrants because the
-    # 10-Q only printed a single weighted-avg line). True terminations
-    # have an explicit narrative footprint (exchange / repurchase /
-    # redemption / inducement) that the walker catches from event
-    # filings — that's the only place we'll accept a 'terminated'
-    # reason for a warrant/convertible/preferred going forward.
-    for t in ("warrant", "convertible", "preferred",
-              "shelf", "atm", "equity_line"):
-        for row in by_type.get(t, []):
-            if row.get("instrument_id") in used_ledger_ids:
-                continue
-            close_reason = _confident_close_reason(row, as_of_date)
-            result.diffs.append(AnchorDiff(
-                diff_kind="extra_in_ledger",
-                instrument_id=row["instrument_id"],
-                category=t,
-                ledger_value={"terms": row.get("terms"),
-                              "outstanding": row.get("outstanding"),
-                              "counterparty": row.get("counterparty_canonical")},
-                filing_value=None,
-                resolution=(f"closed:{close_reason}:tier1"
-                            if close_reason else "kept_ledger"),
-            ))
-            if close_reason:
-                # When the relevant outstanding field is still non-zero,
-                # prepend a zeroing AmendInstrument. validate.py's
-                # close_with_outstanding guard rejects close(redeemed)
-                # while principal_remaining > 0, and walker filings rarely
-                # state an explicit "principal repaid" event for an
-                # instrument that matured uneventfully — without this
-                # amend the close was rejected every quarter and the same
-                # zombie row re-flagged forever (IQST C-003: 16 quarters
-                # of "closed:redeemed" resolution with status still
-                # active). effects_overlay in validate.py picks up the
-                # amend so the close that follows it sees the zeroed state.
-                zeroing = _zero_outstanding_for_close(row, t)
-                if zeroing:
-                    result.correction_mutations.append(amend_from_dict(
-                        type_=t,
-                        instrument_id=row["instrument_id"],
-                        outstanding_updates=zeroing,
-                        event_date=as_of_date,
-                    ))
-                result.correction_mutations.append(CloseInstrument(
-                    instrument_id=row["instrument_id"],
-                    reason=close_reason,
-                    event_date=_as_date(as_of_date),
-                ))
-
-    # s1_offering staleness reaper. S-1 takedowns are not an overhang
-    # category, so the matching loop above never touches them and the
-    # extra_in_ledger loop's type list excludes them — without this they
-    # accumulate as permanent 'active' rows. Close only when the age gate
-    # in _confident_close_reason fires; stay silent otherwise (no
-    # kept_ledger diff) so we don't write one row per S-1 per periodic.
-    # No zeroing amend needed: S-1 rows carry drawn_usd/sold_to_date, not
-    # principal_remaining, which is the field validate.py's terminated
-    # guard checks for this type.
-    for row in by_type.get("s1_offering", []):
-        if row.get("instrument_id") in used_ledger_ids:
-            continue
-        close_reason = _confident_close_reason(row, as_of_date)
-        if not close_reason:
-            continue
-        result.diffs.append(AnchorDiff(
-            diff_kind="extra_in_ledger",
-            instrument_id=row["instrument_id"],
-            category="s1_offering",
-            ledger_value={"terms": row.get("terms"),
-                          "outstanding": row.get("outstanding"),
-                          "last_seen_date": row.get("last_seen_date")},
-            filing_value=None,
-            resolution=f"closed:{close_reason}:tier1",
-        ))
-        result.correction_mutations.append(CloseInstrument(
-            instrument_id=row["instrument_id"],
-            reason=close_reason,
-            event_date=_as_date(as_of_date),
-        ))
-
-    # ── Stated-balance reconciliation (deterministic backstop) ──────
-    # The filing's own prose is ground truth for note balances. For
-    # every note the text states a balance for: (a) a POSITIVE stated
-    # balance VETOES any close / zeroing proposal this pass generated
-    # for that note (the overhang the proposals came from is the lossy
-    # LLM read; the sentence is the issuer's own number — CETY Coventry
-    # was zero+closed 'redeemed' while its 10-Q stated $10,120); (b) the
-    # ledger's principal_remaining is pinned to the stated balance when
-    # they disagree, recovering balance updates the truncated overhang
-    # dropped (CETY C-605: walked the 10-Q stating $61,597 yet stayed at
-    # face $131,610).
-    stated_map = _map_stated_balances(
-        stated_note_balances or [], ledger_open)
-    if stated_map:
-        protected = {iid for iid, bal in stated_map.items() if bal > 0}
-        if protected:
-            kept: list[Mutation] = []
-            for m in result.correction_mutations:
-                iid = getattr(m, "instrument_id", None)
-                if iid in protected:
-                    if isinstance(m, CloseInstrument):
-                        log.info(
-                            "  anchor %s — veto close(%s) on %s: filing "
-                            "states positive note balance $%.0f",
-                            accession, m.reason, iid, stated_map[iid])
-                        continue
-                    upd = getattr(m, "outstanding_updates", None) or {}
-                    if _to_float(upd.get("principal_remaining")) == 0:
-                        log.info(
-                            "  anchor %s — veto zeroing amend on %s: "
-                            "filing states positive note balance $%.0f",
-                            accession, iid, stated_map[iid])
-                        continue
-                kept.append(m)
-            result.correction_mutations = kept
-        by_id = {r.get("instrument_id"): r for r in ledger_open}
-        for iid, bal in stated_map.items():
-            row = by_id.get(iid)
-            if row is None:
-                continue
-            cur = _to_float(_outstanding_dict(row).get(
-                "principal_remaining"))
-            # DECREASE-ONLY: stated 'balance of this note' figures
-            # sometimes include accrued interest / default premiums and
-            # EXCEED face (CETY C-603: $345,000 note, stated balance
-            # $436,654) — principal_remaining is face-denominated, so
-            # only a balance BELOW the ledger value is a safe principal
-            # update (amortization / conversions the overhang missed).
-            if cur is None or bal >= cur - max(1.0, bal * 0.001):
-                continue
-            result.correction_mutations.append(amend_from_dict(
-                type_="convertible",
-                instrument_id=iid,
-                outstanding_updates={"principal_remaining": bal},
-                event_date=as_of_date,
-            ))
-            result.diffs.append(AnchorDiff(
-                diff_kind="field_mismatch",
-                instrument_id=iid,
-                category="convertible",
-                ledger_value={"principal_remaining": cur},
-                filing_value={"principal_remaining": bal},
-                resolution="stated_balance_pin",
-            ))
+    _close_extra_ledger_rows(result, by_type, used_ledger_ids,
+                             as_of_date, last_drawdown_date)
+    _reap_stale_s1_offerings(result, by_type, used_ledger_ids, as_of_date)
+    _apply_stated_balances(result, by_type, used_ledger_ids,
+                           stated_note_balances, as_of_date,
+                           ledger_open, accession)
 
     if result.diffs:
         log.info(
@@ -2397,6 +2455,67 @@ def _zero_outstanding_for_close(row: dict, t: str) -> dict:
     return updates
 
 
+def _term_expired(anchor_date: str | None, as_of: str | None, *,
+                  years: int = 0, days: int = 0) -> bool:
+    """True when anchor + term has elapsed by `as_of`.
+
+    A missing or unparseable anchor is never "expired" — closing on a
+    date we could not read would delete live cards on bad input.
+    """
+    if not (as_of and anchor_date):
+        return False
+    try:
+        ad = date.fromisoformat(anchor_date)
+        expires = (date.fromordinal(ad.toordinal() + days) if days
+                   else ad.replace(year=ad.year + years)).isoformat()
+    except ValueError:
+        return False
+    return expires <= as_of
+
+
+def _date_close_reason(t: str, row: dict, terms: dict,
+                       as_of: str | None) -> str | None:
+    """Calendar-driven closure: an instrument whose term simply ran out."""
+    if t == "warrant":
+        exp = _normalize_date(terms.get("expiration"))
+        if as_of and exp and exp <= as_of:
+            return "expired"
+    elif t in ("convertible", "preferred"):
+        mat = _normalize_date(terms.get("maturity"))
+        if as_of and mat and mat <= as_of:
+            return "redeemed"
+    elif t == "shelf":
+        # SEC Rule 415(a)(5): shelves expire 3 years after the SEC
+        # declares them effective. `effect_date` is the canonical
+        # signal (from the EFFECT filing). Fall back to created_at +
+        # 3y when no EFFECT has reached us, which is conservative —
+        # the shelf is no later than created_at + 3 years.
+        if _term_expired(_normalize_date(terms.get("effect_date"))
+                         or _normalize_date(row.get("created_at")),
+                         as_of, years=3):
+            return "expired"
+    elif t in ("atm", "equity_line"):
+        # ATMs and equity lines typically terminate at the end of the
+        # Sales / Purchase Agreement (often a 3-year term). If we have
+        # the agreement_date and 3 years have passed, treat as
+        # terminated unless the filing explicitly re-upped.
+        if _term_expired(_normalize_date(terms.get("agreement_date"))
+                         or _normalize_date(row.get("created_at")),
+                         as_of, years=3):
+            return "terminated"
+    elif t == "s1_offering":
+        # One-shot registered takedown — no maturity/expiration and not
+        # an overhang category, so it is never matched or date-closed.
+        # Close once it has gone unmentioned for S1_OFFERING_STALE_
+        # CLOSE_DAYS, measured from last_seen_date (fallback created_at)
+        # so continued re-disclosure resets the clock.
+        if _term_expired(_normalize_date(row.get("last_seen_date"))
+                         or _normalize_date(row.get("created_at")),
+                         as_of, days=S1_OFFERING_STALE_CLOSE_DAYS):
+            return "terminated"
+    return None
+
+
 def _confident_close_reason(row: dict, as_of_date: str) -> str | None:
     """Tier 1 auto-close decision for an extra_in_ledger row.
 
@@ -2441,69 +2560,9 @@ def _confident_close_reason(row: dict, as_of_date: str) -> str | None:
     out = _outstanding_dict(row)
     as_of = _normalize_date(as_of_date)
 
-    if t == "warrant":
-        exp = _normalize_date(terms.get("expiration"))
-        if as_of and exp and exp <= as_of:
-            return "expired"
-    elif t in ("convertible", "preferred"):
-        mat = _normalize_date(terms.get("maturity"))
-        if as_of and mat and mat <= as_of:
-            return "redeemed"
-    elif t == "shelf":
-        # SEC Rule 415(a)(5): shelves expire 3 years after the SEC
-        # declares them effective. `effect_date` is the canonical
-        # signal (from the EFFECT filing). Fall back to created_at +
-        # 3y when no EFFECT has reached us, which is conservative —
-        # the shelf is no later than created_at + 3 years.
-        anchor_date = (
-            _normalize_date(terms.get("effect_date"))
-            or _normalize_date(row.get("created_at"))
-        )
-        if as_of and anchor_date:
-            try:
-                ad = date.fromisoformat(anchor_date)
-                expires = ad.replace(year=ad.year + 3).isoformat()
-                if expires <= as_of:
-                    return "expired"
-            except ValueError:
-                pass
-    elif t in ("atm", "equity_line"):
-        # ATMs and equity lines typically terminate at the end of the
-        # Sales / Purchase Agreement (often a 3-year term). If we have
-        # the agreement_date and 3 years have passed, treat as
-        # terminated unless the filing explicitly re-upped.
-        anchor_date = (
-            _normalize_date(terms.get("agreement_date"))
-            or _normalize_date(row.get("created_at"))
-        )
-        if as_of and anchor_date:
-            try:
-                ad = date.fromisoformat(anchor_date)
-                expires = ad.replace(year=ad.year + 3).isoformat()
-                if expires <= as_of:
-                    return "terminated"
-            except ValueError:
-                pass
-    elif t == "s1_offering":
-        # One-shot registered takedown — no maturity/expiration and not
-        # an overhang category, so it is never matched or date-closed.
-        # Close once it has gone unmentioned for S1_OFFERING_STALE_
-        # CLOSE_DAYS, measured from last_seen_date (fallback created_at)
-        # so continued re-disclosure resets the clock.
-        anchor_date = (
-            _normalize_date(row.get("last_seen_date"))
-            or _normalize_date(row.get("created_at"))
-        )
-        if as_of and anchor_date:
-            try:
-                ad = date.fromisoformat(anchor_date)
-                expires = date.fromordinal(
-                    ad.toordinal() + S1_OFFERING_STALE_CLOSE_DAYS
-                ).isoformat()
-                if expires <= as_of:
-                    return "terminated"
-            except ValueError:
-                pass
+    reason = _date_close_reason(t, row, terms, as_of)
+    if reason:
+        return reason
 
     # Tranche-typed zero-outstanding closure (warrant/convertible/preferred).
     # Shelf-family is deliberately excluded — see docstring note.

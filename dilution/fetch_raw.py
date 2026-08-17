@@ -165,7 +165,6 @@ async def _fetch_filing_text_async(accession: str) -> int:
     written = 0
 
     form = row["form"] or ""
-    is_6k = form.startswith("6-K")
 
     # 1) Primary document.
     md: str | None = None

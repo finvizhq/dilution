@@ -525,6 +525,482 @@ def _accumulate_event_effect(
     overlay[iid] = new_row
 
 
+@dataclass(frozen=True)
+class _TargetView:
+    """The resolved target row plus the status facts every post-create
+    check needs. Amend / record_event / close all require an existing
+    live id, so resolution happens once in _validate_one and the three
+    handlers read it from here."""
+    target_id: str
+    target: dict
+    target_type: str | None
+    target_status: str
+    is_terminal: bool
+
+
+def _validate_split(m: Mutation) -> ValidationResult:
+    """Split ratios must be positive; nothing else to check."""
+    if m.ratio <= 0:
+        return _reject(m, "invalid_split",
+                       f"split ratio must be > 0; got {m.ratio}")
+    return ValidationResult(mutation=m, accepted=True)
+
+def _validate_create(m: Mutation, ledger: dict, live_ids: set,
+                     pending: dict, filing_form: str | None
+                     ) -> ValidationResult:
+    """A new instrument: form-appropriateness, terms, misclassification."""
+    # Sanitize entity canonicals first. Bad CP / PA values ride
+    # through the label builder and produce garbage card titles
+    # ('November 2024 warrants (november Warrants'); null them
+    # before validation continues so the create succeeds with a
+    # clean — if uninformative — label.
+    m, _ = _sanitize_entity_canonicals(m)
+    # Reject obvious mis-classification: a `shelf` whose label
+    # describes an EVENT against a shelf (takedown / drawdown) is
+    # the LLM emitting `create_instrument` where it should have
+    # emitted `record_event(drawdown)`. The walker prompt
+    # explicitly bans this; the validator is the deterministic
+    # safety net so polluted rows never reach the ledger.
+    if m.type == "shelf" and m.label:
+        lbl = m.label.lower()
+        if "takedown" in lbl or "drawdown" in lbl:
+            return _reject(
+                m, "shelf_takedown_misclassified",
+                f"shelf label {m.label!r} describes an event, not "
+                "an instrument; emit record_event(drawdown) instead",
+            )
+    # Shelves can only be minted from a base shelf registration
+    # filing. The LLM often writes `terms.form="S-3"` while
+    # processing an 8-K takedown announcement or 424B prospectus
+    # supplement — `terms.form` is what it CLAIMS the underlying
+    # shelf is, not the filing it's reading. Cross-checking against
+    # the actual filing form is the only deterministic way to stop
+    # 8-K/424B-sourced phantom shelves (the AMC SH-027/SH-028/
+    # SH-033 case). /A amendments also fail this check, which is
+    # correct — they go through amend_instrument.
+    if m.type == "shelf" and filing_form:
+        ff_norm = str(filing_form).upper().replace(" ", "").split("/")[0]
+        if ff_norm not in _SHELF_CREATE_FILING_FORMS:
+            return _reject(
+                m, "shelf_wrong_filing_form",
+                f"shelf create not allowed from filing form "
+                f"{filing_form!r}; only "
+                f"{sorted(_SHELF_CREATE_FILING_FORMS)} may mint "
+                "shelf rows. 424B / 8-K takedowns → "
+                "record_event(drawdown); /A amendments → "
+                "amend_instrument.",
+            )
+    # Belt-and-suspenders: even when filing_form is unknown, the
+    # LLM-claimed terms.form must look like a base shelf. /A
+    # suffixes (S-3/A, F-3/A) are amendments and must go through
+    # amend_instrument, not create_instrument.
+    if m.type == "shelf":
+        form_raw = (m.terms or {}).get("form") or ""
+        form_norm = str(form_raw).upper().replace(" ", "")
+        _SHELF_BASE_FORMS = {"S-3", "S-3ASR", "F-3", "F-3ASR",
+                             "F-10", "F-10EF"}
+        if form_norm not in _SHELF_BASE_FORMS:
+            return _reject(
+                m, "shelf_misclassified",
+                f"shelf create requires terms.form in "
+                f"{sorted(_SHELF_BASE_FORMS)}; got {form_raw!r}. "
+                "A 424B5 takedown, 8-K announcement, or S-3/A "
+                "amendment is NOT a new shelf — emit "
+                "record_event(drawdown) or amend_instrument.",
+            )
+    # Periodic-filing narrative creates with missing identifying
+    # terms — see _PERIODIC_NARRATIVE_FORMS comment for the data
+    # behind this guard. A walker prompt change asks the LLM to
+    # SKIP or AMEND rather than under-specify; this is the
+    # deterministic safety net for prompt drift.
+    if filing_form:
+        ff_base = (str(filing_form).upper()
+                   .replace(" ", "").split("/")[0])
+        if ff_base in _PERIODIC_NARRATIVE_FORMS:
+            terms = m.terms or {}
+            if m.type == "convertible" and (
+                terms.get("conv_price") is None
+                or terms.get("maturity") is None
+            ):
+                return _reject(
+                    m, "periodic_create_missing_terms",
+                    f"create_instrument(convertible) from periodic "
+                    f"form {filing_form!r} requires terms.conv_price "
+                    "AND terms.maturity. Got "
+                    f"conv_price={terms.get('conv_price')!r} "
+                    f"maturity={terms.get('maturity')!r}. Periodic "
+                    "narrative summary tables rarely carry per-note "
+                    "terms — emit amend_instrument against an "
+                    "existing ledger row, or skip (the anchor "
+                    "specialist captures summary-only convertibles).",
+                )
+            if m.type == "warrant" and (
+                terms.get("strike") is None
+                or terms.get("expiration") is None
+            ):
+                return _reject(
+                    m, "periodic_create_missing_terms",
+                    f"create_instrument(warrant) from periodic "
+                    f"form {filing_form!r} requires terms.strike AND "
+                    "terms.expiration. Got "
+                    f"strike={terms.get('strike')!r} "
+                    f"expiration={terms.get('expiration')!r}. "
+                    "Roll-forward warrant tables rarely carry per-"
+                    "tranche terms — emit amend_instrument against "
+                    "an existing ledger row, or skip (the anchor "
+                    "specialist captures summary-only warrants).",
+                )
+
+    # proposed_id collisions are not a validation failure — the
+    # apply layer detects existing ids and reallocates atomically.
+    # Validator just lets the create through; store._apply_create
+    # owns id assignment, including the sequence high-water mark.
+    return ValidationResult(mutation=m, accepted=True)
+
+def _validate_restate_atm(m: Mutation, ledger: dict, live_ids: set,
+                          pending: dict, filing_form: str | None,
+                          effects_overlay: dict[str, dict] | None = None,
+                          ) -> ValidationResult:
+    """An amended-and-restated ATM must point at a live ATM predecessor."""
+    # Form gate — a restatement is announced on a deal/amendment
+    # form, never minted from a periodic anchor pass.
+    if filing_form:
+        ff = str(filing_form).upper().replace(" ", "").split("/")[0]
+        if ff not in _RESTATE_FILING_FORMS:
+            return _reject(
+                m, "restate_wrong_filing_form",
+                f"restate_atm not allowed from filing form "
+                f"{filing_form!r}; an amended-and-restated sales "
+                "agreement is announced on an 8-K / 424B / S-3 / "
+                "POS AM. For a capacity figure surfaced in a 10-Q/"
+                "10-K footnote, use amend_atm.",
+            )
+    pred = m.predecessor_id
+    overlay = effects_overlay or {}
+    target = overlay.get(pred) or pending.get(pred) or ledger.get(pred)
+    if pred not in live_ids or target is None:
+        return _reject(
+            m, "missing_predecessor",
+            f"restate_atm predecessor {pred!r} not found in ledger; "
+            "use create_atm for a first-time ATM with no predecessor.",
+        )
+    if (target.get("type") or "").lower() != "atm":
+        return _reject(
+            m, "type_mismatch",
+            f"restate_atm predecessor {pred!r} is type "
+            f"{target.get('type')!r}, not atm.",
+        )
+    pstatus = (target.get("status") or "active").lower()
+    if (pstatus in _TERMINAL_STATUSES
+            or pstatus.startswith(_SUPERSEDED_PREFIX)):
+        return _reject(
+            m, "illegal_transition",
+            f"cannot restate predecessor {pred!r} in terminal status "
+            f"{pstatus!r}; it is no longer the live program.",
+        )
+    return ValidationResult(mutation=m, accepted=True)
+
+def _validate_record(m: Mutation, tv: "_TargetView") -> ValidationResult:
+    """An event against an existing instrument: type + transition legality."""
+    target, target_id = tv.target, tv.target_id
+    target_type, target_status = tv.target_type, tv.target_status
+    is_terminal = tv.is_terminal
+    valid_types = _EVENT_KIND_TYPES.get(m.event_kind, frozenset())
+    if target_type not in valid_types:
+        return _reject(
+            m, "type_mismatch",
+            f"event_kind {m.event_kind!r} incompatible with "
+            f"instrument type {target_type!r}",
+        )
+    if is_terminal:
+        return _reject(
+            m, "illegal_transition",
+            f"cannot record_event {m.event_kind!r} on "
+            f"{target_type} {target_id} in status {target_status!r}",
+        )
+    # Drawdown capacity overflow check.
+    if m.event_kind == "drawdown":
+        overflow = _drawdown_overflow(m, target)
+        if overflow is not None:
+            return _reject(
+                m, "capacity_overflow",
+                f"drawdown {m.fields!r} exceeds remaining "
+                f"capacity by {overflow:.1%}",
+            )
+    # Conversion event: type-gated input field.
+    #   convertible note → principal_converted (face $ converted)
+    #   preferred series → preferred_shares_converted (count retired)
+    # principal_* is debt-shaped and structurally meaningless for
+    # equity preferred; without preferred_shares_converted the store
+    # can't decrement count, the row stays at its last anchored value,
+    # and the row's outstanding only converges if the next periodic's
+    # overhang itemizes it (often it doesn't). IQST P-126: 8,631
+    # Series D shares converted on the 2026-03-31 10-Q but count
+    # stayed at 18,020 because the walker hacked principal_converted
+    # =0.01 to satisfy the old required-field guard.
+    if m.event_kind == "conversion":
+        fields = m.fields or {}
+        if target_type == "preferred":
+            pref_shares = fields.get("preferred_shares_converted")
+            # A debt-shaped principal_converted on a preferred is
+            # translatable to a share count when the series stated_value
+            # is known (loan-to-equity rollover) — the store does the
+            # division. Only reject when neither the share count nor a
+            # translatable $ amount is available.
+            _sv, _pr = _pos_num(
+                _from_json_field(target, "terms_json").get("stated_value")
+            ), _pos_num(fields.get("principal_converted"))
+            if ((not pref_shares or float(pref_shares) <= 0)
+                    and not (_sv and _pr)):
+                return _reject(
+                    m, "preferred_shares_required",
+                    f"record_conversion on preferred {target_id} "
+                    "requires `preferred_shares_converted` (the count "
+                    "of preferred shares retired). principal_* fields "
+                    "are debt-shaped and do not move count on a "
+                    "preferred.",
+                )
+        elif target_type == "convertible":
+            pc = fields.get("principal_converted")
+            if not pc or float(pc) <= 0:
+                return _reject(
+                    m, "principal_converted_required",
+                    f"record_conversion on convertible {target_id} "
+                    "requires `principal_converted` (face $ amount). "
+                    "preferred_shares_converted applies only to "
+                    "preferred series.",
+                )
+    # Partial-redemption event: same per-type field dispatch as
+    # conversion. Preferred carries value in `count`, so a cash
+    # redemption of N preferred shares must come in via
+    # preferred_shares_redeemed for the store to drop count.
+    # principal_redeemed on a preferred is a debt-shaped no-op (same
+    # hole the conversion path had pre-IQST-P-126 fix).
+    if m.event_kind == "partial_redemption":
+        fields = m.fields or {}
+        if target_type == "preferred":
+            pref_shares = fields.get("preferred_shares_redeemed")
+            # As in the conversion gate: a debt-shaped principal_redeemed
+            # on a preferred is translatable to a share count via the
+            # series stated_value, so allow it through when stated_value
+            # is known (SCNI EIB loan-to-equity preliminary tranche
+            # retirement). Reject only when neither path is available.
+            _sv, _pr = _pos_num(
+                _from_json_field(target, "terms_json").get("stated_value")
+            ), _pos_num(fields.get("principal_redeemed"))
+            if ((not pref_shares or float(pref_shares) <= 0)
+                    and not (_sv and _pr)):
+                return _reject(
+                    m, "preferred_shares_redeemed_required",
+                    f"record_partial_redemption on preferred "
+                    f"{target_id} requires `preferred_shares_redeemed` "
+                    "(the count of preferred shares retired for "
+                    "cash). principal_* fields are debt-shaped and "
+                    "do not move count on a preferred.",
+                )
+        elif target_type == "convertible":
+            pr = fields.get("principal_redeemed")
+            if not pr or float(pr) <= 0:
+                return _reject(
+                    m, "principal_redeemed_required",
+                    f"record_partial_redemption on convertible "
+                    f"{target_id} requires `principal_redeemed` "
+                    "(face $ amount called back). "
+                    "preferred_shares_redeemed applies only to "
+                    "preferred series.",
+                )
+    return ValidationResult(mutation=m, accepted=True)
+
+def _validate_amend(m: Mutation, tv: "_TargetView") -> ValidationResult:
+    """A field correction against an existing instrument."""
+    target, target_id = tv.target, tv.target_id
+    target_type, target_status = tv.target_type, tv.target_status
+    is_terminal = tv.is_terminal
+    if is_terminal:
+        return _reject(
+            m, "illegal_transition",
+            f"cannot amend {target_type} {target_id} in status "
+            f"{target_status!r} (terminal)",
+        )
+    # A preferred's liquidation_preference is structurally
+    # count × stated_value (the aggregate redemption face). The LLM
+    # conflates it with the CONSIDERATION exchanged for the series
+    # ('$29 million of debt was converted into 1,000 preferred
+    # shares' → amend liq_pref 34M→29M on SCNI EIB, where 1,000 ×
+    # $34,000 stated = $34M). Reject an amend that breaks the
+    # identity unless stated_value / count move in the same call.
+    # Face-value ceiling on a stated balance. See
+    # PRINCIPAL_REMAINING_CEILING for why 2x and what the failure mode
+    # looks like. Rejecting leaves the prior (credible) balance in
+    # place; the alternative — clamping to face — would invent a
+    # number the filing never stated. No-ops when the row carries no
+    # face (`terms.principal` absent, e.g. most preferred series,
+    # whose aggregate is guarded by the liq-pref identity below).
+    pr_new = _coerce_num(getattr(m, "principal_remaining", None))
+    if pr_new is not None and pr_new > 0:
+        face = _coerce_num(
+            _from_json_field(target, "terms_json").get("principal"))
+        if face and face > 0 and pr_new > face * PRINCIPAL_REMAINING_CEILING:
+            return _reject(
+                m, "principal_remaining_above_face",
+                f"principal_remaining={pr_new:,.0f} is "
+                f"{pr_new / face:.2f}x the ${face:,.0f} face of "
+                f"{target_id} (ceiling "
+                f"{PRINCIPAL_REMAINING_CEILING:g}x). Conversions and "
+                "redemptions only reduce a balance, so this is a "
+                "cumulative-to-date or multi-note aggregate read as a "
+                "period-end balance. Leave the balance unchanged, or "
+                "amend `principal` in the same call if the note itself "
+                "was restated.",
+            )
+    lp_new = getattr(m, "liquidation_preference", None)
+    if (lp_new is not None and target_type == "preferred"
+            and getattr(m, "stated_value", None) is None
+            and getattr(m, "count", None) is None):
+        t = _from_json_field(target, "terms_json")
+        o = _from_json_field(target, "outstanding_json")
+        sv = _coerce_num(t.get("stated_value"))
+        cnt = _coerce_num(o.get("count"))
+        if sv and cnt and cnt > 0:
+            implied = sv * cnt
+            if abs(lp_new - implied) / implied > 0.01:
+                return _reject(
+                    m, "liq_pref_inconsistent",
+                    f"liquidation_preference={lp_new:,.0f} breaks "
+                    f"count × stated_value = {cnt:,.0f} × {sv:,.0f} "
+                    f"= {implied:,.0f} on {target_id}. A '$X of "
+                    "debt converted' consideration figure is NOT "
+                    "the liquidation preference — leave it "
+                    "unchanged, or amend stated_value/count in the "
+                    "same call if the series itself was restated.",
+                )
+    return ValidationResult(mutation=m, accepted=True)
+
+def _validate_close(m: Mutation, tv: "_TargetView",
+                    filing_form: str | None) -> ValidationResult:
+    """Closing an instrument: reason coherence and outstanding-zero."""
+    target, target_id = tv.target, tv.target_id
+    target_type, target_status = tv.target_type, tv.target_status
+    is_terminal = tv.is_terminal
+    # A post-effective amendment re-registers the host shelf's
+    # prospectus; it never terminates the sales programs hosted under
+    # it. The walker misreads the standard "upon termination of the
+    # sales agreement …" conditional in a POS AM as a real
+    # termination and closes the live ATM, then rejects every later
+    # drawdown (FCEL 0001104659-24-132194). Sales-program
+    # supersession is owned by the store when a successor is CREATED
+    # on a shelf-host form — not by a close emitted here.
+    if filing_form and target_type in _SALES_PROGRAM_TYPES:
+        ff_norm = str(filing_form).upper().replace(" ", "").split("/")[0]
+        if ff_norm in _POST_EFFECTIVE_AMENDMENT_FORMS:
+            return _reject(
+                m, "close_on_post_effective_amendment",
+                f"cannot close {target_type} {target_id} from a "
+                f"post-effective amendment ({filing_form!r}); a POS AM "
+                "re-registers the host shelf and does not terminate the "
+                "sales agreement. ATM/ELOC supersession happens when the "
+                "successor program is created on a shelf-host form. Emit "
+                "amend_instrument for capacity changes, or skip.",
+            )
+    # Closing a closed instrument is legal only when chaining via
+    # `superseded` — that's how exchange offers / repricings that
+    # use new ids get linked.
+    if is_terminal and m.reason != "superseded":
+        return _reject(
+            m, "illegal_transition",
+            f"cannot close {target_id} in status {target_status!r} "
+            f"with reason {m.reason!r}",
+        )
+    if m.reason == "superseded" and not m.replaced_by:
+        return _reject(
+            m, "missing_replaced_by",
+            "close_instrument(reason=superseded) requires replaced_by",
+        )
+    # Outstanding-state cross-check. The walker hallucinates
+    # redemptions / terminations / conversions on instruments with
+    # non-zero remaining principal or count — closing the row
+    # removes the card entirely (cards.py only renders active /
+    # superseded rows), so over-eager closes erase real overhang.
+    # Guard: each close reason requires the type's *outstanding*
+    # field to be 0:
+    #   warrant     → count (shares)
+    #   preferred   → count (shares; equity-denominated)
+    #   convertible → principal_remaining (debt-denominated)
+    # Equity preferred carries its value in `count` × stated /
+    # liquidation value; its principal_remaining is structurally
+    # 0 / None even while shares remain outstanding (e.g. a debt-
+    # exchange Series D issued *for* shares, never given a
+    # principal). Using pr as the guard let the walker close such
+    # preferreds on a *partial* conversion — IQST P-126 was closed
+    # reason='converted' after only 8,631 of 18,020 Series D shares
+    # converted, because pr was 0 and the guard didn't fire. See
+    # anchor._confident_close_reason for the parallel rule.
+    # Past-maturity alone is NOT a close-out trigger — cards.py
+    # auto-greys past-expiry warrants without needing the row
+    # closed. Use record_event(partial_redemption / partial_
+    # termination / conversion) for non-final movements.
+    if m.reason in ("redeemed", "terminated", "expired", "exercised",
+                    "converted"):
+        out = _from_json_field(target, "outstanding_json")
+        target_type = target.get("type")
+        count = _coerce_num(out.get("count"))
+        pr = _coerce_num(out.get("principal_remaining"))
+        # Outstanding field that gates closure for this type, plus a
+        # human-readable label for the rejection message.
+        if target_type in ("warrant", "preferred"):
+            out_val, out_label = count, "count"
+        else:
+            out_val, out_label = pr, "principal_remaining"
+        blocking = None
+        if m.reason == "redeemed" and out_val is not None and out_val > 0:
+            # Event-filing exemption. An 8-K/6-K that says a note
+            # "was paid in full" IS the redemption disclosure — there
+            # is no separate per-dollar event to record first, so
+            # demanding outstanding==0 deadlocks the close (CETY
+            # Sep-2024 Mast Hill note: the Jan-2025 8-K's
+            # "$852,406.35 as payment in full" close was rejected
+            # three times and the dead note kept a live card).
+            # _apply_close zeroes the outstanding as the implicit
+            # final repayment. Periodic filings (10-K/10-Q/20-F)
+            # keep the guard — that's where the walker's
+            # hallucinated mass-close batches come from.
+            ff_norm = (str(filing_form).upper().replace(" ", "")
+                       .split("/")[0]) if filing_form else ""
+            if ff_norm not in ("8-K", "6-K"):
+                blocking = (
+                    f"{out_label}={out_val} on {target_type} "
+                    f"{target_id}; full redemption requires 0. "
+                    "Use record_event(partial_redemption) for partial "
+                    "repayments."
+                )
+        elif m.reason == "converted" and out_val is not None and out_val > 0:
+            blocking = (
+                f"{out_label}={out_val} on {target_type} "
+                f"{target_id}; full conversion requires 0. "
+                "Use record_event(conversion) for partial conversions."
+            )
+        elif m.reason == "exercised" and target_type == "warrant" \
+                and count is not None and count > 0:
+            blocking = (
+                f"count={count} on warrant {target_id}; full "
+                "exercise requires 0. Use record_event(exercise) "
+                "for partial exercises."
+            )
+        elif m.reason == "terminated" \
+                and out_val is not None and out_val > 0:
+            blocking = (
+                f"{out_label}={out_val} on {target_type} "
+                f"{target_id}; termination requires 0 outstanding."
+            )
+        if blocking:
+            return _reject(
+                m, "close_with_outstanding",
+                f"close_instrument(reason={m.reason!r}) blocked: "
+                f"{blocking}",
+            )
+    return ValidationResult(mutation=m, accepted=True)
+
+
 def _validate_one(
     m: Mutation,
     ledger: dict[str, dict],
@@ -534,158 +1010,12 @@ def _validate_one(
     filing_form: str | None = None,
 ) -> ValidationResult:
     if isinstance(m, ApplySplit):
-        if m.ratio <= 0:
-            return _reject(m, "invalid_split",
-                           f"split ratio must be > 0; got {m.ratio}")
-        return ValidationResult(mutation=m, accepted=True)
-
+        return _validate_split(m)
     if isinstance(m, CreateMutation):
-        # Sanitize entity canonicals first. Bad CP / PA values ride
-        # through the label builder and produce garbage card titles
-        # ('November 2024 warrants (november Warrants'); null them
-        # before validation continues so the create succeeds with a
-        # clean — if uninformative — label.
-        m, _ = _sanitize_entity_canonicals(m)
-        # Reject obvious mis-classification: a `shelf` whose label
-        # describes an EVENT against a shelf (takedown / drawdown) is
-        # the LLM emitting `create_instrument` where it should have
-        # emitted `record_event(drawdown)`. The walker prompt
-        # explicitly bans this; the validator is the deterministic
-        # safety net so polluted rows never reach the ledger.
-        if m.type == "shelf" and m.label:
-            lbl = m.label.lower()
-            if "takedown" in lbl or "drawdown" in lbl:
-                return _reject(
-                    m, "shelf_takedown_misclassified",
-                    f"shelf label {m.label!r} describes an event, not "
-                    "an instrument; emit record_event(drawdown) instead",
-                )
-        # Shelves can only be minted from a base shelf registration
-        # filing. The LLM often writes `terms.form="S-3"` while
-        # processing an 8-K takedown announcement or 424B prospectus
-        # supplement — `terms.form` is what it CLAIMS the underlying
-        # shelf is, not the filing it's reading. Cross-checking against
-        # the actual filing form is the only deterministic way to stop
-        # 8-K/424B-sourced phantom shelves (the AMC SH-027/SH-028/
-        # SH-033 case). /A amendments also fail this check, which is
-        # correct — they go through amend_instrument.
-        if m.type == "shelf" and filing_form:
-            ff_norm = str(filing_form).upper().replace(" ", "").split("/")[0]
-            if ff_norm not in _SHELF_CREATE_FILING_FORMS:
-                return _reject(
-                    m, "shelf_wrong_filing_form",
-                    f"shelf create not allowed from filing form "
-                    f"{filing_form!r}; only "
-                    f"{sorted(_SHELF_CREATE_FILING_FORMS)} may mint "
-                    "shelf rows. 424B / 8-K takedowns → "
-                    "record_event(drawdown); /A amendments → "
-                    "amend_instrument.",
-                )
-        # Belt-and-suspenders: even when filing_form is unknown, the
-        # LLM-claimed terms.form must look like a base shelf. /A
-        # suffixes (S-3/A, F-3/A) are amendments and must go through
-        # amend_instrument, not create_instrument.
-        if m.type == "shelf":
-            form_raw = (m.terms or {}).get("form") or ""
-            form_norm = str(form_raw).upper().replace(" ", "")
-            _SHELF_BASE_FORMS = {"S-3", "S-3ASR", "F-3", "F-3ASR",
-                                 "F-10", "F-10EF"}
-            if form_norm not in _SHELF_BASE_FORMS:
-                return _reject(
-                    m, "shelf_misclassified",
-                    f"shelf create requires terms.form in "
-                    f"{sorted(_SHELF_BASE_FORMS)}; got {form_raw!r}. "
-                    "A 424B5 takedown, 8-K announcement, or S-3/A "
-                    "amendment is NOT a new shelf — emit "
-                    "record_event(drawdown) or amend_instrument.",
-                )
-        # Periodic-filing narrative creates with missing identifying
-        # terms — see _PERIODIC_NARRATIVE_FORMS comment for the data
-        # behind this guard. A walker prompt change asks the LLM to
-        # SKIP or AMEND rather than under-specify; this is the
-        # deterministic safety net for prompt drift.
-        if filing_form:
-            ff_base = (str(filing_form).upper()
-                       .replace(" ", "").split("/")[0])
-            if ff_base in _PERIODIC_NARRATIVE_FORMS:
-                terms = m.terms or {}
-                if m.type == "convertible" and (
-                    terms.get("conv_price") is None
-                    or terms.get("maturity") is None
-                ):
-                    return _reject(
-                        m, "periodic_create_missing_terms",
-                        f"create_instrument(convertible) from periodic "
-                        f"form {filing_form!r} requires terms.conv_price "
-                        "AND terms.maturity. Got "
-                        f"conv_price={terms.get('conv_price')!r} "
-                        f"maturity={terms.get('maturity')!r}. Periodic "
-                        "narrative summary tables rarely carry per-note "
-                        "terms — emit amend_instrument against an "
-                        "existing ledger row, or skip (the anchor "
-                        "specialist captures summary-only convertibles).",
-                    )
-                if m.type == "warrant" and (
-                    terms.get("strike") is None
-                    or terms.get("expiration") is None
-                ):
-                    return _reject(
-                        m, "periodic_create_missing_terms",
-                        f"create_instrument(warrant) from periodic "
-                        f"form {filing_form!r} requires terms.strike AND "
-                        "terms.expiration. Got "
-                        f"strike={terms.get('strike')!r} "
-                        f"expiration={terms.get('expiration')!r}. "
-                        "Roll-forward warrant tables rarely carry per-"
-                        "tranche terms — emit amend_instrument against "
-                        "an existing ledger row, or skip (the anchor "
-                        "specialist captures summary-only warrants).",
-                    )
-
-        # proposed_id collisions are not a validation failure — the
-        # apply layer detects existing ids and reallocates atomically.
-        # Validator just lets the create through; store._apply_create
-        # owns id assignment, including the sequence high-water mark.
-        return ValidationResult(mutation=m, accepted=True)
-
+        return _validate_create(m, ledger, live_ids, pending, filing_form)
     if isinstance(m, RestateAtm):
-        # Form gate — a restatement is announced on a deal/amendment
-        # form, never minted from a periodic anchor pass.
-        if filing_form:
-            ff = str(filing_form).upper().replace(" ", "").split("/")[0]
-            if ff not in _RESTATE_FILING_FORMS:
-                return _reject(
-                    m, "restate_wrong_filing_form",
-                    f"restate_atm not allowed from filing form "
-                    f"{filing_form!r}; an amended-and-restated sales "
-                    "agreement is announced on an 8-K / 424B / S-3 / "
-                    "POS AM. For a capacity figure surfaced in a 10-Q/"
-                    "10-K footnote, use amend_atm.",
-                )
-        pred = m.predecessor_id
-        overlay = effects_overlay or {}
-        target = overlay.get(pred) or pending.get(pred) or ledger.get(pred)
-        if pred not in live_ids or target is None:
-            return _reject(
-                m, "missing_predecessor",
-                f"restate_atm predecessor {pred!r} not found in ledger; "
-                "use create_atm for a first-time ATM with no predecessor.",
-            )
-        if (target.get("type") or "").lower() != "atm":
-            return _reject(
-                m, "type_mismatch",
-                f"restate_atm predecessor {pred!r} is type "
-                f"{target.get('type')!r}, not atm.",
-            )
-        pstatus = (target.get("status") or "active").lower()
-        if (pstatus in _TERMINAL_STATUSES
-                or pstatus.startswith(_SUPERSEDED_PREFIX)):
-            return _reject(
-                m, "illegal_transition",
-                f"cannot restate predecessor {pred!r} in terminal status "
-                f"{pstatus!r}; it is no longer the live program.",
-            )
-        return ValidationResult(mutation=m, accepted=True)
+        return _validate_restate_atm(m, ledger, live_ids, pending, filing_form,
+                                     effects_overlay)
 
     # Below: amend / record_event / close — all require an existing id.
     target_id = m.instrument_id
@@ -717,292 +1047,15 @@ def _validate_one(
         or target_status.startswith(_SUPERSEDED_PREFIX)
     )
 
+    tv = _TargetView(target_id, target, target_type, target_status,
+                     is_terminal)
+
     if isinstance(m, RecordMutation):
-        valid_types = _EVENT_KIND_TYPES.get(m.event_kind, frozenset())
-        if target_type not in valid_types:
-            return _reject(
-                m, "type_mismatch",
-                f"event_kind {m.event_kind!r} incompatible with "
-                f"instrument type {target_type!r}",
-            )
-        if is_terminal:
-            return _reject(
-                m, "illegal_transition",
-                f"cannot record_event {m.event_kind!r} on "
-                f"{target_type} {target_id} in status {target_status!r}",
-            )
-        # Drawdown capacity overflow check.
-        if m.event_kind == "drawdown":
-            overflow = _drawdown_overflow(m, target)
-            if overflow is not None:
-                return _reject(
-                    m, "capacity_overflow",
-                    f"drawdown {m.fields!r} exceeds remaining "
-                    f"capacity by {overflow:.1%}",
-                )
-        # Conversion event: type-gated input field.
-        #   convertible note → principal_converted (face $ converted)
-        #   preferred series → preferred_shares_converted (count retired)
-        # principal_* is debt-shaped and structurally meaningless for
-        # equity preferred; without preferred_shares_converted the store
-        # can't decrement count, the row stays at its last anchored value,
-        # and the row's outstanding only converges if the next periodic's
-        # overhang itemizes it (often it doesn't). IQST P-126: 8,631
-        # Series D shares converted on the 2026-03-31 10-Q but count
-        # stayed at 18,020 because the walker hacked principal_converted
-        # =0.01 to satisfy the old required-field guard.
-        if m.event_kind == "conversion":
-            fields = m.fields or {}
-            if target_type == "preferred":
-                pref_shares = fields.get("preferred_shares_converted")
-                # A debt-shaped principal_converted on a preferred is
-                # translatable to a share count when the series stated_value
-                # is known (loan-to-equity rollover) — the store does the
-                # division. Only reject when neither the share count nor a
-                # translatable $ amount is available.
-                _sv, _pr = _pos_num(
-                    _from_json_field(target, "terms_json").get("stated_value")
-                ), _pos_num(fields.get("principal_converted"))
-                if ((not pref_shares or float(pref_shares) <= 0)
-                        and not (_sv and _pr)):
-                    return _reject(
-                        m, "preferred_shares_required",
-                        f"record_conversion on preferred {target_id} "
-                        "requires `preferred_shares_converted` (the count "
-                        "of preferred shares retired). principal_* fields "
-                        "are debt-shaped and do not move count on a "
-                        "preferred.",
-                    )
-            elif target_type == "convertible":
-                pc = fields.get("principal_converted")
-                if not pc or float(pc) <= 0:
-                    return _reject(
-                        m, "principal_converted_required",
-                        f"record_conversion on convertible {target_id} "
-                        "requires `principal_converted` (face $ amount). "
-                        "preferred_shares_converted applies only to "
-                        "preferred series.",
-                    )
-        # Partial-redemption event: same per-type field dispatch as
-        # conversion. Preferred carries value in `count`, so a cash
-        # redemption of N preferred shares must come in via
-        # preferred_shares_redeemed for the store to drop count.
-        # principal_redeemed on a preferred is a debt-shaped no-op (same
-        # hole the conversion path had pre-IQST-P-126 fix).
-        if m.event_kind == "partial_redemption":
-            fields = m.fields or {}
-            if target_type == "preferred":
-                pref_shares = fields.get("preferred_shares_redeemed")
-                # As in the conversion gate: a debt-shaped principal_redeemed
-                # on a preferred is translatable to a share count via the
-                # series stated_value, so allow it through when stated_value
-                # is known (SCNI EIB loan-to-equity preliminary tranche
-                # retirement). Reject only when neither path is available.
-                _sv, _pr = _pos_num(
-                    _from_json_field(target, "terms_json").get("stated_value")
-                ), _pos_num(fields.get("principal_redeemed"))
-                if ((not pref_shares or float(pref_shares) <= 0)
-                        and not (_sv and _pr)):
-                    return _reject(
-                        m, "preferred_shares_redeemed_required",
-                        f"record_partial_redemption on preferred "
-                        f"{target_id} requires `preferred_shares_redeemed` "
-                        "(the count of preferred shares retired for "
-                        "cash). principal_* fields are debt-shaped and "
-                        "do not move count on a preferred.",
-                    )
-            elif target_type == "convertible":
-                pr = fields.get("principal_redeemed")
-                if not pr or float(pr) <= 0:
-                    return _reject(
-                        m, "principal_redeemed_required",
-                        f"record_partial_redemption on convertible "
-                        f"{target_id} requires `principal_redeemed` "
-                        "(face $ amount called back). "
-                        "preferred_shares_redeemed applies only to "
-                        "preferred series.",
-                    )
-        return ValidationResult(mutation=m, accepted=True)
-
+        return _validate_record(m, tv)
     if isinstance(m, AmendMutation):
-        if is_terminal:
-            return _reject(
-                m, "illegal_transition",
-                f"cannot amend {target_type} {target_id} in status "
-                f"{target_status!r} (terminal)",
-            )
-        # A preferred's liquidation_preference is structurally
-        # count × stated_value (the aggregate redemption face). The LLM
-        # conflates it with the CONSIDERATION exchanged for the series
-        # ('$29 million of debt was converted into 1,000 preferred
-        # shares' → amend liq_pref 34M→29M on SCNI EIB, where 1,000 ×
-        # $34,000 stated = $34M). Reject an amend that breaks the
-        # identity unless stated_value / count move in the same call.
-        # Face-value ceiling on a stated balance. See
-        # PRINCIPAL_REMAINING_CEILING for why 2x and what the failure mode
-        # looks like. Rejecting leaves the prior (credible) balance in
-        # place; the alternative — clamping to face — would invent a
-        # number the filing never stated. No-ops when the row carries no
-        # face (`terms.principal` absent, e.g. most preferred series,
-        # whose aggregate is guarded by the liq-pref identity below).
-        pr_new = _coerce_num(getattr(m, "principal_remaining", None))
-        if pr_new is not None and pr_new > 0:
-            face = _coerce_num(
-                _from_json_field(target, "terms_json").get("principal"))
-            if face and face > 0 and pr_new > face * PRINCIPAL_REMAINING_CEILING:
-                return _reject(
-                    m, "principal_remaining_above_face",
-                    f"principal_remaining={pr_new:,.0f} is "
-                    f"{pr_new / face:.2f}x the ${face:,.0f} face of "
-                    f"{target_id} (ceiling "
-                    f"{PRINCIPAL_REMAINING_CEILING:g}x). Conversions and "
-                    "redemptions only reduce a balance, so this is a "
-                    "cumulative-to-date or multi-note aggregate read as a "
-                    "period-end balance. Leave the balance unchanged, or "
-                    "amend `principal` in the same call if the note itself "
-                    "was restated.",
-                )
-        lp_new = getattr(m, "liquidation_preference", None)
-        if (lp_new is not None and target_type == "preferred"
-                and getattr(m, "stated_value", None) is None
-                and getattr(m, "count", None) is None):
-            t = _from_json_field(target, "terms_json")
-            o = _from_json_field(target, "outstanding_json")
-            sv = _coerce_num(t.get("stated_value"))
-            cnt = _coerce_num(o.get("count"))
-            if sv and cnt and cnt > 0:
-                implied = sv * cnt
-                if abs(lp_new - implied) / implied > 0.01:
-                    return _reject(
-                        m, "liq_pref_inconsistent",
-                        f"liquidation_preference={lp_new:,.0f} breaks "
-                        f"count × stated_value = {cnt:,.0f} × {sv:,.0f} "
-                        f"= {implied:,.0f} on {target_id}. A '$X of "
-                        "debt converted' consideration figure is NOT "
-                        "the liquidation preference — leave it "
-                        "unchanged, or amend stated_value/count in the "
-                        "same call if the series itself was restated.",
-                    )
-        return ValidationResult(mutation=m, accepted=True)
-
+        return _validate_amend(m, tv)
     if isinstance(m, CloseInstrument):
-        # A post-effective amendment re-registers the host shelf's
-        # prospectus; it never terminates the sales programs hosted under
-        # it. The walker misreads the standard "upon termination of the
-        # sales agreement …" conditional in a POS AM as a real
-        # termination and closes the live ATM, then rejects every later
-        # drawdown (FCEL 0001104659-24-132194). Sales-program
-        # supersession is owned by the store when a successor is CREATED
-        # on a shelf-host form — not by a close emitted here.
-        if filing_form and target_type in _SALES_PROGRAM_TYPES:
-            ff_norm = str(filing_form).upper().replace(" ", "").split("/")[0]
-            if ff_norm in _POST_EFFECTIVE_AMENDMENT_FORMS:
-                return _reject(
-                    m, "close_on_post_effective_amendment",
-                    f"cannot close {target_type} {target_id} from a "
-                    f"post-effective amendment ({filing_form!r}); a POS AM "
-                    "re-registers the host shelf and does not terminate the "
-                    "sales agreement. ATM/ELOC supersession happens when the "
-                    "successor program is created on a shelf-host form. Emit "
-                    "amend_instrument for capacity changes, or skip.",
-                )
-        # Closing a closed instrument is legal only when chaining via
-        # `superseded` — that's how exchange offers / repricings that
-        # use new ids get linked.
-        if is_terminal and m.reason != "superseded":
-            return _reject(
-                m, "illegal_transition",
-                f"cannot close {target_id} in status {target_status!r} "
-                f"with reason {m.reason!r}",
-            )
-        if m.reason == "superseded" and not m.replaced_by:
-            return _reject(
-                m, "missing_replaced_by",
-                "close_instrument(reason=superseded) requires replaced_by",
-            )
-        # Outstanding-state cross-check. The walker hallucinates
-        # redemptions / terminations / conversions on instruments with
-        # non-zero remaining principal or count — closing the row
-        # removes the card entirely (cards.py only renders active /
-        # superseded rows), so over-eager closes erase real overhang.
-        # Guard: each close reason requires the type's *outstanding*
-        # field to be 0:
-        #   warrant     → count (shares)
-        #   preferred   → count (shares; equity-denominated)
-        #   convertible → principal_remaining (debt-denominated)
-        # Equity preferred carries its value in `count` × stated /
-        # liquidation value; its principal_remaining is structurally
-        # 0 / None even while shares remain outstanding (e.g. a debt-
-        # exchange Series D issued *for* shares, never given a
-        # principal). Using pr as the guard let the walker close such
-        # preferreds on a *partial* conversion — IQST P-126 was closed
-        # reason='converted' after only 8,631 of 18,020 Series D shares
-        # converted, because pr was 0 and the guard didn't fire. See
-        # anchor._confident_close_reason for the parallel rule.
-        # Past-maturity alone is NOT a close-out trigger — cards.py
-        # auto-greys past-expiry warrants without needing the row
-        # closed. Use record_event(partial_redemption / partial_
-        # termination / conversion) for non-final movements.
-        if m.reason in ("redeemed", "terminated", "expired", "exercised",
-                        "converted"):
-            out = _from_json_field(target, "outstanding_json")
-            target_type = target.get("type")
-            count = _coerce_num(out.get("count"))
-            pr = _coerce_num(out.get("principal_remaining"))
-            # Outstanding field that gates closure for this type, plus a
-            # human-readable label for the rejection message.
-            if target_type in ("warrant", "preferred"):
-                out_val, out_label = count, "count"
-            else:
-                out_val, out_label = pr, "principal_remaining"
-            blocking = None
-            if m.reason == "redeemed" and out_val is not None and out_val > 0:
-                # Event-filing exemption. An 8-K/6-K that says a note
-                # "was paid in full" IS the redemption disclosure — there
-                # is no separate per-dollar event to record first, so
-                # demanding outstanding==0 deadlocks the close (CETY
-                # Sep-2024 Mast Hill note: the Jan-2025 8-K's
-                # "$852,406.35 as payment in full" close was rejected
-                # three times and the dead note kept a live card).
-                # _apply_close zeroes the outstanding as the implicit
-                # final repayment. Periodic filings (10-K/10-Q/20-F)
-                # keep the guard — that's where the walker's
-                # hallucinated mass-close batches come from.
-                ff_norm = (str(filing_form).upper().replace(" ", "")
-                           .split("/")[0]) if filing_form else ""
-                if ff_norm not in ("8-K", "6-K"):
-                    blocking = (
-                        f"{out_label}={out_val} on {target_type} "
-                        f"{target_id}; full redemption requires 0. "
-                        "Use record_event(partial_redemption) for partial "
-                        "repayments."
-                    )
-            elif m.reason == "converted" and out_val is not None and out_val > 0:
-                blocking = (
-                    f"{out_label}={out_val} on {target_type} "
-                    f"{target_id}; full conversion requires 0. "
-                    "Use record_event(conversion) for partial conversions."
-                )
-            elif m.reason == "exercised" and target_type == "warrant" \
-                    and count is not None and count > 0:
-                blocking = (
-                    f"count={count} on warrant {target_id}; full "
-                    "exercise requires 0. Use record_event(exercise) "
-                    "for partial exercises."
-                )
-            elif m.reason == "terminated" \
-                    and out_val is not None and out_val > 0:
-                blocking = (
-                    f"{out_label}={out_val} on {target_type} "
-                    f"{target_id}; termination requires 0 outstanding."
-                )
-            if blocking:
-                return _reject(
-                    m, "close_with_outstanding",
-                    f"close_instrument(reason={m.reason!r}) blocked: "
-                    f"{blocking}",
-                )
-        return ValidationResult(mutation=m, accepted=True)
+        return _validate_close(m, tv, filing_form)
 
     # Unknown mutation kind — Pydantic should have caught this, but
     # defense in depth keeps the walker from crashing.

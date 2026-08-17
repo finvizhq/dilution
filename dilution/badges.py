@@ -194,14 +194,27 @@ _OFFERING_DESC = (
 )
 
 
-def _offering_ability(cards: dict, mcap: float | None) -> Badge:
-    shelves = cards.get("shelf") or []
-    s1s = [c for c in (cards.get("s1_offering") or [])
-           if c.get("s1_status") in ("pending", "effective")]
-    atms = cards.get("atm") or []
-    elocs = [c for c in (cards.get("equity_line") or [])
-             if not c.get("terminated")]
+@dataclass(frozen=True)
+class _OfferingCapacity:
+    """At-will raisable dollars, split by registration source.
 
+    `unknown` counts registrations the filing never sized. Those are
+    excluded from the total rather than guessed at, and surfaced in the
+    detail so a small total can't be misread as "nothing on file".
+    """
+    shelf: float
+    s1: float
+    unknown: int
+    wksi: bool
+
+    @property
+    def total(self) -> float:
+        return self.shelf + self.s1
+
+
+def _offering_capacity(shelves: list[dict],
+                       s1s: list[dict]) -> _OfferingCapacity:
+    """Sum registered capacity, skipping WKSI sentinels and unsized rows."""
     wksi = any(_is_wksi_amount(c.get("current_raisable_amount"))
                or _is_wksi_amount(c.get("total_shelf_capacity"))
                for c in shelves)
@@ -225,7 +238,95 @@ def _offering_ability(cards: dict, mcap: float | None) -> Badge:
             unknown += 1
             continue
         s1_cap += float(v)
-    capacity = shelf_cap + s1_cap
+    return _OfferingCapacity(shelf_cap, s1_cap, unknown, wksi)
+
+
+def _offering_sources_detail(shelves: list[dict], s1s: list[dict],
+                             cap: _OfferingCapacity) -> list[str]:
+    """The "what is on file" half of the badge detail."""
+    detail: list[str] = []
+    if shelves:
+        if cap.wksi:
+            detail.append("WKSI automatic shelf (S-3ASR/F-3ASR) — "
+                          "effectively unlimited capacity")
+        if cap.shelf > 0 or not cap.wksi:
+            noun = "shelves" if len(shelves) > 1 else "shelf"
+            detail.append(f"{len(shelves)} active {noun}: "
+                          f"{_usd(cap.shelf)} raisable now")
+        if any(c.get("baby_shelf_restriction") == "Yes" for c in shelves):
+            detail.append("Baby-shelf (I.B.6) cap applied — raisable is "
+                          "limited to ⅓ of public float per 12 months")
+    if s1s:
+        detail.append(f"{len(s1s)} pending S-1/F-1: {_usd(cap.s1)} anticipated")
+    if not shelves and not s1s:
+        detail.append("No active shelf or pending S-1 on file")
+    if cap.unknown:
+        detail.append(f"{cap.unknown} registration"
+                      f"{'s' if cap.unknown > 1 else ''} with undisclosed "
+                      f"capacity (not counted)")
+    return detail
+
+
+def _offering_band(cap: _OfferingCapacity,
+                   mcap: float | None) -> tuple[str | None, float, list[str]]:
+    """Size capacity against market cap → (band, frac, detail lines)."""
+    if cap.wksi:
+        return "high", 1.0, []
+    if cap.total <= 0:
+        return "low", 0.0, []
+    if not mcap:
+        return None, 0.0, ["Market cap unavailable — cannot size the capacity"]
+
+    detail: list[str] = []
+    ratio = cap.total / mcap * 100.0
+    if cap.total < _OFFERING_FLOOR_USD:
+        band, frac = "low", min(0.5, ratio / _OFFERING_MED_PCT)
+        detail.append(f"Capacity under {_usd(_OFFERING_FLOOR_USD)} — "
+                      f"too small for a meaningful raise")
+    elif ratio < _OFFERING_MED_PCT:
+        band, frac = "low", ratio / _OFFERING_MED_PCT
+    elif ratio <= _OFFERING_HIGH_PCT:
+        band, frac = "medium", ((ratio - _OFFERING_MED_PCT)
+                                / (_OFFERING_HIGH_PCT - _OFFERING_MED_PCT))
+    else:
+        band, frac = "high", min(1.0, (ratio - _OFFERING_HIGH_PCT) / 75.0)
+    detail.append(f"= {_pct0(ratio)} of {_usd(mcap)} market cap")
+    return band, frac, detail
+
+
+def _offering_escalate(band: str | None, frac: float,
+                       atm_live: float) -> tuple[str, float, list[str]]:
+    """Bump one band: at-will selling is already running.
+
+    Capacity is not re-added — an ATM usually draws down the shelf we
+    already counted. An unsized badge (no market cap) lands mid-scale
+    rather than staying blank; an already-High one only gains fraction.
+    """
+    if band is None:
+        band, frac = "medium", 0.5
+    elif band == "low":
+        band = "medium"
+    elif band == "medium":
+        band = "high"
+    else:
+        frac = min(1.0, frac + 0.33)
+    return band, frac, [f"Live ATM/equity line, {_usd(atm_live)} remaining "
+                        f"— escalated one level"]
+
+
+def _offering_ability(cards: dict, mcap: float | None) -> Badge:
+    shelves = cards.get("shelf") or []
+    s1s = [c for c in (cards.get("s1_offering") or [])
+           if c.get("s1_status") in ("pending", "effective")]
+    atms = cards.get("atm") or []
+    elocs = [c for c in (cards.get("equity_line") or [])
+             if not c.get("terminated")]
+
+    cap = _offering_capacity(shelves, s1s)
+    detail = _offering_sources_detail(shelves, s1s, cap)
+
+    band, frac, band_detail = _offering_band(cap, mcap)
+    detail += band_detail
 
     # ATMs: use the IB6-capped live raisable (raisable_capped), not the
     # contractual remaining_capacity DT displays — the escalator measures
@@ -236,63 +337,10 @@ def _offering_ability(cards: dict, mcap: float | None) -> Badge:
                 + sum(float(c.get("remaining_capacity") or 0) for c in elocs))
     # Same materiality grammar as the main bands: $1M absolute floor OR
     # the 5%-of-market-cap Low/Medium boundary.
-    escalator = (atm_live >= _OFFERING_FLOOR_USD
-                 or (mcap and atm_live >= mcap * _OFFERING_MED_PCT / 100.0))
-
-    detail: list[str] = []
-    if shelves:
-        if wksi:
-            detail.append("WKSI automatic shelf (S-3ASR/F-3ASR) — "
-                          "effectively unlimited capacity")
-        if shelf_cap > 0 or not wksi:
-            noun = "shelves" if len(shelves) > 1 else "shelf"
-            detail.append(f"{len(shelves)} active {noun}: "
-                          f"{_usd(shelf_cap)} raisable now")
-        if any(c.get("baby_shelf_restriction") == "Yes" for c in shelves):
-            detail.append("Baby-shelf (I.B.6) cap applied — raisable is "
-                          "limited to ⅓ of public float per 12 months")
-    if s1s:
-        detail.append(f"{len(s1s)} pending S-1/F-1: {_usd(s1_cap)} anticipated")
-    if not shelves and not s1s:
-        detail.append("No active shelf or pending S-1 on file")
-    if unknown:
-        detail.append(f"{unknown} registration"
-                      f"{'s' if unknown > 1 else ''} with undisclosed "
-                      f"capacity (not counted)")
-
-    if wksi:
-        band, frac = "high", 1.0
-    elif capacity <= 0:
-        band, frac = "low", 0.0
-    elif mcap:
-        ratio = capacity / mcap * 100.0
-        if capacity < _OFFERING_FLOOR_USD:
-            band, frac = "low", min(0.5, ratio / _OFFERING_MED_PCT)
-            detail.append(f"Capacity under {_usd(_OFFERING_FLOOR_USD)} — "
-                          f"too small for a meaningful raise")
-        elif ratio < _OFFERING_MED_PCT:
-            band, frac = "low", ratio / _OFFERING_MED_PCT
-        elif ratio <= _OFFERING_HIGH_PCT:
-            band, frac = "medium", ((ratio - _OFFERING_MED_PCT)
-                                    / (_OFFERING_HIGH_PCT - _OFFERING_MED_PCT))
-        else:
-            band, frac = "high", min(1.0, (ratio - _OFFERING_HIGH_PCT) / 75.0)
-        detail.append(f"= {_pct0(ratio)} of {_usd(mcap)} market cap")
-    else:
-        band, frac = None, 0.0
-        detail.append("Market cap unavailable — cannot size the capacity")
-
-    if escalator:
-        if band is None:
-            band, frac = "medium", 0.5
-        elif band == "low":
-            band = "medium"
-        elif band == "medium":
-            band = "high"
-        else:
-            frac = min(1.0, frac + 0.33)
-        detail.append(f"Live ATM/equity line, {_usd(atm_live)} remaining "
-                      f"— escalated one level")
+    if (atm_live >= _OFFERING_FLOOR_USD
+            or (mcap and atm_live >= mcap * _OFFERING_MED_PCT / 100.0)):
+        band, frac, esc_detail = _offering_escalate(band, frac, atm_live)
+        detail += esc_detail
 
     return _mk("offering_ability", "Offering Ability", _OFFERING_DESC,
                band, frac, detail, _OFFERING_LEGEND)

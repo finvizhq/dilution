@@ -19,6 +19,7 @@ Derived statuses:
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import date as _d, timedelta
 
 from db import get_conn
@@ -55,12 +56,18 @@ def _add_days(date_str: str, days: int) -> str:
     return (base + timedelta(days=days)).isoformat()
 
 
-def derive_shelf_status(cik: int, today=None) -> list[dict]:
-    """One entry per shelf instrument with derived status.
+@dataclass(frozen=True)
+class _ShelfIndex:
+    """Filing-side lookups keyed the way the per-shelf derivation needs them."""
+    forms: dict                       # accession → (form, filing_date)
+    file_numbers: dict                # accession → SEC 333- file number
+    rw_by_file_number: dict           # file number → earliest RW date
+    effects_by_file_number: dict      # file number → earliest EFFECT date
+    effect_dates: list                # every EFFECT date, for the no-file# path
 
-    Returns derived_status ∈ {active, registered, withdrawn, expired}.
-    """
-    today_iso = (_coerce_date(today) or _d.today()).isoformat()
+
+def _load_shelf_index(cik: int) -> tuple[list, _ShelfIndex]:
+    """Fetch shelf rows plus every filing-side lookup in one connection."""
     with get_conn() as conn:
         shelves = conn.execute(
             """SELECT instrument_id, terms_json, outstanding_json,
@@ -120,84 +127,106 @@ def derive_shelf_status(cik: int, today=None) -> list[dict]:
     # Fallback list for shelves with no file_number on record (rare —
     # synthetic / very old EDGAR rows).
     effect_dates = [e["filing_date"] for e in effects]
+    return shelves, _ShelfIndex(forms, file_numbers, rw_by_file_number,
+                                effects_by_file_number, effect_dates)
 
+
+def _shelf_effect_date(auto_effective: bool, filing_date: str,
+                       file_number: str | None,
+                       idx: _ShelfIndex) -> str | None:
+    """When the registration became effective, by the sharpest join available."""
+    if auto_effective:
+        return filing_date
+    if file_number:
+        return idx.effects_by_file_number.get(file_number)
+    # No file_number → can't do the canonical join. Best effort:
+    # the EFFECT usually lands within ~90 days of filing.
+    window_end = _add_days(filing_date, EFFECT_WINDOW_DAYS)
+    for d in idx.effect_dates:
+        if filing_date <= d <= window_end:
+            return d
+    return None
+
+
+def _derive_one_shelf(s, idx: _ShelfIndex, today_iso: str) -> dict | None:
+    """Derived status for one shelf row, or None if it isn't renderable."""
+    terms = json.loads(s["terms_json"] or "{}")
+    outstanding = json.loads(s["outstanding_json"] or "{}")
+    accession = s["created_accession"]
+    form, filing_date = idx.forms.get(accession, (None, s["created_at"]))
+    form = (form or terms.get("form") or "").upper()
+    if not any(form.startswith(p) for p in SHELF_FORM_PREFIXES):
+        return None
+    # remaining_capacity_usd is authoritative when present (including a
+    # literal 0 = fully drawn); only fall back to the registered
+    # capacity_usd when remaining is absent. A `0 or capacity_usd` here
+    # would treat a drawn-to-zero shelf as still raisable.
+    remaining = outstanding.get("remaining_capacity_usd")
+    capacity = (remaining if remaining is not None
+                else terms.get("capacity_usd"))
+    if capacity is not None and capacity <= 0:
+        return None
+    auto_effective = "ASR" in form
+    file_number = idx.file_numbers.get(accession)
+    effect_date = _shelf_effect_date(auto_effective, filing_date,
+                                     file_number, idx)
+    base = "active" if (auto_effective or effect_date is not None) else "registered"
+
+    # Layer terminal states on top of active/registered. Order
+    # matters — withdrawn is sharper than expired (an RW is an
+    # explicit SEC action, not a calendar inference).
+    # An RW only counts if it post-dates the registration's filing
+    # (an earlier RW belongs to a prior, unrelated registration under a
+    # recycled file number). Surface the date only when it was honored,
+    # so withdrawal_date is present iff derived_status == 'withdrawn'.
+    rw_match = (idx.rw_by_file_number.get(file_number)
+                if file_number else None)
+    withdrawn = bool(rw_match and rw_match >= filing_date)
+    withdrawal_date = rw_match if withdrawn else None
+    # Rule 415(a)(5): 3 years from the date the registration first
+    # became effective, not from filing date. Fall back to
+    # filing_date only when the EFFECT hasn't arrived yet (early in
+    # the registration's life) — that's a conservative under-
+    # estimate of remaining life, not a misclassification.
+    expiration_date = (None if auto_effective
+                       else _add_days(effect_date or filing_date,
+                                      365 * SHELF_LIFE_YEARS))
+    if withdrawn:
+        derived = "withdrawn"
+    elif (not auto_effective
+          and expiration_date
+          and expiration_date < today_iso):
+        derived = "expired"
+    else:
+        derived = base
+
+    return {
+        "instrument_id": s["instrument_id"],
+        "accession_number": accession,
+        "form": form,
+        "file_number": file_number,
+        "filing_date": filing_date,
+        "effect_date": effect_date,
+        "withdrawal_date": withdrawal_date,
+        "expiration_date": expiration_date,
+        "anticipated_amount_usd": terms.get("capacity_usd"),
+        "reported_status": s["status"],
+        "derived_status": derived,
+    }
+
+
+def derive_shelf_status(cik: int, today=None) -> list[dict]:
+    """One entry per shelf instrument with derived status.
+
+    Returns derived_status ∈ {active, registered, withdrawn, expired}.
+    """
+    today_iso = (_coerce_date(today) or _d.today()).isoformat()
+    shelves, idx = _load_shelf_index(cik)
     out = []
     for s in shelves:
-        terms = json.loads(s["terms_json"] or "{}")
-        outstanding = json.loads(s["outstanding_json"] or "{}")
-        accession = s["created_accession"]
-        form, filing_date = forms.get(accession, (None, s["created_at"]))
-        form = (form or terms.get("form") or "").upper()
-        if not any(form.startswith(p) for p in SHELF_FORM_PREFIXES):
-            continue
-        # remaining_capacity_usd is authoritative when present (including a
-        # literal 0 = fully drawn); only fall back to the registered
-        # capacity_usd when remaining is absent. A `0 or capacity_usd` here
-        # would treat a drawn-to-zero shelf as still raisable.
-        remaining = outstanding.get("remaining_capacity_usd")
-        capacity = (remaining if remaining is not None
-                    else terms.get("capacity_usd"))
-        if capacity is not None and capacity <= 0:
-            continue
-        auto_effective = "ASR" in form
-        file_number = file_numbers.get(accession)
-        effect_date = None
-        if auto_effective:
-            effect_date = filing_date
-        elif file_number:
-            effect_date = effects_by_file_number.get(file_number)
-        else:
-            # No file_number → can't do the canonical join. Best effort:
-            # the EFFECT usually lands within ~90 days of filing.
-            window_end = _add_days(filing_date, EFFECT_WINDOW_DAYS)
-            for d in effect_dates:
-                if filing_date <= d <= window_end:
-                    effect_date = d
-                    break
-        had_effect = effect_date is not None
-        base = "active" if (auto_effective or had_effect) else "registered"
-
-        # Layer terminal states on top of active/registered. Order
-        # matters — withdrawn is sharper than expired (an RW is an
-        # explicit SEC action, not a calendar inference).
-        # An RW only counts if it post-dates the registration's filing
-        # (an earlier RW belongs to a prior, unrelated registration under a
-        # recycled file number). Surface the date only when it was honored,
-        # so withdrawal_date is present iff derived_status == 'withdrawn'.
-        rw_match = (rw_by_file_number.get(file_number)
-                    if file_number else None)
-        withdrawn = bool(rw_match and rw_match >= filing_date)
-        withdrawal_date = rw_match if withdrawn else None
-        # Rule 415(a)(5): 3 years from the date the registration first
-        # became effective, not from filing date. Fall back to
-        # filing_date only when the EFFECT hasn't arrived yet (early in
-        # the registration's life) — that's a conservative under-
-        # estimate of remaining life, not a misclassification.
-        expiration_date = (None if auto_effective
-                           else _add_days(effect_date or filing_date,
-                                          365 * SHELF_LIFE_YEARS))
-        if withdrawn:
-            derived = "withdrawn"
-        elif (not auto_effective
-              and expiration_date
-              and expiration_date < today_iso):
-            derived = "expired"
-        else:
-            derived = base
-
-        out.append({
-            "instrument_id": s["instrument_id"],
-            "accession_number": accession,
-            "form": form,
-            "file_number": file_number,
-            "filing_date": filing_date,
-            "effect_date": effect_date,
-            "withdrawal_date": withdrawal_date,
-            "expiration_date": expiration_date,
-            "anticipated_amount_usd": terms.get("capacity_usd"),
-            "reported_status": s["status"],
-            "derived_status": derived,
-        })
+        card = _derive_one_shelf(s, idx, today_iso)
+        if card is not None:
+            out.append(card)
     return out
 
 

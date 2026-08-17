@@ -1,16 +1,21 @@
 .env
 .venv/
 venv/
-dilution.db
-dilution.db-wal
-dilution.db-shm
-dilution.db.bak*
-*.db.bak*
+*.db
+*.db-wal
+*.db-shm
 *.bak
 *.bak-*
-dilution.log*
-dashboard.log*
 dilution_reports/
 __pycache__/
+.pytest_cache/
 *.pyc
+# Run output. Stray walk transcripts and dashboard.txt sat tracked for
+# months because `*.log` matches neither a .txt-suffixed access log nor
+# the loose transcripts under logs/. Curated eval reports are kept.
 *.log
+logs/*
+!logs/eval_reports/
+!logs/rewalk_*/
+walker_dumps/
+dashboard.txt

@@ -27,6 +27,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from dataclasses import dataclass
 from datetime import date as _d, timedelta
 from functools import lru_cache
 from typing import Any
@@ -1296,6 +1297,94 @@ def convertible_note_cards(cik: int) -> list[dict]:
 
 
 # ─── Preferred card ──────────────────────────────────────────────────
+@dataclass(frozen=True)
+class _PreferredFace:
+    """The series' dollar face, aggregate and still-outstanding."""
+    count: float
+    stated_value: float | None
+    principal_total: float | None
+    principal_remaining: float | None
+
+
+def _preferred_face(terms: dict, out: dict) -> _PreferredFace:
+    """Resolve the aggregate and remaining $-face of a preferred series."""
+    count = _to_float(out.get("count")) or 0
+    liq_pref = _to_float(terms.get("liquidation_preference"))
+    stated_value = _to_float(terms.get("stated_value"))
+    # When liquidation_preference equals stated_value, the LLM
+    # extracted it per-share. Fall through to stated_value × count
+    # so the card shows the aggregate $-amount (matches DT).
+    per_share_liq = (
+        liq_pref is not None and stated_value
+        and abs(liq_pref - stated_value) <= max(stated_value * 0.01, 0.01)
+    )
+    if stated_value and count and (per_share_liq or not liq_pref):
+        principal_total = stated_value * count
+    else:
+        # Prefer aggregate keys over liq_pref: the walker sometimes
+        # stores liquidation_preference as a per-share face ($1,000)
+        # rather than the series aggregate, and per-share × split-
+        # adjusted stated_value × floored-count blows up. The
+        # original aggregate $-amount commonly lands in
+        # terms.principal_remaining for preferred extracted by the
+        # walker (misnomer kept for backward-compat).
+        principal_total = _to_float(
+            terms.get("principal")
+            or terms.get("principal_remaining")
+            or terms.get("aggregate_value")
+            or liq_pref
+        )
+    principal_remaining = _to_float(out.get("principal_remaining"))
+    if principal_remaining is None:
+        # When the filing never discloses a remaining principal and the
+        # conversions (if any) are tracked only as share counts — never
+        # as a converted-dollar figure — fall back to the aggregate face
+        # so the card shows the full series value rather than a blank.
+        # DT renders the full liq-pref in this case (e.g. IQST Series D:
+        # split-mangled share counts, $3.546M aggregate, no $-level
+        # conversion line). Guard on principal_converted_to_date so a
+        # row whose conversions ARE dollar-tracked keeps the
+        # count×stated_value remaining view and is never overstated.
+        if (principal_total
+                and out.get("principal_converted_to_date") is None):
+            principal_remaining = principal_total
+        elif count and stated_value:
+            principal_remaining = count * stated_value
+    return _PreferredFace(count, stated_value,
+                          principal_total, principal_remaining)
+
+
+def _preferred_issuable(terms: dict, out: dict, face: _PreferredFace
+                        ) -> tuple[float | None, float | None, float | None]:
+    """→ (conversion price, remaining shares issuable, total shares issuable)."""
+    cv_price = _to_float(terms.get("conv_price")
+                         or terms.get("conversion_price"))
+    # A disclosed fixed shares-per-preferred ratio wins over the
+    # $-division ONLY when the series has no dollar conversion price:
+    # count × ratio is exact for fixed-rate series (SCNI EIB: 1,000 ×
+    # 364 = 364,000). When conv_price IS present the series converts
+    # on dollars (stated value / True-Up — IQST Series D), the stated
+    # ratio is just the pre-adjustment base rate, and the $-division
+    # (principal / conv_price) is the DT-matching basis (round-4
+    # iqst-seriesd: ratio×live-count gave 117,362.5 vs DT 464,154).
+    ratio = _to_float(terms.get("conversion_ratio"))
+    if ratio and ratio > 0 and face.count and not cv_price:
+        retired = ((_to_float(out.get("count_converted_to_date")) or 0)
+                   + (_to_float(out.get("count_redeemed_to_date")) or 0))
+        return cv_price, face.count * ratio, (face.count + retired) * ratio
+    rem_shares = (
+        (face.principal_remaining / cv_price)
+        if (cv_price and face.principal_remaining and cv_price > 0)
+        else None
+    )
+    total_shares = (
+        (face.principal_total / cv_price)
+        if (cv_price and face.principal_total and cv_price > 0)
+        else None
+    )
+    return cv_price, rem_shares, total_shares
+
+
 def preferred_cards(cik: int) -> list[dict]:
     rows = _select_by_type(cik, "preferred",
                            statuses=("active",),
@@ -1308,48 +1397,10 @@ def preferred_cards(cik: int) -> list[dict]:
             continue
         terms = r["terms"]
         out = r["outstanding"]
-        count = _to_float(out.get("count")) or 0
-        liq_pref = _to_float(terms.get("liquidation_preference"))
-        stated_value = _to_float(terms.get("stated_value"))
-        # When liquidation_preference equals stated_value, the LLM
-        # extracted it per-share. Fall through to stated_value × count
-        # so the card shows the aggregate $-amount (matches DT).
-        per_share_liq = (
-            liq_pref is not None and stated_value
-            and abs(liq_pref - stated_value) <= max(stated_value * 0.01, 0.01)
-        )
-        if stated_value and count and (per_share_liq or not liq_pref):
-            principal_total = stated_value * count
-        else:
-            # Prefer aggregate keys over liq_pref: the walker sometimes
-            # stores liquidation_preference as a per-share face ($1,000)
-            # rather than the series aggregate, and per-share × split-
-            # adjusted stated_value × floored-count blows up. The
-            # original aggregate $-amount commonly lands in
-            # terms.principal_remaining for preferred extracted by the
-            # walker (misnomer kept for backward-compat).
-            principal_total = _to_float(
-                terms.get("principal")
-                or terms.get("principal_remaining")
-                or terms.get("aggregate_value")
-                or liq_pref
-            )
-        principal_remaining = _to_float(out.get("principal_remaining"))
-        if principal_remaining is None:
-            # When the filing never discloses a remaining principal and the
-            # conversions (if any) are tracked only as share counts — never
-            # as a converted-dollar figure — fall back to the aggregate face
-            # so the card shows the full series value rather than a blank.
-            # DT renders the full liq-pref in this case (e.g. IQST Series D:
-            # split-mangled share counts, $3.546M aggregate, no $-level
-            # conversion line). Guard on principal_converted_to_date so a
-            # row whose conversions ARE dollar-tracked keeps the
-            # count×stated_value remaining view and is never overstated.
-            if (principal_total
-                    and out.get("principal_converted_to_date") is None):
-                principal_remaining = principal_total
-            elif count and stated_value:
-                principal_remaining = count * stated_value
+        face = _preferred_face(terms, out)
+        principal_total = face.principal_total
+        principal_remaining = face.principal_remaining
+        count = face.count
         if not principal_total and not count:
             continue
         # A lone 1-share balance-sheet residual with no aggregate face is a
@@ -1359,33 +1410,8 @@ def preferred_cards(cik: int) -> list[dict]:
         # real counts (1001907 P-149=280,898) or a real principal_total.
         if (principal_total in (None, 0)) and count and 0 < count <= 1:
             continue
-        cv_price = _to_float(terms.get("conv_price")
-                             or terms.get("conversion_price"))
-        # A disclosed fixed shares-per-preferred ratio wins over the
-        # $-division ONLY when the series has no dollar conversion price:
-        # count × ratio is exact for fixed-rate series (SCNI EIB: 1,000 ×
-        # 364 = 364,000). When conv_price IS present the series converts
-        # on dollars (stated value / True-Up — IQST Series D), the stated
-        # ratio is just the pre-adjustment base rate, and the $-division
-        # (principal / conv_price) is the DT-matching basis (round-4
-        # iqst-seriesd: ratio×live-count gave 117,362.5 vs DT 464,154).
-        ratio = _to_float(terms.get("conversion_ratio"))
-        if ratio and ratio > 0 and count and not cv_price:
-            retired = ((_to_float(out.get("count_converted_to_date")) or 0)
-                       + (_to_float(out.get("count_redeemed_to_date")) or 0))
-            rem_shares = count * ratio
-            total_shares = (count + retired) * ratio
-        else:
-            rem_shares = (
-                (principal_remaining / cv_price)
-                if (cv_price and principal_remaining and cv_price > 0)
-                else None
-            )
-            total_shares = (
-                (principal_total / cv_price)
-                if (cv_price and principal_total and cv_price > 0)
-                else None
-            )
+        cv_price, rem_shares, total_shares = _preferred_issuable(
+            terms, out, face)
         cards.append({
             "instrument_id": r["instrument_id"],
             "title": _title(r, "convertible_preferred"),
@@ -1582,21 +1608,23 @@ def _resolve_float_shares(
 
 
 # ─── ATM card ────────────────────────────────────────────────────────
-def atm_cards(cik: int, finviz: dict | None = None,
-              latest_os: float | None = None) -> list[dict]:
+def _atm_rows(cik: int) -> list[dict]:
+    """Renderable ATM rows: active/superseded, plus live restate-chain heads.
+
+    A restate chain's head is the successor the predecessor was restated
+    into. The active/superseded selection already includes any head that
+    is still active or itself superseded; the only heads it misses are
+    TERMINATED ones — and a chain that ends in a terminated head means
+    the whole amended-and-restated program ended. DT hides ended ATMs, so
+    we do NOT resurrect such a head (its restated predecessors stay
+    extinguished, leaving the dead chain correctly absent). Without this,
+    XTIA's tangled Maxim chain — which ends in a terminated head still
+    carrying the ORIGINAL 2022 signing date — renders as a spurious
+    "July 2022 Maxim ATM" card.
+    """
     rows = _select_by_type(cik, "atm",
                            statuses=("active", "terminated"),
                            status_prefixes=("superseded:",))
-    # A restate chain's head is the successor the predecessor was restated
-    # into. The active/superseded selection above already includes any head
-    # that is still active or itself superseded; the only heads it misses
-    # are TERMINATED ones — and a chain that ends in a terminated head means
-    # the whole amended-and-restated program ended. DT hides ended ATMs, so
-    # we do NOT resurrect such a head (its restated predecessors stay
-    # extinguished, leaving the dead chain correctly absent). Without this,
-    # XTIA's tangled Maxim chain — which ends in a terminated head still
-    # carrying the ORIGINAL 2022 signing date — renders as a spurious
-    # "July 2022 Maxim ATM" card.
     seen = {r["instrument_id"] for r in rows}
     heads = _restate_successor_ids(cik, "atm") - seen
     if heads:
@@ -1604,13 +1632,21 @@ def atm_cards(cik: int, finviz: dict | None = None,
             status = h.get("status") or "active"
             if status == "active" or status.startswith("superseded:"):
                 rows.append(h)
-    cards = []
+    return rows
+
+
+def _atm_ib6_cap(cik: int, finviz: dict | None,
+                 latest_os: float | None) -> float | None:
+    """The I.B.6 1/3-of-float ceiling in dollars, or None if uncapped.
+
+    Loop-invariant for a given issuer: the cap is a property of the float
+    and the price basis, not of any one ATM program.
+    """
     # Lazy-import to avoid pulling ledger.cards into baby_shelf import path.
     from .baby_shelf import (
         ib6_remaining as _ib6,
         is_baby_shelf_restricted,
     )
-    price = (finviz or {}).get("price")
     float_shares = _resolve_float_shares(cik, finviz, latest_os)
     high60: float | None = None
     if finviz and finviz.get("ticker"):
@@ -1638,71 +1674,100 @@ def atm_cards(cik: int, finviz: dict | None = None,
             ib6 = _ib6(cik, float_shares, effective_price)
         except Exception as exc:
             log.warning("ib6_remaining failed for cik=%s: %s", cik, exc)
+    # The cap only applies to baby-shelf-restricted issuers (float value
+    # < $75M). Above the threshold the issuer files under I.B.1 and the
+    # full ATM capacity is raisable.
+    return (ib6.get("raisable_remaining_usd")
+            if (ib6 and is_baby_shelf) else None)
+
+
+def _atm_hidden(r: dict, rows: list[dict]) -> bool:
+    """Programs DT does not surface at all, independent of economics."""
+    # Drop the restated predecessor of a same-program chain (XTIA
+    # Maxim): its live successor is in `rows` via _restate_successor_ids.
+    if _supersession_extinguished(r):
+        return True
+    # Drop a non-restate auto-supersede predecessor whose chain ends in a
+    # terminated head — the program is dead and DT shows nothing (FCEL
+    # 'June 2020 Jefferies', XTIA 'May 2024 Maxim').
+    if _chain_head_terminated(r):
+        return True
+    if _is_generic_counterparty(r):
+        return True
+    return bool(_eloc_atm_stale(r, rows))
+
+
+@dataclass(frozen=True)
+class _AtmEconomics:
+    capacity: float | None
+    drawn: float
+    remaining: float | None
+    used_pct: float | None
+
+
+def _atm_economics(cik: int, r: dict) -> _AtmEconomics | None:
+    """Capacity/drawn/remaining for one ATM, or None if the program is hidden."""
+    terms = r["terms"]
+    out = r["outstanding"]
+    capacity = _to_float(terms.get("capacity_usd"))
+    # Anchor-corrected drawn, exactly as shelf_cards does: a stated-
+    # remaining checkpoint (drawn_usd_anchor/asof) already subsumes
+    # every sale on or before its as-of date, so only post-asof
+    # discrete draws are added on top. Reading the raw running
+    # drawn_usd instead double-counts when the same period's sales
+    # land BOTH as an anchor pin and as a discrete record_event
+    # drawdown (FCEL Dec-2025: 42.9M pin + 56.4M discrete = 101.6M
+    # vs filing-true 45.2M).
+    drawn = _drawn_to_date(cik, r["instrument_id"], out)
+    # DT hides ENDED ATM programs — both an explicit `terminated` status
+    # and an `active` row whose sales-agreement term has already expired
+    # (XTIA Maxim ATM-2678: agreement_end 2024-12-31, never marked
+    # terminated) — EXCEPT one that raised its full capacity before
+    # ending (GCTK Dec-2024 Dawson: drawn to within rounding of its
+    # $8.23M cap). A program that ended with material capacity left was
+    # abandoned mid-stream and stays hidden. DB-wide the fully-drawn
+    # carve-out flags ATM-2679 alone; the expired-term skip flags the
+    # XTIA Maxim chain alone.
+    program_ended = ((r.get("status") or "") == "terminated"
+                     or _date_before(terms.get("agreement_end_date"),
+                                     _d.today()))
+    if program_ended:
+        if not (capacity and capacity > 0
+                and 0 <= capacity - drawn < 0.005 * capacity):
+            return None
+    # Prefer capacity − drawn over the persisted remaining_capacity_usd
+    # snapshot, which goes stale when a drawn_usd anchor amend lands
+    # without refreshing it (CGEN Leerink: persisted 23.9M vs
+    # filing-true 50M − 15.1M = 34.9M). Fall back to the snapshot only
+    # when no capacity is known — mirrors what shelf_cards already does.
+    if capacity is not None:
+        # A program the filing recorded as fully drawn (stored
+        # remaining 0) raised its full capacity; snap a tiny rounding
+        # shortfall up so the card doesn't show a ghost residual
+        # (GCTK Dawson ATM 8,217,693 → 8,230,000). See
+        # _fully_drawn_clamp; mirrors the shelf-rollup path.
+        drawn = _fully_drawn_clamp(drawn, capacity, out)
+        remaining = max(0.0, capacity - drawn)
+    else:
+        remaining = _to_float(out.get("remaining_capacity_usd"))
+    used_pct = (drawn / capacity * 100) if (capacity and capacity > 0) else None
+    return _AtmEconomics(capacity, drawn, remaining, used_pct)
+
+
+def atm_cards(cik: int, finviz: dict | None = None,
+              latest_os: float | None = None) -> list[dict]:
+    rows = _atm_rows(cik)
+    ib6_cap = _atm_ib6_cap(cik, finviz, latest_os)
+    cards = []
     for r in rows:
-        # Drop the restated predecessor of a same-program chain (XTIA
-        # Maxim): its live successor is in `rows` via _restate_successor_ids.
-        if _supersession_extinguished(r):
+        if _atm_hidden(r, rows):
             continue
-        # Drop a non-restate auto-supersede predecessor whose chain ends in a
-        # terminated head — the program is dead and DT shows nothing (FCEL
-        # 'June 2020 Jefferies', XTIA 'May 2024 Maxim').
-        if _chain_head_terminated(r):
-            continue
-        if _is_generic_counterparty(r):
-            continue
-        if _eloc_atm_stale(r, rows):
+        econ = _atm_economics(cik, r)
+        if econ is None:
             continue
         terms = r["terms"]
-        out = r["outstanding"]
-        capacity = _to_float(terms.get("capacity_usd"))
-        # Anchor-corrected drawn, exactly as shelf_cards does: a stated-
-        # remaining checkpoint (drawn_usd_anchor/asof) already subsumes
-        # every sale on or before its as-of date, so only post-asof
-        # discrete draws are added on top. Reading the raw running
-        # drawn_usd instead double-counts when the same period's sales
-        # land BOTH as an anchor pin and as a discrete record_event
-        # drawdown (FCEL Dec-2025: 42.9M pin + 56.4M discrete = 101.6M
-        # vs filing-true 45.2M).
-        drawn = _drawn_to_date(cik, r["instrument_id"], out)
-        # DT hides ENDED ATM programs — both an explicit `terminated` status
-        # and an `active` row whose sales-agreement term has already expired
-        # (XTIA Maxim ATM-2678: agreement_end 2024-12-31, never marked
-        # terminated) — EXCEPT one that raised its full capacity before
-        # ending (GCTK Dec-2024 Dawson: drawn to within rounding of its
-        # $8.23M cap). A program that ended with material capacity left was
-        # abandoned mid-stream and stays hidden. DB-wide the fully-drawn
-        # carve-out flags ATM-2679 alone; the expired-term skip flags the
-        # XTIA Maxim chain alone.
-        program_ended = ((r.get("status") or "") == "terminated"
-                         or _date_before(terms.get("agreement_end_date"),
-                                         _d.today()))
-        if program_ended:
-            if not (capacity and capacity > 0
-                    and 0 <= capacity - drawn < 0.005 * capacity):
-                continue
-        # Prefer capacity − drawn over the persisted remaining_capacity_usd
-        # snapshot, which goes stale when a drawn_usd anchor amend lands
-        # without refreshing it (CGEN Leerink: persisted 23.9M vs
-        # filing-true 50M − 15.1M = 34.9M). Fall back to the snapshot only
-        # when no capacity is known — mirrors what shelf_cards already does.
-        if capacity is not None:
-            # A program the filing recorded as fully drawn (stored
-            # remaining 0) raised its full capacity; snap a tiny rounding
-            # shortfall up so the card doesn't show a ghost residual
-            # (GCTK Dawson ATM 8,217,693 → 8,230,000). See
-            # _fully_drawn_clamp; mirrors the shelf-rollup path.
-            drawn = _fully_drawn_clamp(drawn, capacity, out)
-            remaining = max(0.0, capacity - drawn)
-        else:
-            remaining = _to_float(out.get("remaining_capacity_usd"))
-        used_pct = (drawn / capacity * 100) if (capacity and capacity > 0) else None
-        # I.B.6 1/3-of-float cap only applies to baby-shelf-restricted
-        # issuers (float value < $75M). Above the threshold the issuer
-        # files under I.B.1 and the full ATM capacity is raisable.
-        ib6_cap = (
-            ib6.get("raisable_remaining_usd")
-            if (ib6 and is_baby_shelf) else None
-        )
+        capacity, drawn = econ.capacity, econ.drawn
+        remaining, used_pct = econ.remaining, econ.used_pct
         # Is the program subject to the I.B.6 1/3-of-float cap? That depends
         # on whether the cap sits below the program's TOTAL raisable capacity
         # — not below how much currently REMAINS. Comparing against remaining
@@ -1835,7 +1900,6 @@ def shelf_cards(cik: int, finviz: dict | None = None,
         derive_shelf_status,
     )
 
-    price = (finviz or {}).get("price")
     # Yahoo's floatShares is fresher than Finviz on low-volume tickers
     # (esp. ADRs — AACG: Yahoo 15.04M matches DT, Finviz 8.84M stale),
     # but is rejected when it exceeds shares outstanding (SCNI: stale

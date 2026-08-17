@@ -1024,6 +1024,92 @@ def _agents_same(a: str | None, b: str | None) -> bool:
 
 
 
+def _create_matches_row(m, r: dict, new_d, window: int, new_terms: dict,
+                        new_out: dict, new_label: str, new_series: str,
+                        new_pa: str, accession: str) -> bool:
+    """True when this existing ledger row IS the instrument `m` creates.
+
+    Extracted from the re-disclosure scan: a `continue` in the original
+    loop meant "not this row", which is exactly a False here.
+    """
+    try:
+        existing_d = _d.fromisoformat((r["created_at"] or "")[:10])
+    except (ValueError, TypeError):
+        return False
+    if abs((new_d - existing_d).days) > window:
+        return False
+    existing_terms = json.loads(r["terms_json"] or "{}")
+    existing_out = json.loads(r["outstanding_json"] or "{}")
+    old_pa = r["placement_agent_canonical"] or ""
+    if _create_keys_match(m.type, new_terms, new_out,
+                          existing_terms, existing_out,
+                          new_pa=new_pa, old_pa=old_pa):
+        # Same-accession warrant safeguard. The LLM frequently emits
+        # multiple distinct warrants from one filing at an identical
+        # strike (e.g. SCNI 2026-04-23 6-K: Inducement and Series B
+        # both at $0.55). Strike alone collapses them; require
+        # initial_count to also agree when both sides expose it, so
+        # tranches with wildly different sizes (458,621 vs 5,208,333)
+        # stay distinct. Skipped cross-filing — genuine re-disclosure
+        # usually omits initial_count on the second pass.
+        if (m.type == "warrant" and accession
+                and r["created_accession"] == accession):
+            new_ic = (new_out or {}).get("initial_count")
+            old_ic = (existing_out or {}).get("initial_count")
+            if (new_ic is not None and old_ic is not None
+                    and not _close(new_ic, old_ic,
+                                   _CREATE_AMOUNT_TOLERANCE)):
+                return False
+        return True
+    # Same-accession LLM-duplicate fallback. Only fires when the
+    # primary key truly can't decide — both rows from the same
+    # filing missing the discriminator.
+    if (accession and r["created_accession"] == accession
+            and not _has_discriminator(m.type, new_terms, new_out)
+            and not _has_discriminator(
+                m.type, existing_terms, existing_out)):
+        existing_label = (r["label"] or "").strip().lower()
+        existing_series = (
+            existing_terms.get("series_letter") or "").strip().upper()
+        if m.type == "preferred" and new_series and existing_series:
+            if new_series == existing_series:
+                return True
+        elif new_label and existing_label and new_label == existing_label:
+            return True
+        elif not new_label and not existing_label:
+            # Both label-less rows from one filing with no
+            # discriminator — treat as duplicate.
+            return True
+
+    # Warrant split-via-misread-strike collapse. The strike key above
+    # FAILS when the LLM read a different exercise price for the SAME
+    # offering across disclosures — a 424B5 then a 10-Q re-statement of
+    # the same tranche (CELU April-2023, created off both), or two
+    # create calls from one filing (CELU March-2023). Serial-diluter
+    # warrant ladders ratchet, so the strike the LLM copies drifts per
+    # filing and can't anchor identity. A same canonical-LABEL + same
+    # INITIAL_COUNT match within the window is a strong duplicate
+    # signal instead: distinct tranches differ in issued size or
+    # series_letter (the same-strike SCNI Inducement/Series B case is
+    # already separated by initial_count), but ONE offering keeps its
+    # issued count and month-year label. Collapse to the existing row
+    # rather than spawn a phantom partial-count card (CELU 923,077 →
+    # $7.50/435,625 + $3.50/487,451; 938,184 → $30 + $1.69/75,000).
+    # series_letter must not conflict (one-sided/absent falls through).
+    if m.type == "warrant":
+        new_ic = (new_out or {}).get("initial_count")
+        old_ic = (existing_out or {}).get("initial_count")
+        old_label = (r["label"] or "").strip().lower()
+        new_sl = warrant_series_key(new_terms.get("series_letter"))
+        old_sl = warrant_series_key(existing_terms.get("series_letter"))
+        if (new_ic is not None and old_ic is not None
+                and _close(new_ic, old_ic, _CREATE_AMOUNT_TOLERANCE)
+                and new_label and old_label and new_label == old_label
+                and not (new_sl and old_sl and new_sl != old_sl)):
+            return True
+    return False
+
+
 def _create_already_recorded(
     conn: sqlite3.Connection, cik: int, m: "CreateMutation",
     filing_date: str, accession: str | None = None,
@@ -1095,82 +1181,9 @@ def _create_already_recorded(
     new_series = (new_terms.get("series_letter") or "").strip().upper()
     new_pa = (m.placement_agent_canonical or "").strip()
     for r in rows:
-        try:
-            existing_d = _d.fromisoformat((r["created_at"] or "")[:10])
-        except (ValueError, TypeError):
-            continue
-        if abs((new_d - existing_d).days) > window:
-            continue
-        existing_terms = json.loads(r["terms_json"] or "{}")
-        existing_out = json.loads(r["outstanding_json"] or "{}")
-        old_pa = r["placement_agent_canonical"] or ""
-        if _create_keys_match(m.type, new_terms, new_out,
-                              existing_terms, existing_out,
-                              new_pa=new_pa, old_pa=old_pa):
-            # Same-accession warrant safeguard. The LLM frequently emits
-            # multiple distinct warrants from one filing at an identical
-            # strike (e.g. SCNI 2026-04-23 6-K: Inducement and Series B
-            # both at $0.55). Strike alone collapses them; require
-            # initial_count to also agree when both sides expose it, so
-            # tranches with wildly different sizes (458,621 vs 5,208,333)
-            # stay distinct. Skipped cross-filing — genuine re-disclosure
-            # usually omits initial_count on the second pass.
-            if (m.type == "warrant" and accession
-                    and r["created_accession"] == accession):
-                new_ic = (new_out or {}).get("initial_count")
-                old_ic = (existing_out or {}).get("initial_count")
-                if (new_ic is not None and old_ic is not None
-                        and not _close(new_ic, old_ic,
-                                       _CREATE_AMOUNT_TOLERANCE)):
-                    continue
+        if _create_matches_row(m, r, new_d, window, new_terms, new_out,
+                               new_label, new_series, new_pa, accession):
             return r["instrument_id"]
-        # Same-accession LLM-duplicate fallback. Only fires when the
-        # primary key truly can't decide — both rows from the same
-        # filing missing the discriminator.
-        if (accession and r["created_accession"] == accession
-                and not _has_discriminator(m.type, new_terms, new_out)
-                and not _has_discriminator(
-                    m.type, existing_terms, existing_out)):
-            existing_label = (r["label"] or "").strip().lower()
-            existing_series = (
-                existing_terms.get("series_letter") or "").strip().upper()
-            if m.type == "preferred" and new_series and existing_series:
-                if new_series == existing_series:
-                    return r["instrument_id"]
-            elif new_label and existing_label and new_label == existing_label:
-                return r["instrument_id"]
-            elif not new_label and not existing_label:
-                # Both label-less rows from one filing with no
-                # discriminator — treat as duplicate.
-                return r["instrument_id"]
-
-        # Warrant split-via-misread-strike collapse. The strike key above
-        # FAILS when the LLM read a different exercise price for the SAME
-        # offering across disclosures — a 424B5 then a 10-Q re-statement of
-        # the same tranche (CELU April-2023, created off both), or two
-        # create calls from one filing (CELU March-2023). Serial-diluter
-        # warrant ladders ratchet, so the strike the LLM copies drifts per
-        # filing and can't anchor identity. A same canonical-LABEL + same
-        # INITIAL_COUNT match within the window is a strong duplicate
-        # signal instead: distinct tranches differ in issued size or
-        # series_letter (the same-strike SCNI Inducement/Series B case is
-        # already separated by initial_count), but ONE offering keeps its
-        # issued count and month-year label. Collapse to the existing row
-        # rather than spawn a phantom partial-count card (CELU 923,077 →
-        # $7.50/435,625 + $3.50/487,451; 938,184 → $30 + $1.69/75,000).
-        # series_letter must not conflict (one-sided/absent falls through).
-        if m.type == "warrant":
-            new_ic = (new_out or {}).get("initial_count")
-            old_ic = (existing_out or {}).get("initial_count")
-            old_label = (r["label"] or "").strip().lower()
-            new_sl = warrant_series_key(new_terms.get("series_letter"))
-            old_sl = warrant_series_key(existing_terms.get("series_letter"))
-            if (new_ic is not None and old_ic is not None
-                    and _close(new_ic, old_ic, _CREATE_AMOUNT_TOLERANCE)
-                    and new_label and old_label and new_label == old_label
-                    and not (new_sl and old_sl and new_sl != old_sl)):
-                return r["instrument_id"]
-
     # Closed-row resurrection guard (see _CLOSED_REDISCLOSURE_WINDOW_DAYS).
     # A periodic re-disclosure of an already-CLOSED tranche must collapse
     # onto the dead row (which _append_redisclosure leaves closed), NOT
@@ -1273,167 +1286,213 @@ def _end_dates_conflict(new_t: dict, old_t: dict) -> bool:
     return abs((new_end - old_end).days) > _CREATE_END_DATE_TOL_DAYS
 
 
+def _keys_match_warrant(new_t: dict, new_o: dict, old_t: dict, old_o: dict,
+                       new_pa: str, old_pa: str) -> bool:
+    """Warrants: series tag, then strike, then expiry."""
+    # series_letter as identity: when BOTH sides name one, they must
+    # agree. Strike alone is not enough — a single filing can issue
+    # an Inducement Warrant and a Series B Warrant at the same strike
+    # (SCNI 2026-04-23 6-K: both at $0.55), and the second create
+    # would otherwise collapse onto the first. warrant_series_key keeps
+    # warrant series_letter's polymorphism: letters ("A","B"), digits
+    # ("1"), and descriptive tags ("Inducement","Pre-Funded") stay
+    # discriminators. A 10-Q footnote that re-states a ladder under
+    # financial-statement *closing dates* drops a date label
+    # ("August 23") here; warrant_series_key maps that to "" so this
+    # guard goes one-sided and falls through to strike — the
+    # re-disclosure-collapse behavior (GCTK Nov-2024 10-Q). One-sided
+    # cases (LLM omits the tag in a later re-disclosure) likewise fall
+    # through to strike.
+    new_sl = warrant_series_key(new_t.get("series_letter"))
+    old_sl = warrant_series_key(old_t.get("series_letter"))
+    if new_sl and old_sl and new_sl != old_sl:
+        return False
+    # Distinct expirations ⇒ distinct warrants even at an identical
+    # strike (CETY Feb-2025 Mast Hill @ $2.50 exp 2030-02-28 vs the
+    # Jan-2025 tranche @ $2.50 exp 2030-01-16 — 43d apart, well
+    # inside the 60d created-window). Mirrors walker _is_dup_create.
+    if _end_dates_conflict(new_t, old_t):
+        return False
+    return _close(
+        new_t.get("strike") or new_t.get("warrant_strike"),
+        old_t.get("strike") or old_t.get("warrant_strike"),
+        _CREATE_PRICE_TOLERANCE,
+    )
+
+
+def _keys_match_convertible(new_t: dict, new_o: dict, old_t: dict, old_o: dict,
+                       new_pa: str, old_pa: str) -> bool:
+    """Convertible notes: principal and conversion price."""
+    # Distinct maturities ⇒ distinct notes, before any price test:
+    # serial toxic issuers place note after note with the SAME
+    # lender at the SAME conv price (and same-accession twins exist:
+    # Mega Sincere / Noblebear, both $0.646, maturities 6mo apart).
+    if _end_dates_conflict(new_t, old_t):
+        return False
+    new_cp = new_t.get("conv_price") or new_t.get("conversion_price")
+    old_cp = old_t.get("conv_price") or old_t.get("conversion_price")
+    # Primary: conv_price authoritative when both sides have it.
+    # Different conv_prices ⇒ different notes, period.
+    if new_cp is not None and old_cp is not None:
+        return _close(new_cp, old_cp, _CREATE_PRICE_TOLERANCE)
+    # Fallback when conv_price missing on either side: principal
+    # face amount is the next-best discriminator. Two convertibles
+    # rarely share a principal within ±5% within the 60d re-disclosure
+    # window unless they're the same note re-described.
+    return _close(
+        new_t.get("principal"), old_t.get("principal"),
+        _CREATE_AMOUNT_TOLERANCE,
+    )
+
+
+def _keys_match_preferred(new_t: dict, new_o: dict, old_t: dict, old_o: dict,
+                       new_pa: str, old_pa: str) -> bool:
+    """Preferred: series letter is the identity."""
+    # series_letter is unique within an issuer — primary identity
+    # key. Same letter on both sides → same tranche, regardless of
+    # how conv_price has drifted across re-disclosures. Different
+    # letters → definitively different tranches; do NOT fall back
+    # to price-based dedup, which can cause a Series D create with
+    # similar conv_price to a Series B to collapse incorrectly.
+    new_series = extract_series_letter(new_t.get("series_letter"))
+    old_series = extract_series_letter(old_t.get("series_letter"))
+    if new_series and old_series:
+        return new_series == old_series
+    # When at least one side has no series_letter, fall back to
+    # price/principal — the original v1 dedup behavior.
+    if _close(
+        new_t.get("conv_price") or new_t.get("conversion_price"),
+        old_t.get("conv_price") or old_t.get("conversion_price"),
+        _CREATE_PRICE_TOLERANCE,
+    ):
+        return True
+    return _close(
+        new_t.get("liquidation_preference"),
+        old_t.get("liquidation_preference"),
+        _CREATE_AMOUNT_TOLERANCE,
+    )
+
+
+def _keys_match_shelf(new_t: dict, new_o: dict, old_t: dict, old_o: dict,
+                       new_pa: str, old_pa: str) -> bool:
+    """Shelves: SEC file number, else capacity."""
+    # Base form (S-3 vs F-3) must match — they are distinct
+    # registration regimes for distinct issuer classes.
+    new_base = (new_t.get("form") or "").upper().split("/")[0]
+    old_base = (old_t.get("form") or "").upper().split("/")[0]
+    if new_base and old_base and new_base != old_base:
+        return False
+    if _close(
+        new_t.get("capacity_usd"), old_t.get("capacity_usd"),
+        _CREATE_AMOUNT_TOLERANCE,
+    ):
+        return True
+    # Some shelves are denominated in shares (e.g. resale registrations
+    # of a fixed share count) rather than dollars. Match on
+    # `capacity_shares` when both sides expose it. Without this fall-
+    # back, two same-day disclosures of the same N-share registration
+    # (8-K + 424B3 pair) both pass dedup with capacity_usd=None and
+    # land as distinct shelf rows.
+    return _close(
+        new_t.get("capacity_shares"), old_t.get("capacity_shares"),
+        _CREATE_AMOUNT_TOLERANCE,
+    )
+
+
+def _keys_match_sales_program(new_t: dict, new_o: dict, old_t: dict, old_o: dict,
+                       new_pa: str, old_pa: str) -> bool:
+    """ATM / equity line: the agreement counterparty and size."""
+    # agreement_date equality is the primary identity key. Two ATMs
+    # with different signing dates are DISTINCT instruments even
+    # if capacity is similar. The prior capacity-similarity rule
+    # collapsed multi-program issuers (XTIA had two Maxim ATMs at
+    # ~$25M and ~$27M signed 11 months apart) into one row and
+    # blocked valid drawdowns via capacity_overflow. No fallback —
+    # if the walker fails to extract agreement_date, a duplicate
+    # row is preferable to a silent collapse.
+    new_ad = (new_t.get("agreement_date") or "").strip()[:10]
+    old_ad = (old_t.get("agreement_date") or "").strip()[:10]
+    if not (bool(new_ad) and bool(old_ad) and new_ad == old_ad):
+        return False
+    # agreement_date matches — but an issuer can AMEND the same
+    # underlying Sales Agreement (capacity bump, banker rebrand)
+    # via a fresh shelf years later. The amendment carries the
+    # ORIGINAL signing date in the prospectus, which would defeat
+    # the date key alone. CGEN's May-2026 F-3 amends the Jan-2023
+    # SVB ATM: agreement_date still 2023-01-31, but capacity jumps
+    # $50M→$100M and banker rebrands SVB→Leerink. Treating this as
+    # a redisclosure throws away the new tranche; treat as a new
+    # instrument so the walker_prompt's case-C supersede path can
+    # close the old row.
+    new_cap = new_t.get("capacity_usd")
+    old_cap = old_t.get("capacity_usd")
+    if (new_cap is not None and old_cap is not None
+            and not _close(new_cap, old_cap, _CREATE_AMOUNT_TOLERANCE)):
+        return False
+    new_pa_n = (new_pa or "").strip().lower()
+    old_pa_n = (old_pa or "").strip().lower()
+    if new_pa_n and old_pa_n and new_pa_n != old_pa_n:
+        return False
+    return True
+
+
+def _keys_match_s1_offering(new_t: dict, new_o: dict, old_t: dict, old_o: dict,
+                       new_pa: str, old_pa: str) -> bool:
+    """S-1 takedowns: anticipated deal size."""
+    new_size = new_t.get("anticipated_deal_size")
+    old_size = old_t.get("anticipated_deal_size")
+    # Primary: anticipated_deal_size when both sides carry it.
+    if new_size is not None and old_size is not None:
+        return _close(new_size, old_size, _CREATE_AMOUNT_TOLERANCE)
+    # Fallback when deal_size missing: same placement agent within
+    # the 60d window ⇒ same S-1. Issuers don't file two distinct
+    # S-1s through the same underwriter that close together.
+    np = new_pa.strip().lower()
+    op = old_pa.strip().lower()
+    return bool(np) and np == op
+
+
+def _keys_match_equity(new_t: dict, new_o: dict, old_t: dict, old_o: dict,
+                       new_pa: str, old_pa: str) -> bool:
+    """Equity (PIPE) tranches: share count and price."""
+    if not _close(new_o.get("count"), old_o.get("count"),
+                  _CREATE_AMOUNT_TOLERANCE):
+        return False
+    np = new_t.get("price_per_share") or new_t.get("price")
+    op = old_t.get("price_per_share") or old_t.get("price")
+    # Price is a strong secondary signal when both sides carry it.
+    # Allow None on either side (a private placement may disclose
+    # count but not price across re-disclosures).
+    if np is not None and op is not None:
+        return _close(np, op, _CREATE_PRICE_TOLERANCE)
+    return True
+
+
+# instrument type → identity predicate. A type absent from this table
+# has no identity rule, so a create can never collapse onto an existing
+# row of that type.
+_CREATE_KEY_MATCHERS = {
+    "warrant": _keys_match_warrant,
+    "convertible": _keys_match_convertible,
+    "preferred": _keys_match_preferred,
+    "shelf": _keys_match_shelf,
+    "atm": _keys_match_sales_program,
+    "equity_line": _keys_match_sales_program,
+    "s1_offering": _keys_match_s1_offering,
+    "equity": _keys_match_equity,
+}
+
+
 def _create_keys_match(
     type_: str, new_t: dict, new_o: dict,
     old_t: dict, old_o: dict,
     *,
     new_pa: str = "", old_pa: str = "",
 ) -> bool:
-    if type_ == "warrant":
-        # series_letter as identity: when BOTH sides name one, they must
-        # agree. Strike alone is not enough — a single filing can issue
-        # an Inducement Warrant and a Series B Warrant at the same strike
-        # (SCNI 2026-04-23 6-K: both at $0.55), and the second create
-        # would otherwise collapse onto the first. warrant_series_key keeps
-        # warrant series_letter's polymorphism: letters ("A","B"), digits
-        # ("1"), and descriptive tags ("Inducement","Pre-Funded") stay
-        # discriminators. A 10-Q footnote that re-states a ladder under
-        # financial-statement *closing dates* drops a date label
-        # ("August 23") here; warrant_series_key maps that to "" so this
-        # guard goes one-sided and falls through to strike — the
-        # re-disclosure-collapse behavior (GCTK Nov-2024 10-Q). One-sided
-        # cases (LLM omits the tag in a later re-disclosure) likewise fall
-        # through to strike.
-        new_sl = warrant_series_key(new_t.get("series_letter"))
-        old_sl = warrant_series_key(old_t.get("series_letter"))
-        if new_sl and old_sl and new_sl != old_sl:
-            return False
-        # Distinct expirations ⇒ distinct warrants even at an identical
-        # strike (CETY Feb-2025 Mast Hill @ $2.50 exp 2030-02-28 vs the
-        # Jan-2025 tranche @ $2.50 exp 2030-01-16 — 43d apart, well
-        # inside the 60d created-window). Mirrors walker _is_dup_create.
-        if _end_dates_conflict(new_t, old_t):
-            return False
-        return _close(
-            new_t.get("strike") or new_t.get("warrant_strike"),
-            old_t.get("strike") or old_t.get("warrant_strike"),
-            _CREATE_PRICE_TOLERANCE,
-        )
-    if type_ == "convertible":
-        # Distinct maturities ⇒ distinct notes, before any price test:
-        # serial toxic issuers place note after note with the SAME
-        # lender at the SAME conv price (and same-accession twins exist:
-        # Mega Sincere / Noblebear, both $0.646, maturities 6mo apart).
-        if _end_dates_conflict(new_t, old_t):
-            return False
-        new_cp = new_t.get("conv_price") or new_t.get("conversion_price")
-        old_cp = old_t.get("conv_price") or old_t.get("conversion_price")
-        # Primary: conv_price authoritative when both sides have it.
-        # Different conv_prices ⇒ different notes, period.
-        if new_cp is not None and old_cp is not None:
-            return _close(new_cp, old_cp, _CREATE_PRICE_TOLERANCE)
-        # Fallback when conv_price missing on either side: principal
-        # face amount is the next-best discriminator. Two convertibles
-        # rarely share a principal within ±5% within the 60d re-disclosure
-        # window unless they're the same note re-described.
-        return _close(
-            new_t.get("principal"), old_t.get("principal"),
-            _CREATE_AMOUNT_TOLERANCE,
-        )
-    if type_ == "preferred":
-        # series_letter is unique within an issuer — primary identity
-        # key. Same letter on both sides → same tranche, regardless of
-        # how conv_price has drifted across re-disclosures. Different
-        # letters → definitively different tranches; do NOT fall back
-        # to price-based dedup, which can cause a Series D create with
-        # similar conv_price to a Series B to collapse incorrectly.
-        new_series = extract_series_letter(new_t.get("series_letter"))
-        old_series = extract_series_letter(old_t.get("series_letter"))
-        if new_series and old_series:
-            return new_series == old_series
-        # When at least one side has no series_letter, fall back to
-        # price/principal — the original v1 dedup behavior.
-        if _close(
-            new_t.get("conv_price") or new_t.get("conversion_price"),
-            old_t.get("conv_price") or old_t.get("conversion_price"),
-            _CREATE_PRICE_TOLERANCE,
-        ):
-            return True
-        return _close(
-            new_t.get("liquidation_preference"),
-            old_t.get("liquidation_preference"),
-            _CREATE_AMOUNT_TOLERANCE,
-        )
-    if type_ == "shelf":
-        # Base form (S-3 vs F-3) must match — they are distinct
-        # registration regimes for distinct issuer classes.
-        new_base = (new_t.get("form") or "").upper().split("/")[0]
-        old_base = (old_t.get("form") or "").upper().split("/")[0]
-        if new_base and old_base and new_base != old_base:
-            return False
-        if _close(
-            new_t.get("capacity_usd"), old_t.get("capacity_usd"),
-            _CREATE_AMOUNT_TOLERANCE,
-        ):
-            return True
-        # Some shelves are denominated in shares (e.g. resale registrations
-        # of a fixed share count) rather than dollars. Match on
-        # `capacity_shares` when both sides expose it. Without this fall-
-        # back, two same-day disclosures of the same N-share registration
-        # (8-K + 424B3 pair) both pass dedup with capacity_usd=None and
-        # land as distinct shelf rows.
-        return _close(
-            new_t.get("capacity_shares"), old_t.get("capacity_shares"),
-            _CREATE_AMOUNT_TOLERANCE,
-        )
-    if type_ in ("atm", "equity_line"):
-        # agreement_date equality is the primary identity key. Two ATMs
-        # with different signing dates are DISTINCT instruments even
-        # if capacity is similar. The prior capacity-similarity rule
-        # collapsed multi-program issuers (XTIA had two Maxim ATMs at
-        # ~$25M and ~$27M signed 11 months apart) into one row and
-        # blocked valid drawdowns via capacity_overflow. No fallback —
-        # if the walker fails to extract agreement_date, a duplicate
-        # row is preferable to a silent collapse.
-        new_ad = (new_t.get("agreement_date") or "").strip()[:10]
-        old_ad = (old_t.get("agreement_date") or "").strip()[:10]
-        if not (bool(new_ad) and bool(old_ad) and new_ad == old_ad):
-            return False
-        # agreement_date matches — but an issuer can AMEND the same
-        # underlying Sales Agreement (capacity bump, banker rebrand)
-        # via a fresh shelf years later. The amendment carries the
-        # ORIGINAL signing date in the prospectus, which would defeat
-        # the date key alone. CGEN's May-2026 F-3 amends the Jan-2023
-        # SVB ATM: agreement_date still 2023-01-31, but capacity jumps
-        # $50M→$100M and banker rebrands SVB→Leerink. Treating this as
-        # a redisclosure throws away the new tranche; treat as a new
-        # instrument so the walker_prompt's case-C supersede path can
-        # close the old row.
-        new_cap = new_t.get("capacity_usd")
-        old_cap = old_t.get("capacity_usd")
-        if (new_cap is not None and old_cap is not None
-                and not _close(new_cap, old_cap, _CREATE_AMOUNT_TOLERANCE)):
-            return False
-        new_pa_n = (new_pa or "").strip().lower()
-        old_pa_n = (old_pa or "").strip().lower()
-        if new_pa_n and old_pa_n and new_pa_n != old_pa_n:
-            return False
-        return True
-    if type_ == "s1_offering":
-        new_size = new_t.get("anticipated_deal_size")
-        old_size = old_t.get("anticipated_deal_size")
-        # Primary: anticipated_deal_size when both sides carry it.
-        if new_size is not None and old_size is not None:
-            return _close(new_size, old_size, _CREATE_AMOUNT_TOLERANCE)
-        # Fallback when deal_size missing: same placement agent within
-        # the 60d window ⇒ same S-1. Issuers don't file two distinct
-        # S-1s through the same underwriter that close together.
-        np = new_pa.strip().lower()
-        op = old_pa.strip().lower()
-        return bool(np) and np == op
-    if type_ == "equity":
-        if not _close(new_o.get("count"), old_o.get("count"),
-                      _CREATE_AMOUNT_TOLERANCE):
-            return False
-        np = new_t.get("price_per_share") or new_t.get("price")
-        op = old_t.get("price_per_share") or old_t.get("price")
-        # Price is a strong secondary signal when both sides carry it.
-        # Allow None on either side (a private placement may disclose
-        # count but not price across re-disclosures).
-        if np is not None and op is not None:
-            return _close(np, op, _CREATE_PRICE_TOLERANCE)
-        return True
-    return False
+    matcher = _CREATE_KEY_MATCHERS.get(type_)
+    if matcher is None:
+        return False
+    return matcher(new_t, new_o, old_t, old_o, new_pa, old_pa)
 
 
 def _close(a, b, tol: float) -> bool:
@@ -2493,364 +2552,442 @@ def _maybe_write_equity_drawdown(
     return True
 
 
-def _apply_record_event(
-    conn: sqlite3.Connection, cik: int, m: "RecordMutation",
-    accession: str, form: str, filing_date: str,
-) -> bool:
-    """Return True if an aux drawdown row was recorded."""
-    row = _fetch(conn, cik, m.instrument_id)
-    terms = json.loads(row["terms_json"] or "{}")
-    outstanding = json.loads(row["outstanding_json"] or "{}")
-    fields = dict(m.fields or {})
-    drew = False
-    terms_changed = False
-    pref_closed = False  # set when a preferred is fully retired below
+@dataclass
+class _EventCtx:
+    """Everything a record-event handler reads or writes.
 
-    if m.event_kind == "exercise":
-        shares = float(fields.get("shares") or 0)
-        # Cashless/net-share exercises retire MORE warrants than the
-        # common shares delivered (ACTU: 76,376 warrants → 26,070 net
-        # shares); the count drops by the surrendered figure while
-        # exercised_to_date tracks shares actually issued. Without
-        # warrants_exercised the two are 1:1 (ordinary cash exercise).
-        retired = float(fields.get("warrants_exercised") or 0) or shares
-        # Down-round/cashless signature: shares delivered FAR above the
-        # warrant's current count means the two are in different units
-        # (a ratcheted or cashless formula delivered multiples of the
-        # face), and a 1:1 decrement would blow through the face and
-        # zero a live warrant (CETY Jan-2025 Mast Hill: 1,264,420 +
-        # 195,867 shares against a 54,594-count warrant → zeroed +
-        # auto-terminated). Skip the COUNT decrement — the anchor's
-        # warrant-table reconciliation owns the count — but still track
-        # shares in exercised_to_date. An explicit warrants_exercised
-        # always wins (the issuer stated the retired figure).
-        cur_count = float(outstanding.get("count") or 0)
-        if (not float(fields.get("warrants_exercised") or 0)
-                and cur_count > 0 and retired > cur_count * 1.5):
-            fields["count_decrement_skipped"] = {
-                "reason": "cashless_ratio",
-                "shares": retired, "count": cur_count,
-            }
-            retired = 0.0
-        if retired:
-            outstanding["count"] = max(
-                0.0, float(outstanding.get("count") or 0) - retired,
-            )
-        if shares:
-            outstanding["exercised_to_date"] = (
-                float(outstanding.get("exercised_to_date") or 0) + shares
-            )
-        action = "exercised"
-    elif m.event_kind == "conversion":
-        # Convertible notes: principal_converted decrements principal_remaining.
-        principal = float(fields.get("principal_converted") or 0)
-        _conv_iso = _ev(m, filing_date)[:10]
-        _bal_asof = str(
-            outstanding.get("principal_remaining_asof") or "")[:10]
-        if principal:
-            # Subsumption: a stated balance as-of X already nets every
-            # conversion on or before X (same strictly-after convention
-            # as _drawn_to_date for ATM draws). Decrementing again
-            # double-subtracts — a 10-Q that itemizes the quarter's
-            # conversions AND states the period-end balance must land
-            # on the stated balance regardless of in-batch order.
-            # converted_to_date still accumulates: the event is real,
-            # only the balance already reflects it.
-            if _bal_asof and _conv_iso <= _bal_asof:
-                fields["balance_decrement_subsumed"] = {
-                    "asof": _bal_asof, "event": _conv_iso}
-            else:
-                outstanding["principal_remaining"] = max(
-                    0.0, float(outstanding.get("principal_remaining") or 0)
-                    - principal,
-                )
-                outstanding["principal_remaining_asof"] = _conv_iso
-            # Cumulative converted can never exceed the note's face — the
-            # issuer cannot convert more principal than it issued. Clamp
-            # and record the raw figure (same marker style as
-            # `count_decrement_skipped` above). The overflow signature is
-            # an aggregate multi-note conversion figure attributed to EACH
-            # note separately (NUAI C-123/C-124: $6,119,409 and $6,118,243
-            # booked against a combined $10M of face, summing to $12.2M).
-            # Unlike `principal_remaining` this field has no anchor to
-            # reconcile it — nothing downstream ever corrects it — so the
-            # clamp is the only guard, and `close_retired_debt` reads it
-            # as a full-retirement signal.
-            _conv_td = (
-                float(outstanding.get("principal_converted_to_date") or 0)
-                + principal
-            )
-            _face = float(terms.get("principal") or 0)
-            if _face > 0 and _conv_td > _face:
-                fields["converted_to_date_clamped"] = {
-                    "raw": _conv_td, "kept": _face,
-                }
-                _conv_td = _face
-            outstanding["principal_converted_to_date"] = _conv_td
-        if "principal_remaining" in fields:
-            # An explicitly stated post-conversion balance is an as-of
-            # statement at the event date — same latest-as-of-wins gate
-            # as _apply_amend.
-            if not (_bal_asof and _conv_iso < _bal_asof):
-                outstanding["principal_remaining"] = float(
-                    fields["principal_remaining"])
-                outstanding["principal_remaining_asof"] = _conv_iso
-            else:
-                fields["stated_balance_stale_asof"] = {
-                    "asof": _bal_asof, "event": _conv_iso}
-        # Preferred series: preferred_shares_converted decrements `count`.
-        # validate.py gates that this field is set when target is preferred,
-        # so we just trust the value here. `count_converted_to_date` mirrors
-        # principal_converted_to_date / exercised_to_date so downstream
-        # readers (cards, anchor) can recover the running total.
-        pref_shares = float(fields.get("preferred_shares_converted") or 0)
-        if (not pref_shares and principal
-                and (row["type"] or "").lower() == "preferred"):
-            # Debt-shaped conversion ($ amount) on a preferred → translate
-            # to a share count via stated_value (validate allows this when
-            # stated_value is known). Full conversion extinguishes the row.
-            pref_shares, pref_closed = _preferred_shares_from_principal(
-                principal, terms, outstanding,
-            )
-        if pref_shares and (row["type"] or "").lower() == "preferred":
-            outstanding["count"] = max(
-                0.0, float(outstanding.get("count") or 0) - pref_shares,
-            )
-            outstanding["count_converted_to_date"] = (
-                float(outstanding.get("count_converted_to_date") or 0)
-                + pref_shares
-            )
-        action = "converted"
-    elif m.event_kind == "partial_redemption":
-        # Convertible notes: principal_redeemed decrements principal_remaining.
-        amount = float(fields.get("principal_redeemed") or 0)
-        if amount:
+    `terms` / `outstanding` / `fields` are mutated IN PLACE — a handler
+    never rebinds them, so unpacking them to locals at the top of each
+    handler is safe and keeps the bodies reading exactly as they did
+    when they were branches of one function. The three flags are what
+    the shared tail keys off: whether an aux drawdown row was written,
+    whether terms moved (which UPDATE shape to use), and whether a
+    preferred was fully retired (an extra history entry + status write).
+    """
+    conn: sqlite3.Connection
+    cik: int
+    m: "RecordMutation"
+    accession: str
+    form: str
+    filing_date: str
+    row: dict
+    terms: dict
+    outstanding: dict
+    fields: dict
+    drew: bool = False
+    terms_changed: bool = False
+    pref_closed: bool = False
+
+def _event_exercise(ctx: "_EventCtx") -> str:
+    """Warrant exercise: retire count, accumulate shares delivered.
+
+    Returns the history `action` label.
+    """
+    outstanding, fields = ctx.outstanding, ctx.fields
+    shares = float(fields.get("shares") or 0)
+    # Cashless/net-share exercises retire MORE warrants than the
+    # common shares delivered (ACTU: 76,376 warrants → 26,070 net
+    # shares); the count drops by the surrendered figure while
+    # exercised_to_date tracks shares actually issued. Without
+    # warrants_exercised the two are 1:1 (ordinary cash exercise).
+    retired = float(fields.get("warrants_exercised") or 0) or shares
+    # Down-round/cashless signature: shares delivered FAR above the
+    # warrant's current count means the two are in different units
+    # (a ratcheted or cashless formula delivered multiples of the
+    # face), and a 1:1 decrement would blow through the face and
+    # zero a live warrant (CETY Jan-2025 Mast Hill: 1,264,420 +
+    # 195,867 shares against a 54,594-count warrant → zeroed +
+    # auto-terminated). Skip the COUNT decrement — the anchor's
+    # warrant-table reconciliation owns the count — but still track
+    # shares in exercised_to_date. An explicit warrants_exercised
+    # always wins (the issuer stated the retired figure).
+    cur_count = float(outstanding.get("count") or 0)
+    if (not float(fields.get("warrants_exercised") or 0)
+            and cur_count > 0 and retired > cur_count * 1.5):
+        fields["count_decrement_skipped"] = {
+            "reason": "cashless_ratio",
+            "shares": retired, "count": cur_count,
+        }
+        retired = 0.0
+    if retired:
+        outstanding["count"] = max(
+            0.0, float(outstanding.get("count") or 0) - retired,
+        )
+    if shares:
+        outstanding["exercised_to_date"] = (
+            float(outstanding.get("exercised_to_date") or 0) + shares
+        )
+    return "exercised"
+
+def _event_conversion(ctx: "_EventCtx") -> str:
+    """Note/preferred conversion: decrement the balance, accumulate the flow.
+
+    Returns the history `action` label.
+    """
+    m, row, filing_date = ctx.m, ctx.row, ctx.filing_date
+    terms, outstanding, fields = ctx.terms, ctx.outstanding, ctx.fields
+    # Convertible notes: principal_converted decrements principal_remaining.
+    principal = float(fields.get("principal_converted") or 0)
+    _conv_iso = _ev(m, filing_date)[:10]
+    _bal_asof = str(
+        outstanding.get("principal_remaining_asof") or "")[:10]
+    if principal:
+        # Subsumption: a stated balance as-of X already nets every
+        # conversion on or before X (same strictly-after convention
+        # as _drawn_to_date for ATM draws). Decrementing again
+        # double-subtracts — a 10-Q that itemizes the quarter's
+        # conversions AND states the period-end balance must land
+        # on the stated balance regardless of in-batch order.
+        # converted_to_date still accumulates: the event is real,
+        # only the balance already reflects it.
+        if _bal_asof and _conv_iso <= _bal_asof:
+            fields["balance_decrement_subsumed"] = {
+                "asof": _bal_asof, "event": _conv_iso}
+        else:
             outstanding["principal_remaining"] = max(
                 0.0, float(outstanding.get("principal_remaining") or 0)
-                - amount,
+                - principal,
             )
-            # Mirror principal_converted_to_date for the CASH-repayment
-            # leg. Without this a note repaid in cash reaches
-            # principal_remaining=0 with no flow record anywhere, so
-            # `close_retired_debt` cannot tell "fully repaid" from
-            # "balance is wrong" and has to leave it active. Clamped at
-            # face for the same reason as the conversion accumulator.
-            _red_td = (
-                float(outstanding.get("principal_redeemed_to_date") or 0)
-                + amount
+            outstanding["principal_remaining_asof"] = _conv_iso
+        # Cumulative converted can never exceed the note's face — the
+        # issuer cannot convert more principal than it issued. Clamp
+        # and record the raw figure (same marker style as
+        # `count_decrement_skipped` above). The overflow signature is
+        # an aggregate multi-note conversion figure attributed to EACH
+        # note separately (NUAI C-123/C-124: $6,119,409 and $6,118,243
+        # booked against a combined $10M of face, summing to $12.2M).
+        # Unlike `principal_remaining` this field has no anchor to
+        # reconcile it — nothing downstream ever corrects it — so the
+        # clamp is the only guard, and `close_retired_debt` reads it
+        # as a full-retirement signal.
+        _conv_td = (
+            float(outstanding.get("principal_converted_to_date") or 0)
+            + principal
+        )
+        _face = float(terms.get("principal") or 0)
+        if _face > 0 and _conv_td > _face:
+            fields["converted_to_date_clamped"] = {
+                "raw": _conv_td, "kept": _face,
+            }
+            _conv_td = _face
+        outstanding["principal_converted_to_date"] = _conv_td
+    if "principal_remaining" in fields:
+        # An explicitly stated post-conversion balance is an as-of
+        # statement at the event date — same latest-as-of-wins gate
+        # as _apply_amend.
+        if not (_bal_asof and _conv_iso < _bal_asof):
+            outstanding["principal_remaining"] = float(
+                fields["principal_remaining"])
+            outstanding["principal_remaining_asof"] = _conv_iso
+        else:
+            fields["stated_balance_stale_asof"] = {
+                "asof": _bal_asof, "event": _conv_iso}
+    # Preferred series: preferred_shares_converted decrements `count`.
+    # validate.py gates that this field is set when target is preferred,
+    # so we just trust the value here. `count_converted_to_date` mirrors
+    # principal_converted_to_date / exercised_to_date so downstream
+    # readers (cards, anchor) can recover the running total.
+    pref_shares = float(fields.get("preferred_shares_converted") or 0)
+    if (not pref_shares and principal
+            and (row["type"] or "").lower() == "preferred"):
+        # Debt-shaped conversion ($ amount) on a preferred → translate
+        # to a share count via stated_value (validate allows this when
+        # stated_value is known). Full conversion extinguishes the row.
+        pref_shares, ctx.pref_closed = _preferred_shares_from_principal(
+            principal, terms, outstanding,
+        )
+    if pref_shares and (row["type"] or "").lower() == "preferred":
+        outstanding["count"] = max(
+            0.0, float(outstanding.get("count") or 0) - pref_shares,
+        )
+        outstanding["count_converted_to_date"] = (
+            float(outstanding.get("count_converted_to_date") or 0)
+            + pref_shares
+        )
+    return "converted"
+
+def _event_partial_redemption(ctx: "_EventCtx") -> str:
+    """Cash retirement of note principal or preferred shares.
+
+    Returns the history `action` label.
+    """
+    row = ctx.row
+    terms, outstanding, fields = ctx.terms, ctx.outstanding, ctx.fields
+    # Convertible notes: principal_redeemed decrements principal_remaining.
+    amount = float(fields.get("principal_redeemed") or 0)
+    if amount:
+        outstanding["principal_remaining"] = max(
+            0.0, float(outstanding.get("principal_remaining") or 0)
+            - amount,
+        )
+        # Mirror principal_converted_to_date for the CASH-repayment
+        # leg. Without this a note repaid in cash reaches
+        # principal_remaining=0 with no flow record anywhere, so
+        # `close_retired_debt` cannot tell "fully repaid" from
+        # "balance is wrong" and has to leave it active. Clamped at
+        # face for the same reason as the conversion accumulator.
+        _red_td = (
+            float(outstanding.get("principal_redeemed_to_date") or 0)
+            + amount
+        )
+        _red_face = float(terms.get("principal") or 0)
+        if _red_face > 0 and _red_td > _red_face:
+            fields["redeemed_to_date_clamped"] = {
+                "raw": _red_td, "kept": _red_face,
+            }
+            _red_td = _red_face
+        outstanding["principal_redeemed_to_date"] = _red_td
+    # Preferred series: preferred_shares_redeemed decrements `count`.
+    # validate.py gates that this field is set when target is preferred,
+    # so we just trust the value here. `count_redeemed_to_date` mirrors
+    # count_converted_to_date so cards/anchor readers can recover the
+    # running total of preferred shares retired for cash.
+    pref_shares = float(fields.get("preferred_shares_redeemed") or 0)
+    if (not pref_shares and amount
+            and (row["type"] or "").lower() == "preferred"):
+        # Debt-shaped redemption ($ amount) on a preferred → translate
+        # to a share count via stated_value (validate allows this when
+        # stated_value is known); previously this was hard-rejected and
+        # the retirement silently lost, leaving the preliminary tranche
+        # of a loan-to-equity rollover live forever (SCNI EIB P-177).
+        pref_shares, ctx.pref_closed = _preferred_shares_from_principal(
+            amount, terms, outstanding,
+        )
+    if pref_shares and (row["type"] or "").lower() == "preferred":
+        outstanding["count"] = max(
+            0.0, float(outstanding.get("count") or 0) - pref_shares,
+        )
+        outstanding["count_redeemed_to_date"] = (
+            float(outstanding.get("count_redeemed_to_date") or 0)
+            + pref_shares
+        )
+    return "partial_redemption"
+
+def _event_partial_termination(ctx: "_EventCtx") -> str:
+    """A capacity program shrunk without being closed.
+
+    Returns the history `action` label.
+    """
+    outstanding, fields = ctx.outstanding, ctx.fields
+    amount = float(fields.get("capacity_reduced_usd") or 0)
+    if amount:
+        cap = float(outstanding.get("remaining_capacity_usd") or 0)
+        if cap:
+            outstanding["remaining_capacity_usd"] = max(
+                0.0, cap - amount,
             )
-            _red_face = float(terms.get("principal") or 0)
-            if _red_face > 0 and _red_td > _red_face:
-                fields["redeemed_to_date_clamped"] = {
-                    "raw": _red_td, "kept": _red_face,
-                }
-                _red_td = _red_face
-            outstanding["principal_redeemed_to_date"] = _red_td
-        # Preferred series: preferred_shares_redeemed decrements `count`.
-        # validate.py gates that this field is set when target is preferred,
-        # so we just trust the value here. `count_redeemed_to_date` mirrors
-        # count_converted_to_date so cards/anchor readers can recover the
-        # running total of preferred shares retired for cash.
-        pref_shares = float(fields.get("preferred_shares_redeemed") or 0)
-        if (not pref_shares and amount
-                and (row["type"] or "").lower() == "preferred"):
-            # Debt-shaped redemption ($ amount) on a preferred → translate
-            # to a share count via stated_value (validate allows this when
-            # stated_value is known); previously this was hard-rejected and
-            # the retirement silently lost, leaving the preliminary tranche
-            # of a loan-to-equity rollover live forever (SCNI EIB P-177).
-            pref_shares, pref_closed = _preferred_shares_from_principal(
-                amount, terms, outstanding,
-            )
-        if pref_shares and (row["type"] or "").lower() == "preferred":
-            outstanding["count"] = max(
-                0.0, float(outstanding.get("count") or 0) - pref_shares,
-            )
-            outstanding["count_redeemed_to_date"] = (
-                float(outstanding.get("count_redeemed_to_date") or 0)
-                + pref_shares
-            )
-        action = "partial_redemption"
-    elif m.event_kind == "partial_termination":
-        amount = float(fields.get("capacity_reduced_usd") or 0)
+    return "partial_termination"
+
+def _event_drawdown(ctx: "_EventCtx") -> str:
+    """A takedown against a shelf / ATM / equity line.
+
+    Returns the history `action` label.
+    """
+    conn, cik, m = ctx.conn, ctx.cik, ctx.m
+    accession = ctx.accession
+    outstanding, fields = ctx.outstanding, ctx.fields
+    # GROSS dollars are the single capacity basis. RecordDrawdown.fields
+    # always emits `drawdown_amount_usd` as gross — shares × gross
+    # price_per_share when a per-share price was given, else the gross
+    # aggregate fallback (the prompt + the drawdown_missing_price retry
+    # steer the model to the per-share gross price precisely so a
+    # net-of-fees aggregate doesn't slip in). Shelf/ATM capacity is
+    # registered gross, so drawn_usd / remaining_capacity_usd below stay
+    # on the same basis and the validator's overflow check compares
+    # like-for-like. The former `or amount_usd or gross_proceeds`
+    # fallbacks were dead — no drawdown mutation emits those keys
+    # (gross_proceeds belongs to record_exercise, amount_usd to no
+    # mutation at all) — and reading three interchangeable fields made
+    # the gross/net basis look non-deterministic when it is not.
+    amount = float(fields.get("drawdown_amount_usd") or 0)
+    shares = float(fields.get("drawdown_shares")
+                   or fields.get("shares") or 0)
+    ev_iso = m.event_date.isoformat()
+    if _drawdown_already_recorded(
+        conn, cik, m.instrument_id, ev_iso, amount, shares,
+    ):
+        log.info(
+            "drawdown re-disclosure suppressed: instrument=%s "
+            "date=%s amount=%s accession=%s",
+            m.instrument_id, ev_iso, amount, accession,
+        )
+        return "drawdown_redisclosed"
+    else:
         if amount:
+            outstanding["drawn_usd"] = (
+                float(outstanding.get("drawn_usd") or 0) + amount
+            )
             cap = float(outstanding.get("remaining_capacity_usd") or 0)
             if cap:
                 outstanding["remaining_capacity_usd"] = max(
                     0.0, cap - amount,
                 )
-        action = "partial_termination"
-    elif m.event_kind == "drawdown":
-        # GROSS dollars are the single capacity basis. RecordDrawdown.fields
-        # always emits `drawdown_amount_usd` as gross — shares × gross
-        # price_per_share when a per-share price was given, else the gross
-        # aggregate fallback (the prompt + the drawdown_missing_price retry
-        # steer the model to the per-share gross price precisely so a
-        # net-of-fees aggregate doesn't slip in). Shelf/ATM capacity is
-        # registered gross, so drawn_usd / remaining_capacity_usd below stay
-        # on the same basis and the validator's overflow check compares
-        # like-for-like. The former `or amount_usd or gross_proceeds`
-        # fallbacks were dead — no drawdown mutation emits those keys
-        # (gross_proceeds belongs to record_exercise, amount_usd to no
-        # mutation at all) — and reading three interchangeable fields made
-        # the gross/net basis look non-deterministic when it is not.
-        amount = float(fields.get("drawdown_amount_usd") or 0)
-        shares = float(fields.get("drawdown_shares")
-                       or fields.get("shares") or 0)
-        ev_iso = m.event_date.isoformat()
-        if _drawdown_already_recorded(
-            conn, cik, m.instrument_id, ev_iso, amount, shares,
-        ):
-            log.info(
-                "drawdown re-disclosure suppressed: instrument=%s "
-                "date=%s amount=%s accession=%s",
-                m.instrument_id, ev_iso, amount, accession,
+        if shares:
+            outstanding["sold_to_date"] = (
+                float(outstanding.get("sold_to_date") or 0) + shares
             )
-            action = "drawdown_redisclosed"
+        # Index the drawdown for fast IB6 / utilization queries +
+        # "Last Banker" lookups on shelf cards. Drawdown party is
+        # distinct from the parent instrument's counterparty
+        # (shelves don't have a banker; each takedown does).
+        # placement_agent → role='bank'; counterparty → 'investor'.
+        pa = fields.get("placement_agent_canonical")
+        cp = fields.get("counterparty_canonical")
+        if pa:
+            party_canon, party_role = pa, "bank"
+        elif cp:
+            party_canon, party_role = cp, "investor"
         else:
-            if amount:
-                outstanding["drawn_usd"] = (
-                    float(outstanding.get("drawn_usd") or 0) + amount
-                )
-                cap = float(outstanding.get("remaining_capacity_usd") or 0)
-                if cap:
-                    outstanding["remaining_capacity_usd"] = max(
-                        0.0, cap - amount,
-                    )
-            if shares:
-                outstanding["sold_to_date"] = (
-                    float(outstanding.get("sold_to_date") or 0) + shares
-                )
-            # Index the drawdown for fast IB6 / utilization queries +
-            # "Last Banker" lookups on shelf cards. Drawdown party is
-            # distinct from the parent instrument's counterparty
-            # (shelves don't have a banker; each takedown does).
-            # placement_agent → role='bank'; counterparty → 'investor'.
-            pa = fields.get("placement_agent_canonical")
-            cp = fields.get("counterparty_canonical")
-            if pa:
-                party_canon, party_role = pa, "bank"
-            elif cp:
-                party_canon, party_role = cp, "investor"
-            else:
-                party_canon, party_role = None, None
-            conn.execute(
-                """INSERT INTO dilution_ledger_drawdowns
-                     (cik, instrument_id, accession_number, event_date,
-                      amount_usd, shares, price,
-                      drawdown_party_canonical, drawdown_party_role,
-                      detected_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (cik, m.instrument_id, accession, ev_iso,
-                 amount or None, shares or None,
-                 fields.get("price") or fields.get("avg_price"),
-                 party_canon, party_role, now_iso()),
-            )
-            drew = True
-            action = "drawn_down"
-    elif m.event_kind == "closing" and (row["type"] or "").lower() == "equity":
-        # Equity (off-shelf PIPE) close: book the cash into the
-        # drawdowns index. NO warrant-style date-rebase and NO relabel
-        # — equity has no term to preserve, and the card keeps its
-        # announcement-month label.
-        closing_iso = m.event_date.isoformat()
-        if terms.get("closing_date") != closing_iso:
-            terms["closing_date"] = closing_iso
-            terms_changed = True
-        # Count true-up first so the amount fallback (count × price)
-        # uses the final issued count.
-        count_actual = fields.get("count_actual")
-        if count_actual is not None:
-            outstanding["count"] = float(count_actual)
-        drew = _maybe_write_equity_drawdown(
-            conn, cik, m.instrument_id, row["counterparty_canonical"],
-            terms, outstanding, fields.get("gross_proceeds_usd"),
-            closing_iso, accession,
+            party_canon, party_role = None, None
+        conn.execute(
+            """INSERT INTO dilution_ledger_drawdowns
+                 (cik, instrument_id, accession_number, event_date,
+                  amount_usd, shares, price,
+                  drawdown_party_canonical, drawdown_party_role,
+                  detected_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (cik, m.instrument_id, accession, ev_iso,
+             amount or None, shares or None,
+             fields.get("price") or fields.get("avg_price"),
+             party_canon, party_role, now_iso()),
         )
-        action = "closing_confirmed"
-    elif m.event_kind == "closing":
-        # Closing-relabel: a previously-announced tranche is now
-        # actually issued. The signing filing's create stamped the row
-        # with the announcement date; this event re-bases issue_date /
-        # exercisable_date / expiration so the card matches DT's
-        # closing-date convention.
-        closing_iso = m.event_date.isoformat()
-        # Old issue date for term-preservation math. Prefer an
-        # explicit terms.issue_date the create supplied; fall back to
-        # the row's created_at (the signing filing's event_date).
-        old_issue_raw = terms.get("issue_date") or row["created_at"]
+        ctx.drew = True
+        return "drawn_down"
+
+def _event_closing_equity(ctx: "_EventCtx") -> str:
+    """Equity (off-shelf PIPE) close: book the cash, keep the label.
+
+    Returns the history `action` label.
+    """
+    conn, cik, m, row = ctx.conn, ctx.cik, ctx.m, ctx.row
+    accession = ctx.accession
+    terms, outstanding, fields = ctx.terms, ctx.outstanding, ctx.fields
+    # Equity (off-shelf PIPE) close: book the cash into the
+    # drawdowns index. NO warrant-style date-rebase and NO relabel
+    # — equity has no term to preserve, and the card keeps its
+    # announcement-month label.
+    closing_iso = m.event_date.isoformat()
+    if terms.get("closing_date") != closing_iso:
+        terms["closing_date"] = closing_iso
+        ctx.terms_changed = True
+    # Count true-up first so the amount fallback (count × price)
+    # uses the final issued count.
+    count_actual = fields.get("count_actual")
+    if count_actual is not None:
+        outstanding["count"] = float(count_actual)
+    ctx.drew = _maybe_write_equity_drawdown(
+        conn, cik, m.instrument_id, row["counterparty_canonical"],
+        terms, outstanding, fields.get("gross_proceeds_usd"),
+        closing_iso, accession,
+    )
+    return "closing_confirmed"
+
+def _event_closing(ctx: "_EventCtx") -> str:
+    """Announced tranche actually issued: re-base the term dates.
+
+    Returns the history `action` label.
+    """
+    m, row = ctx.m, ctx.row
+    terms, outstanding, fields = ctx.terms, ctx.outstanding, ctx.fields
+    # Closing-relabel: a previously-announced tranche is now
+    # actually issued. The signing filing's create stamped the row
+    # with the announcement date; this event re-bases issue_date /
+    # exercisable_date / expiration so the card matches DT's
+    # closing-date convention.
+    closing_iso = m.event_date.isoformat()
+    # Old issue date for term-preservation math. Prefer an
+    # explicit terms.issue_date the create supplied; fall back to
+    # the row's created_at (the signing filing's event_date).
+    old_issue_raw = terms.get("issue_date") or row["created_at"]
+    try:
+        old_issue = _d.fromisoformat(str(old_issue_raw)[:10])
+    except (TypeError, ValueError):
+        old_issue = None
+    # Shift expiration by the same delta so the N-year term
+    # measured "from issuance" stays intact.
+    old_exp_raw = terms.get("expiration")
+    if old_exp_raw and old_issue:
         try:
-            old_issue = _d.fromisoformat(str(old_issue_raw)[:10])
+            old_exp = _d.fromisoformat(str(old_exp_raw)[:10])
+            delta = m.event_date - old_issue
+            terms["expiration"] = (old_exp + delta).isoformat()
+            ctx.terms_changed = True
         except (TypeError, ValueError):
-            old_issue = None
-        # Shift expiration by the same delta so the N-year term
-        # measured "from issuance" stays intact.
-        old_exp_raw = terms.get("expiration")
-        if old_exp_raw and old_issue:
+            pass
+    # Shift convertible_date by the same delta — an N-month lockup
+    # "commencing on the date of issuance" tracks the re-based
+    # issuance, exactly like expiration above (SCNI EIB: 12-month
+    # lockup anchored to the 08-13 announcement create stayed
+    # frozen while issue_date re-based to the 08-21 closing).
+    # ONLY a convertible_date still equal to its CREATE-time value
+    # is announcement-anchored; once anything moved it (an LLM
+    # amend already correcting it to the closing-based lockup, or
+    # a prior closing event's own shift) re-shifting double-applies
+    # the delta (round-6 EIB: amend fixed 08-13→08-21, the shift
+    # then pushed it to 08-29).
+    old_cd_raw = terms.get("convertible_date")
+    if old_cd_raw and old_issue:
+        try:
+            hist0 = json.loads(row["history_json"] or "[]")
+        except (TypeError, ValueError):
+            hist0 = []
+        create_cd = None
+        for e in hist0:
+            if e.get("action") == "created":
+                create_cd = ((e.get("fields_changed") or {})
+                             .get("terms") or {}).get("convertible_date")
+                break
+        if create_cd and str(old_cd_raw)[:10] == str(create_cd)[:10]:
             try:
-                old_exp = _d.fromisoformat(str(old_exp_raw)[:10])
+                old_cd = _d.fromisoformat(str(old_cd_raw)[:10])
                 delta = m.event_date - old_issue
-                terms["expiration"] = (old_exp + delta).isoformat()
-                terms_changed = True
+                terms["convertible_date"] = (old_cd + delta).isoformat()
+                ctx.terms_changed = True
             except (TypeError, ValueError):
                 pass
-        # Shift convertible_date by the same delta — an N-month lockup
-        # "commencing on the date of issuance" tracks the re-based
-        # issuance, exactly like expiration above (SCNI EIB: 12-month
-        # lockup anchored to the 08-13 announcement create stayed
-        # frozen while issue_date re-based to the 08-21 closing).
-        # ONLY a convertible_date still equal to its CREATE-time value
-        # is announcement-anchored; once anything moved it (an LLM
-        # amend already correcting it to the closing-based lockup, or
-        # a prior closing event's own shift) re-shifting double-applies
-        # the delta (round-6 EIB: amend fixed 08-13→08-21, the shift
-        # then pushed it to 08-29).
-        old_cd_raw = terms.get("convertible_date")
-        if old_cd_raw and old_issue:
-            try:
-                hist0 = json.loads(row["history_json"] or "[]")
-            except (TypeError, ValueError):
-                hist0 = []
-            create_cd = None
-            for e in hist0:
-                if e.get("action") == "created":
-                    create_cd = ((e.get("fields_changed") or {})
-                                 .get("terms") or {}).get("convertible_date")
-                    break
-            if create_cd and str(old_cd_raw)[:10] == str(create_cd)[:10]:
-                try:
-                    old_cd = _d.fromisoformat(str(old_cd_raw)[:10])
-                    delta = m.event_date - old_issue
-                    terms["convertible_date"] = (old_cd + delta).isoformat()
-                    terms_changed = True
-                except (TypeError, ValueError):
-                    pass
-        if terms.get("issue_date") != closing_iso:
-            terms["issue_date"] = closing_iso
-            terms_changed = True
-        if terms.get("exercisable_date") != closing_iso:
-            terms["exercisable_date"] = closing_iso
-            terms_changed = True
-        # Count true-up. Only widen initial_count when no exercises /
-        # terminations have happened yet — same guard as _apply_amend's
-        # upward-count clarification, since "closing came after the
-        # tranche already started moving" is a coherence-warning case
-        # the apply layer shouldn't paper over.
-        count_actual = fields.get("count_actual")
-        if count_actual is not None:
-            new_count = float(count_actual)
-            outstanding["count"] = new_count
-            if (not float(outstanding.get("exercised_to_date") or 0)
-                    and not float(outstanding.get("terminated_to_date") or 0)):
-                initial = float(outstanding.get("initial_count") or 0)
-                if new_count > initial:
-                    outstanding["initial_count"] = new_count
-                elif initial == 0:
-                    outstanding["initial_count"] = new_count
-        action = "closing_confirmed"
-    else:
-        action = m.event_kind  # forward-compat
+    if terms.get("issue_date") != closing_iso:
+        terms["issue_date"] = closing_iso
+        ctx.terms_changed = True
+    if terms.get("exercisable_date") != closing_iso:
+        terms["exercisable_date"] = closing_iso
+        ctx.terms_changed = True
+    # Count true-up. Only widen initial_count when no exercises /
+    # terminations have happened yet — same guard as _apply_amend's
+    # upward-count clarification, since "closing came after the
+    # tranche already started moving" is a coherence-warning case
+    # the apply layer shouldn't paper over.
+    count_actual = fields.get("count_actual")
+    if count_actual is not None:
+        new_count = float(count_actual)
+        outstanding["count"] = new_count
+        if (not float(outstanding.get("exercised_to_date") or 0)
+                and not float(outstanding.get("terminated_to_date") or 0)):
+            initial = float(outstanding.get("initial_count") or 0)
+            if new_count > initial:
+                outstanding["initial_count"] = new_count
+            elif initial == 0:
+                outstanding["initial_count"] = new_count
+    return "closing_confirmed"
 
+# event_kind → handler. `closing` splits on instrument type inside
+# _apply_record_event: equity has no term to re-base and keeps its
+# announcement-month label.
+_RECORD_EVENT_HANDLERS = {
+    "exercise": _event_exercise,
+    "conversion": _event_conversion,
+    "partial_redemption": _event_partial_redemption,
+    "partial_termination": _event_partial_termination,
+    "drawdown": _event_drawdown,
+}
+
+
+def _write_record_event(ctx: "_EventCtx", action: str) -> None:
+    """Append history and persist the row — shared by every handler."""
+    m, row = ctx.m, ctx.row
+    terms, outstanding, fields = ctx.terms, ctx.outstanding, ctx.fields
+    conn, accession, form = ctx.conn, ctx.accession, ctx.form
+    filing_date = ctx.filing_date
+    pref_closed, terms_changed = ctx.pref_closed, ctx.terms_changed
     history = json.loads(row["history_json"] or "[]")
     history.append({
         "date": _ev(m, filing_date),
@@ -2911,7 +3048,30 @@ def _apply_record_event(
             "WHERE instrument_id=?",
             ("redeemed", filing_date, m.instrument_id),
         )
-    return drew
+
+
+def _apply_record_event(
+    conn: sqlite3.Connection, cik: int, m: "RecordMutation",
+    accession: str, form: str, filing_date: str,
+) -> bool:
+    """Return True if an aux drawdown row was recorded."""
+    row = _fetch(conn, cik, m.instrument_id)
+    ctx = _EventCtx(
+        conn=conn, cik=cik, m=m, accession=accession, form=form,
+        filing_date=filing_date, row=row,
+        terms=json.loads(row["terms_json"] or "{}"),
+        outstanding=json.loads(row["outstanding_json"] or "{}"),
+        fields=dict(m.fields or {}),
+    )
+    if m.event_kind == "closing":
+        handler = (_event_closing_equity
+                   if (row["type"] or "").lower() == "equity"
+                   else _event_closing)
+    else:
+        handler = _RECORD_EVENT_HANDLERS.get(m.event_kind)
+    action = handler(ctx) if handler else m.event_kind  # forward-compat
+    _write_record_event(ctx, action)
+    return ctx.drew
 
 
 def _apply_close(

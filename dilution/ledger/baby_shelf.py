@@ -102,7 +102,7 @@ def raised_under_ib6_last_12mo(cik: int,
         acc = r["accession_number"]
         date = r["event_date"]
         is_dup = False
-        for prev_acc, prev_amt, prev_date in seen:
+        for prev_acc, prev_amt, _prev_date in seen:
             if prev_acc != acc:
                 continue
             denom = max(abs(amount), abs(prev_amt))

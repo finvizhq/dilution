@@ -94,7 +94,7 @@ def _finviz_rate(currency: str, on: date) -> float | None:
     close = _nearest_close(series, on)
     if close is None:
         return None
-    pair, invert = _FINVIZ_PAIRS[currency]
+    _pair, invert = _FINVIZ_PAIRS[currency]
     return (1.0 / close) if invert else close
 
 
