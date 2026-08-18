@@ -21,8 +21,8 @@ What this layer is responsible for (§4 conventions):
     shelves are dropped here, so the consumer's card list is live paper
     only. Pre-funded / placement-agent warrants and withdrawn / lapsed
     S-1s are already filtered by the card layer.
-  * the cached AI brief read (never generated) at push time, with a
-    staleness flag
+  * the AI brief — cached, regenerated inline (one LLM call) only when
+    the ledger mutated since it was written
   * a SETTLED market basis: `as_of` and the price behind the price-based
     O/S-chart segments are the last settled close, never the live price
     (contract §5.2 + open question #3 — a pushed snapshot must not carry
@@ -479,57 +479,31 @@ def _badges_block(badges) -> dict | None:
 
 
 # ── §8 brief ─────────────────────────────────────────────────────────
-def _latest_filing_date(cik: int) -> str | None:
-    with get_conn() as conn:
-        row = conn.execute(
-            "SELECT MAX(filing_date) d FROM dilution_filings WHERE cik = ?",
-            (int(cik),),
-        ).fetchone()
-    return row["d"] if row else None
-
-
-def _brief_block(cik: int) -> dict | None:
-    """§8. The cached AI dilution brief, or null when none exists.
+def _brief_block(cik: int, ticker: str, *, name: str, fund: dict | None,
+                 latest_os, cards: dict, cash, raised, badges) -> dict | None:
+    """§8. The AI dilution brief, or null when none exists.
 
     Display-only prose generated from the same deterministic facts the
-    rest of the payload carries (cards / badges / cash). The producer
-    only *reads* the cache here — generation is a pipeline job
-    (scripts/run_brief_all.py), so a push never blocks on an LLM call
-    and never mints text mid-request.
-
-    `stale` means a filing arrived after the brief was generated, so the
-    prose may not mention it — the same test scripts/run_brief_all.py
-    inverts to decide what to regenerate. It does NOT catch
-    prose that went stale because the LEDGER changed under it (a re-walk
-    with no new filing), which is why `generated_at` ships too — a
-    consumer that wants to suppress old commentary can age it out.
+    rest of the payload carries — the assembly passes in the objects it
+    already fetched, so nothing is fetched twice. ensure_brief reuses
+    the cache unless the ledger mutated after generation, so pushed
+    prose is current by construction; on regeneration failure it serves
+    the cached prose instead, so an LLM outage degrades to dated prose
+    (or null) rather than blocking a push.
     """
     try:
-        cached = brief_mod.get_cached(cik)
+        cached = brief_mod.ensure_brief(
+            cik, ticker, name=name, fund=fund, latest_os=latest_os,
+            cards=cards, cash=cash, raised=raised, badges=badges)
     except Exception:
-        log.exception("brief lookup failed for cik=%s", cik)
+        log.exception("brief block failed for cik=%s", cik)
         return None
     if not cached:
         return None
-    generated_at = cached.get("generated_at")
-    latest_filing = None
-    try:
-        latest_filing = _latest_filing_date(cik)
-    except Exception:
-        log.exception("latest-filing lookup failed for cik=%s", cik)
-    stale = bool(latest_filing and generated_at
-                 and latest_filing > generated_at[:10])
     return {
-        "headline": cached.get("headline"),
-        "bullets": _strs(cached.get("bullets")),
-        # Dated forward-looking items (expiries, maturities, lock-up
-        # ends). Frequently empty — not every issuer has any.
-        "watch": _strs(cached.get("watch")),
-        "generated_at": generated_at,
-        "stale": stale,
-        # The filing that makes it stale, so the consumer can say what it
-        # predates instead of just flagging it. Null when not stale.
-        "stale_since_filing_date": latest_filing if stale else None,
+        # One flowing sentence — the current situation at a glance.
+        "summary": cached.get("summary"),
+        "generated_at": cached.get("generated_at"),
     }
 
 
@@ -576,7 +550,7 @@ def payload_summary(doc: dict) -> str:
             f"badge={overall if overall is not None else '—'} "
             f"cash={'y' if company.get('cash') else 'n'} "
             f"os_chart={'y' if company.get('os_chart') else 'n'} "
-            f"brief={'stale' if brief.get('stale') else 'y' if brief else 'n'} "
+            f"brief={'y' if brief else 'n'} "
             f"{counts or 'no cards'}")
 
 
@@ -658,7 +632,7 @@ def build_snapshot(ticker: str, *, generated_at: datetime | None = None) -> dict
         log.exception("baby-shelf test failed for %s", ticker)
         baby = None
 
-    cash, _raised = _cash_and_raised(cik)
+    cash, raised = _cash_and_raised(cik)
 
     osh = None
     os_block = None
@@ -708,7 +682,9 @@ def build_snapshot(ticker: str, *, generated_at: datetime | None = None) -> dict
         "company": company,
         "badges": _badges_block(badges),
         "cards": _cards_block(cards),
-        "brief": _brief_block(cik),
+        "brief": _brief_block(cik, ticker, name=row["name"], fund=fund,
+                              latest_os=latest_os, cards=cards, cash=cash,
+                              raised=raised, badges=badges),
     }
 
 

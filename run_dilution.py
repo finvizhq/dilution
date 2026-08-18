@@ -85,9 +85,8 @@ def main() -> int:
                     help="do everything except the POST: build the snapshot, "
                          "validate the envelope, read back what Finviz "
                          "currently holds and report whether the content "
-                         "changed. Nothing is sent. The nightly job runs this "
-                         "way and publishes in one pass at the end, after "
-                         "briefs are refreshed")
+                         "changed. Nothing is sent. nightly.sh --dry-run "
+                         "propagates this flag")
     args = ap.parse_args()
 
     set_log_ticker(args.ticker)

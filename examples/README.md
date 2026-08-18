@@ -93,18 +93,19 @@ still cached from June contradicted the current cards (GCTK's claimed no
 outstanding warrants while its own `cards.warrant` array holds ten). So
 four of the five were dumped with `--dummy-brief`, which templates the
 block from the snapshot's own numbers — correct shape, coherent with the
-cards, and every one carries a closing bullet saying so.
+cards, and every one says so in its closing sentence.
 
 `CELU` is the exception: its brief is genuine model prose, generated
 today. Use that one to judge tone and length; use the other four to build
-the panel. Re-dump any of them without the flag once the generator is
-healthy:
+the panel. The brief regenerates inside the payload build itself when
+the ledger changed, so re-dumping is enough once the generator is
+healthy (delete the ticker's `dilution_ticker_brief` row first to force
+fresh prose):
 
 ```bash
-python scripts/run_brief_all.py GCTK FCEL XTIA SCNI --force
 python scripts/dump_finviz_payload.py GCTK FCEL XTIA SCNI --out examples
 ```
 
-Note that none of the five currently exercises `stale: true` or
-`brief: null` — build those states from the §8 spec, or point
-`--dummy-brief` at a ticker with no cached brief.
+Note that none of the five currently exercises `brief: null` — build
+that state from the §8 spec, or point `--dummy-brief` at a ticker with
+no cached brief.

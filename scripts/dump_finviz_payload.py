@@ -29,7 +29,6 @@ import argparse
 import json
 import logging
 import sys
-from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -54,16 +53,6 @@ from dilution.finviz_push import fetch_snapshot      # noqa: E402
 # rendered beside it — which is the failure mode stale real prose has.
 _DUMMY_MARKER = ("Placeholder brief, templated from this snapshot's own "
                  "numbers — real briefs are model-written prose.")
-
-
-def _pretty_date(iso: str) -> str:
-    """"2026-12-31" → "December 31, 2026", matching how the real briefs
-    word their watch items."""
-    try:
-        d = date.fromisoformat(iso)
-    except (TypeError, ValueError):
-        return iso
-    return f"{d.strftime('%B')} {d.day}, {d.year}"
 
 
 def _dummy_brief(snapshot: dict) -> dict:
@@ -91,65 +80,38 @@ def _dummy_brief(snapshot: dict) -> dict:
     # words, so pass the magnitude or it reads "burn of -$30.6M".
     op_cf = cash.get("op_cf_quarterly_usd")
     burn = _usd(abs(op_cf)) if op_cf is not None else "—"
-    bullets = [
-        f"Estimated cash of {_usd(cash.get('current_cash_est_usd'))} against a "
-        f"quarterly operating {'burn' if (op_cf or 0) < 0 else 'inflow'} of "
-        f"{burn} leaves {runway} of runway.",
-    ]
+    clauses = []
     if unlimited:
-        bullets.append("An unlimited (WKSI) shelf is on file — shelf capacity "
-                       "is not a constraint on new issuance.")
+        clauses.append("an unlimited (WKSI) shelf is on file")
     elif raisable:
-        n = len(cards.get("shelf") or [])
-        bullets.append(f"{_usd(raisable)} is raisable today across "
-                       f"{n} active shelf registration"
-                       f"{'s' if n != 1 else ''}"
-                       + (", after the baby-shelf I.B.6 cap."
+        clauses.append(f"{_usd(raisable)} of shelf capacity is raisable "
+                       f"today"
+                       + (" after the baby-shelf I.B.6 cap"
                           if company.get("is_baby_shelf_restricted")
-                          else "."))
-    else:
-        bullets.append("No shelf capacity is raisable today.")
+                          else ""))
     if at_will:
-        bullets.append(f"{_usd(at_will)} of at-will selling capacity remains "
-                       f"across live ATM / equity-line programs.")
+        clauses.append(f"{_usd(at_will)} of at-will ATM / equity-line "
+                       f"capacity is live")
     if overhang:
-        pct = (f" — {overhang / outstanding * 100:.0f}% of shares outstanding"
+        pct = (f" ({overhang / outstanding * 100:.0f}% of O/S)"
                if outstanding else "")
-        bullets.append(f"Fixed-share overhang of {_sh(overhang)} potential "
-                       f"shares from warrants, notes and preferred{pct}.")
-    if overall.get("score") is not None:
-        bullets.append(f"Composite dilution-risk score is "
-                       f"{overall['score']}/100 ({overall.get('label')}).")
-    bullets.append(_DUMMY_MARKER)
-
-    # Watch items: the next dated obligations the cards actually carry.
-    # Sort on the ISO date, render it the way real briefs word it.
-    dated: list[tuple[str, str]] = []
-    for card in cards.get("convertible") or []:
-        if card.get("maturity_date"):
-            dated.append((card["maturity_date"],
-                          f"Maturity of the "
-                          f"{_usd(card.get('principal_remaining'))} "
-                          f"{card.get('title')}"))
-    for card in cards.get("warrant") or []:
-        if card.get("expiration_date") and card.get("remaining_outstanding"):
-            dated.append((card["expiration_date"],
-                          f"Expiration of "
-                          f"{_sh(card['remaining_outstanding'])} "
-                          f"{card.get('title')}"))
-    today = date.today().isoformat()
-    watch = [f"{_pretty_date(iso)}: {text}."
-             for iso, text in sorted(d for d in dated if d[0] >= today)[:3]]
+        clauses.append(f"{_sh(overhang)} potential shares{pct} hang over "
+                       f"the stock")
+    takeaway = (f" — composite dilution-risk is {overall['score']}/100 "
+                f"({overall.get('label')})"
+                if overall.get("score") is not None else "")
+    summary = (
+        f"With estimated cash of {_usd(cash.get('current_cash_est_usd'))} "
+        f"against a quarterly operating "
+        f"{'burn' if (op_cf or 0) < 0 else 'inflow'} of {burn}, "
+        f"{snapshot.get('ticker')}'s runway is {runway}"
+        + "".join(f", and {c}" for c in clauses)
+        + f"{takeaway}. [{_DUMMY_MARKER}]"
+    )
 
     return {
-        "headline": f"{snapshot.get('ticker')} shows "
-                    f"{(overall.get('label') or 'unrated').lower()} dilution "
-                    f"risk with {runway} of cash runway",
-        "bullets": bullets,
-        "watch": watch,
+        "summary": summary,
         "generated_at": snapshot.get("generated_at"),
-        "stale": False,
-        "stale_since_filing_date": None,
     }
 
 
@@ -217,8 +179,7 @@ def main() -> int:
             print(f"{ticker}: FAILED — {exc}", file=sys.stderr)
             continue
         if args.dummy_brief:
-            # Unconditional: `stale` only tracks new FILINGS, so an old
-            # brief can read as fresh while contradicting the cards
+            # Unconditional: old cached prose can contradict the cards
             # (GCTK's June prose claimed no warrants with ten cards live).
             # Dump without the flag for tickers whose cached prose you
             # know is current.

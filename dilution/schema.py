@@ -333,8 +333,8 @@ CREATE TABLE IF NOT EXISTS dilution_ledger_narrative (
     model TEXT
 );
 
--- Per-ticker AI dilution brief cache (headline + bullets + watch
--- items) for payload §8. dilution/ticker_brief.py owns the working
+-- Per-ticker AI dilution brief cache (the current situation in one
+-- sentence) for payload §8. dilution/ticker_brief.py owns the working
 -- copy of this DDL (keep in sync) and self-bootstraps on first use;
 -- the copy here only exists so reset_db.py produces a complete
 -- schema. Keyed by a hash of the deterministic facts block so the
@@ -342,9 +342,7 @@ CREATE TABLE IF NOT EXISTS dilution_ledger_narrative (
 CREATE TABLE IF NOT EXISTS dilution_ticker_brief (
     cik INTEGER PRIMARY KEY,
     facts_hash TEXT NOT NULL,
-    headline TEXT NOT NULL,
-    bullets_json TEXT NOT NULL,
-    watch_json TEXT NOT NULL,
+    summary TEXT NOT NULL,
     generated_at TEXT NOT NULL,
     model TEXT
 );

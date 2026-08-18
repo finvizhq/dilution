@@ -84,8 +84,8 @@ def _snapshot(**overrides) -> dict:
         "company": {"shares_outstanding": 1e6, "cash": {"months_of_cash": 3.0}},
         "badges": {"overall": {"score": 50, "label": "Moderate"}},
         "cards": {"warrant": [{"source_ref": "W-001", "title": "Warrants"}]},
-        "brief": {"headline": "h", "bullets": ["b"],
-                  "generated_at": "2026-06-02T00:00:00Z", "stale": False},
+        "brief": {"summary": "s",
+                  "generated_at": "2026-06-02T00:00:00Z"},
         "_filler": "x" * 4096,
     }
     snap.update(overrides)

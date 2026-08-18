@@ -5,15 +5,11 @@ filings into a ledger and pushes one JSON snapshot per ticker to Finviz,
 which renders the product. The only HTTP surface is `run_inspect.py`, a
 loopback-only debug view you reach over an SSH tunnel.
 
-**Nightly shape** — one systemd timer runs `scripts/nightly.sh`:
-
-1. walk every tracked ticker (`--dry-run`)
-2. refresh briefs whose ticker got new filings
-3. publish the snapshots whose content changed
-
-Step 3 is one pass at the end rather than a push per walk, because step 2
-regenerates exactly the briefs the walk invalidated — pushing per-walk
-would ship the old brief beside the new cards.
+**Nightly shape** — one systemd timer runs `scripts/nightly.sh`, which is
+one `run_dilution.py` pipeline per ticker in `tickers.txt`: walk new
+filings, rebuild the snapshot (the AI brief regenerates inline when the
+walk mutated the ledger), validate, and publish only if the content
+changed. There are no separate brief or publish steps.
 
 ## What lives where
 
@@ -144,8 +140,7 @@ systemctl list-timers dilution-nightly     # next fire time
 ```
 
 The dry run walks and refreshes briefs for real, then validates and
-change-checks every snapshot without POSTing. Check the log shows all
-three steps in order.
+change-checks every snapshot without POSTing anything.
 
 Then let the timer fire once and confirm what landed:
 
@@ -180,29 +175,19 @@ shift moves the margin, not the deadline.
 ```bash
 journalctl -u dilution-nightly -f          # live
 tail -f logs/nightly_$(date +%F).log       # this run's detail
-ls logs/open_access_*.log                  # per-ticker walk logs
+ls logs/walk_*.log                         # per-ticker walk logs
 ```
 
-**Exit codes.** 0 clean; 1 a step reported failures; **2 the blast-radius
-gate declined to publish.** Exit 2 means an implausible share of the
-universe came up changed, which normally means a code or prompt change
-reshaped every payload rather than the market moving. Nothing was
-published. Inspect a diff:
+**Exit codes.** 0 clean; 1 a step reported failures (see the log).
+
+To inspect what a push would change before it goes out, diff a local
+build against the live copy:
 
 ```bash
 python scripts/dump_finviz_payload.py CELU --stdout > /tmp/local.json
 python scripts/dump_finviz_payload.py CELU --live --stdout > /tmp/live.json
 diff <(jq -S .data /tmp/local.json) <(jq -S .data /tmp/live.json)
 ```
-
-If the change is intended (a pipeline release), publish deliberately:
-
-```bash
-python scripts/push_finviz.py --all --yes
-```
-
-The unit treats exit 2 as success (`SuccessExitStatus=2`) so it reads as
-"held for review" rather than paging on every release.
 
 **Publishing by hand:**
 
@@ -237,8 +222,9 @@ ssh user@VPS_IP 'cd /opt/dilution && ./deploy.sh'
 ```
 
 No service to bounce — the timer picks up the new code on its next fire.
-A release that reshapes payloads will trip the blast-radius gate on that
-first run; that is the intended checkpoint.
+A release that reshapes payloads publishes the new shape on its first
+run; run `push_finviz.py --all --dry-run` first when you want to see
+the change set before it ships.
 
 ---
 
@@ -277,7 +263,7 @@ seeded DB from step 3 is the pre-log baseline, so keep a copy of it.
 - **Pushes 400:** a producer bug, never retried. The log carries the
   ASP.NET `traceId` — quote it to Finviz infra.
 - **A run seems stuck:** a cold walk is genuinely hours. Check per-ticker
-  progress in `logs/open_access_<TICKER>.log`. `TimeoutStartSec=8h` is the
+  progress in `logs/walk_<TICKER>.log`. `TimeoutStartSec=8h` is the
   outer bound.
 - **Two runs at once:** they cannot. `nightly.sh` takes an advisory lock
   (`/opt/dilution/.nightly.lock`) and a second invocation exits 0

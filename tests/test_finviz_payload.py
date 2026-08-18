@@ -503,78 +503,44 @@ class TestBadgesBlock:
 
 # ── §8 brief ─────────────────────────────────────────────────────────
 _CACHED_BRIEF = {
-    "headline": "CELU faces severe dilution",
-    "bullets": ["Cash is $531K.", "A pending S-1 seeks $17.9M."],
-    "watch": ["October 16, 2026: Maturity of the Helena note."],
+    "summary": ("With just $531K cash against a $3.28M quarterly burn, "
+                "CELU's runway is under 0.5 months — nearly out of cash "
+                "with every mechanism in place to dilute heavily."),
     "facts_hash": "abc123",
     "generated_at": "2026-06-04T14:33:01Z",
     "model": "gpt-5.6-luna",
 }
 
 
-class TestBriefBlock:
-    @pytest.fixture
-    def cached(self, monkeypatch):
-        monkeypatch.setattr(fp.brief_mod, "get_cached",
-                            lambda cik: dict(_CACHED_BRIEF))
+def _brief_block():
+    """_brief_block with empty assembly objects — ensure_brief is always
+    stubbed in these tests, so their content never matters."""
+    return fp._brief_block(1, "CELU", name="Celularity Inc.", fund=None,
+                           latest_os=None, cards={}, cash=None, raised=None,
+                           badges=None)
 
-    def test_null_when_nothing_cached(self, monkeypatch):
-        monkeypatch.setattr(fp.brief_mod, "get_cached", lambda cik: None)
-        assert fp._brief_block(1) is None
+
+class TestBriefBlock:
+    def test_null_when_no_brief_exists(self, monkeypatch):
+        monkeypatch.setattr(fp.brief_mod, "ensure_brief",
+                            lambda cik, ticker, **kw: None)
+        assert _brief_block() is None
 
     def test_null_when_the_lookup_blows_up(self, monkeypatch):
-        def _boom(_cik):
+        def _boom(cik, ticker, **kw):
             raise RuntimeError("no such table")
-        monkeypatch.setattr(fp.brief_mod, "get_cached", _boom)
-        assert fp._brief_block(1) is None
+        monkeypatch.setattr(fp.brief_mod, "ensure_brief", _boom)
+        assert _brief_block() is None
 
-    def test_fresh_brief(self, cached, monkeypatch):
-        monkeypatch.setattr(fp, "_latest_filing_date", lambda cik: "2026-06-01")
-        block = fp._brief_block(1)
-        assert block["headline"] == "CELU faces severe dilution"
-        assert block["bullets"] == _CACHED_BRIEF["bullets"]
-        assert block["watch"] == _CACHED_BRIEF["watch"]
+    def test_brief_shape(self, monkeypatch):
+        monkeypatch.setattr(fp.brief_mod, "ensure_brief",
+                            lambda cik, ticker, **kw: dict(_CACHED_BRIEF))
+        block = _brief_block()
+        assert block["summary"] == _CACHED_BRIEF["summary"]
         assert block["generated_at"] == "2026-06-04T14:33:01Z"
-        assert block["stale"] is False
-        assert block["stale_since_filing_date"] is None
         # Cache-internal fields stay internal.
         assert "facts_hash" not in block
         assert "model" not in block
-
-    def test_filing_after_generation_is_stale(self, cached, monkeypatch):
-        monkeypatch.setattr(fp, "_latest_filing_date", lambda cik: "2026-06-12")
-        block = fp._brief_block(1)
-        assert block["stale"] is True
-        assert block["stale_since_filing_date"] == "2026-06-12"
-
-    def test_same_day_filing_is_not_stale(self, cached, monkeypatch):
-        # The rule compares dates, not timestamps: a filing on the
-        # generation date is assumed to have been in the facts.
-        monkeypatch.setattr(fp, "_latest_filing_date", lambda cik: "2026-06-04")
-        assert fp._brief_block(1)["stale"] is False
-
-    def test_no_filings_at_all_is_not_stale(self, cached, monkeypatch):
-        monkeypatch.setattr(fp, "_latest_filing_date", lambda cik: None)
-        assert fp._brief_block(1)["stale"] is False
-
-    def test_filing_lookup_failure_degrades_to_fresh(self, cached,
-                                                     monkeypatch):
-        def _boom(_cik):
-            raise RuntimeError("db gone")
-        monkeypatch.setattr(fp, "_latest_filing_date", _boom)
-        block = fp._brief_block(1)
-        assert block["stale"] is False
-        assert block["headline"] == "CELU faces severe dilution"
-
-    def test_missing_watch_becomes_an_empty_list(self, monkeypatch):
-        row = dict(_CACHED_BRIEF)
-        row["watch"] = None
-        row["bullets"] = None
-        monkeypatch.setattr(fp.brief_mod, "get_cached", lambda cik: row)
-        monkeypatch.setattr(fp, "_latest_filing_date", lambda cik: None)
-        block = fp._brief_block(1)
-        assert block["watch"] == []
-        assert block["bullets"] == []
 
 
 # ── §4 assembly ──────────────────────────────────────────────────────
@@ -609,7 +575,7 @@ class TestBuildPayload:
                             lambda cik: FakeOsHistory())
         monkeypatch.setattr(fp, "build_fd_stack", lambda cards, price: [])
         monkeypatch.setattr(fp, "compute_badges", lambda *a, **k: None)
-        monkeypatch.setattr(fp, "_brief_block", lambda cik: None)
+        monkeypatch.setattr(fp, "_brief_block", lambda cik, ticker, **kw: None)
 
     def test_wire_body_is_the_ticker_plus_data_wrapper(self, stubs):
         doc = fp.build_payload("gctk")
@@ -670,10 +636,9 @@ class TestBuildPayload:
         assert fp.build_snapshot("GCTK")["badges"] is None
 
     def test_brief_rides_inside_data(self, stubs, monkeypatch):
-        monkeypatch.setattr(fp, "_brief_block", lambda cik: {
-            "headline": "h", "bullets": [], "watch": [],
-            "generated_at": "2026-06-04T14:33:01Z", "stale": True,
-            "stale_since_filing_date": "2026-06-12"})
+        monkeypatch.setattr(fp, "_brief_block", lambda cik, ticker, **kw: {
+            "summary": "s",
+            "generated_at": "2026-06-04T14:33:01Z"})
         doc = fp.build_payload("GCTK")
-        assert doc["data"]["brief"]["stale"] is True
+        assert doc["data"]["brief"]["summary"] == "s"
         assert "brief" not in doc

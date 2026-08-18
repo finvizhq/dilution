@@ -1,4 +1,4 @@
-"""Per-ticker AI dilution brief — headline + scannable bullets + watch items.
+"""Per-ticker AI dilution brief — the current situation in one sentence.
 
 Answers "what's the dilution situation on this ticker RIGHT NOW" in a
 shape a user can scan in five seconds. Thin-prompt/thick-core: every
@@ -7,14 +7,17 @@ number is computed deterministically by the existing projections
 model only writes prose around them and is instructed to use no
 outside numbers.
 
-Caching: one row per cik in `dilution_ticker_brief`. The payload is
-display-only — it shows the cached brief and marks it stale when a
-filing arrived after generation (NOT via the stored facts_hash — that
-embeds live-price-derived numbers and flips intraday). The cache is
-populated by scripts/run_brief_all.py (skip-if-fresh batch over all
-tracked tickers) or scripts/ticker_brief_test.py (one ticker). This
-module owns the working copy of the DDL (schema.py carries a copy for
-reset_db completeness — keep in sync) and self-bootstraps on first use.
+Caching: one row per cik in `dilution_ticker_brief`, kept fresh by
+`ensure_brief` — the pipeline entry point the payload assembly
+(dilution/finviz_payload.py §8) calls with the objects it has already
+fetched, so building a payload IS the brief pipeline; there is no
+separate batch job. A cached brief is reused until a ledger mutation
+is applied after its generation (NOT the stored facts_hash — that
+embeds live-price-derived numbers and flips intraday; and NOT bare
+filing dates — most filings mutate nothing); only then does one LLM
+call regenerate it. This module owns the working copy of the DDL
+(schema.py carries a copy for reset_db completeness — keep in sync)
+and self-bootstraps on first use.
 """
 from __future__ import annotations
 
@@ -29,6 +32,8 @@ from pydantic import BaseModel
 import config
 from db import get_conn, now_iso
 
+from .ledger.store import ensure_mutation_log_conn
+from .observability import pipeline_session
 from .openai_client import complete, make_sync_client, output_text, system, user
 
 log = logging.getLogger(__name__)
@@ -43,9 +48,7 @@ _DDL = """
 CREATE TABLE IF NOT EXISTS dilution_ticker_brief (
     cik INTEGER PRIMARY KEY,
     facts_hash TEXT NOT NULL,
-    headline TEXT NOT NULL,
-    bullets_json TEXT NOT NULL,
-    watch_json TEXT NOT NULL,
+    summary TEXT NOT NULL,
     generated_at TEXT NOT NULL,
     model TEXT
 );
@@ -53,9 +56,7 @@ CREATE TABLE IF NOT EXISTS dilution_ticker_brief (
 
 
 class TickerBrief(BaseModel):
-    headline: str
-    bullets: list[str]
-    watch: list[str]
+    summary: str
 
 
 SYSTEM_PROMPT = (
@@ -70,16 +71,15 @@ Write a dilution brief for {ticker} from the FACTS below.
 
 Return strict JSON:
 {{
-  "headline": "<≤90 chars — the dilution story in one line, lead with the
-               single most important fact>",
-  "bullets": ["<4-7 bullets, ≤110 chars each, ordered most→least important.
-               Each bullet = one concrete fact with its number(s).
-               Cover: share overhang, live raise capacity (ATM/shelf/ELOC),
-               recent dilution events, cash runway — when facts exist>"],
-  "watch": ["<0-3 forward-looking items with dates/triggers from the facts,
-             e.g. lock-up expiries, exchangeability dates, pending votes.
-             ONLY items with a concrete date or trigger in the FACTS —
-             if none exist, return []. Never pad with generic risks>"]
+  "summary": "<ONE flowing sentence, ≤320 chars — the whole dilution
+              story, readable at a glance. Lead with the single most
+              important fact, weave in the 2-4 facts that matter most
+              (cash vs. quarterly burn / runway, live raise capacity,
+              share overhang, risk-driver levels; a dated trigger like
+              a maturity or expiry only if it is imminent and material),
+              then close with an em-dash takeaway in plain words, e.g.
+              '— the company is nearly out of cash with every mechanism
+              in place to dilute heavily, almost immediately'>"
 }}
 
 Style: plain trader language, no hedging, no filler. Abbreviate dollars
@@ -195,6 +195,13 @@ def facts_hash(facts: dict) -> str:
 
 def _ensure_table(conn) -> None:
     conn.executescript(_DDL)
+    cols = {r[1] for r in conn.execute(
+        "PRAGMA table_info(dilution_ticker_brief)")}
+    if "summary" not in cols or "headline" in cols or "watch_json" in cols:
+        # Pre-2026-08 headline+bullets+watch shape. Pure regenerable
+        # cache — drop it, the next payload builds refill, no migration.
+        conn.execute("DROP TABLE dilution_ticker_brief")
+        conn.executescript(_DDL)
 
 
 def get_cached(cik: int) -> dict | None:
@@ -207,13 +214,62 @@ def get_cached(cik: int) -> dict | None:
     if not row:
         return None
     return {
-        "headline": row["headline"],
-        "bullets": json.loads(row["bullets_json"]),
-        "watch": json.loads(row["watch_json"]),
+        "summary": row["summary"],
         "facts_hash": row["facts_hash"],
         "generated_at": row["generated_at"],
         "model": row["model"],
     }
+
+
+def is_fresh(cik: int) -> bool:
+    """True when no ledger mutation has been applied since the cached
+    brief was generated. Both timestamps come from db.now_iso(), so
+    plain string comparison is exact.
+
+    Render-time card changes that mint no mutation (a note aging past
+    maturity, the s1 540-day reaper) can lag in the prose until the
+    ticker's next real mutation — accepted: they are calendar effects
+    whose dates the prose already carries."""
+    cached = get_cached(cik)
+    if not cached:
+        return False
+    with get_conn() as conn:
+        ensure_mutation_log_conn(conn)
+        row = conn.execute(
+            "SELECT 1 FROM dilution_mutations "
+            "WHERE cik = ? AND applied_at > ? LIMIT 1",
+            (int(cik), cached["generated_at"]),
+        ).fetchone()
+    return row is None
+
+
+def ensure_brief(cik: int, ticker: str, *, name: str, fund: dict | None,
+                 latest_os: float | None, cards: dict, cash,
+                 raised: float | None, badges) -> dict | None:
+    """Pipeline entry point: return this ticker's brief, fresh.
+
+    Reuses the cache when no ledger mutation postdates it; otherwise
+    builds the facts block from the objects the caller has already
+    fetched (the payload assembly fetches them all anyway — nothing is
+    fetched twice) and regenerates with one LLM call. Any regeneration
+    failure falls back to whatever is cached — dated prose beats a
+    blank §8 — so only a ticker that has never been briefed returns
+    None on failure.
+    """
+    if is_fresh(cik):
+        return get_cached(cik)
+    try:
+        facts = build_facts(ticker=ticker, name=name, fund=fund,
+                            latest_os=latest_os, cards=cards, cash=cash,
+                            raised=raised, badges=badges)
+        with pipeline_session(ticker, name="dilution-brief",
+                              metadata={"cik": cik,
+                                        "llm_model": config.LLM_MODEL}):
+            return generate(cik, ticker, facts)
+    except Exception:
+        log.exception("brief regeneration failed for %s — serving cached",
+                      ticker)
+        return get_cached(cik)
 
 
 def generate(cik: int, ticker: str, facts: dict) -> dict:
@@ -250,26 +306,18 @@ def generate(cik: int, ticker: str, facts: dict) -> dict:
         _ensure_table(conn)
         conn.execute(
             """INSERT INTO dilution_ticker_brief
-                 (cik, facts_hash, headline, bullets_json, watch_json,
-                  generated_at, model)
-               VALUES (?, ?, ?, ?, ?, ?, ?)
+                 (cik, facts_hash, summary, generated_at, model)
+               VALUES (?, ?, ?, ?, ?)
                ON CONFLICT(cik) DO UPDATE SET
                  facts_hash=excluded.facts_hash,
-                 headline=excluded.headline,
-                 bullets_json=excluded.bullets_json,
-                 watch_json=excluded.watch_json,
+                 summary=excluded.summary,
                  generated_at=excluded.generated_at,
                  model=excluded.model""",
-            (int(cik), fhash, brief.headline,
-             json.dumps(brief.bullets, ensure_ascii=False),
-             json.dumps(brief.watch, ensure_ascii=False),
-             now_iso(), model_used),
+            (int(cik), fhash, brief.summary, now_iso(), model_used),
         )
     log.info("ticker brief generated for cik=%s (%s)", cik, ticker)
     return {
-        "headline": brief.headline,
-        "bullets": brief.bullets,
-        "watch": brief.watch,
+        "summary": brief.summary,
         "facts_hash": fhash,
         "generated_at": now_iso(),
         "model": model_used,

@@ -1,5 +1,5 @@
 [Unit]
-Description=Dilution pipeline nightly run (walk EDGAR, refresh briefs, publish to Finviz)
+Description=Dilution pipeline nightly run (walk EDGAR, publish to Finviz)
 Documentation=file:///opt/dilution/DEPLOY.md
 # EDGAR and Finviz are both remote, and the timer's Persistent=true can
 # fire a catch-up run at boot — before DNS is necessarily up.
@@ -34,12 +34,6 @@ ExecStart=/opt/dilution/scripts/nightly.sh
 # A cold walk over the full universe is hours of LLM calls. nightly.sh's
 # flock guards overlap; this is the outer bound on a hung run.
 TimeoutStartSec=8h
-
-# Exit 2 is the blast-radius gate declining to publish because an
-# implausible share of the universe changed — the guard working as
-# designed, needing a human to look rather than a crash alert. Without
-# this, every pipeline release would page.
-SuccessExitStatus=2
 
 NoNewPrivileges=true
 

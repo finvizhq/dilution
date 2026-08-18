@@ -1,0 +1,77 @@
+# The dilution pipeline's tracked universe — one ticker per line.
+#
+# This file is the single source of truth for WHICH tickers get walked:
+# scripts/nightly.sh reads it. Adding a line onboards a ticker (the
+# first walk pulls its full filing history);
+# removing a line stops walking it, but its last published snapshot
+# stays on Finviz until its row is removed from dilution_company.
+#
+# '#' starts a comment. Blank lines are ignored. Case-insensitive.
+#
+# Seeded 2026-08-17 with every ticker then present in dilution_company.
+AACG
+ACTU
+AMBR
+AMPY
+ANL
+AOUT
+ASTC
+ATHR
+ATPC
+ATXG
+BIYA
+BJDX
+BNKK
+BTCT
+BTOG
+CATX
+CELU
+CETY
+CGEN
+CHNR
+CLIR
+CLLS
+COCH
+CVEO
+DOMO
+DXST
+ELUT
+EPRX
+FCEL
+GCO
+GCTK
+GLDG
+HDSN
+HLLY
+HOLO
+HTCO
+HYNE
+III
+IPW
+IQST
+KSCP
+LGVN
+LIXT
+LMFA
+MAGN
+MBRX
+NRT
+NUAI
+NXGL
+OSUR
+OZ
+POAS
+PPBT
+QTEX
+SBMT
+SCNI
+SCYX
+SDOT
+SPRU
+SUNE
+SUPX
+VRM
+VTAK
+XTIA
+XTLB
+ZYBT

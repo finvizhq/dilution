@@ -31,7 +31,7 @@ fi
 source .venv/bin/activate
 pip install -r requirements.txt -q
 mkdir -p logs
-chmod +x scripts/nightly.sh scripts/run_open_access.sh
+chmod +x scripts/nightly.sh
 
 echo ""
 echo "=== Environment check ==="
